@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VB-G RAM G Daily Report Portal</title><link rel="stylesheet" href="styles.css"></head>
+<body><header class="topbar"><div><div class="eyebrow">VB-G RAM G • DAILY MONITORING</div><h1>Daily Report Portal</h1><p>Janpad • Engineer / Upyantri • District • GP</p></div><div class="datebox"><span>Report Date</span><strong id="reportDate">—</strong></div></header>
+<main class="shell">
+<section class="auto-card"><div id="autoStatus">Auto update status…</div></section>
+<section class="upload-card no-print"><div><h2>आज की Excel से एक क्लिक में रिपोर्ट</h2><p><b>Daily Report.xlsx</b> जैसी workbook चुनें। <b>RepDay + Sheet1 + VBG</b> से report browser में ही बनेगी।</p></div><div class="actions"><label class="file-btn">Excel चुनें<input id="fileInput" type="file" accept=".xlsx,.xls"></label><button class="primary" id="generateBtn">रिपोर्ट बनाएँ</button><button id="printBtn">Print / PDF</button><button id="csvBtn">CSV Export</button></div><div id="fileStatus" class="status">Sample workbook loaded</div></section>
+<section class="filters no-print"><select id="districtFilter"><option value="ALL">सभी District</option><option value="MAIHAR">MAIHAR</option><option value="SATNA">SATNA</option></select><select id="janpadFilter"><option value="ALL">सभी Janpad</option></select><select id="engineerFilter"><option value="ALL">सभी Engineer</option></select><select id="clusterFilter"><option value="ALL">सभी Cluster</option></select><button id="resetBtn">Reset</button></section>
+<section class="kpis" id="kpis"></section>
+<nav class="tabs no-print"><button class="tab active" data-view="official">Official Janpad Daily</button><button class="tab" data-view="engineer">Engineer-wise</button><button class="tab" data-view="district">Full District Report</button><button class="tab" data-view="gp">GP Detail</button></nav>
+<section class="report-card"><div class="report-head"><div><h2 id="viewTitle">Official Janpad Daily Report</h2><p id="viewMeta"></p></div><div class="legend"><span class="dot good"></span> Better coverage <span class="dot warn"></span> Needs attention</div></div><div class="table-wrap"><table id="reportTable"></table></div></section>
+<section class="note"><b>Engineer-wise:</b> Daily MR/Labour values RepDay से आते हैं। PMAY-G / Ek Bagiya ongoing work counts VBG work-level data से engineer-GP mapping द्वारा निकाले जाते हैं।</section>
+</main><footer>Prepared for srdmsatna.online/daily-report</footer>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="auto-data.js"></script><script src="sample-data.js"></script><script src="app.js"></script></body></html>
