@@ -25,3 +25,30 @@ function parseWorkbook(wb){const a=sheetArray(wb,'RepDay');if(!a.length)throw ne
 $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null;$('fileStatus').textContent=pendingFile?`Selected: ${pendingFile.name}`:'कोई file नहीं चुनी गई'});$('generateBtn').addEventListener('click',async()=>{if(!pendingFile){render();return}try{if(typeof XLSX==='undefined')throw new Error('Excel reader load नहीं हुआ।');$('fileStatus').textContent='Excel पढ़ी जा रही है…';const buf=await pendingFile.arrayBuffer();parseWorkbook(XLSX.read(buf,{type:'array'}));autoMeta={mode:'manual',updatedAt:new Date().toISOString(),source:pendingFile.name,status:'manual'};refreshFilters();render();updateAutoStatus();updateAutoStatus();$('fileStatus').textContent=`Generated: ${pendingFile.name} • ${fmt(rows.length)} GP rows`}catch(e){$('fileStatus').textContent='Error: '+e.message;alert(e.message)}});
 ['districtFilter','janpadFilter','engineerFilter','clusterFilter'].forEach(id=>$(id).addEventListener('change',()=>{refreshFilters();render()}));$('resetBtn').addEventListener('click',()=>{$('districtFilter').value='ALL';refreshFilters();$('janpadFilter').value=$('engineerFilter').value=$('clusterFilter').value='ALL';render()});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;render()}));
 $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${extractDate(reportTitle)}.csv`;a.click();URL.revokeObjectURL(a.href)});refreshFilters();render();
+// V6: Font size and Portrait/Landscape print controls
+(function(){
+  let fontScale=1;
+  const root=document.documentElement;
+  const minus=document.getElementById('fontMinusBtn');
+  const plus=document.getElementById('fontPlusBtn');
+  const orient=document.getElementById('printOrientation');
+  const printBtn=document.getElementById('printBtn');
+  function applyScale(){root.style.setProperty('--table-font-scale',fontScale.toFixed(2));}
+  minus?.addEventListener('click',()=>{fontScale=Math.max(.75,+(fontScale-.10).toFixed(2));applyScale();});
+  plus?.addEventListener('click',()=>{fontScale=Math.min(1.60,+(fontScale+.10).toFixed(2));applyScale();});
+  function setPrintOrientation(){
+    const mode=orient?.value==='portrait'?'portrait':'landscape';
+    document.body.classList.toggle('print-portrait',mode==='portrait');
+    document.body.classList.toggle('print-landscape',mode==='landscape');
+    let st=document.getElementById('dynamicPrintPageStyle');
+    if(!st){st=document.createElement('style');st.id='dynamicPrintPageStyle';document.head.appendChild(st);}
+    st.textContent=`@media print{@page{size:A4 ${mode};margin:7mm}}`;
+  }
+  orient?.addEventListener('change',setPrintOrientation);
+  if(printBtn){
+    const cloned=printBtn.cloneNode(true);
+    printBtn.parentNode.replaceChild(cloned,printBtn);
+    cloned.addEventListener('click',()=>{setPrintOrientation();setTimeout(()=>window.print(),30);});
+  }
+  setPrintOrientation();applyScale();
+})();

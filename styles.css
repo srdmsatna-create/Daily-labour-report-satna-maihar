@@ -61,3 +61,22 @@ body{margin:0;font-family:Inter,"Noto Sans Devanagari",Arial,sans-serif;backgrou
   .report-table thead tr:first-child th{background:#123f72!important;color:#fff!important}.report-table thead tr:last-child th{background:#c8dcf5!important;color:#0d2f56!important}.report-table tbody tr:nth-child(even):not(.total-row){background:#f7faff!important}.report-table .total-row td{background:#dbe9fb!important;color:#0b2c50!important;border-top:2px solid #3f6288!important;border-bottom:2px solid #3f6288!important}
   footer{margin:4px 0;font-size:8px}
 }
+
+/* V6 display/print controls */
+:root{--table-font-scale:1}
+.print-select{border:1px solid #c9d4e4;background:#fff;color:var(--navy);border-radius:10px;padding:10px 12px;font-weight:800;cursor:pointer}
+.report-table th,.report-table td{font-size:calc(10.2px * var(--table-font-scale))}
+.report-table th{font-size:calc(9.7px * var(--table-font-scale))}
+.report-table .badge{font-size:calc(10px * var(--table-font-scale))}
+body.print-portrait .report-table.official-grid th,body.print-portrait .report-table.official-grid td{font-size:calc(6.15px * var(--table-font-scale))}
+body.print-landscape .report-table.official-grid th,body.print-landscape .report-table.official-grid td{font-size:calc(6.3px * var(--table-font-scale))}
+
+@media print{
+  body.print-portrait .report-table{table-layout:fixed}
+  body.print-portrait .report-table.engineer-grid th,body.print-portrait .report-table.engineer-grid td,
+  body.print-portrait .report-table.district-grid th,body.print-portrait .report-table.district-grid td,
+  body.print-portrait .report-table.gp-grid th,body.print-portrait .report-table.gp-grid td{font-size:calc(6.5px * var(--table-font-scale));padding:2px}
+  body.print-landscape .report-table.engineer-grid th,body.print-landscape .report-table.engineer-grid td,
+  body.print-landscape .report-table.district-grid th,body.print-landscape .report-table.district-grid td,
+  body.print-landscape .report-table.gp-grid th,body.print-landscape .report-table.gp-grid td{font-size:calc(7px * var(--table-font-scale));padding:2px 3px}
+}
