@@ -76,9 +76,16 @@ def parse(path):
     if len(daily)!=8:
         raise SystemExit(f'Screen 2 table parse failed: expected 8 Janpads, got {len(daily)}')
 
-    # VBG = work-type add-ons for engineer cards.
-    v=wb['VBG']; wm={}
+    # VBG = work-level add-ons for engineer cards, category-wise work and expenditure buckets.
+    v=wb['VBG']; wm={}; cm={}
     inst=re.compile(r'(school|prathmik|madhyamik|shala|vidyalaya|प्राथमिक|माध्यमिक|शाला|विद्यालय)',re.I)
+    def exp_bucket(p):
+        if p<=0: return 'b0'
+        if p<=25: return 'b25'
+        if p<=60: return 'b60'
+        if p<=75: return 'b75'
+        if p<=90: return 'b90'
+        return 'b90p'
     for i,r in enumerate(v.iter_rows(values_only=True),start=1):
         if i<5 or len(r)<22: continue
         jan,gp,fy,status,code,name,wt=janpad(r[2]),up(r[3]),c(r[4]),c(r[5]).lower(),c(r[6]),c(r[7]),c(r[8])
@@ -90,7 +97,15 @@ def parse(path):
         if wt.lower()=='ek bagiya' and fy in ('2025-2026','2026-2027') and not inst.search(name): z['ekOngoing']+=1
         if n(r[21])>0: z['currentFYActive']+=1
 
-    return {'title':title,'rows':rows,'official':official,'daily':daily,'workmix':list(wm.values()),'_sourceDates':{'RepDay':rep_date,'Sheet1':sheet1_date}}
+        category=wt or 'Unspecified'
+        sanctioned=n(r[11]) if len(r)>11 else (n(r[9])+n(r[10]))
+        booked=(n(r[16])+n(r[17])) if len(r)>17 else 0
+        ep=(booked*100/sanctioned) if sanctioned>0 else 0
+        ck=(jan,eng,cl,gp,category)
+        q=cm.setdefault(ck,{'janpad':jan,'engineer':eng,'cluster':cl,'panchayat':gp,'category':category,'workCount':0,'totalSanction':0,'totalBooked':0,'b0':0,'b25':0,'b60':0,'b75':0,'b90':0,'b90p':0})
+        q['workCount']+=1; q['totalSanction']+=sanctioned; q['totalBooked']+=booked; q[exp_bucket(ep)]+=1
+
+    return {'title':title,'rows':rows,'official':official,'daily':daily,'workmix':list(wm.values()),'categorymix':list(cm.values()),'_sourceDates':{'RepDay':rep_date,'Sheet1':sheet1_date}}
 
 path,source=obtain(); data=parse(path)
 dates=data.pop('_sourceDates',{})

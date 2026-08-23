@@ -28,3 +28,17 @@ If this secret is not configured, the workflow uses `incoming/Daily Report.xlsx`
 - Total Ongoing Works continues to use the upper official `Sheet1` work-load table because Screen 2 does not contain that total.
 - `SOHAWAL` from RepDay is normalized to `SATNA` so Janpad filters align with the official Screen-2 label.
 - Engineer/Cluster/GP drill-down still uses RepDay, as intended.
+
+## V14 — Top Navigation + Priority Alerts
+- Main report tabs are moved to the upper dashboard area and remain sticky while scrolling.
+- Added **Priority Alerts** view.
+- Priority rules: CRITICAL = ongoing GP with zero Works with MR; HIGH = zero labour or MR coverage under 10%; WATCH = MR coverage under 20%.
+- Existing Dysfunctional GP Alert remains available as a separate top tab.
+
+## V15 — Category / Expenditure Buckets
+- Added **Category-wise Work** top navigation bucket.
+- Added **Exp % Buckets** top navigation bucket.
+- Expenditure % for each ongoing VBG work = **Amount booked since inception (Wages + Material) / Total Sanction Amount × 100**.
+- Buckets: **0%**, **1%-25%**, **26%-60%**, **61%-75%**, **76%-90%**, **More than 90%**.
+- Category and expenditure views respect District, Janpad, Engineer and Cluster filters.
+- 0% expenditure works are visually highlighted for priority review.
