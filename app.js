@@ -17,25 +17,36 @@ function mixMap(){const m=new Map();for(const r of workmix){const k=[r.janpad,r.
 function apportionExact(group,key,target,fallbackKey='gps'){target=Math.max(0,Math.round(num(target)));if(!group.length)return;const vals=group.map(r=>Math.max(0,num(r[key]))),sumv=vals.reduce((a,b)=>a+b,0);let weights=vals;if(sumv<=0){weights=group.map(r=>Math.max(0,num(r[fallbackKey])));if(weights.reduce((a,b)=>a+b,0)<=0)weights=group.map(()=>1)}const sw=weights.reduce((a,b)=>a+b,0)||1;const raw=weights.map(w=>target*w/sw),base=raw.map(Math.floor);let left=target-base.reduce((a,b)=>a+b,0);const order=raw.map((v,i)=>({i,frac:v-base[i],name:clean(group[i].engineer)})).sort((a,b)=>b.frac-a.frac||a.name.localeCompare(b.name,'hi'));for(let n=0;n<left;n++)base[order[n%order.length].i]++;group.forEach((r,i)=>r[key]=base[i])}
 function engineerData(list){const mm=mixMap();const enriched=list.map(r=>{const x=mm.get([r.janpad,r.engineer,r.cluster,r.panchayat].map(clean).join('¦'))||{};return {...r,pmayOngoing:num(x.pmayOngoing),ekOngoing:num(x.ekOngoing),currentFYActive:num(x.currentFYActive)}});const metrics=['gps','gpsProgress','ongoing','worksMR','labour','mrs','noEkyc','pmayOngoing','ekOngoing','currentFYActive'];const out=aggregate(enriched,['janpad','engineer'],metrics);const cm=new Map();for(const r of enriched){const k=[clean(r.janpad),clean(r.engineer)].join('¦');if(!cm.has(k))cm.set(k,new Set());if(clean(r.cluster))cm.get(k).add(clean(r.cluster));}for(const r of out){const k=[clean(r.janpad),clean(r.engineer)].join('¦');r.cluster=[...(cm.get(k)||[])].sort((a,b)=>a.localeCompare(b,'hi')).join(', ');}/* Reconcile Engineer-wise daily columns to official Sheet1 Janpad totals. RepDay remains the distribution basis, but each Janpad now sums exactly to Screen-2 / Sheet1. */const dmap=new Map(daily.map(r=>[normJanpad(r.janpad),r])),omap=new Map(official.map(r=>[normJanpad(r.janpad),r]));for(const j of [...new Set(out.map(r=>normJanpad(r.janpad)))]){const g=out.filter(r=>normJanpad(r.janpad)===j),d=dmap.get(j)||{},o=omap.get(j)||{};apportionExact(g,'gps',d.totalGP,'gps');apportionExact(g,'gpsProgress',d.gpsProgress,'gps');apportionExact(g,'labour',d.labour,'gps');apportionExact(g,'worksMR',d.worksMR,'ongoing');apportionExact(g,'mrs',d.mrs,'worksMR');apportionExact(g,'ongoing',o.ongoingAll,'gps')}return out}
 function coverageBadgeText(worksMR,ongoing){return `${pct(worksMR,ongoing).toFixed(1)}%`}
+function dysfunctionalEngineerData(list){
+  /* Engineer-wise Dysfunctional GP is reconciled from Official Sheet1:
+     Dysfunctional GP = Total GP - GP Progress. engineerData() already apportions
+     GP and GP Progress so every Janpad exactly matches Screen-2 / Sheet1. */
+  const eng=engineerData(list).filter(r=>num(r.gps)>0);
+  const janpads=[...new Set(eng.map(r=>clean(r.janpad)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'hi'));
+  const out=[];
+  for(const janpad of janpads){
+    const group=eng.filter(r=>clean(r.janpad)===janpad).map(r=>({...r,dysfunctionalGP:Math.max(0,num(r.gps)-num(r.gpsProgress))}));
+    const off=official.find(r=>normJanpad(r.janpad)===normJanpad(janpad));
+    const janpadTotal=off?num(off.dysfunctionalGP):group.reduce((a,r)=>a+num(r.dysfunctionalGP),0);
+    group.sort((a,b)=>num(b.dysfunctionalGP)-num(a.dysfunctionalGP)||pct(a.worksMR,a.ongoing)-pct(b.worksMR,b.ongoing)||num(b.ongoing)-num(a.ongoing)||clean(a.engineer).localeCompare(clean(b.engineer),'hi'));
+    group.forEach((r,i)=>out.push({...r,rank:i+1,totalJanpadDys:janpadTotal}));
+  }
+  return out;
+}
 function alertInsights(list){
   const eng=engineerData(list).filter(r=>num(r.ongoing)>0);
   const janpads=[...new Set(eng.map(r=>clean(r.janpad)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'hi'));
   const lowByJanpad=[];
-  const dysByJanpad=[];
   for(const janpad of janpads){
     const je=eng.filter(r=>clean(r.janpad)===janpad)
       .sort((a,b)=>pct(a.worksMR,a.ongoing)-pct(b.worksMR,b.ongoing)||num(b.ongoing)-num(a.ongoing)||clean(a.engineer).localeCompare(clean(b.engineer),'hi'))
       .slice(0,3);
     if(je.length)lowByJanpad.push({janpad,items:je});
-    const drows=list.filter(r=>clean(r.janpad)===janpad&&num(r.ongoing)>0&&num(r.worksMR)===0);
-    const byEngineer=new Map();
-    for(const r of drows){
-      const key=[r.engineer,r.cluster].map(clean).join('¦');
-      if(!byEngineer.has(key))byEngineer.set(key,{janpad,engineer:clean(r.engineer),cluster:clean(r.cluster),count:0,ongoing:0,gps:[]});
-      const z=byEngineer.get(key);z.count++;z.ongoing+=num(r.ongoing);z.gps.push({name:clean(r.panchayat),ongoing:num(r.ongoing)});
-    }
-    const ranked=[...byEngineer.values()].sort((a,b)=>num(b.count)-num(a.count)||num(b.ongoing)-num(a.ongoing)||clean(a.engineer).localeCompare(clean(b.engineer),'hi')).slice(0,3);
-    if(ranked.length)dysByJanpad.push({janpad,items:ranked,totalDys:drows.length});
+  }
+  const allDys=dysfunctionalEngineerData(list),dysByJanpad=[];
+  for(const janpad of [...new Set(allDys.map(r=>r.janpad))]){
+    const all=allDys.filter(r=>r.janpad===janpad),items=all.filter(r=>num(r.dysfunctionalGP)>0).slice(0,3);
+    if(items.length)dysByJanpad.push({janpad,items,totalDys:all.length?all[0].totalJanpadDys:0});
   }
   return {lowByJanpad,dysByJanpad};
 }
@@ -43,10 +54,22 @@ function renderAlerts(list){
   const el=$('alerts');if(!el)return;
   const {lowByJanpad,dysByJanpad}=alertInsights(list);
   const lowRows=[];for(const g of lowByJanpad){g.items.forEach((x,i)=>lowRows.push(`<tr><td>${esc(g.janpad)}</td><td class="rank-cell">${i+1}</td><td>${esc(x.engineer)}</td><td>${esc(x.cluster||'—')}</td><td>${fmt(x.ongoing)}</td><td>${fmt(x.worksMR)}</td><td><span class="mini-chip warn-chip">${coverageBadgeText(x.worksMR,x.ongoing)}</span></td></tr>`))}
-  const lowHtml=lowRows.length?`<div class="alert-table-wrap"><table class="alert-table"><thead><tr><th>Janpad</th><th>Rank</th><th>Sub Engineer</th><th>Cluster</th><th>Ongoing</th><th>Works with MR</th><th>MR %</th></tr></thead><tbody>${lowRows.join('')}</tbody></table></div>`:`<div class="empty-alert">Current filter में data उपलब्ध नहीं है।</div>`;
-  const dysRows=[];for(const g of dysByJanpad){g.items.forEach((x,i)=>{const gps=x.gps.map(v=>`${esc(v.name)} (${fmt(v.ongoing)})`).join(', ');dysRows.push(`<tr><td>${esc(g.janpad)}</td><td class="rank-cell dys-rank">${i+1}</td><td>${esc(x.engineer)}</td><td>${esc(x.cluster||'—')}</td><td class="dys-count">${fmt(x.count)}</td><td class="gp-table-cell">${gps}</td><td>${fmt(x.ongoing)}</td><td>${fmt(g.totalDys)}</td></tr>`)})}
-  const dysHtml=dysRows.length?`<div class="alert-table-wrap"><table class="alert-table dys-alert-table"><thead><tr><th>Janpad</th><th>Rank</th><th>Sub Engineer</th><th>Cluster</th><th>Dys GP</th><th>GP Name (Ongoing)</th><th>Ongoing</th><th>Janpad Total</th></tr></thead><tbody>${dysRows.join('')}</tbody></table></div>`:`<div class="empty-alert">Current filter में कोई dysfunctional GP नहीं मिला।</div>`;
-  el.innerHTML=`<article class="alert-card warn wide"><div class="alert-head"><span class="alert-icon">⚠</span><div><h3>Per Janpad — 03 Sub Engineer: Lowest MR Coverage</h3><p>हर Janpad के 3 सबसे कम Muster Roll coverage वाले Sub Engineer</p></div></div>${lowHtml}</article><article class="alert-card danger wide"><div class="alert-head"><span class="alert-icon">📍</span><div><h3>Per Janpad — 03 Sub Engineer: Dysfunctional GP Alert</h3><p>हर Janpad में सबसे अधिक Dysfunctional GP वाले 3 Sub Engineer, GP name और Ongoing Work सहित</p></div></div>${dysHtml}</article>`;
+  const lowHtml=lowRows.length?`<div class="alert-table-wrap"><table class="alert-table"><thead><tr><th>Janpad</th><th>Rank</th><th>Sub Engineer</th><th>Cluster(s)</th><th>Ongoing</th><th>Works with MR</th><th>MR %</th></tr></thead><tbody>${lowRows.join('')}</tbody></table></div>`:`<div class="empty-alert">Current filter में data उपलब्ध नहीं है।</div>`;
+  const dysRows=[];for(const g of dysByJanpad){g.items.forEach((x,i)=>{dysRows.push(`<tr><td>${esc(g.janpad)}</td><td class="rank-cell dys-rank">${i+1}</td><td>${esc(x.engineer)}</td><td>${esc(x.cluster||'—')}</td><td>${fmt(x.gps)}</td><td>${fmt(x.gpsProgress)}</td><td class="dys-count">${fmt(x.dysfunctionalGP)}</td><td>${fmt(g.totalDys)}</td></tr>`)})}
+  const dysHtml=dysRows.length?`<div class="alert-table-wrap"><table class="alert-table dys-alert-table"><thead><tr><th>Janpad</th><th>Rank</th><th>Sub Engineer</th><th>Cluster(s)</th><th>Total GP</th><th>GP Progress</th><th>Dys GP</th><th>Janpad Official Dys GP</th></tr></thead><tbody>${dysRows.join('')}</tbody></table></div>`:`<div class="empty-alert">Current filter में कोई dysfunctional GP नहीं मिला।</div>`;
+  el.innerHTML=`<article class="alert-card warn wide"><div class="alert-head"><span class="alert-icon">⚠</span><div><h3>Per Janpad — 03 Sub Engineer: Lowest MR Coverage</h3><p>हर Janpad के 3 सबसे कम Muster Roll coverage वाले Sub Engineer</p></div></div>${lowHtml}</article><article class="alert-card danger wide"><div class="alert-head"><span class="alert-icon">📍</span><div><h3>Per Janpad — 03 Sub Engineer: Dysfunctional GP Alert</h3><p>Official Sheet1 के अनुसार Engineer-wise Dysfunctional GP = Total GP − GP Progress; Janpad total Screen-2 से exact match</p></div></div>${dysHtml}</article>`;
+}
+function dysfunctionalAlertTable(list){
+  return dysfunctionalEngineerData(list).filter(r=>num(r.dysfunctionalGP)>0).map(r=>({janpad:r.janpad,rank:r.rank,engineer:r.engineer,cluster:r.cluster,totalGP:r.gps,gpProgress:r.gpsProgress,dysfunctionalGP:r.dysfunctionalGP,ongoing:r.ongoing,worksMR:r.worksMR,labour:r.labour,mrCoverage:+pct(r.worksMR,r.ongoing).toFixed(1),totalJanpadDys:r.totalJanpadDys}));
+}
+function renderDysfunctionalBucket(list){
+  const data=dysfunctionalAlertTable(list);lastExport=data;
+  $('viewTitle').textContent='Engineer-wise Dysfunctional GP — Official Reconciled';
+  $('viewMeta').textContent=`Dysfunctional GP = Total GP − GP Progress • Janpad totals Official Sheet1 / Screen-2 matched • ${todayDate()}`;
+  let h=`<thead><tr><th>Janpad</th><th>Rank</th><th>Sub Engineer</th><th>Cluster(s)</th><th>Total GP</th><th>GP Progress</th><th>Dysfunctional GP</th><th>Ongoing Works</th><th>Works with MR</th><th>Labour</th><th>MR Coverage</th><th>Janpad Official Dys GP</th></tr></thead><tbody>`;
+  for(const r of data){h+=`<tr>${cell(r.janpad)}${cell(r.rank,true)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.totalGP,true)}${cell(r.gpProgress,true)}${cell(r.dysfunctionalGP,true)}${cell(r.ongoing,true)}${cell(r.worksMR,true)}${cell(r.labour,true)}<td>${r.mrCoverage.toFixed(1)}%</td>${cell(r.totalJanpadDys,true)}</tr>`}
+  if(!data.length)h+=`<tr><td colspan="12" class="empty-table">Current filter में कोई Dysfunctional GP नहीं मिला।</td></tr>`;
+  h+=`</tbody>`;$('reportTable').innerHTML=h;
 }
 function priorityAlertTable(list){
   const out=[];
