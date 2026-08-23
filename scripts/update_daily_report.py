@@ -21,6 +21,47 @@ def janpad(v):
     j=up(v)
     return 'SATNA' if j=='SOHAWAL' else j
 
+
+
+def final_category(name, wt, fy):
+    name=c(name); wt=c(wt); t=(name+' '+wt).lower(); start=name.lower().strip()
+    def has(p): return re.search(p,t,re.I) is not None
+    if re.search(r'\bpmay\b|pmay[- ]?g|pradhan\s*mantri\s*awas',wt,re.I) or re.search(r'\bpmay\b|pmay[- ]?g',name,re.I):
+        return 'PMAY-G'
+    inst=re.compile(r'(school|prathmik|madhyamik|shala|vidyalaya|प्राथमिक|माध्यमिक|शाला|विद्यालय)',re.I)
+    ek=re.compile(r'^(?:ek\s+(?:ma+a?|maa|mother)?\s*ki?\s*)?(?:bagiya|bagia)\b|^ek\s+bagiya\b|^ek\s+(?:maa?|ma|mाँ|मॉ|माॅ)\s+ke\s+naam\b|^(?:एक\s+)?(?:माँ|मा|मॉ|माॅ)\s*(?:की|के\s+नाम)?\s*बगिया\b|^एक\s+बगिया\b',re.I)
+    if c(fy) in ('2025-2026','2026-2027') and ek.search(name) and not inst.search(name): return 'Ek Bagiya'
+    rules=[
+      ('Boundary Wall',r'(?:boundary|boundry|boundri|baundri|baundry|bawandri|bawndri|baudri|baundary|baun?dr[iy]|बाउंड्री|बाउण्डी|बाउण्?डी|बाउणडी|बाउंडरी|बॉउंड्री)'),
+      ('Pulya',r'(?:puliya|pulia|pulya|पुलिया|culvert|cluvert|hume\s*pipe|क्रांस|\bcross\b)'),
+      ('Cement Concrete',r'(?:\bpcc\b|\bcc\b|cement\s*concrete|concrete|nali|नाली|drain|drainage|grey\s*water|greywater|ग्रेवाटर|cover(?:e)?d\s*nali|rural\s*connectivity)'),
+      ('Gravel Road',r'(?:gravel|greval|grewal|graval|grable|ग्रेवल|ग्रेबल|गे्रवल|गे्वल|mitti\s*mur+am|mur+am|murram|मिट्टी\s*मुरुम|मुरुम|sudoor|sudur|सुदूर\s*सड़क|\bbt\s*road\b|बीटी\s*रोड|bitumen)'),
+      ('Water conservation & recharge',r'(?:\br\.?m\.?s\.?\b|आर\.?एम\.?एस|stop\s*dam|stap\s*dam|स्टाप\s*डैम|स्टापडैम|स्टाप\s*डेम|check\s*dam|चेक\s*डैम|ring\s*bund|d\s*frame|d\s*band|percolation|parkulation|पार्कुलेशन|hand\s*pump\s*recharge|handpump\s*recharge|hundpump\s*recharge)'),
+      ('Farm Pond',r'(?:khet\s*talab|खेत\s*तालाब|\bctr\b.*khet\s*talab|farm\s*pond)'),
+      ('Watershed Related Works',r'(?:dug\s*pond|डुग\s*पोंड|डग\s*पोंड|soak\s*pit|soakpit|shokpit|शोकपिट|gabion|\brfr\b|nadi\s*restoration|gully\s*plug|medh\s*bandhan|loose\s*boulder|new\s*talab)'),
+      ('Dug Well Recharge',r'(?:samuday(?:i|ik|ak)\s*koop|community\s*well|सामुदायिक\s*कूप|dug\s*well\s*recharge|dugwell\s*recharge)'),
+      ('Gap Filling in Plantation',r'(?:charagah|charagaah|chara\s*gah|chara\s*gaah|चारागाह|चारगाह|चारा\s*गाह|posh?an\s*vatika|vasudha|vashudha|bsudha|vassudha|वसुधा|vriksharopan|vraksha\s*ropan|bracharopan|braksharopan|वृक्षारोपण|व़क्षारोपण|वुक्षारोपण|faloudd?yan|faloudyan|फलोउद्यान|फलोउद्ययान|plantation|land\s*development)'),
+      ('Crematorium',r'(?:shanti\s*dham|santi\s*dham|santhi\s*dham|shathi\s*dham|shanti\s*daham|shantidham|shantidam|mukti\s*dham|muktidham|मुक्तिधाम|शांति\s*धाम|शांती\s*धाम|शान्ति\s*धाम|शान्तिधाम)'),
+      ('Panchayat and Community Hall',r'(?:panchayat\s*bhavan|panchyat\s*bhawan|panchyat\s*bhavan|naveen\s*panchayat|mangal\s*bhawan|samudai?k\s*bhawan|samudayik\s*bhavan|samudaik\s*bhavan|sabhagar\s*nirman|kaushal|कौशल|मंगल\s*भवन|पंचायत\s*भवन|सामुदायिक\s*भवन)'),
+      ('SBM Works',r'(?:samudai?k\s*shauchalay|samudayik\s*shauchalay|सामुदायिक\s*शौचालय|segregation|segragation|kachara|karchra|kooda|kuda|कचरा|कूड़ा|\bnadep\b)'),
+      ('Play Field',r'(?:play\s*ground|playground|khel\s*maidan|खेल\s*मैदान|खेल\s*का\s*मैदान|खेलो\s*के\s*मैदान)'),
+    ]
+    for cat,pat in rules:
+        if has(pat): return cat
+    ang=re.compile(r'^(?:a+nganwadi|a+ganwadi|a+anganbadi|a+ganbadi|anganbadi|aganbadi|आंगनवाडी|आंगनवाड़ी|आंगनवाड़ी|आंगनबाडी|आंगनबाड़ी|आंगनबाड़ी|आगनबाडी|आगनबाड़ी|आगनबाड़ी|आगनवाडी|आगनवाड़ी|आगनवाड़ी|आगवाड़ी|आगवाडी|ऑगनबाडी|ऑगनबाड़ी|ऑगनबाड़ी|ऑगनवाडी|ऑगनवाड़ी|ऑगनवाड़ी|अांगनवाडी|आंंगनवाडी)\b',re.I)
+    if ang.search(start) and has(r'(?:bhavan|bhawan|nirman|kendra|sewa\s*kendra|शेष\s*कार्य|कार्य|भवन|निर्माण|केंद्र)'): return 'Anganwadi'
+    if has(r'(?:kapil\s*dhara|kapildhara|कपिलधारा|open\s*dug\s*well|open\s*dugwell)'): return 'Kapildhara'
+    if has(r'(?:cattle\s*shed|goat\s*shelter|poultry|pasu\s*shed|pashu\s*shed|पशु\s*शेड)'): return 'Poultry Cattle and Goat Shelter'
+    if has(r'(?:micro\s*irrigation|सूक्ष्म\s*सिंचाई)'): return 'Irrigation infrastructure'
+    if has(r'(?:uchit\s*mul|उचित\s*मूल|\bpds\b|food\s*grain|foodgrain|khad[hy]*yan|खाद्यान|खय्दायन|godam|gaushala|gau\s*shala|chabut|चबुत|paver|pever|pewar|retaining\s*wall|retarning\s*wall|ghat\s*nirman|bus\s*stop|pani\s*tanki|water\s*tank|kitchen\s*shed|laboratory|प्रयोगशाला|sub\s*health|उप\s*स्वास्थ्य|rangmanch|park\b|paper)'): return 'Other Works'
+    rw=wt.lower()
+    fallback=[
+      ('Crematorium',r'crematorium'),('Gap Filling in Plantation',r'plantation|chara\s*gaah'),('Water conservation & recharge',r'check\s*dam|percolation'),
+      ('Farm Pond',r'khet\s*talab|farm\s*pond'),('Watershed Related Works',r'dug\s*pond|soak\s*pit|gully\s*plug'),('Play Field',r'play\s*ground'),
+      ('Cement Concrete',r'pcc|coverd\s*nali'),('Pulya',r'puliya|pulya'),('Boundary Wall',r'boundary'),('Poultry Cattle and Goat Shelter',r'cattle\s*shed'),('SBM Works',r'nadep|segregation|\bcsc\b'),('Water conservation & recharge',r'old\s*water|amrit\s*sarovar|roof\s*top'),('Watershed Related Works',r'contour\s*trench|loose\s*bolder|loose\s*boulder|nala\s*trench'),('Panchayat and Community Hall',r'panchayat.*community.*bhawan|community.*bhawan'),('Other Works',r'other')]
+    for cat,pat in fallback:
+        if re.search(pat,rw,re.I): return cat
+    return wt or 'Other Works'
 def obtain():
     if URL:
         fd,name=tempfile.mkstemp(suffix='.xlsx'); os.close(fd)
@@ -94,10 +135,10 @@ def parse(path):
         z=wm.setdefault(key,{'janpad':jan,'engineer':eng,'cluster':cl,'panchayat':gp,'workTotal':0,'pmayOngoing':0,'ekOngoing':0,'currentFYActive':0})
         z['workTotal']+=1
         if 'pmay' in wt.lower(): z['pmayOngoing']+=1
-        if wt.lower()=='ek bagiya' and fy in ('2025-2026','2026-2027') and not inst.search(name): z['ekOngoing']+=1
+        if final_category(name,wt,fy)=='Ek Bagiya': z['ekOngoing']+=1
         if n(r[21])>0: z['currentFYActive']+=1
 
-        category=wt or 'Unspecified'
+        category=final_category(name,wt,fy)
         sanctioned=n(r[11]) if len(r)>11 else (n(r[9])+n(r[10]))
         booked=(n(r[16])+n(r[17])) if len(r)>17 else 0
         ep=(booked*100/sanctioned) if sanctioned>0 else 0

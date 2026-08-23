@@ -42,3 +42,7 @@ If this secret is not configured, the workflow uses `incoming/Daily Report.xlsx`
 - Buckets: **0%**, **1%-25%**, **26%-60%**, **61%-75%**, **76%-90%**, **More than 90%**.
 - Category and expenditure views respect District, Janpad, Engineer and Cluster filters.
 - 0% expenditure works are visually highlighted for priority review.
+
+
+## V16 Final Work Category Mapping
+Category-wise Work now uses the established Final Work Category rules on VBG Work Name + Work Type, not the raw VBG Work Type. Priority rules include strict Ek Bagiya, Boundary Wall, Pulya, Cement Concrete, Gravel Road, Water conservation & recharge, Farm Pond, Watershed Related Works, Dug Well Recharge, Plantation, Crematorium, Panchayat/Community Hall, SBM, Play Field, Anganwadi, Kapildhara and other established categories.
