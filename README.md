@@ -59,3 +59,12 @@ Engineer-wise GP, GP Progress, Ongoing Works, Works with MR, Labour and Muster R
 
 
 V20 correction: Engineer-wise Dysfunctional GP now uses actual RepDay GP ownership and raw engineer dysfunctional pattern; only Janpad dysfunctional total is reconciled to Official Sheet1. Removed legacy duplicate JS functions that were overriding the corrected table.
+
+
+V21 update: Added top tab “Ongoing Work All Summary” using current VBG ongoing work-level data, grouped by Janpad + Engineer + Cluster with PMAY-G, Ek Bagiya, Current FY Active, expenditure buckets, sanction/booked/remaining and Exp %. Added the three official VB-G RAM G source links in the dashboard. Note: the dynamic_work_details payload can be session/time-sensitive; current browser upload remains the reliable fallback when the government portal blocks direct fetch.
+
+
+## V22 update
+- Added **Ongoing Works Sheet** tab with 16,214 row-level ongoing works from dynamic_work_details/VBG export.
+- Added Janpad/Engineer/Cluster filtering and work-level Sanction, Booked, Exp %, Mandays.
+- Added packaged downloadable CSV at `data/Ongoing_Works_dynamic_work_details_Janpad_Wise_23-08-2026.csv`.
