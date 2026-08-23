@@ -1,4 +1,4 @@
-# Daily Report Portal V5 Final Polished
+# Daily Report Portal V7 Official KPI Data Fix
 
 Final polished portal package for Satna/Maihar Daily Report.
 
@@ -15,3 +15,9 @@ Final polished portal package for Satna/Maihar Daily Report.
 
 ## Hosting
 Upload all files to a GitHub Pages repository. The portal is static-hosting friendly.
+
+
+## V7 Official KPI fix
+- Official Janpad Daily tab top KPI cards now use Sheet1 official totals, so they match the TOTAL row.
+- Default all-district values for 23-08-2026 are expected to show: 695 GP, 542 GP progress/muster GP, 16,873 ongoing, 1,557 works with MR, 2,904 labour, 153 dysfunctional GP.
+- Engineer/District/GP tabs continue to use RepDay values because those tabs require engineer/GP-level breakdown.
