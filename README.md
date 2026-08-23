@@ -22,3 +22,9 @@ Value: a direct-download URL that always returns the latest `Daily Report.xlsx`.
 Then go to Actions → Daily Report Auto Update → Run workflow once.
 
 If this secret is not configured, the workflow uses `incoming/Daily Report.xlsx`; that fallback is only static.
+
+## 23-08-2026 Screen-2 matching fix
+- Dashboard top daily metrics now use the lower `Sheet1` table headed `Total No. of Gram Panchayats (GPs)` (the Screen-2 source) for Total GP, GPs with Progress, Labour Engagement, Works with MR, Workers without e-KYC, and Muster Rolls.
+- Total Ongoing Works continues to use the upper official `Sheet1` work-load table because Screen 2 does not contain that total.
+- `SOHAWAL` from RepDay is normalized to `SATNA` so Janpad filters align with the official Screen-2 label.
+- Engineer/Cluster/GP drill-down still uses RepDay, as intended.
