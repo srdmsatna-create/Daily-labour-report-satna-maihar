@@ -46,3 +46,13 @@ If this secret is not configured, the workflow uses `incoming/Daily Report.xlsx`
 
 ## V16 Final Work Category Mapping
 Category-wise Work now uses the established Final Work Category rules on VBG Work Name + Work Type, not the raw VBG Work Type. Priority rules include strict Ek Bagiya, Boundary Wall, Pulya, Cement Concrete, Gravel Road, Water conservation & recharge, Farm Pond, Watershed Related Works, Dug Well Recharge, Plantation, Crematorium, Panchayat/Community Hall, SBM, Play Field, Anganwadi, Kapildhara and other established categories.
+
+
+## V17 Engineer-wise correction
+- Engineer-wise tab अब Janpad + Engineer / Upyantri पर consolidate होता है।
+- एक Engineer के multiple clusters एक ही row में `Cluster(s)` के रूप में दिखते हैं।
+- Duplicate engineer rows हटाए गए हैं; metrics engineer level पर sum होते हैं।
+
+
+## V18 Engineer-wise official reconciliation
+Engineer-wise GP, GP Progress, Ongoing Works, Works with MR, Labour and Muster Rolls are integer-apportioned within each Janpad using RepDay as the distribution basis so that each Janpad and district total exactly matches Sheet1 / Screen 2. District targets: GP 695, Progress 542, Ongoing 16,873, Works with MR 1,557, Labour 2,904, Muster Rolls 1,593.
