@@ -56,3 +56,6 @@ Category-wise Work now uses the established Final Work Category rules on VBG Wor
 
 ## V18 Engineer-wise official reconciliation
 Engineer-wise GP, GP Progress, Ongoing Works, Works with MR, Labour and Muster Rolls are integer-apportioned within each Janpad using RepDay as the distribution basis so that each Janpad and district total exactly matches Sheet1 / Screen 2. District targets: GP 695, Progress 542, Ongoing 16,873, Works with MR 1,557, Labour 2,904, Muster Rolls 1,593.
+
+
+V20 correction: Engineer-wise Dysfunctional GP now uses actual RepDay GP ownership and raw engineer dysfunctional pattern; only Janpad dysfunctional total is reconciled to Official Sheet1. Removed legacy duplicate JS functions that were overriding the corrected table.

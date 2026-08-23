@@ -17,19 +17,53 @@ function mixMap(){const m=new Map();for(const r of workmix){const k=[r.janpad,r.
 function apportionExact(group,key,target,fallbackKey='gps'){target=Math.max(0,Math.round(num(target)));if(!group.length)return;const vals=group.map(r=>Math.max(0,num(r[key]))),sumv=vals.reduce((a,b)=>a+b,0);let weights=vals;if(sumv<=0){weights=group.map(r=>Math.max(0,num(r[fallbackKey])));if(weights.reduce((a,b)=>a+b,0)<=0)weights=group.map(()=>1)}const sw=weights.reduce((a,b)=>a+b,0)||1;const raw=weights.map(w=>target*w/sw),base=raw.map(Math.floor);let left=target-base.reduce((a,b)=>a+b,0);const order=raw.map((v,i)=>({i,frac:v-base[i],name:clean(group[i].engineer)})).sort((a,b)=>b.frac-a.frac||a.name.localeCompare(b.name,'hi'));for(let n=0;n<left;n++)base[order[n%order.length].i]++;group.forEach((r,i)=>r[key]=base[i])}
 function engineerData(list){const mm=mixMap();const enriched=list.map(r=>{const x=mm.get([r.janpad,r.engineer,r.cluster,r.panchayat].map(clean).join('¦'))||{};return {...r,pmayOngoing:num(x.pmayOngoing),ekOngoing:num(x.ekOngoing),currentFYActive:num(x.currentFYActive)}});const metrics=['gps','gpsProgress','ongoing','worksMR','labour','mrs','noEkyc','pmayOngoing','ekOngoing','currentFYActive'];const out=aggregate(enriched,['janpad','engineer'],metrics);const cm=new Map();for(const r of enriched){const k=[clean(r.janpad),clean(r.engineer)].join('¦');if(!cm.has(k))cm.set(k,new Set());if(clean(r.cluster))cm.get(k).add(clean(r.cluster));}for(const r of out){const k=[clean(r.janpad),clean(r.engineer)].join('¦');r.cluster=[...(cm.get(k)||[])].sort((a,b)=>a.localeCompare(b,'hi')).join(', ');}/* Reconcile Engineer-wise daily columns to official Sheet1 Janpad totals. RepDay remains the distribution basis, but each Janpad now sums exactly to Screen-2 / Sheet1. */const dmap=new Map(daily.map(r=>[normJanpad(r.janpad),r])),omap=new Map(official.map(r=>[normJanpad(r.janpad),r]));for(const j of [...new Set(out.map(r=>normJanpad(r.janpad)))]){const g=out.filter(r=>normJanpad(r.janpad)===j),d=dmap.get(j)||{},o=omap.get(j)||{};apportionExact(g,'gps',d.totalGP,'gps');apportionExact(g,'gpsProgress',d.gpsProgress,'gps');apportionExact(g,'labour',d.labour,'gps');apportionExact(g,'worksMR',d.worksMR,'ongoing');apportionExact(g,'mrs',d.mrs,'worksMR');apportionExact(g,'ongoing',o.ongoingAll,'gps')}return out}
 function coverageBadgeText(worksMR,ongoing){return `${pct(worksMR,ongoing).toFixed(1)}%`}
+function apportionCappedExact(group,key,target,weightKey,maxKey){
+  target=Math.max(0,Math.round(num(target)));if(!group.length)return;
+  const caps=group.map(r=>Math.max(0,Math.round(num(r[maxKey]))));
+  target=Math.min(target,caps.reduce((a,b)=>a+b,0));
+  let weights=group.map(r=>Math.max(0,num(r[weightKey])));
+  if(weights.reduce((a,b)=>a+b,0)<=0){weights=group.map(r=>Math.max(0,num(r[maxKey])-num(r.gpsProgressRaw||0)));}
+  if(weights.reduce((a,b)=>a+b,0)<=0)weights=group.map(r=>Math.max(0,num(r[maxKey])));
+  if(weights.reduce((a,b)=>a+b,0)<=0)weights=group.map(()=>1);
+  const out=group.map(()=>0);let remaining=target;
+  while(remaining>0){
+    const eligible=group.map((r,i)=>i).filter(i=>out[i]<caps[i]);if(!eligible.length)break;
+    const sw=eligible.reduce((a,i)=>a+weights[i],0)||eligible.length;
+    const raw=eligible.map(i=>({i,v:remaining*((weights[i]||1)/sw)}));
+    let placed=0;
+    for(const q of raw){const room=caps[q.i]-out[q.i],add=Math.min(room,Math.floor(q.v));if(add>0){out[q.i]+=add;placed+=add;}}
+    remaining-=placed;if(remaining<=0)break;
+    const order=raw.map(q=>({i:q.i,frac:q.v-Math.floor(q.v),w:weights[q.i],name:clean(group[q.i].engineer)})).filter(q=>out[q.i]<caps[q.i]).sort((a,b)=>b.frac-a.frac||b.w-a.w||a.name.localeCompare(b.name,'hi'));
+    if(!order.length)break;
+    for(const q of order){if(remaining<=0)break;if(out[q.i]<caps[q.i]){out[q.i]++;remaining--;}}
+  }
+  group.forEach((r,i)=>r[key]=out[i]);
+}
 function dysfunctionalEngineerData(list){
-  /* Engineer-wise Dysfunctional GP is reconciled from Official Sheet1:
-     Dysfunctional GP = Total GP - GP Progress. engineerData() already apportions
-     GP and GP Progress so every Janpad exactly matches Screen-2 / Sheet1. */
-  const eng=engineerData(list).filter(r=>num(r.gps)>0);
-  const janpads=[...new Set(eng.map(r=>clean(r.janpad)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'hi'));
-  const out=[];
+  /* Correct engineer-wise basis:
+     1) GP ownership comes directly from RepDay GP rows (no GP apportionment).
+     2) Raw dysfunctional basis = each engineer's RepDay (GP - GP Progress).
+     3) Only the Janpad dysfunctional TOTAL is reconciled to official Sheet1.
+     4) Official dysfunctional total is distributed in the same raw engineer pattern,
+        capped by that engineer's actual GP count. Then GP Progress = GP - Dysfunctional.
+     This avoids separately apportioning GP and GP Progress, which distorted engineer-wise results. */
+  const base=aggregate(list,['janpad','engineer'],['gps','gpsProgress','ongoing','worksMR','labour','mrs']);
+  const cm=new Map();for(const r of list){const k=[clean(r.janpad),clean(r.engineer)].join('¦');if(!cm.has(k))cm.set(k,new Set());if(clean(r.cluster))cm.get(k).add(clean(r.cluster));}
+  for(const r of base){const k=[clean(r.janpad),clean(r.engineer)].join('¦');r.cluster=[...(cm.get(k)||[])].sort((a,b)=>a.localeCompare(b,'hi')).join(', ');r.gpsProgressRaw=num(r.gpsProgress);r.rawDys=Math.max(0,num(r.gps)-num(r.gpsProgress));}
+  const officialEng=engineerData(list);const em=new Map(officialEng.map(r=>[[clean(r.janpad),clean(r.engineer)].join('¦'),r]));
+  const out=[];const janpads=[...new Set(base.map(r=>clean(r.janpad)).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'hi'));
   for(const janpad of janpads){
-    const group=eng.filter(r=>clean(r.janpad)===janpad).map(r=>({...r,dysfunctionalGP:Math.max(0,num(r.gps)-num(r.gpsProgress))}));
+    const group=base.filter(r=>clean(r.janpad)===janpad);
     const off=official.find(r=>normJanpad(r.janpad)===normJanpad(janpad));
-    const janpadTotal=off?num(off.dysfunctionalGP):group.reduce((a,r)=>a+num(r.dysfunctionalGP),0);
-    group.sort((a,b)=>num(b.dysfunctionalGP)-num(a.dysfunctionalGP)||pct(a.worksMR,a.ongoing)-pct(b.worksMR,b.ongoing)||num(b.ongoing)-num(a.ongoing)||clean(a.engineer).localeCompare(clean(b.engineer),'hi'));
-    group.forEach((r,i)=>out.push({...r,rank:i+1,totalJanpadDys:janpadTotal}));
+    const janpadTotal=off?num(off.dysfunctionalGP):group.reduce((a,r)=>a+num(r.rawDys),0);
+    apportionCappedExact(group,'dysfunctionalGP',janpadTotal,'rawDys','gps');
+    for(const r of group){
+      r.gpsProgress=Math.max(0,num(r.gps)-num(r.dysfunctionalGP));
+      const e=em.get([clean(r.janpad),clean(r.engineer)].join('¦'))||{};
+      r.ongoing=num(e.ongoing);r.worksMR=num(e.worksMR);r.labour=num(e.labour);r.mrs=num(e.mrs);r.totalJanpadDys=janpadTotal;
+    }
+    group.sort((a,b)=>num(b.dysfunctionalGP)-num(a.dysfunctionalGP)||num(b.rawDys)-num(a.rawDys)||clean(a.engineer).localeCompare(clean(b.engineer),'hi'));
+    group.forEach((r,i)=>out.push({...r,rank:i+1}));
   }
   return out;
 }
@@ -64,8 +98,8 @@ function dysfunctionalAlertTable(list){
 }
 function renderDysfunctionalBucket(list){
   const data=dysfunctionalAlertTable(list);lastExport=data;
-  $('viewTitle').textContent='Engineer-wise Dysfunctional GP — Official Reconciled';
-  $('viewMeta').textContent=`Dysfunctional GP = Total GP − GP Progress • Janpad totals Official Sheet1 / Screen-2 matched • ${todayDate()}`;
+  $('viewTitle').textContent='Engineer-wise Dysfunctional GP — Corrected';
+  $('viewMeta').textContent=`Engineer GP ownership = RepDay • Dysfunctional distribution = raw engineer pattern • Janpad total = Official Sheet1 • ${todayDate()}`;
   let h=`<thead><tr><th>Janpad</th><th>Rank</th><th>Sub Engineer</th><th>Cluster(s)</th><th>Total GP</th><th>GP Progress</th><th>Dysfunctional GP</th><th>Ongoing Works</th><th>Works with MR</th><th>Labour</th><th>MR Coverage</th><th>Janpad Official Dys GP</th></tr></thead><tbody>`;
   for(const r of data){h+=`<tr>${cell(r.janpad)}${cell(r.rank,true)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.totalGP,true)}${cell(r.gpProgress,true)}${cell(r.dysfunctionalGP,true)}${cell(r.ongoing,true)}${cell(r.worksMR,true)}${cell(r.labour,true)}<td>${r.mrCoverage.toFixed(1)}%</td>${cell(r.totalJanpadDys,true)}</tr>`}
   if(!data.length)h+=`<tr><td colspan="12" class="empty-table">Current filter में कोई Dysfunctional GP नहीं मिला।</td></tr>`;
@@ -97,8 +131,6 @@ function renderPriorityAlerts(list){
   if(!data.length)h+=`<tr><td colspan="11" class="empty-table">Current filter में कोई Priority Alert नहीं मिला।</td></tr>`;
   h+='</tbody>';$('reportTable').innerHTML=h;
 }
-function dysfunctionalAlertTable(list){const {dysByJanpad}=alertInsights(list);const flat=[];for(const group of dysByJanpad){group.items.forEach((x,i)=>flat.push({janpad:group.janpad,rank:i+1,engineer:x.engineer,cluster:x.cluster,dysfunctionalGP:x.count,gpNames:x.gps.map(v=>`${v.name} (${fmt(v.ongoing)})`).join(', '),ongoing:x.ongoing,totalJanpadDys:group.totalDys}))}return flat}
-function renderDysfunctionalBucket(list){const data=dysfunctionalAlertTable(list);lastExport=data;$('viewTitle').textContent='Per Janpad — 03 Sub Engineer: Dysfunctional GP Alert';$('viewMeta').textContent=`हर Janpad के Top 3 Sub Engineer • ${todayDate()}`;let h=`<thead><tr><th>Janpad</th><th>Rank</th><th>Sub Engineer</th><th>Cluster</th><th>Dysfunctional GP</th><th>GP Name (Ongoing Work)</th><th>Ongoing Works</th><th>Janpad Total Dys GP</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(r.janpad)}${cell(r.rank,true)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.dysfunctionalGP,true)}<td class="gp-name-cell">${esc(r.gpNames)}</td>${cell(r.ongoing,true)}${cell(r.totalJanpadDys,true)}</tr>`}if(!data.length)h+=`<tr><td colspan="8" class="empty-table">Current filter में कोई Dysfunctional GP नहीं मिला।</td></tr>`;h+=`</tbody>`;$('reportTable').innerHTML=h}
 function officialFiltered(){let a=official;if($('districtFilter').value!=='ALL')a=a.filter(r=>districtOf(r.janpad)===$('districtFilter').value);if($('janpadFilter').value!=='ALL')a=a.filter(r=>r.janpad===$('janpadFilter').value);return a}
 
 function finalWorkCategory(name,wt,fy){
