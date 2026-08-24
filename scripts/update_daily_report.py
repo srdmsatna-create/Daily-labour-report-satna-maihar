@@ -99,7 +99,7 @@ def parse(path):
         if idx>=len(svals): continue
         r=svals[idx]
         if len(r)<20 or not c(r[1]): continue
-        official.append({'janpad':janpad(r[1]),'totalGP':n(r[2]),'musterGP':n(r[3]),'dysfunctionalGP':n(r[4]),'labourAll':n(r[5]),'mrAll':n(r[6]),'ongoingAll':n(r[7]),'labourIndividual':n(r[9]),'mrIndividual':n(r[10]),'labourCommunity':n(r[11]),'mrCommunity':n(r[12]),'pmayOngoing':n(r[14]),'pmayMR':n(r[15]),'ekLabour':n(r[17]),'ekOngoing':n(r[18]),'ekMR':n(r[19])})
+        official.append({'janpad':janpad(r[1]),'totalGP':n(r[2]),'musterGP':n(r[3]),'dysfunctionalGP':n(r[4]),'labourAll':n(r[6]),'mrAll':n(r[7]),'ongoingAll':n(r[8]),'labourIndividual':n(r[10]),'mrIndividual':n(r[11]),'labourCommunity':n(r[12]),'mrCommunity':n(r[13]),'pmayOngoing':n(r[15]),'pmayMR':n(r[16]),'ekLabour':n(r[18]),'ekOngoing':n(r[19]),'ekMR':n(r[20])})
 
     # Sheet1 lower embedded table = Screen 2 authority.
     # Columns: GP, GP with progress, labour, works with MR, no-eKYC, Muster Rolls.
@@ -113,7 +113,7 @@ def parse(path):
             if len(r)<8: continue
             jan=janpad(r[1])
             if jan not in VALID_JANPADS: continue
-            daily.append({'janpad':jan,'totalGP':n(r[2]),'gpsProgress':n(r[3]),'labour':n(r[4]),'worksMR':n(r[5]),'noEkyc':n(r[6]),'mrs':n(r[7])})
+            daily.append({'janpad':jan,'totalGP':n(r[2]),'gpsProgress':n(r[3]),'labour':n(r[4]),'worksMR':n(r[6]),'noEkyc':n(r[7]),'mrs':n(r[8])})
     if len(daily)!=8:
         raise SystemExit(f'Screen 2 table parse failed: expected 8 Janpads, got {len(daily)}')
 

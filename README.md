@@ -68,3 +68,10 @@ V21 update: Added top tab “Ongoing Work All Summary” using current VBG ongoi
 - Added **Ongoing Works Sheet** tab with 16,214 row-level ongoing works from dynamic_work_details/VBG export.
 - Added Janpad/Engineer/Cluster filtering and work-level Sanction, Booked, Exp %, Mandays.
 - Added packaged downloadable CSV at `data/Ongoing_Works_dynamic_work_details_Janpad_Wise_23-08-2026.csv`.
+
+
+## V24 — 24-08-2026 Screen-2 / Sheet1 mapping fix
+- Fixed lower Sheet1 embedded Screen-2 columns: Works with MR = column G, Workers without e-KYC = H, Muster Rolls = I.
+- Fixed upper official Sheet1 metrics after the blank F column: Labour = G, Works with MR = H, Ongoing Works = I, and downstream category columns shifted correctly.
+- Verified current workbook totals: GP 695, GP Progress 533, Labour 2,711, Works with MR 1,521, Muster Rolls 1,548, Official Ongoing Works 16,873.
+- Bundled `incoming/Daily Report.xlsx` is the 24-08-2026 corrected workbook.
