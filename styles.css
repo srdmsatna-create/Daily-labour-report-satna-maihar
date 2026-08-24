@@ -247,7 +247,7 @@ body.print-landscape .report-table.official-grid th,body.print-landscape .report
 .dys-detail-cell{min-width:0!important;width:auto!important}.dys-gp-line{display:grid!important;grid-template-columns:minmax(120px,1fr) auto auto!important;gap:6px!important;align-items:center!important;padding:3px 5px!important;margin-bottom:3px!important;border:1px solid #d9e3ef!important;border-radius:6px!important;background:#f8fbff!important}.dys-gp-line b{color:#b42318!important;white-space:normal!important;overflow-wrap:anywhere!important}.dys-gp-line span{white-space:nowrap!important;font-size:10.5px!important;color:#334e68!important}.district-dys-card{grid-column:auto!important}
 @media(max-width:1000px){.dys-gp-line{grid-template-columns:1fr!important}.dys-gp-line span{white-space:normal!important}}
 
-/* ===== V30: MAIN ENGINEER DYSFUNCTIONAL TABLE — ALL COLUMNS FIT ===== */
+/* ===== V30: MAIN ENGINEER DYSFUNCTIONAL TABLE - ALL COLUMNS FIT ===== */
 .build-badge{
   position:absolute;right:14px;top:6px;z-index:20;
   padding:4px 9px;border-radius:999px;
