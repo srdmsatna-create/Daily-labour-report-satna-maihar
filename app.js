@@ -318,10 +318,22 @@ function updatePortalHeading(){
     if(t)t.textContent='सभी 8 जनपद';
     if(sd)sd.textContent='District Maihar + District Satna';
   }
+  updateQuickScope();
+  updatePremiumHero();
   document.querySelectorAll('[data-janpad-home]').forEach(b=>{
     const v=b.dataset.janpadHome;
     b.classList.toggle('active',v===j || (v==='ALL'&&j==='ALL'&&d==='ALL'));
   });
+}
+
+function updateQuickScope(){
+  const j=$('janpadFilter')?.value||'ALL';
+  const d=$('districtFilter')?.value||'ALL';
+  const qd=$('quickDistrictName'), qs=$('quickJanpadScope');
+  if(!qd||!qs) return;
+  if(j!=='ALL'){ qd.textContent = districtOf(j)==='MAIHAR' ? 'DISTRICT MAIHAR' : 'DISTRICT SATNA'; qs.textContent = j; }
+  else if(d!=='ALL'){ qd.textContent = d==='MAIHAR' ? 'DISTRICT MAIHAR' : 'DISTRICT SATNA'; qs.textContent = d==='MAIHAR' ? '3 Janpad' : '5 Janpad'; }
+  else { qd.textContent='SATNA + MAIHAR'; qs.textContent='8 Janpad'; }
 }
 function setPortalJanpad(j,scroll=true){
   j=normJanpad(j||'ALL');
@@ -370,7 +382,7 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   updatePortalHeading();
   render();
 }));$('resetBtn').addEventListener('click',()=>{setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='ongoingdetails'){const o=$('printOrientation');if(o)o.value='portrait';}render()}));
-$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});refreshFilters();initJanpadPortal();render();updateAutoStatus();
+$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});refreshFilters();initJanpadPortal();initPremiumUI();render();updateAutoStatus();
 // V6: Font size and Portrait/Landscape print controls
 (function(){
   let fontScale=1;
@@ -398,3 +410,34 @@ $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const key
   }
   setPrintOrientation();applyScale();
 })();
+
+
+function updatePremiumHero(){
+  const j=$('janpadFilter')?.value||'ALL';
+  const d=$('districtFilter')?.value||'ALL';
+  const ht=$('heroJanpadTitle'), hs=$('heroJanpadSub');
+  if(!ht||!hs)return;
+  if(j!=='ALL'){
+    const dist=districtOf(j), lab=portalJanpadLabel(j);
+    ht.textContent=`${j} • ${dist}`;
+    hs.textContent=`जनपद पंचायत ${lab} • Daily Monitoring • Official Source`;
+    document.body.dataset.district=dist;
+  }else if(d!=='ALL'){
+    ht.textContent=`DISTRICT ${d} • ${d==='MAIHAR'?'3':'5'} JANPAD`;
+    hs.textContent=`${d==='MAIHAR'?'Amarpatan • Maihar • Ramnagar':'Majhgawan • Nagod • Rampur Baghelan • Satna • Unchahara'}`;
+    document.body.dataset.district=d;
+  }else{
+    ht.textContent='SATNA + MAIHAR • 8 JANPAD';
+    hs.textContent='Official Daily Monitoring • Engineer • Cluster • Gram Panchayat';
+    document.body.dataset.district='ALL';
+  }
+}
+function initPremiumUI(){
+  $('heroDataBtn')?.addEventListener('click',()=>document.querySelector('.kpis')?.scrollIntoView({behavior:'smooth',block:'start'}));
+  document.querySelectorAll('[data-review-view]').forEach(b=>b.addEventListener('click',()=>{
+    const v=b.dataset.reviewView;
+    document.querySelector(`.tab[data-view="${v}"]`)?.click();
+    document.querySelector('.report-card')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+  updatePremiumHero();
+}

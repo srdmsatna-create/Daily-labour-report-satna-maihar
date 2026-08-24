@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=36"></head>
+<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=38"></head>
 <body>
 <header class="gov-top">
   <div class="gov-strip">
@@ -19,6 +19,34 @@
 </header>
 <main class="shell">
 
+<section class="premium-hero">
+  <div class="hero-left">
+    <div class="hero-badges">
+      <span class="hero-badge gold">VB-G RAM G 2026-27</span>
+      <span class="hero-badge blue">District Monitoring</span>
+    </div>
+    <h2 id="heroJanpadTitle">SATNA + MAIHAR • 8 JANPAD</h2>
+    <p id="heroJanpadSub">Official Daily Monitoring • Engineer • Cluster • Gram Panchayat</p>
+    <div class="hero-actions no-print">
+      <button type="button" data-janpad-home="ALL" class="hero-primary">सभी 8 जनपद</button>
+      <button type="button" id="heroDataBtn" class="hero-secondary">Daily Report देखें</button>
+    </div>
+  </div>
+  <div class="hero-side">
+    <div class="hero-seal">
+      <span class="seal-top">मध्यप्रदेश</span>
+      <strong>SRDM</strong>
+      <span class="seal-bottom">SATNA • MAIHAR</span>
+    </div>
+    <div class="hero-update">
+      <span>AUTO UPDATE</span>
+      <b>07:00 AM</b>
+      <b>08:00 AM</b>
+    </div>
+  </div>
+</section>
+
+
 <section class="janpad-home no-print" id="janpadHome">
   <div class="janpad-home-head">
     <div>
@@ -29,29 +57,29 @@
     <button class="all-janpad-btn" type="button" data-janpad-home="ALL">सभी 8 जनपद</button>
   </div>
 
-  <div class="district-block maihar-block">
+  <div class="district-block maihar-block district-theme-maihar">
     <div class="district-ribbon">
       <div><b>DISTRICT MAIHAR</b><span>3 JANPAD</span></div>
       <span class="district-dot">3</span>
     </div>
     <div class="janpad-cards">
-      <button class="janpad-card" data-janpad-home="AMARPATAN"><span class="jp-icon">A</span><span><b>AMARPATAN</b><small>जनपद पंचायत अमरपाटन</small></span><em>Open →</em></button>
-      <button class="janpad-card" data-janpad-home="MAIHAR"><span class="jp-icon">M</span><span><b>MAIHAR</b><small>जनपद पंचायत मैहर</small></span><em>Open →</em></button>
-      <button class="janpad-card" data-janpad-home="RAMNAGAR"><span class="jp-icon">R</span><span><b>RAMNAGAR</b><small>जनपद पंचायत रामनगर</small></span><em>Open →</em></button>
+      <button class="janpad-card" data-janpad-home="AMARPATAN"><span class="jp-icon">A</span><span class="jp-meta"><b>AMARPATAN</b><small>जनपद पंचायत अमरपाटन</small></span><span class="jp-open">Open</span></button>
+      <button class="janpad-card" data-janpad-home="MAIHAR"><span class="jp-icon">M</span><span class="jp-meta"><b>MAIHAR</b><small>जनपद पंचायत मैहर</small></span><span class="jp-open">Open</span></button>
+      <button class="janpad-card" data-janpad-home="RAMNAGAR"><span class="jp-icon">R</span><span class="jp-meta"><b>RAMNAGAR</b><small>जनपद पंचायत रामनगर</small></span><span class="jp-open">Open</span></button>
     </div>
   </div>
 
-  <div class="district-block satna-block">
+  <div class="district-block satna-block district-theme-satna">
     <div class="district-ribbon">
       <div><b>DISTRICT SATNA</b><span>5 JANPAD</span></div>
       <span class="district-dot">5</span>
     </div>
     <div class="janpad-cards five">
-      <button class="janpad-card" data-janpad-home="MAJHGAWAN"><span class="jp-icon">M</span><span><b>MAJHGAWAN</b><small>जनपद पंचायत मझगवां</small></span><em>Open →</em></button>
-      <button class="janpad-card" data-janpad-home="NAGOD"><span class="jp-icon">N</span><span><b>NAGOD</b><small>जनपद पंचायत नागौद</small></span><em>Open →</em></button>
-      <button class="janpad-card" data-janpad-home="RAMPUR BAGHELAN"><span class="jp-icon">R</span><span><b>RAMPUR BAGHELAN</b><small>जनपद पंचायत रामपुर बघेलान</small></span><em>Open →</em></button>
-      <button class="janpad-card" data-janpad-home="SATNA"><span class="jp-icon">S</span><span><b>SATNA</b><small>जनपद पंचायत सोहावल / सतना</small></span><em>Open →</em></button>
-      <button class="janpad-card" data-janpad-home="UNCHAHARA"><span class="jp-icon">U</span><span><b>UNCHAHARA</b><small>जनपद पंचायत उचेहरा</small></span><em>Open →</em></button>
+      <button class="janpad-card" data-janpad-home="MAJHGAWAN"><span class="jp-icon">M</span><span class="jp-meta"><b>MAJHGAWAN</b><small>जनपद पंचायत मझगवां</small></span><span class="jp-open">Open</span></button>
+      <button class="janpad-card" data-janpad-home="NAGOD"><span class="jp-icon">N</span><span class="jp-meta"><b>NAGOD</b><small>जनपद पंचायत नागौद</small></span><span class="jp-open">Open</span></button>
+      <button class="janpad-card" data-janpad-home="RAMPUR BAGHELAN"><span class="jp-icon">R</span><span class="jp-meta"><b>RAMPUR BAGHELAN</b><small>जनपद पंचायत रामपुर बघेलान</small></span><span class="jp-open">Open</span></button>
+      <button class="janpad-card" data-janpad-home="SATNA"><span class="jp-icon">S</span><span class="jp-meta"><b>SATNA</b><small>जनपद पंचायत सोहावल / सतना</small></span><span class="jp-open">Open</span></button>
+      <button class="janpad-card" data-janpad-home="UNCHAHARA"><span class="jp-icon">U</span><span class="jp-meta"><b>UNCHAHARA</b><small>जनपद पंचायत उचेहरा</small></span><span class="jp-open">Open</span></button>
     </div>
   </div>
 </section>
@@ -66,7 +94,28 @@
   <button type="button" id="changeJanpadBtn">Janpad बदलें</button>
 </section>
 
+<section class="portal-quickstats no-print" id="portalQuickStats">
+  <div class="quickstat"><span>District</span><b id="quickDistrictName">SATNA + MAIHAR</b></div>
+  <div class="quickstat"><span>Janpad Scope</span><b id="quickJanpadScope">8 Janpad</b></div>
+  <div class="quickstat"><span>Auto Refresh</span><b>07:00 AM & 08:00 AM</b></div>
+  <div class="quickstat"><span>Platform</span><b>srdmsatna.online</b></div>
+</section>
+
 <section class="auto-card"><div id="autoStatus">Auto update status…</div></section>
+
+<section class="collector-review no-print">
+  <div class="collector-title">
+    <span class="collector-icon">★</span>
+    <div><b>Collector Review Mode</b><small>Janpad performance, MR coverage, dysfunctional GP और priority alerts एक साथ</small></div>
+  </div>
+  <div class="collector-actions">
+    <button type="button" data-review-view="official">Janpad Overview</button>
+    <button type="button" data-review-view="engineer">Engineer Review</button>
+    <button type="button" data-review-view="dysfunctional">Dysfunctional GP</button>
+    <button type="button" data-review-view="priority">Priority Alerts</button>
+  </div>
+</section>
+
 <nav class="tabs top-tabs no-print"><button class="tab active" data-view="official">Official Janpad Daily</button><button class="tab" data-view="engineer">Engineer-wise</button><button class="tab" data-view="district">Full District Report</button><button class="tab" data-view="gp">GP Detail</button><button class="tab ongoingall-tab" data-view="ongoingall">Ongoing Work All Summary</button><button class="tab ongoingdetail-tab" data-view="ongoingdetails">Ongoing Works Sheet</button><button class="tab category-tab" data-view="category">Category-wise Work</button><button class="tab exp-tab" data-view="expbucket">Exp % Buckets</button><button class="tab priority-tab" data-view="priority">Priority Alerts</button><button class="tab dys-tab" data-view="dysfunctional">Dysfunctional GP Alert</button></nav>
 
 <section class="source-links no-print"><b>Official VB-G RAM G Sources:</b> <a href="https://vbgramg.dord.gov.in/vbgramg/home.aspx" target="_blank" rel="noopener">Home</a> <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/MISreport.aspx" target="_blank" rel="noopener">MIS Report</a> <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=4PmH2eRA9khYNUNqz1h5yt9D8POKLA7Afp0nercX3xt22K65u-hNco55SZiMHr78IufQr-Pyxw1-2tJEz-65UMtG5kOTBzCEHurJmRrAtoAIfVSTK-qhJdX02vLZMWrVbwM-oS9xX58g6SiO5ODhhFid9RqKvnwTnS-hLkXfa1-25phIp66JlphIcilUU7cK" target="_blank" rel="noopener">Ongoing Work All</a> <a class="download-source" href="data/Ongoing_Works_dynamic_work_details_Janpad_Wise_23-08-2026.csv" download>⬇ Janpad-wise Ongoing Sheet</a></section>
@@ -77,4 +126,4 @@
 <section class="report-card"><div class="report-head"><div><h2 id="viewTitle">Official Janpad Daily Report</h2><p id="viewMeta"></p></div><div class="legend"><span class="dot good"></span> Better coverage <span class="dot warn"></span> Needs attention</div></div><div class="table-wrap"><table id="reportTable"></table></div></section>
 <section class="note"><b>Engineer-wise:</b> अब हर Janpad में प्रत्येक Engineer / Upyantri की केवल एक consolidated row दिखाई जाती है। एक Engineer के एक से अधिक Cluster होने पर Cluster(s) में सभी Cluster साथ दिखेंगे। Engineer-wise GP, Progress, Ongoing, Works with MR, Labour और Muster Rolls अब RepDay के Engineer distribution पर आधारित रहते हुए प्रत्येक Janpad के Official Sheet1 / Screen-2 totals से exact reconcile होते हैं। PMAY-G / Ek Bagiya ongoing counts VBG work-level mapping से आते हैं।<br><b>Dysfunctional GP:</b> Engineer-wise count अब <b>Total GP − GP Progress</b> से बनता है और प्रत्येक Janpad का total Official Sheet1 / Screen-2 के Dysfunctional GP से exact match करता है।</section>
 </main><footer>SRDM SATNA • VB-G RAM G • District Satna & Maihar • 8 Janpad Monitoring</footer>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="auto-status.js?v=33"></script><script src="auto-data.js?v=28"></script><script src="ongoing-details.js?v=28"></script><script src="sample-data.js?v=28"></script><script src="app.js?v=36"></script></body></html>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="auto-status.js?v=38"></script><script src="auto-data.js?v=38"></script><script src="ongoing-details.js?v=38"></script><script src="sample-data.js?v=38"></script><script src="app.js?v=38"></script></body></html>

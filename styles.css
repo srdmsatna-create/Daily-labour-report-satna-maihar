@@ -413,3 +413,258 @@ body.print-landscape .report-table.official-grid th,body.print-landscape .report
 .dys-gp-line span{white-space:nowrap!important;text-align:right!important;font-size:10.5px!important;color:#40536b!important}
 @media(max-width:1700px){.dys-alert-table{min-width:1660px!important}}
 @media(max-width:1100px){.dys-gp-line{grid-template-columns:1fr!important}.dys-gp-line span{text-align:left!important;white-space:normal!important}}
+
+/* ===== V36: 8 JANPAD GOVERNMENT-STYLE PORTAL ===== */
+.gov-top{background:#fff;border-bottom:4px solid #123f72;box-shadow:0 5px 22px #1434551a}
+.gov-strip{min-height:42px;padding:8px max(20px,calc((100vw - 1650px)/2));background:#0b3159;color:#fff;display:flex;justify-content:space-between;align-items:center;gap:20px;font-size:13px}
+.gov-strip div:first-child{display:flex;gap:12px;align-items:center}.gov-strip span{opacity:.85}.gov-right{font-weight:900;color:#ffc247;letter-spacing:.03em}
+.gov-main{padding:20px max(20px,calc((100vw - 1650px)/2));display:grid;grid-template-columns:82px 1fr auto;gap:18px;align-items:center;background:linear-gradient(180deg,#fff,#f8fbff)}
+.gov-mark{width:66px;height:66px;border-radius:16px;background:linear-gradient(135deg,#ffad24,#0d5ca8);color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:950;box-shadow:0 8px 20px #24517b28}
+.gov-title .eyebrow{color:#a56300;opacity:1}.gov-title h1{margin:3px 0 4px;color:#103f73;font-size:30px}.gov-title p{margin:0;color:#64748b;font-weight:650}
+.gov-main .datebox{color:#123f72}
+.gov-main .datebox span{color:#6c7f94}
+.build-badge{display:none!important}
+
+.janpad-home{display:grid;gap:14px;margin:16px 0}
+.janpad-home-head{background:#fff;border:1px solid #cbd9e8;border-radius:16px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:0 5px 18px #173a5f10}
+.home-kicker{display:inline-block;color:#c47700;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.janpad-home-head h2{margin:3px 0 4px;color:#0b3159;font-size:23px}.janpad-home-head p{margin:0;color:#64748b}
+.all-janpad-btn{background:#f7ae24!important;border-color:#f7ae24!important;color:#13243a!important;padding:11px 18px!important}
+
+.district-block{background:#fff;border:1px solid #cbd9e8;border-radius:16px;overflow:hidden;box-shadow:0 5px 18px #173a5f10}
+.district-ribbon{padding:12px 16px;background:linear-gradient(90deg,#0b3159,#1766ad);color:#fff;display:flex;justify-content:space-between;align-items:center}
+.district-ribbon div{display:flex;gap:10px;align-items:baseline}.district-ribbon b{font-size:17px}.district-ribbon span{font-size:11px;color:#ffd067;font-weight:900;letter-spacing:.09em}
+.district-dot{display:flex!important;width:34px;height:34px;border-radius:50%;background:#f7ae24;color:#12233b!important;align-items:center;justify-content:center;font-size:15px!important}
+.janpad-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px}
+.janpad-cards.five{grid-template-columns:repeat(5,1fr)}
+.janpad-card{min-width:0;padding:12px!important;display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;text-align:left;border:1px solid #d4e0ec!important;background:#fff!important;border-radius:12px!important;transition:.18s transform,.18s box-shadow,.18s border-color}
+.janpad-card:hover,.janpad-card.active{transform:translateY(-2px);box-shadow:0 8px 20px #183c6220;border-color:#2c73b7!important;background:#f5faff!important}
+.jp-icon{width:38px;height:38px;border-radius:10px;background:#eaf2fb;color:#0b4f8d;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:950}
+.janpad-card b{display:block;color:#0c3157;font-size:13px}.janpad-card small{display:block;margin-top:3px;color:#708197;font-size:10px}.janpad-card em{font-style:normal;color:#a86100;font-size:10px;font-weight:900;white-space:nowrap}
+
+.selected-janpad-banner{margin:12px 0;background:linear-gradient(95deg,#0a3767,#1269b3);border-radius:16px;padding:14px 18px;color:#fff;display:grid;grid-template-columns:48px 1fr auto;gap:14px;align-items:center;border-left:6px solid #f7ae24;box-shadow:0 6px 20px #173f6b24}
+.selected-icon{width:42px;height:42px;border-radius:10px;background:#ffffff18;border:1px solid #ffffff35;display:flex;align-items:center;justify-content:center;font-size:20px}
+.selected-janpad-banner span{color:#ffcc5c;font-size:10px;font-weight:950;letter-spacing:.14em}.selected-janpad-banner h2{margin:2px 0;font-size:21px}.selected-janpad-banner p{margin:0;color:#dbeaff;font-size:11px}
+.selected-janpad-banner button{background:#f7ae24!important;border-color:#f7ae24!important;color:#142740!important}
+
+.auto-card{border-left:5px solid #1b75bc!important}
+.upload-card{border-left:5px solid #8097ae!important}
+.source-links{border-radius:12px}
+.kpis{grid-template-columns:repeat(7,minmax(120px,1fr))}
+.kpi{border-top:3px solid #1b66a8}.kpi:nth-child(3){border-top-color:#c44536}.kpi:nth-child(5){border-top-color:#d18b00}
+
+@media(max-width:1250px){
+  .janpad-cards.five{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:900px){
+  .gov-main{grid-template-columns:56px 1fr}.gov-main .datebox{grid-column:1/-1;text-align:left}.gov-mark{width:52px;height:52px}.gov-title h1{font-size:22px}
+  .janpad-cards,.janpad-cards.five{grid-template-columns:1fr 1fr}
+  .janpad-home-head{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:620px){
+  .gov-strip{align-items:flex-start;flex-direction:column}.gov-strip div:first-child{flex-direction:column;gap:3px}
+  .janpad-cards,.janpad-cards.five{grid-template-columns:1fr}
+  .selected-janpad-banner{grid-template-columns:42px 1fr}.selected-janpad-banner button{grid-column:1/-1}
+}
+@media print{
+  .gov-strip,.janpad-home,.selected-janpad-banner{display:none!important}
+  .gov-main{padding:8mm 4mm;box-shadow:none;border-bottom:1px solid #aaa}
+}
+
+
+/* ===== V37 DESIGN FIX ===== */
+html,body{overflow-x:hidden}
+body{line-height:1.45;background:linear-gradient(180deg,#eef4fa 0%,#f6f9fc 100%)}
+.shell{max-width:1600px;margin:0 auto;padding:18px 20px 28px}
+.gov-top{position:relative;overflow:hidden}
+.gov-top:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 10%,rgba(255,195,59,.18),transparent 28%),radial-gradient(circle at 10% 80%,rgba(17,109,186,.12),transparent 30%);pointer-events:none}
+.gov-strip{font-size:14px;font-weight:700;padding-top:10px;padding-bottom:10px}
+.gov-strip b{display:inline-block;margin-right:10px}
+.gov-main{min-height:128px}
+.gov-title .eyebrow{display:inline-block;background:#eff6ff;border:1px solid #d6e6f6;border-radius:999px;padding:5px 11px;font-size:11px;font-weight:900;letter-spacing:.18em;color:#174d82;margin-bottom:8px}
+.gov-title h1{font-size:42px;line-height:1.14;font-weight:900;letter-spacing:-.02em}
+.gov-title p{font-size:18px;line-height:1.35}
+.datebox{display:flex;flex-direction:column;gap:4px;align-items:flex-end;background:#fff;border:1px solid #d8e3ef;border-radius:16px;padding:12px 16px;box-shadow:0 8px 22px rgba(14,52,88,.08)}
+.datebox span{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.12em}
+.datebox strong{font-size:24px;font-weight:900;color:#103f73}
+
+.janpad-home{margin-top:8px}
+.janpad-home-head{padding:20px 22px;border-radius:20px}
+.janpad-home-head h2{font-size:34px;line-height:1.15;font-weight:900}
+.janpad-home-head p{font-size:19px;line-height:1.45}
+.home-kicker{font-size:12px}
+.all-janpad-btn{font-size:16px!important;font-weight:900!important;border-radius:14px!important;box-shadow:0 10px 22px rgba(245,173,35,.24)}
+
+.district-block{border-radius:20px;overflow:hidden}
+.district-ribbon{padding:16px 18px;background:linear-gradient(90deg,#09335b 0%,#0f5ea5 100%)}
+.district-ribbon b{font-size:22px;letter-spacing:.02em}
+.district-ribbon span{font-size:12px}
+.district-dot{width:44px;height:44px;font-size:18px!important;font-weight:900}
+.janpad-cards{padding:16px;gap:14px}
+.janpad-card{display:grid!important;grid-template-columns:56px minmax(0,1fr) auto!important;align-items:center!important;gap:14px!important;min-height:90px;padding:16px 18px!important;border-radius:18px!important;background:linear-gradient(180deg,#ffffff 0%,#fbfdff 100%)!important;box-shadow:0 4px 14px rgba(20,56,92,.06)!important}
+.janpad-card .jp-icon{width:48px;height:48px;border-radius:14px;font-size:20px;font-weight:900;background:linear-gradient(145deg,#e6f1ff,#d3e6ff);border:1px solid #bfd6f4;color:#0b4f8d;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)}
+.janpad-card .jp-meta{display:flex!important;flex-direction:column!important;gap:4px;min-width:0}
+.janpad-card .jp-meta b{display:block;font-size:21px;line-height:1.1;color:#082e54;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.janpad-card .jp-meta small{display:block;font-size:13px;line-height:1.3;color:#667c92;white-space:normal}
+.janpad-card .jp-open{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;background:#fff4da;color:#9b5f00;border:1px solid #f2d18d;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:900}
+.janpad-card .jp-open:after{content:" →";font-size:13px}
+.janpad-card:hover,.janpad-card.active{box-shadow:0 14px 28px rgba(17,72,123,.14)!important;border-color:#1d6fb8!important;transform:translateY(-3px)}
+
+.selected-janpad-banner{padding:18px 20px;border-radius:20px;margin-top:14px}
+.selected-janpad-banner h2{font-size:32px;line-height:1.15;font-weight:900}
+.selected-janpad-banner p{font-size:15px}
+.selected-janpad-banner button{font-size:15px!important;font-weight:900!important;border-radius:12px!important;box-shadow:0 8px 18px rgba(245,173,35,.22)}
+.selected-icon{width:50px;height:50px;border-radius:14px}
+
+.portal-quickstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:14px 0 16px}
+.quickstat{background:#fff;border:1px solid #d8e3ef;border-radius:18px;padding:16px 18px;box-shadow:0 6px 18px rgba(17,72,123,.08)}
+.quickstat span{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#6c8196;font-weight:800;margin-bottom:6px}
+.quickstat b{display:block;font-size:22px;line-height:1.2;color:#0d406f}
+
+.top-tabs{margin-top:14px;border-radius:16px;padding:10px;background:#fff;border:1px solid #d8e3ef;box-shadow:0 4px 14px rgba(17,72,123,.06)}
+.top-tabs .tab{border-radius:12px!important;font-weight:800!important;font-size:14px!important}
+.source-links,.upload-card,.filters,.report-card,.note,.auto-card,.alert-card,.report-head,.kpi{border-radius:18px!important}
+.source-links,.upload-card,.filters,.report-card,.note,.auto-card,.alerts .alert-card{box-shadow:0 6px 18px rgba(17,72,123,.07)!important;border:1px solid #d8e3ef!important}
+.upload-card{padding:18px 20px!important}
+.upload-card h2{font-size:26px;font-weight:900;color:#0b3159;margin:0 0 6px}
+.upload-card p{font-size:15px;margin:0;color:#61788d}
+.filters{padding:14px;background:#fff}
+.filters select,.filters button,.upload-card .actions button,.upload-card .actions .file-btn,.print-select{min-height:46px!important;border-radius:12px!important;font-size:15px!important;font-weight:700!important}
+.kpis{margin-top:14px;gap:14px}
+.kpi{padding:18px 20px!important;background:#fff!important}
+.kpi .num{font-size:40px!important;line-height:1!important;font-weight:900!important}
+.kpi .label{font-size:15px!important;font-weight:800!important}
+.kpi .sub{font-size:13px!important}
+.alerts{margin-top:16px;gap:16px!important}
+.report-card{margin-top:18px;background:#fff}
+.report-head{padding:18px 20px!important;border-bottom:1px solid #e4ebf3}
+.report-head h2{font-size:26px!important;font-weight:900!important;color:#0b3159}
+.report-head p{font-size:14px!important}
+.table-wrap{padding:0!important}
+#reportTable th{position:sticky;top:0;z-index:2;background:#cfe0f5!important}
+#reportTable th,#reportTable td{font-size:13px!important;padding:10px 9px!important}
+.note{padding:16px 18px;background:#fff;font-size:14px;line-height:1.6}
+footer{margin-top:24px;padding:18px 20px;text-align:center;background:#0b3159;color:#fff;font-weight:800}
+
+@media (max-width: 1400px){
+  .janpad-cards.five{grid-template-columns:repeat(3,1fr)}
+  .gov-title h1{font-size:34px}
+}
+@media (max-width: 1100px){
+  .portal-quickstats{grid-template-columns:repeat(2,1fr)}
+  .janpad-card .jp-meta b{font-size:18px}
+  .selected-janpad-banner h2{font-size:26px}
+}
+@media (max-width: 760px){
+  .shell{padding:12px}
+  .gov-main{grid-template-columns:56px 1fr;gap:12px}
+  .gov-title h1{font-size:26px}
+  .gov-title p{font-size:15px}
+  .datebox{grid-column:1/-1;align-items:flex-start}
+  .janpad-home-head h2{font-size:26px}
+  .portal-quickstats{grid-template-columns:1fr}
+  .janpad-cards,.janpad-cards.five{grid-template-columns:1fr}
+  .janpad-card{grid-template-columns:48px minmax(0,1fr)!important}
+  .janpad-card .jp-open{grid-column:1/-1;justify-self:start}
+  .selected-janpad-banner{grid-template-columns:44px 1fr}
+  .selected-janpad-banner button{grid-column:1/-1;justify-self:start}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* ===== V38 PREMIUM COLLECTOR REVIEW THEME ===== */
+:root{
+  --mp-navy:#082f57;
+  --mp-blue:#0f5fa8;
+  --mp-gold:#f3ad2b;
+  --mp-green:#176a52;
+  --mp-purple:#6949a3;
+}
+.premium-hero{
+  margin:18px 0 16px;
+  border-radius:24px;
+  padding:28px 30px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:24px;
+  align-items:center;
+  color:#fff;
+  background:
+    radial-gradient(circle at 88% 20%,rgba(255,196,73,.24),transparent 30%),
+    linear-gradient(125deg,#082f57 0%,#0d4f8b 55%,#126cb4 100%);
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 18px 38px rgba(6,44,83,.22);
+  overflow:hidden;
+  position:relative;
+}
+.premium-hero:after{
+  content:"";
+  position:absolute;right:-80px;bottom:-100px;width:280px;height:280px;
+  border:34px solid rgba(255,255,255,.05);border-radius:50%;
+}
+.hero-left,.hero-side{position:relative;z-index:1}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.hero-badge{display:inline-flex;padding:6px 10px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.08em}
+.hero-badge.gold{background:#ffcf67;color:#653d00}
+.hero-badge.blue{background:#dceeff;color:#0a4b82}
+.premium-hero h2{margin:0 0 8px;font-size:38px;line-height:1.1;font-weight:950;letter-spacing:-.02em}
+.premium-hero p{margin:0;color:#d7e9fa;font-size:16px;font-weight:650}
+.hero-actions{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+.hero-actions button{min-height:44px;border-radius:12px;padding:0 16px;font-size:14px;font-weight:900;cursor:pointer}
+.hero-primary{background:#f3ad2b;color:#17273a;border:1px solid #f3ad2b}
+.hero-secondary{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.hero-side{display:flex;gap:14px;align-items:center}
+.hero-seal{width:136px;height:136px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:3px solid #f5c75e;outline:5px solid rgba(255,255,255,.08);background:rgba(4,36,67,.56)}
+.hero-seal strong{font-size:27px;letter-spacing:.06em}
+.hero-seal span{font-size:10px;font-weight:900;letter-spacing:.1em;color:#ffd66f}
+.hero-update{min-width:126px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18)}
+.hero-update span{display:block;color:#ffd66f;font-size:10px;font-weight:900;letter-spacing:.11em;margin-bottom:7px}
+.hero-update b{display:block;font-size:18px;line-height:1.35}
+
+.district-theme-maihar .district-ribbon{background:linear-gradient(90deg,#4b2d76,#6b4ca1)!important}
+.district-theme-maihar .jp-icon{color:#5a3d8d!important;background:linear-gradient(145deg,#f1ecfa,#e5daf7)!important;border-color:#d0bfe9!important}
+.district-theme-maihar .janpad-card:hover,.district-theme-maihar .janpad-card.active{border-color:#6b4ca1!important}
+.district-theme-satna .district-ribbon{background:linear-gradient(90deg,#0c4f72,#0f7b77)!important}
+.district-theme-satna .jp-icon{color:#0e6864!important;background:linear-gradient(145deg,#e6f7f5,#d7efed)!important;border-color:#b9dfdc!important}
+.district-theme-satna .janpad-card:hover,.district-theme-satna .janpad-card.active{border-color:#0f7b77!important}
+
+body[data-district="MAIHAR"] .selected-janpad-banner{background:linear-gradient(95deg,#4b2d76,#7456aa)!important;border-left-color:#f3ad2b!important}
+body[data-district="SATNA"] .selected-janpad-banner{background:linear-gradient(95deg,#0b486a,#0d7774)!important;border-left-color:#f3ad2b!important}
+
+.collector-review{
+  margin:14px 0;
+  background:linear-gradient(180deg,#fffdf8,#fff);
+  border:1px solid #ead7a5;
+  border-left:6px solid #f0ad24;
+  border-radius:18px;
+  padding:14px 16px;
+  display:flex;
+  justify-content:space-between;
+  gap:18px;
+  align-items:center;
+  box-shadow:0 7px 18px rgba(92,66,17,.08)
+}
+.collector-title{display:flex;gap:12px;align-items:center}
+.collector-icon{width:42px;height:42px;border-radius:12px;background:#fff0c8;color:#996000;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900}
+.collector-title b{display:block;color:#603f00;font-size:17px}
+.collector-title small{display:block;margin-top:2px;color:#7b6e54;font-size:11px}
+.collector-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.collector-actions button{min-height:38px;padding:0 12px;border-radius:10px;border:1px solid #d7c38e;background:#fff;color:#6e4e06;font-size:12px;font-weight:850;cursor:pointer}
+.collector-actions button:hover{background:#fff4d7;border-color:#e0aa32}
+
+body[data-district="MAIHAR"] .quickstat:first-child{border-top:4px solid #6b4ca1}
+body[data-district="SATNA"] .quickstat:first-child{border-top:4px solid #0f7b77}
+body[data-district="ALL"] .quickstat:first-child{border-top:4px solid #0f5fa8}
+
+@media(max-width:1000px){
+  .premium-hero{grid-template-columns:1fr}
+  .hero-side{justify-content:flex-start}
+  .collector-review{align-items:flex-start;flex-direction:column}
+  .collector-actions{justify-content:flex-start}
+}
+@media(max-width:640px){
+  .premium-hero{padding:22px 18px}
+  .premium-hero h2{font-size:28px}
+  .hero-side{flex-wrap:wrap}
+  .hero-seal{width:110px;height:110px}
+  .collector-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}
+}
