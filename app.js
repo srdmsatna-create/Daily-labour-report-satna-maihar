@@ -382,7 +382,7 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   updatePortalHeading();
   render();
 }));$('resetBtn').addEventListener('click',()=>{setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='ongoingdetails'){const o=$('printOrientation');if(o)o.value='portrait';}render()}));
-$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();render();updateAutoStatus();
+$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
 // V6: Font size and Portrait/Landscape print controls
 (function(){
   let fontScale=1;
@@ -499,4 +499,145 @@ function initPortalLogin(){
   $('passwordModal')?.addEventListener('click',e=>{if(e.target===$('passwordModal'))hidePasswordModal();});
   ['currentPassword','newPassword','confirmPassword'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')savePortalPassword();}));
   ['loginUsername','loginPassword'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')tryPortalLogin()}));
+}
+
+
+function currentScopeText(){
+  const d=$('districtFilter')?.value||'ALL';
+  const j=$('janpadFilter')?.value||'ALL';
+  const e=$('engineerFilter')?.value||'ALL';
+  const c=$('clusterFilter')?.value||'ALL';
+  const parts=[];
+  if(d!=='ALL')parts.push(`District: ${d}`);
+  if(j!=='ALL')parts.push(`Janpad: ${j}`);
+  if(e!=='ALL')parts.push(`Engineer: ${e}`);
+  if(c!=='ALL')parts.push(`Cluster: ${c}`);
+  return parts.length?parts.join(' • '):'All District • All Janpad • All Engineer • All Cluster';
+}
+function pptCellText(v){
+  if(v===null||v===undefined)return '';
+  if(Array.isArray(v))return v.join(', ');
+  if(typeof v==='object'){
+    if(v.panchayat)return `${v.panchayat} (Ongoing ${v.ongoing||0}, MR ${v.worksMR||0})`;
+    return Object.values(v).join(' ');
+  }
+  return String(v).replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
+}
+function pickPptColumns(rows){
+  if(!rows||!rows.length)return [];
+  const preferred = [
+    ['janpad','Janpad'],['rank','Rank'],['engineer','Sub Engineer'],['cluster','Cluster'],
+    ['panchayat','Gram Panchayat'],['totalGP','Total GP'],['gpProgress','GP Progress'],
+    ['dysfunctionalGP','Dys GP'],['ongoing','Ongoing'],['worksMR','Works with MR'],
+    ['labour','Labour'],['mrs','Muster Rolls'],['mrCoverage','MR %'],
+    ['totalJanpadDys','Janpad Dys GP'],['alert','Alert'],['severity','Severity'],
+    ['category','Category'],['workType','Work Type'],['workCount','Works'],['workName','Work Name'],
+    ['workCode','Work Code']
+  ];
+  const keys = Object.keys(rows[0]||{});
+  const cols = preferred.filter(([k])=>keys.includes(k));
+  for(const k of keys){
+    if(cols.length>=9)break;
+    if(!cols.some(([x])=>x===k) && !['dysGpRows','dysGpDetails'].includes(k)){
+      cols.push([k,k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase())]);
+    }
+  }
+  return cols.slice(0,9);
+}
+function addPptTable(ppt, rows, title, subtitle, pageSet){
+  const isWide=pageSet!=='standard';
+  const slide=ppt.addSlide();
+  slide.background={color:'F5F8FC'};
+  slide.addShape(ppt.ShapeType.rect,{x:0,y:0,w:isWide?13.333:10,h:0.62,fill:{color:'0B3159'},line:{color:'0B3159'}});
+  slide.addText('SRDM SATNA • VB-G RAM G DAILY MONITORING',{x:0.32,y:0.16,w:isWide?8.6:6.2,h:0.24,fontSize:10,bold:true,color:'FFFFFF',margin:0});
+  slide.addText(todayDate(),{x:isWide?11.1:8.2,y:0.16,w:1.7,h:0.24,fontSize:10,bold:true,color:'FFD36A',align:'right',margin:0});
+  slide.addText(title,{x:0.38,y:0.86,w:isWide?12.45:9.2,h:0.38,fontSize:22,bold:true,color:'123F72',margin:0});
+  slide.addText(subtitle,{x:0.4,y:1.28,w:isWide?12.2:9.1,h:0.25,fontSize:9.5,color:'52677F',margin:0});
+
+  const cols=pickPptColumns(rows);
+  const maxRows=isWide?14:12;
+  const safeRows=(rows||[]).slice(0,maxRows);
+  const table=[cols.map(([,label])=>({text:label,options:{bold:true,color:'FFFFFF',fill:'1557B0'}}))];
+  for(const r of safeRows){
+    table.push(cols.map(([k])=>pptCellText(r[k]).slice(0,70)));
+  }
+  if(!safeRows.length)table.push([{text:'No data in current filter',options:{colSpan:Math.max(1,cols.length),color:'A33'}}]);
+
+  const x=0.38,y=1.72,w=isWide?12.55:9.25;
+  const colW=cols.map((c,i)=>{
+    const label=c[1].toLowerCase();
+    if(label.includes('engineer'))return isWide?1.6:1.15;
+    if(label.includes('panchayat')||label.includes('cluster')||label.includes('work'))return isWide?1.85:1.35;
+    return isWide?1.05:.78;
+  });
+  const sum=colW.reduce((a,b)=>a+b,0);
+  const widths=colW.map(v=>v*w/sum);
+  slide.addTable(table,{x,y,w,h:isWide?4.95:4.2,colW:widths,border:{type:'solid',color:'C8D7E8',pt:.5},fontSize:isWide?7.2:6.3,color:'0B1F33',margin:0.04,fill:'FFFFFF',autoFit:false});
+  slide.addText(`Rows shown: ${safeRows.length} of ${(rows||[]).length} • ${currentScopeText()}`,{x:0.42,y:isWide?6.96:6.78,w:isWide?12.2:9.1,h:.22,fontSize:8,color:'60758B',margin:0});
+  return slide;
+}
+function downloadCurrentPpt(){
+  if(typeof pptxgen==='undefined'){
+    alert('PPT library load नहीं हुई। Internet on करके page refresh करें, फिर PPT Download दबाएँ।');
+    return;
+  }
+  const pageSet=$('pptPageSet')?.value||'wide';
+  const ppt=new pptxgen();
+  ppt.layout=pageSet==='standard'?'LAYOUT_4X3':'LAYOUT_WIDE';
+  ppt.author='SRDM SATNA';
+  ppt.company='SRDM SATNA';
+  ppt.subject='VB-G RAM G Daily Monitoring';
+  ppt.title='SRDM SATNA Daily Report';
+
+  const rows = (lastExport && lastExport.length) ? lastExport : dailyFiltered();
+  const viewName=$('viewTitle')?.textContent||'Daily Report';
+  const scope=currentScopeText();
+
+  const cover=ppt.addSlide();
+  cover.background={color:'0B3159'};
+  cover.addShape(ppt.ShapeType.rect,{x:0,y:0,w:pageSet==='standard'?10:13.333,h:7.5,fill:{color:'0B3159'},line:{color:'0B3159'}});
+  cover.addText('VB-G RAM G DAILY MONITORING',{x:.55,y:.85,w:pageSet==='standard'?8.9:12.2,h:.35,fontSize:15,bold:true,color:'FFD36A',margin:0});
+  cover.addText('SRDM SATNA • DISTRICT SATNA & MAIHAR',{x:.55,y:1.28,w:pageSet==='standard'?8.9:12.2,h:.3,fontSize:10,bold:true,color:'DDEBFA',margin:0});
+  cover.addText(viewName,{x:.55,y:2.05,w:pageSet==='standard'?8.8:12,h:.8,fontSize:30,bold:true,color:'FFFFFF',fit:'shrink',margin:0});
+  cover.addText(scope,{x:.58,y:3.05,w:pageSet==='standard'?8.6:11.8,h:.35,fontSize:13,color:'DDEBFA',margin:0});
+  cover.addText(`Report Date: ${todayDate()}`,{x:.58,y:3.55,w:pageSet==='standard'?8.6:11.8,h:.3,fontSize:12,bold:true,color:'FFD36A',margin:0});
+  cover.addShape(ppt.ShapeType.roundRect,{x:pageSet==='standard'?6.5:9.6,y:4.35,w:pageSet==='standard'?2.7:3.0,h:1.45,rectRadius:.12,fill:{color:'FFFFFF',transparency:8},line:{color:'FFFFFF',transparency:50}});
+  cover.addText('Designed PPT Export',{x:pageSet==='standard'?6.78:9.88,y:4.73,w:pageSet==='standard'?2.1:2.4,h:.25,fontSize:13,bold:true,color:'0B3159',align:'center',margin:0});
+  cover.addText('srdmsatna.online',{x:pageSet==='standard'?6.78:9.88,y:5.08,w:pageSet==='standard'?2.1:2.4,h:.22,fontSize:10,color:'0B3159',align:'center',margin:0});
+
+  const kpiEls=[...document.querySelectorAll('.kpi')].slice(0,8);
+  if(kpiEls.length){
+    const slide=ppt.addSlide(); slide.background={color:'F5F8FC'};
+    slide.addText('Key Performance Indicators',{x:.45,y:.45,w:pageSet==='standard'?8.9:12.3,h:.4,fontSize:24,bold:true,color:'123F72',margin:0});
+    slide.addText(scope,{x:.48,y:.9,w:pageSet==='standard'?8.8:12.2,h:.25,fontSize:9.5,color:'52677F',margin:0});
+    const cols=pageSet==='standard'?2:4, boxW=pageSet==='standard'?4.25:3.05, boxH=1.05;
+    kpiEls.forEach((el,i)=>{
+      const x=.55+(i%cols)*(boxW+.18), y=1.35+Math.floor(i/cols)*(boxH+.22);
+      const label=el.querySelector('.label')?.textContent||'Metric';
+      const val=el.querySelector('.num')?.textContent||'';
+      const sub=el.querySelector('.sub')?.textContent||'';
+      slide.addShape(ppt.ShapeType.roundRect,{x,y,w:boxW,h:boxH,rectRadius:.08,fill:{color:'FFFFFF'},line:{color:'C8D7E8'}});
+      slide.addText(label,{x:x+.16,y:y+.14,w:boxW-.3,h:.22,fontSize:8.5,bold:true,color:'61738A',margin:0});
+      slide.addText(val,{x:x+.16,y:y+.40,w:boxW-.3,h:.35,fontSize:22,bold:true,color:'0B3159',margin:0});
+      slide.addText(sub,{x:x+.16,y:y+.78,w:boxW-.3,h:.18,fontSize:7.2,color:'52677F',margin:0});
+    });
+  }
+
+  const chunkSize=pageSet==='standard'?12:14;
+  const chunks=[];
+  for(let i=0;i<rows.length;i+=chunkSize)chunks.push(rows.slice(i,i+chunkSize));
+  (chunks.length?chunks:[[]]).slice(0,8).forEach((chunk,i)=>{
+    addPptTable(ppt, chunk, `${viewName}${chunks.length>1?` (${i+1}/${Math.min(chunks.length,8)})`:''}`, scope, pageSet);
+  });
+
+  const fileScope=($('janpadFilter')?.value||$('districtFilter')?.value||'ALL').replaceAll(' ','_');
+  ppt.writeFile({fileName:`SRDM_SATNA_${view}_${fileScope}_${todayDate()}.pptx`});
+}
+function initPptExportUI(){
+  $('pptBtn')?.addEventListener('click',downloadCurrentPpt);
+  $('screenPptBtn')?.addEventListener('click',downloadCurrentPpt);
+  document.querySelectorAll('[data-review-view]').forEach(b=>b.addEventListener('click',()=>{
+    const v=b.dataset.reviewView;
+    document.querySelector(`.tab[data-view="${v}"]`)?.click();
+  }));
 }
