@@ -75,3 +75,18 @@ V21 update: Added top tab “Ongoing Work All Summary” using current VBG ongoi
 - Fixed upper official Sheet1 metrics after the blank F column: Labour = G, Works with MR = H, Ongoing Works = I, and downstream category columns shifted correctly.
 - Verified current workbook totals: GP 695, GP Progress 533, Labour 2,711, Works with MR 1,521, Muster Rolls 1,548, Official Ongoing Works 16,873.
 - Bundled `incoming/Daily Report.xlsx` is the 24-08-2026 corrected workbook.
+
+V25 Dysfunctional GP name/status correction (24-08-2026)
+---------------------------------------------------------
+- Engineer-wise Dysfunctional GP is now the exact count of RepDay GP rows where GP Progress = 0; no engineer-level apportionment is used.
+- Added "Dysfunctional GP Name / Work Status" column.
+- For every dysfunctional GP the report shows: GP Name, Ongoing Works, and MR Issued.
+- Example: if an engineer has 3 dysfunctional GPs, all 3 names are listed separately with their Ongoing and MR Issued values (normally MR Issued = 0 for these rows).
+- Janpad Official Dys GP remains visible for cross-check against Sheet1 / Screen-2.
+
+
+## V27 update
+- Added District-wise Highest Dysfunctional GP Janpad card beside alert panels.
+- SATNA and MAIHAR are evaluated separately from official Sheet1 / Screen-2 Janpad totals.
+- Added Total GP, GP Progress, Dysfunctional GP and Dysfunctional % columns.
+- Corrected Dysfunctional GP alert table column widths for Engineer, Cluster, counts and GP-name/work-status details.
