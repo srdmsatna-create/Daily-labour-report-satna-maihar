@@ -382,7 +382,7 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   updatePortalHeading();
   render();
 }));$('resetBtn').addEventListener('click',()=>{setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='ongoingdetails'){const o=$('printOrientation');if(o)o.value='portrait';}render()}));
-$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});refreshFilters();initJanpadPortal();initPremiumUI();render();updateAutoStatus();
+$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();render();updateAutoStatus();
 // V6: Font size and Portrait/Landscape print controls
 (function(){
   let fontScale=1;
@@ -440,4 +440,63 @@ function initPremiumUI(){
     document.querySelector('.report-card')?.scrollIntoView({behavior:'smooth',block:'start'});
   }));
   updatePremiumHero();
+}
+
+
+const PORTAL_LOGIN_USER='srdmsatna';
+const PORTAL_DEFAULT_PASS='SRDM@2026';
+const PORTAL_PASS_KEY='srdmPortalPassword';
+function getPortalPassword(){return localStorage.getItem(PORTAL_PASS_KEY)||PORTAL_DEFAULT_PASS;}
+function setPortalPassword(v){localStorage.setItem(PORTAL_PASS_KEY,v);}
+function openPortal(){
+  const s=$('loginScreen'); if(s)s.classList.add('hidden');
+  document.body.classList.remove('login-locked');
+  sessionStorage.setItem('srdmPortalLogin','1');
+}
+function closePortal(){
+  sessionStorage.removeItem('srdmPortalLogin');
+  const s=$('loginScreen'); if(s)s.classList.remove('hidden');
+  document.body.classList.add('login-locked');
+  const p=$('loginPassword'); if(p)p.value='';
+}
+function tryPortalLogin(){
+  const u=($('loginUsername')?.value||'').trim();
+  const p=$('loginPassword')?.value||'';
+  const e=$('loginError');
+  if(u===PORTAL_LOGIN_USER && p===getPortalPassword()){ if(e)e.classList.remove('show'); openPortal(); }
+  else { if(e)e.classList.add('show'); $('loginPassword')?.focus(); }
+}
+function showPasswordModal(){
+  const m=$('passwordModal'); if(!m)return;
+  ['currentPassword','newPassword','confirmPassword'].forEach(id=>{const x=$(id);if(x)x.value='';});
+  const msg=$('passwordMessage');if(msg){msg.textContent='';msg.className='password-message';}
+  m.classList.remove('hidden');
+  setTimeout(()=>$('currentPassword')?.focus(),20);
+}
+function hidePasswordModal(){ $('passwordModal')?.classList.add('hidden'); }
+function savePortalPassword(){
+  const current=$('currentPassword')?.value||'';
+  const next=$('newPassword')?.value||'';
+  const confirm=$('confirmPassword')?.value||'';
+  const msg=$('passwordMessage');
+  const fail=t=>{if(msg){msg.textContent=t;msg.className='password-message error';}};
+  if(current!==getPortalPassword())return fail('Current Password गलत है।');
+  if(next.length<6)return fail('New Password कम से कम 6 characters का रखें।');
+  if(next!==confirm)return fail('New Password और Confirm Password match नहीं कर रहे हैं।');
+  if(next===current)return fail('New Password पुराने password से अलग रखें।');
+  setPortalPassword(next);
+  if(msg){msg.textContent='Password successfully changed.';msg.className='password-message success';}
+  setTimeout(hidePasswordModal,800);
+}
+function initPortalLogin(){
+  if(sessionStorage.getItem('srdmPortalLogin')==='1') openPortal(); else closePortal();
+  $('loginBtn')?.addEventListener('click',tryPortalLogin);
+  $('logoutBtn')?.addEventListener('click',closePortal);
+  $('changePasswordBtn')?.addEventListener('click',showPasswordModal);
+  $('closePasswordBtn')?.addEventListener('click',hidePasswordModal);
+  $('cancelPasswordBtn')?.addEventListener('click',hidePasswordModal);
+  $('savePasswordBtn')?.addEventListener('click',savePortalPassword);
+  $('passwordModal')?.addEventListener('click',e=>{if(e.target===$('passwordModal'))hidePasswordModal();});
+  ['currentPassword','newPassword','confirmPassword'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')savePortalPassword();}));
+  ['loginUsername','loginPassword'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')tryPortalLogin()}));
 }

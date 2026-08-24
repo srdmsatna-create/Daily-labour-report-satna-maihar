@@ -1,7 +1,31 @@
 <!doctype html>
 <html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=38"></head>
+<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=40"></head>
 <body>
+<div class="login-screen" id="loginScreen">
+  <div class="login-shell">
+    <div class="login-brand">
+      <div class="login-emblem">MP</div>
+      <div>
+        <span class="login-kicker">मध्यप्रदेश शासन • पंचायत एवं ग्रामीण विकास विभाग</span>
+        <h1>VB-G RAM G Daily Monitoring Portal</h1>
+        <p>District Satna & Maihar • 8 Janpad • srdmsatna.online</p>
+      </div>
+    </div>
+    <div class="login-card">
+      <div class="login-card-head">
+        <span class="login-lock">🔐</span>
+        <div><h2>Secure Login</h2><p>Portal खोलने के लिए Username और Password दर्ज करें</p></div>
+      </div>
+      <label>Username<input id="loginUsername" type="text" autocomplete="username" placeholder="Username"></label>
+      <label>Password<input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password"></label>
+      <div class="login-error" id="loginError">Username या Password गलत है।</div>
+      <button type="button" id="loginBtn">Login to Dashboard</button>
+      <div class="login-help">Authorized monitoring access only</div>
+    </div>
+  </div>
+</div>
+
 <header class="gov-top">
   <div class="gov-strip">
     <div><b>मध्यप्रदेश शासन</b><span>पंचायत एवं ग्रामीण विकास विभाग</span></div>
@@ -14,7 +38,7 @@
       <h1 id="portalHeading">जिला सतना एवं मैहर — 8 जनपद डेली मॉनिटरिंग</h1>
       <p id="portalSubheading">srdmsatna.online • Official Daily Report • Engineer • Cluster • GP</p>
     </div>
-    <div class="datebox"><span>Report Date</span><strong id="reportDate"></strong></div>
+    <div class="header-side"><div class="datebox"><span>Report Date</span><strong id="reportDate"></strong></div><div class="account-actions no-print"><button class="change-pass-btn" id="changePasswordBtn" type="button">Change Password</button><button class="logout-btn" id="logoutBtn" type="button">Logout</button></div></div>
   </div>
 </header>
 <main class="shell">
@@ -93,14 +117,6 @@
   </div>
   <button type="button" id="changeJanpadBtn">Janpad बदलें</button>
 </section>
-
-<section class="portal-quickstats no-print" id="portalQuickStats">
-  <div class="quickstat"><span>District</span><b id="quickDistrictName">SATNA + MAIHAR</b></div>
-  <div class="quickstat"><span>Janpad Scope</span><b id="quickJanpadScope">8 Janpad</b></div>
-  <div class="quickstat"><span>Auto Refresh</span><b>07:00 AM & 08:00 AM</b></div>
-  <div class="quickstat"><span>Platform</span><b>srdmsatna.online</b></div>
-</section>
-
 <section class="auto-card"><div id="autoStatus">Auto update status…</div></section>
 
 <section class="collector-review no-print">
@@ -126,4 +142,21 @@
 <section class="report-card"><div class="report-head"><div><h2 id="viewTitle">Official Janpad Daily Report</h2><p id="viewMeta"></p></div><div class="legend"><span class="dot good"></span> Better coverage <span class="dot warn"></span> Needs attention</div></div><div class="table-wrap"><table id="reportTable"></table></div></section>
 <section class="note"><b>Engineer-wise:</b> अब हर Janpad में प्रत्येक Engineer / Upyantri की केवल एक consolidated row दिखाई जाती है। एक Engineer के एक से अधिक Cluster होने पर Cluster(s) में सभी Cluster साथ दिखेंगे। Engineer-wise GP, Progress, Ongoing, Works with MR, Labour और Muster Rolls अब RepDay के Engineer distribution पर आधारित रहते हुए प्रत्येक Janpad के Official Sheet1 / Screen-2 totals से exact reconcile होते हैं। PMAY-G / Ek Bagiya ongoing counts VBG work-level mapping से आते हैं।<br><b>Dysfunctional GP:</b> Engineer-wise count अब <b>Total GP − GP Progress</b> से बनता है और प्रत्येक Janpad का total Official Sheet1 / Screen-2 के Dysfunctional GP से exact match करता है।</section>
 </main><footer>SRDM SATNA • VB-G RAM G • District Satna & Maihar • 8 Janpad Monitoring</footer>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="auto-status.js?v=38"></script><script src="auto-data.js?v=38"></script><script src="ongoing-details.js?v=38"></script><script src="sample-data.js?v=38"></script><script src="app.js?v=38"></script></body></html>
+
+<div class="password-modal hidden" id="passwordModal" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+  <div class="password-dialog">
+    <div class="password-dialog-head">
+      <div><span>ACCOUNT SECURITY</span><h2 id="passwordModalTitle">Change Password</h2></div>
+      <button type="button" id="closePasswordBtn" class="password-close" aria-label="Close">×</button>
+    </div>
+    <div class="password-dialog-body">
+      <label>Current Password<input id="currentPassword" type="password" autocomplete="current-password" placeholder="Current password"></label>
+      <label>New Password<input id="newPassword" type="password" autocomplete="new-password" placeholder="Minimum 6 characters"></label>
+      <label>Confirm New Password<input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Re-enter new password"></label>
+      <div class="password-message" id="passwordMessage"></div>
+      <div class="password-dialog-actions"><button type="button" id="savePasswordBtn" class="save-password-btn">Save New Password</button><button type="button" id="cancelPasswordBtn">Cancel</button></div>
+      <p class="password-note">यह static portal है। बदला हुआ password इस browser/device में सुरक्षित रहेगा।</p>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="auto-status.js?v=39"></script><script src="auto-data.js?v=39"></script><script src="ongoing-details.js?v=39"></script><script src="sample-data.js?v=39"></script><script src="app.js?v=40"></script></body></html>
