@@ -772,3 +772,7 @@ body[data-district="ALL"] .quickstat:first-child{border-top:4px solid #0f5fa8}
 @media print{
   .screen-tools{display:none!important}
 }
+
+/* V42 local PPT engine status */
+.ppt-ready-note{display:inline-flex;align-items:center;min-height:40px;padding:0 10px;border-radius:10px;background:#edf9f2;border:1px solid #b9e4c8;color:#176a43;font-size:11px;font-weight:850;white-space:nowrap}
+@media(max-width:900px){.ppt-ready-note{width:auto}}

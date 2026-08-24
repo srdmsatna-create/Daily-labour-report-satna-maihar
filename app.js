@@ -577,12 +577,12 @@ function addPptTable(ppt, rows, title, subtitle, pageSet){
   return slide;
 }
 function downloadCurrentPpt(){
-  if(typeof pptxgen==='undefined'){
-    alert('PPT library load नहीं हुई। Internet on करके page refresh करें, फिर PPT Download दबाएँ।');
+  if(typeof PptxGenJS==='undefined'){
+    alert('PPT library load नहीं हुई। कृपया Ctrl+F5 से page refresh करें।');
     return;
   }
   const pageSet=$('pptPageSet')?.value||'wide';
-  const ppt=new pptxgen();
+  const ppt=new PptxGenJS();
   ppt.layout=pageSet==='standard'?'LAYOUT_4X3':'LAYOUT_WIDE';
   ppt.author='SRDM SATNA';
   ppt.company='SRDM SATNA';
@@ -631,7 +631,14 @@ function downloadCurrentPpt(){
   });
 
   const fileScope=($('janpadFilter')?.value||$('districtFilter')?.value||'ALL').replaceAll(' ','_');
-  ppt.writeFile({fileName:`SRDM_SATNA_${view}_${fileScope}_${todayDate()}.pptx`});
+  const pptName=`SRDM_SATNA_${view}_${fileScope}_${todayDate()}.pptx`;
+  try{
+    const result=ppt.writeFile({fileName:pptName});
+    if(result&&typeof result.catch==='function')result.catch(err=>{console.error(err);alert('PPT बनाने में error आया: '+(err?.message||err));});
+  }catch(err){
+    console.error(err);
+    alert('PPT बनाने में error आया: '+(err?.message||err));
+  }
 }
 function initPptExportUI(){
   $('pptBtn')?.addEventListener('click',downloadCurrentPpt);
