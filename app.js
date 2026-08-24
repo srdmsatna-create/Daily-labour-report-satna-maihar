@@ -1,4 +1,5 @@
 const MAIHAR=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']);const SATNA=new Set(['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SOHAWAL','SATNA','UNCHAHARA']);
+const JANPAD_PORTAL=[{district:'MAIHAR',janpad:'AMARPATAN',label:'अमरपाटन'},{district:'MAIHAR',janpad:'MAIHAR',label:'मैहर'},{district:'MAIHAR',janpad:'RAMNAGAR',label:'रामनगर'},{district:'SATNA',janpad:'MAJHGAWAN',label:'मझगवां'},{district:'SATNA',janpad:'NAGOD',label:'नागौद'},{district:'SATNA',janpad:'RAMPUR BAGHELAN',label:'रामपुर बघेलान'},{district:'SATNA',janpad:'SATNA',label:'सतना / सोहावल'},{district:'SATNA',janpad:'UNCHAHARA',label:'उचेहरा'}];
 const BOOT_REPORT=window.AUTO_REPORT||window.SAMPLE_REPORT||{};
 let rows=BOOT_REPORT.rows||[],official=BOOT_REPORT.official||[],daily=BOOT_REPORT.daily||[],workmix=BOOT_REPORT.workmix||[],categorymix=BOOT_REPORT.categorymix||[],ongoingDetails=window.ONGOING_DETAILS||[],reportTitle=BOOT_REPORT.title||'',pendingFile=null,view='official',lastExport=[];
 let autoMeta=BOOT_REPORT.meta||{mode:(window.AUTO_REPORT?'auto':'sample'),updatedAt:null,source:null,status:(window.AUTO_REPORT?'ok':'sample')};
@@ -291,9 +292,85 @@ function parseWorkbook(wb){const a=sheetArray(wb,'RepDay');if(!a.length)throw ne
  const s1=sheetArray(wb,'Sheet1');official=[];for(const ix of [3,4,5,7,8,9,10,11]){const r=s1[ix]||[];if(!clean(r[1]))continue;official.push({janpad:normJanpad(r[1]),totalGP:num(r[2]),musterGP:num(r[3]),dysfunctionalGP:num(r[4]),labourAll:num(r[6]),mrAll:num(r[7]),ongoingAll:num(r[8]),labourIndividual:num(r[10]),mrIndividual:num(r[11]),labourCommunity:num(r[12]),mrCommunity:num(r[13]),pmayOngoing:num(r[15]),pmayMR:num(r[16]),ekLabour:num(r[18]),ekOngoing:num(r[19]),ekMR:num(r[20])})}
  daily=[];let hix=s1.findIndex(r=>clean(r?.[2]).toLowerCase().includes('total no. of gram panchayats'));if(hix>=0){for(let i=hix+2;i<s1.length;i++){const r=s1[i]||[],j=clean(r[1]).toUpperCase();if(!j||j==='TOTAL')continue;if(!MAIHAR.has(j)&&!SATNA.has(j))continue;daily.push({janpad:j,totalGP:num(r[2]),gpsProgress:num(r[3]),labour:num(r[4]),worksMR:num(r[6]),noEkyc:num(r[7]),mrs:num(r[8])})}}
  const gpmap=new Map(rows.map(r=>[[r.janpad,r.panchayat].join('¦'),[r.engineer,r.cluster]]));workmix=[];categorymix=[];ongoingDetails=[];const wm=new Map(),cm=new Map(),v=sheetArray(wb,'VBG');const expBucket=p=>p<=0?'b0':p<=25?'b25':p<=60?'b60':p<=75?'b75':p<=90?'b90':'b90p';for(let i=4;i<v.length;i++){const r=v[i],jan=normJanpad(r[2]),gp=clean(r[3]).toUpperCase(),fy=clean(r[4]),status=clean(r[5]).toLowerCase(),code=clean(r[6]),name=clean(r[7]),wt=clean(r[8]);if(!jan||!gp||!code||!status.includes('ongoing'))continue;const ec=gpmap.get([jan,gp].join('¦'))||['Unmapped','Unmapped'],key=[jan,ec[0],ec[1],gp].join('¦');if(!wm.has(key))wm.set(key,{janpad:jan,engineer:ec[0],cluster:ec[1],panchayat:gp,workTotal:0,pmayOngoing:0,ekOngoing:0,currentFYActive:0});const z=wm.get(key);z.workTotal++;if(wt.toLowerCase().includes('pmay'))z.pmayOngoing++;if(finalWorkCategory(name,wt,fy)==='Ek Bagiya')z.ekOngoing++;if(num(r[21])>0)z.currentFYActive++;const cat=finalWorkCategory(name,wt,fy),sanction=num(r[11])||num(r[9])+num(r[10]),booked=num(r[16])+num(r[17]),ep=sanction?booked*100/sanction:0;ongoingDetails.push({sno:ongoingDetails.length+1,district:districtOf(jan),janpad:jan,engineer:ec[0],cluster:ec[1],panchayat:gp,fy:fy,status:clean(r[5]),code:code,name:name,type:wt,sanction:sanction,booked:booked,expPct:ep,mandays:num(r[20]),currentFYMandays:num(r[21])});const ck=[jan,ec[0],ec[1],gp,cat].join('¦');if(!cm.has(ck))cm.set(ck,{janpad:jan,engineer:ec[0],cluster:ec[1],panchayat:gp,category:cat,workCount:0,totalSanction:0,totalBooked:0,b0:0,b25:0,b60:0,b75:0,b90:0,b90p:0});const q=cm.get(ck);q.workCount++;q.totalSanction+=sanction;q.totalBooked+=booked;q[expBucket(ep)]++}workmix=[...wm.values()];categorymix=[...cm.values()];if(!rows.length)throw new Error('RepDay में usable data नहीं मिला।')}
-$('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null;$('fileStatus').textContent=pendingFile?`Selected: ${pendingFile.name}`:'कोई file नहीं चुनी गई'});$('generateBtn').addEventListener('click',async()=>{if(!pendingFile){render();return}try{if(typeof XLSX==='undefined')throw new Error('Excel reader load नहीं हुआ।');$('fileStatus').textContent='Excel पढ़ी जा रही है…';const buf=await pendingFile.arrayBuffer();parseWorkbook(XLSX.read(buf,{type:'array'}));autoMeta={mode:'manual',updatedAt:new Date().toISOString(),source:pendingFile.name,status:'manual'};refreshFilters();render();updateAutoStatus();updateAutoStatus();$('fileStatus').textContent=`Generated: ${pendingFile.name} • ${fmt(rows.length)} GP rows`}catch(e){$('fileStatus').textContent='Error: '+e.message;alert(e.message)}});
-['districtFilter','janpadFilter','engineerFilter','clusterFilter'].forEach(id=>$(id).addEventListener('change',()=>{refreshFilters();render()}));$('resetBtn').addEventListener('click',()=>{$('districtFilter').value='ALL';refreshFilters();$('janpadFilter').value=$('engineerFilter').value=$('clusterFilter').value='ALL';render()});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='ongoingdetails'){const o=$('printOrientation');if(o)o.value='portrait';}render()}));
-$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});refreshFilters();render();updateAutoStatus();
+
+function portalJanpadLabel(j){
+  const x=JANPAD_PORTAL.find(q=>q.janpad===j);
+  return x?x.label:j;
+}
+function updatePortalHeading(){
+  const j=$('janpadFilter')?.value||'ALL';
+  const d=$('districtFilter')?.value||'ALL';
+  const h=$('portalHeading'),s=$('portalSubheading'),t=$('selectedJanpadTitle'),sd=$('selectedJanpadDistrict');
+  if(j!=='ALL'){
+    const dist=districtOf(j),lab=portalJanpadLabel(j);
+    if(h)h.textContent=`जनपद पंचायत ${lab}, जिला ${dist==='MAIHAR'?'मैहर':'सतना'} (म.प्र.)`;
+    if(s)s.textContent=`VB-G RAM G • ${j} • Daily Monitoring • srdmsatna.online`;
+    if(t)t.textContent=`जनपद ${lab} — ${j}`;
+    if(sd)sd.textContent=`DISTRICT ${dist}`;
+  }else if(d!=='ALL'){
+    if(h)h.textContent=`District ${d==='MAIHAR'?'Maihar':'Satna'} — VB-G RAM G Daily Monitoring`;
+    if(s)s.textContent=`${d==='MAIHAR'?'3':'5'} Janpad • Official Daily Report • srdmsatna.online`;
+    if(t)t.textContent=`DISTRICT ${d}`;
+    if(sd)sd.textContent=`${d==='MAIHAR'?'3':'5'} Janpad`;
+  }else{
+    if(h)h.textContent='जिला सतना एवं मैहर — 8 जनपद डेली मॉनिटरिंग';
+    if(s)s.textContent='srdmsatna.online • Official Daily Report • Engineer • Cluster • GP';
+    if(t)t.textContent='सभी 8 जनपद';
+    if(sd)sd.textContent='District Maihar + District Satna';
+  }
+  document.querySelectorAll('[data-janpad-home]').forEach(b=>{
+    const v=b.dataset.janpadHome;
+    b.classList.toggle('active',v===j || (v==='ALL'&&j==='ALL'&&d==='ALL'));
+  });
+}
+function setPortalJanpad(j,scroll=true){
+  j=normJanpad(j||'ALL');
+  if(j==='ALL'){
+    $('districtFilter').value='ALL';
+    refreshFilters();
+    $('janpadFilter').value='ALL';
+  }else{
+    const d=districtOf(j);
+    $('districtFilter').value=d;
+    refreshFilters();
+    $('janpadFilter').value=j;
+    refreshFilters();
+  }
+  $('engineerFilter').value='ALL';
+  $('clusterFilter').value='ALL';
+  const url=new URL(window.location.href);
+  if(j==='ALL')url.searchParams.delete('janpad');else url.searchParams.set('janpad',j);
+  history.replaceState(null,'',url.pathname+(url.search?'?'+url.searchParams.toString():''));
+  updatePortalHeading();
+  render();
+  if(scroll)document.querySelector('.auto-card')?.scrollIntoView({behavior:'smooth',block:'start'});
+}
+function initJanpadPortal(){
+  document.querySelectorAll('[data-janpad-home]').forEach(b=>b.addEventListener('click',()=>setPortalJanpad(b.dataset.janpadHome)));
+  $('changeJanpadBtn')?.addEventListener('click',()=>document.getElementById('janpadHome')?.scrollIntoView({behavior:'smooth'}));
+  const q=normJanpad(new URLSearchParams(location.search).get('janpad')||'ALL');
+  if(q!=='ALL' && JANPAD_PORTAL.some(x=>x.janpad===q)){
+    $('districtFilter').value=districtOf(q);
+    refreshFilters();
+    $('janpadFilter').value=q;
+    refreshFilters();
+  }
+  updatePortalHeading();
+}
+
+$('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null;$('fileStatus').textContent=pendingFile?`Selected: ${pendingFile.name}`:'कोई file नहीं चुनी गई'});$('generateBtn').addEventListener('click',async()=>{if(!pendingFile){render();return}try{if(typeof XLSX==='undefined')throw new Error('Excel reader load नहीं हुआ।');$('fileStatus').textContent='Excel पढ़ी जा रही है…';const buf=await pendingFile.arrayBuffer();parseWorkbook(XLSX.read(buf,{type:'array'}));autoMeta={mode:'manual',updatedAt:new Date().toISOString(),source:pendingFile.name,status:'manual'};refreshFilters();updatePortalHeading();render();updateAutoStatus();$('fileStatus').textContent=`Generated: ${pendingFile.name} • ${fmt(rows.length)} GP rows`}catch(e){$('fileStatus').textContent='Error: '+e.message;alert(e.message)}});
+['districtFilter','janpadFilter','engineerFilter','clusterFilter'].forEach(id=>$(id).addEventListener('change',()=>{
+  refreshFilters();
+  if(id==='janpadFilter'){
+    const j=$('janpadFilter').value;
+    const url=new URL(location.href);
+    if(j==='ALL')url.searchParams.delete('janpad');else url.searchParams.set('janpad',j);
+    history.replaceState(null,'',url.pathname+(url.search?'?'+url.searchParams.toString():''));
+  }
+  updatePortalHeading();
+  render();
+}));$('resetBtn').addEventListener('click',()=>{setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='ongoingdetails'){const o=$('printOrientation');if(o)o.value='portrait';}render()}));
+$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});refreshFilters();initJanpadPortal();render();updateAutoStatus();
 // V6: Font size and Portrait/Landscape print controls
 (function(){
   let fontScale=1;
