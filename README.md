@@ -87,3 +87,14 @@ V25 Dysfunctional GP name/status correction (24-08-2026)
 
 ## V28 IMPORTANT
 Open this V28 folder's index.html. The top-right must show **V28 • DISTRICT-DYS FIX**. If not, you opened an older folder. Local CSS/JS are cache-busted with ?v=28.
+
+
+## V35 Git Push Fix
+If GitHub Action showed `main -> main (fetch first)`, the remote `main` branch changed after the runner checked it out.
+V35 fixes this by:
+- checkout with full history (`fetch-depth: 0`)
+- syncing to `origin/main` before report generation
+- rebasing again immediately before push
+- retrying push up to 4 times if `main` changes during the run
+
+Schedule remains only 07:00 AM and 08:00 AM IST.
