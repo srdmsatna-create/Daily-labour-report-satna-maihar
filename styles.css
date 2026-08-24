@@ -182,17 +182,53 @@ body.print-landscape .report-table.official-grid th,body.print-landscape .report
 .muted{color:#64748b}
 @media print{.dys-detail-cell{min-width:260px;max-width:none}.dys-gp-item{font-size:9px;padding:2px 3px;gap:4px}}
 
-/* V27: district-wise highest Dysfunctional GP + corrected alert column widths */
-.alerts{grid-template-columns:minmax(360px,.92fr) minmax(620px,1.45fr) minmax(420px,1fr);align-items:start}
-.dys-alert-table{table-layout:fixed;min-width:1040px;width:100%}
-.dys-alert-table .c-janpad{width:12%}.dys-alert-table .c-rank{width:6%}.dys-alert-table .c-engineer{width:15%}.dys-alert-table .c-cluster{width:16%}.dys-alert-table .c-num{width:7%}.dys-alert-table .c-detail{width:23%}.dys-alert-table .c-official{width:10%}
-.dys-alert-table th,.dys-alert-table td{vertical-align:top;white-space:normal;overflow-wrap:anywhere}
-.dys-alert-table th{text-align:center}.dys-alert-table th:first-child,.dys-alert-table th:nth-child(3),.dys-alert-table th:nth-child(4),.dys-alert-table th:nth-child(8){text-align:left}
-.dys-detail-cell{min-width:220px}
-.district-dys-card{border-left:5px solid #2b6cb0}
-.district-dys-wrap{max-height:420px}
-.district-dys-table{min-width:610px;table-layout:auto}
-.district-dys-table th,.district-dys-table td{white-space:nowrap;text-align:center}
-.district-dys-table th:nth-child(3),.district-dys-table td:nth-child(3){text-align:left;min-width:150px}
-@media(max-width:1500px){.alerts{grid-template-columns:1fr 1.35fr}.district-dys-card{grid-column:1/-1}.district-dys-table{min-width:760px}}
-@media(max-width:900px){.alerts{grid-template-columns:1fr}.district-dys-card{grid-column:auto}.dys-alert-table{min-width:980px}.district-dys-table{min-width:620px}}
+/* ===== V28 District Dysfunctional visibility + width fix ===== */
+.build-badge{
+  position:absolute;right:14px;top:6px;z-index:10;
+  font-size:10px;font-weight:900;padding:4px 8px;border-radius:999px;
+  background:#0b4f9c;color:#fff;border:1px solid rgba(255,255,255,.8)
+}
+.alerts{
+  display:grid!important;
+  grid-template-columns:minmax(520px,.95fr) minmax(760px,1.45fr) minmax(520px,.9fr)!important;
+  gap:14px!important;
+  align-items:start!important;
+}
+.alert-card{min-width:0!important;grid-column:auto!important}
+.alert-low-card .alert-table{min-width:650px}
+.alert-dys-card .alert-table-wrap{max-height:520px}
+.dys-alert-table{min-width:1180px!important;table-layout:fixed!important}
+.dys-alert-table .c-janpad{width:105px}
+.dys-alert-table .c-rank{width:48px}
+.dys-alert-table .c-engineer{width:155px}
+.dys-alert-table .c-cluster{width:175px}
+.dys-alert-table .c-num{width:82px}
+.dys-alert-table .c-detail{width:315px}
+.dys-alert-table .c-official{width:105px}
+.dys-alert-table th,.dys-alert-table td{padding:6px 7px!important;vertical-align:top}
+.dys-alert-table th:nth-child(3),.dys-alert-table td:nth-child(3),
+.dys-alert-table th:nth-child(4),.dys-alert-table td:nth-child(4),
+.dys-alert-table th:nth-child(8),.dys-alert-table td:nth-child(8){text-align:left!important;white-space:normal!important}
+.district-dys-card{border-left:5px solid #2b6cb0!important}
+.district-dys-wrap{max-height:520px!important;overflow:auto!important}
+.district-dys-table{min-width:510px!important;width:100%!important;table-layout:fixed!important}
+.district-dys-table th,.district-dys-table td{font-size:11px!important;padding:7px 6px!important;text-align:center!important;white-space:nowrap!important}
+.district-dys-table th:nth-child(1){width:72px}
+.district-dys-table th:nth-child(2){width:48px}
+.district-dys-table th:nth-child(3){width:132px}
+.district-dys-table th:nth-child(4),
+.district-dys-table th:nth-child(5),
+.district-dys-table th:nth-child(6){width:72px}
+.district-dys-table th:nth-child(7){width:62px}
+.district-dys-table td:nth-child(3){text-align:left!important}
+.district-top-row td{font-weight:900;background:#fff3d8}
+.district-dys-note{display:flex;justify-content:space-between;gap:8px;align-items:center;padding:0 4px 8px;font-size:11px}
+.district-dys-note span{color:#65758b;font-weight:700}
+@media(max-width:1700px){
+  .alerts{grid-template-columns:minmax(480px,1fr) minmax(720px,1.35fr)!important}
+  .district-dys-card{grid-column:1/-1!important}
+}
+@media(max-width:1050px){
+  .alerts{grid-template-columns:1fr!important}
+  .alert-card,.district-dys-card{grid-column:auto!important}
+}

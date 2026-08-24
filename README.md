@@ -85,8 +85,5 @@ V25 Dysfunctional GP name/status correction (24-08-2026)
 - Janpad Official Dys GP remains visible for cross-check against Sheet1 / Screen-2.
 
 
-## V27 update
-- Added District-wise Highest Dysfunctional GP Janpad card beside alert panels.
-- SATNA and MAIHAR are evaluated separately from official Sheet1 / Screen-2 Janpad totals.
-- Added Total GP, GP Progress, Dysfunctional GP and Dysfunctional % columns.
-- Corrected Dysfunctional GP alert table column widths for Engineer, Cluster, counts and GP-name/work-status details.
+## V28 IMPORTANT
+Open this V28 folder's index.html. The top-right must show **V28 • DISTRICT-DYS FIX**. If not, you opened an older folder. Local CSS/JS are cache-busted with ?v=28.
