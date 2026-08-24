@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=42"></head>
+<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=43"></head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
@@ -135,7 +135,7 @@
 <nav class="tabs top-tabs no-print"><button class="tab active" data-view="official">Official Janpad Daily</button><button class="tab" data-view="engineer">Engineer-wise</button><button class="tab" data-view="district">Full District Report</button><button class="tab" data-view="gp">GP Detail</button><button class="tab ongoingall-tab" data-view="ongoingall">Ongoing Work All Summary</button><button class="tab ongoingdetail-tab" data-view="ongoingdetails">Ongoing Works Sheet</button><button class="tab category-tab" data-view="category">Category-wise Work</button><button class="tab exp-tab" data-view="expbucket">Exp % Buckets</button><button class="tab priority-tab" data-view="priority">Priority Alerts</button><button class="tab dys-tab" data-view="dysfunctional">Dysfunctional GP Alert</button></nav>
 
 <section class="source-links no-print"><b>Official VB-G RAM G Sources:</b> <a href="https://vbgramg.dord.gov.in/vbgramg/home.aspx" target="_blank" rel="noopener">Home</a> <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/MISreport.aspx" target="_blank" rel="noopener">MIS Report</a> <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=4PmH2eRA9khYNUNqz1h5yt9D8POKLA7Afp0nercX3xt22K65u-hNco55SZiMHr78IufQr-Pyxw1-2tJEz-65UMtG5kOTBzCEHurJmRrAtoAIfVSTK-qhJdX02vLZMWrVbwM-oS9xX58g6SiO5ODhhFid9RqKvnwTnS-hLkXfa1-25phIp66JlphIcilUU7cK" target="_blank" rel="noopener">Ongoing Work All</a> <a class="download-source" href="data/Ongoing_Works_dynamic_work_details_Janpad_Wise_23-08-2026.csv" download>⬇ Janpad-wise Ongoing Sheet</a></section>
-<section class="upload-card no-print"><div><h2>Automatic Daily Report</h2><p>Official source से data auto-update होगा। Excel upload केवल <b>Manual Backup / Emergency</b> के लिए है।</p></div><div class="actions"><label class="file-btn">Excel चुनें<input id="fileInput" type="file" accept=".xlsx,.xls"></label><button class="primary" id="generateBtn">रिपोर्ट बनाएँ</button><button id="fontMinusBtn" title="Font छोटा करें">A−</button><button id="fontPlusBtn" title="Font बड़ा करें">A+</button><select id="printOrientation" class="print-select" title="Print page orientation"><option value="portrait" selected>Portrait</option><option value="landscape">Landscape</option></select><button id="printBtn">Print / PDF</button><button id="csvBtn">CSV Export</button><select id="pptPageSet" class="ppt-select" title="PPT Page Set"><option value="wide" selected>PPT 16:9</option><option value="standard">PPT 4:3</option></select><button id="pptBtn" class="ppt-btn">PPT Download</button><span class="ppt-ready-note">PPT engine: Local ✓</span></div><div id="fileStatus" class="status">Sample workbook loaded</div></section>
+<section class="upload-card no-print"><div><h2>Automatic Daily Report</h2><p>Official source से data auto-update होगा। Excel upload केवल <b>Manual Backup / Emergency</b> के लिए है।</p></div><div class="actions"><label class="file-btn">Excel चुनें<input id="fileInput" type="file" accept=".xlsx,.xls"></label><button class="primary" id="generateBtn">रिपोर्ट बनाएँ</button><button id="fontMinusBtn" title="Font छोटा करें">A−</button><button id="fontPlusBtn" title="Font बड़ा करें">A+</button><select id="printOrientation" class="print-select" title="Print page orientation"><option value="portrait" selected>Portrait</option><option value="landscape">Landscape</option></select><button id="printBtn">Print / PDF</button><button id="csvBtn">CSV Export</button><select id="pptPageSet" class="ppt-select" title="PPT Page Set"><option value="wide" selected>PPT 16:9</option><option value="standard">PPT 4:3</option></select><button id="pptBtn" class="ppt-btn">Current Report PPT</button><span class="ppt-ready-note">PPT engine: Local ✓ • Key Indication included</span></div><div id="fileStatus" class="status">Sample workbook loaded</div></section>
 <section class="filters no-print"><select id="districtFilter"><option value="ALL">सभी District</option><option value="MAIHAR">MAIHAR</option><option value="SATNA">SATNA</option></select><select id="janpadFilter"><option value="ALL">सभी Janpad</option></select><select id="engineerFilter"><option value="ALL">सभी Engineer</option></select><select id="clusterFilter"><option value="ALL">सभी Cluster</option></select><button id="resetBtn">Reset</button></section>
 
 <section class="screen-tools no-print" id="screenTools">
@@ -152,7 +152,7 @@
     <button type="button" data-review-view="gp">GP Detail</button>
     <button type="button" data-review-view="priority">Priority Alerts</button>
     <button type="button" data-review-view="dysfunctional">Dysfunctional GP</button>
-    <button type="button" id="screenPptBtn" class="ppt-export-btn">PPT Download</button>
+    <button type="button" id="screenPptBtn" class="ppt-export-btn">Current Report PPT</button>
   </div>
 </section>
 
@@ -178,4 +178,4 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=42"></script><script src="auto-status.js?v=41"></script><script src="auto-data.js?v=41"></script><script src="ongoing-details.js?v=41"></script><script src="sample-data.js?v=41"></script><script src="app.js?v=42"></script></body></html>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=43"></script><script src="auto-status.js?v=43"></script><script src="auto-data.js?v=43"></script><script src="ongoing-details.js?v=43"></script><script src="sample-data.js?v=43"></script><script src="app.js?v=43"></script></body></html>

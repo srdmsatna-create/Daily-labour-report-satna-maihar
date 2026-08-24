@@ -576,6 +576,129 @@ function addPptTable(ppt, rows, title, subtitle, pageSet){
   slide.addText(`Rows shown: ${safeRows.length} of ${(rows||[]).length} • ${currentScopeText()}`,{x:0.42,y:isWide?6.96:6.78,w:isWide?12.2:9.1,h:.22,fontSize:8,color:'60758B',margin:0});
   return slide;
 }
+
+function pptLegend(slide,ppt,y=1.49){
+  slide.addShape(ppt.ShapeType.ellipse,{x:9.35,y:y+0.02,w:.10,h:.10,fill:{color:'2FA56E'},line:{color:'2FA56E'}});
+  slide.addText('Better coverage  ≥ 10%',{x:9.49,y,w:1.55,h:.17,fontSize:7.6,color:'58708A',margin:0});
+  slide.addShape(ppt.ShapeType.ellipse,{x:11.12,y:y+0.02,w:.10,h:.10,fill:{color:'E79A16'},line:{color:'E79A16'}});
+  slide.addText('Needs attention  < 10%',{x:11.26,y,w:1.62,h:.17,fontSize:7.6,color:'58708A',margin:0});
+}
+function officialPct(a,b){return b?((Number(a||0)/Number(b||0))*100):0}
+function officialTotalRow(data){
+  const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'];
+  const t={}; keys.forEach(k=>t[k]=(data||[]).reduce((s,r)=>s+Number(r[k]||0),0)); return t;
+}
+function officialRowsForPpt(data){
+  const out=(data||[]).map(r=>[
+    districtOf(r.janpad),r.janpad,
+    r.totalGP,r.musterGP,r.dysfunctionalGP,
+    r.labourAll,r.mrAll,r.ongoingAll,officialPct(r.mrAll,r.ongoingAll).toFixed(1)+'%',
+    r.labourIndividual,r.mrIndividual,
+    r.labourCommunity,r.mrCommunity,officialPct(r.mrCommunity,r.mrAll).toFixed(1)+'%',
+    r.pmayOngoing,r.pmayMR,officialPct(r.pmayMR,r.pmayOngoing).toFixed(1)+'%',
+    r.ekLabour,r.ekOngoing,r.ekMR,officialPct(r.ekMR,r.ekOngoing).toFixed(1)+'%'
+  ]);
+  const t=officialTotalRow(data);
+  out.push([
+    'TOTAL','',
+    t.totalGP,t.musterGP,t.dysfunctionalGP,
+    t.labourAll,t.mrAll,t.ongoingAll,officialPct(t.mrAll,t.ongoingAll).toFixed(1)+'%',
+    t.labourIndividual,t.mrIndividual,
+    t.labourCommunity,t.mrCommunity,officialPct(t.mrCommunity,t.mrAll).toFixed(1)+'%',
+    t.pmayOngoing,t.pmayMR,officialPct(t.pmayMR,t.pmayOngoing).toFixed(1)+'%',
+    t.ekLabour,t.ekOngoing,t.ekMR,officialPct(t.ekMR,t.ekOngoing).toFixed(1)+'%'
+  ]);
+  return out;
+}
+function addOfficialFullTableSlide(ppt,data,scope){
+  const slide=ppt.addSlide(); slide.background={color:'F7FAFE'};
+  slide.addShape(ppt.ShapeType.rect,{x:0,y:0,w:13.333,h:.58,fill:{color:'0B3159'},line:{color:'0B3159'}});
+  slide.addText('Official Janpad Daily Report',{x:.28,y:.12,w:6.0,h:.27,fontSize:17,bold:true,color:'FFFFFF',margin:0});
+  slide.addText(scope,{x:6.25,y:.14,w:6.7,h:.22,fontSize:7.8,color:'DDEBFA',align:'right',margin:0});
+  slide.addText(`${data.length} Janpad • ${todayDate()}`,{x:.30,y:.72,w:3.1,h:.20,fontSize:8.5,color:'5D7289',margin:0});
+  pptLegend(slide,ppt,.71);
+
+  const h1=[
+    {text:'District',options:{rowSpan:2,bold:true,color:'FFFFFF',fill:'4A78A8',align:'center',valign:'mid'}},
+    {text:'Janpad',options:{rowSpan:2,bold:true,color:'FFFFFF',fill:'4A78A8',align:'center',valign:'mid'}},
+    {text:'Gram Panchayat',options:{colSpan:3,bold:true,color:'FFFFFF',fill:'7EA2C8',align:'center'}},
+    {text:'All Types of Works',options:{colSpan:4,bold:true,color:'FFFFFF',fill:'7EA2C8',align:'center'}},
+    {text:'Individual Land (Cat-IV)',options:{colSpan:2,bold:true,color:'FFFFFF',fill:'7EA2C8',align:'center'}},
+    {text:'Community Works',options:{colSpan:3,bold:true,color:'FFFFFF',fill:'7EA2C8',align:'center'}},
+    {text:'PMAY-G',options:{colSpan:3,bold:true,color:'FFFFFF',fill:'7EA2C8',align:'center'}},
+    {text:'Ek Bagiya',options:{colSpan:4,bold:true,color:'FFFFFF',fill:'7EA2C8',align:'center'}}
+  ];
+  const h2=['Total GP','Muster GP','Dysfunctional','Labour','Works with MR','Ongoing','MR %','Labour','Works MR','Labour','Works MR','Share %','Ongoing','MR Issued','MR %','Labour','Ongoing','MR Issued','MR %']
+    .map(x=>({text:x,options:{bold:true,fill:'D6E6F8',color:'0A3158',align:'center',valign:'mid'}}));
+  const rows=officialRowsForPpt(data);
+  const body=rows.map((r,ri)=>r.map((v,ci)=>{
+    let fill=ri===rows.length-1?'D9E8F8':(ri%2?'F3F7FC':'FFFFFF');
+    let color='172334',bold=ri===rows.length-1;
+    if([8,13,16,20].includes(ci)){
+      const n=parseFloat(String(v));
+      fill=n>=10?'E5F4EC':'FFF2D8';
+      color=n>=10?'146C48':'9A5C00';
+      bold=true;
+    }
+    return {text:String(v??''),options:{fill,color,bold,align:ci<2?'left':'center',valign:'mid'}};
+  }));
+  // JS literal "True" fix after source insertion.
+  const table=[h1,h2,...body];
+  const widths=[.62,1.00,.52,.52,.67,.54,.55,.58,.46,.54,.55,.54,.55,.48,.58,.55,.46,.54,.55,.55,.46];
+  slide.addTable(table,{
+    x:.16,y:1.08,w:13.02,h:5.96,
+    colW:widths,rowH:[.34,.44,...rows.map(()=>.49)],
+    margin:.025,fontSize:5.3,color:'172334',
+    border:{type:'solid',color:'7D9BB9',pt:.45},
+    autoFit:false,breakLine:false
+  });
+  slide.addText('Key Indication: Green = MR coverage/share 10% or more • Amber = below 10%',{
+    x:.32,y:7.16,w:7.3,h:.17,fontSize:7.2,color:'5C7087',margin:0
+  });
+}
+function addOfficialDetailSlides(ppt,data,scope){
+  const common=[
+    {key:'district',label:'District'}, {key:'janpad',label:'Janpad'}
+  ];
+  const sets=[
+    {
+      title:'Official Janpad Daily Report • Part A',
+      groups:'Gram Panchayat • All Types of Works • Individual Land (Cat-IV)',
+      headers:['District','Janpad','Total GP','Muster GP','Dysfunctional GP','Labour','Works with MR','Ongoing','MR %','Individual Labour','Individual Works MR'],
+      rows:(data||[]).map(r=>[districtOf(r.janpad),r.janpad,r.totalGP,r.musterGP,r.dysfunctionalGP,r.labourAll,r.mrAll,r.ongoingAll,officialPct(r.mrAll,r.ongoingAll).toFixed(1)+'%',r.labourIndividual,r.mrIndividual])
+    },
+    {
+      title:'Official Janpad Daily Report • Part B',
+      groups:'Community Works • PMAY-G • Ek Bagiya',
+      headers:['District','Janpad','Community Labour','Community Works MR','Share %','PMAY Ongoing','PMAY MR Issued','PMAY MR %','Ek Bagiya Labour','Ek Bagiya Ongoing','Ek Bagiya MR','Ek Bagiya MR %'],
+      rows:(data||[]).map(r=>[districtOf(r.janpad),r.janpad,r.labourCommunity,r.mrCommunity,officialPct(r.mrCommunity,r.mrAll).toFixed(1)+'%',r.pmayOngoing,r.pmayMR,officialPct(r.pmayMR,r.pmayOngoing).toFixed(1)+'%',r.ekLabour,r.ekOngoing,r.ekMR,officialPct(r.ekMR,r.ekOngoing).toFixed(1)+'%'])
+    }
+  ];
+  sets.forEach(set=>{
+    const slide=ppt.addSlide(); slide.background={color:'F7FAFE'};
+    slide.addShape(ppt.ShapeType.rect,{x:0,y:0,w:13.333,h:.58,fill:{color:'0B3159'},line:{color:'0B3159'}});
+    slide.addText(set.title,{x:.3,y:.12,w:6.3,h:.26,fontSize:17,bold:true,color:'FFFFFF',margin:0});
+    slide.addText(scope,{x:7.0,y:.14,w:5.9,h:.2,fontSize:7.8,color:'DDEBFA',align:'right',margin:0});
+    slide.addText(set.groups,{x:.32,y:.73,w:7.2,h:.22,fontSize:9,bold:true,color:'123F72',margin:0});
+    pptLegend(slide,ppt,.73);
+    const table=[
+      set.headers.map(h=>({text:h,options:{bold:true,fill:'CFE0F5',color:'0A3158',align:'center',valign:'mid'}})),
+      ...set.rows.map((r,ri)=>r.map((v,ci)=>{
+        let fill=ri%2?'F3F7FC':'FFFFFF',color='172334',bold=false;
+        const sv=String(v??'');
+        if(sv.endsWith('%')){
+          const n=parseFloat(sv); fill=n>=10?'E5F4EC':'FFF2D8'; color=n>=10?'146C48':'9A5C00'; bold=true;
+        }
+        return {text:sv,options:{fill,color,bold,align:ci<2?'left':'center',valign:'mid'}};
+      }))
+    ];
+    slide.addTable(table,{x:.35,y:1.15,w:12.62,h:5.5,margin:.04,fontSize:8.1,border:{type:'solid',color:'91A9C0',pt:.5},fill:'FFFFFF',autoFit:false});
+    slide.addText('Key Indication: Green = Better coverage (≥10%) • Amber = Needs attention (<10%)',{
+      x:.38,y:6.82,w:7.2,h:.2,fontSize:8,color:'5C7087',margin:0
+    });
+  });
+}
+
 function downloadCurrentPpt(){
   if(typeof PptxGenJS==='undefined'){
     alert('PPT library load नहीं हुई। कृपया Ctrl+F5 से page refresh करें।');
@@ -613,9 +736,9 @@ function downloadCurrentPpt(){
     const cols=pageSet==='standard'?2:4, boxW=pageSet==='standard'?4.25:3.05, boxH=1.05;
     kpiEls.forEach((el,i)=>{
       const x=.55+(i%cols)*(boxW+.18), y=1.35+Math.floor(i/cols)*(boxH+.22);
-      const label=el.querySelector('.label')?.textContent||'Metric';
-      const val=el.querySelector('.num')?.textContent||'';
-      const sub=el.querySelector('.sub')?.textContent||'';
+      const label=el.querySelector('.label')?.textContent||el.querySelector('small')?.textContent||'Metric';
+      const val=el.querySelector('.num')?.textContent||el.querySelector('strong')?.textContent||'';
+      const sub=el.querySelector('.sub')?.textContent||el.querySelector('em')?.textContent||'';
       slide.addShape(ppt.ShapeType.roundRect,{x,y,w:boxW,h:boxH,rectRadius:.08,fill:{color:'FFFFFF'},line:{color:'C8D7E8'}});
       slide.addText(label,{x:x+.16,y:y+.14,w:boxW-.3,h:.22,fontSize:8.5,bold:true,color:'61738A',margin:0});
       slide.addText(val,{x:x+.16,y:y+.40,w:boxW-.3,h:.35,fontSize:22,bold:true,color:'0B3159',margin:0});
@@ -623,12 +746,17 @@ function downloadCurrentPpt(){
     });
   }
 
-  const chunkSize=pageSet==='standard'?12:14;
-  const chunks=[];
-  for(let i=0;i<rows.length;i+=chunkSize)chunks.push(rows.slice(i,i+chunkSize));
-  (chunks.length?chunks:[[]]).slice(0,8).forEach((chunk,i)=>{
-    addPptTable(ppt, chunk, `${viewName}${chunks.length>1?` (${i+1}/${Math.min(chunks.length,8)})`:''}`, scope, pageSet);
-  });
+  if(view==='official'){
+    addOfficialFullTableSlide(ppt, officialFiltered(), scope);
+    addOfficialDetailSlides(ppt, officialFiltered(), scope);
+  }else{
+    const chunkSize=pageSet==='standard'?12:14;
+    const chunks=[];
+    for(let i=0;i<rows.length;i+=chunkSize)chunks.push(rows.slice(i,i+chunkSize));
+    (chunks.length?chunks:[[]]).slice(0,8).forEach((chunk,i)=>{
+      addPptTable(ppt, chunk, `${viewName}${chunks.length>1?` (${i+1}/${Math.min(chunks.length,8)})`:''}`, scope, pageSet);
+    });
+  }
 
   const fileScope=($('janpadFilter')?.value||$('districtFilter')?.value||'ALL').replaceAll(' ','_');
   const pptName=`SRDM_SATNA_${view}_${fileScope}_${todayDate()}.pptx`;
