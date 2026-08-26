@@ -36,3 +36,11 @@ V35 fixes this by:
 - retrying push up to 4 times if `main` changes during the run
 
 Schedule remains only 07:00 AM and 08:00 AM IST.
+
+## V45 — Official summary fallback fix (26-08-2026)
+- Root cause fixed: older workflow published only when a full `RepDay + Sheet1 + VBG` Excel export was detected.
+- The browser fetch now also parses the official 8-Janpad MIS summary table directly.
+- If full Excel is available: full GP/Engineer + official data refreshes.
+- If only the official HTML summary is available: official Janpad cards/table refresh, while the last valid detailed GP/Engineer data remains protected.
+- `data/official-summary.csv` is committed for audit/debugging.
+- Invalid/incomplete official data still cannot overwrite the last valid report.

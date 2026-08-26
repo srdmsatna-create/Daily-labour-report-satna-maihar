@@ -108,6 +108,44 @@ def validate_workbook(path):
     except Exception as e:
         note('workbook sheet validation',False,e); return False
 
+
+
+def parse_official_summary_from_tables():
+    """Parse the 8-Janpad official summary directly from captured MIS HTML tables.
+    This is the fallback when the official portal does not expose a downloadable workbook.
+    """
+    source=RAW/'mis_tables.json'
+    if not source.exists(): return None
+    try: tables=json.loads(source.read_text(encoding='utf-8'))
+    except Exception as e:
+        note('official summary table parse',False,e); return None
+    valid={'AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'}
+    fields=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR']
+    idx=[2,3,4,6,7,8,10,11,12,13,15,16,18,19,20]
+    def n(v):
+        try:return float(str(v).replace(',','').strip() or 0)
+        except:return 0.0
+    best={}
+    for table in tables:
+        found={}
+        for r in table:
+            if len(r)<21: continue
+            jan=str(r[1]).strip().upper()
+            if jan not in valid: continue
+            z={'janpad':jan}
+            for k,i in zip(fields,idx): z[k]=n(r[i])
+            if z['totalGP']>0 and z['ongoingAll']>0: found[jan]=z
+        if len(found)>len(best): best=found
+    if set(best)!=valid:
+        note('official summary table parse',False,f'Expected 8 Janpads, got {len(best)}'); return None
+    import csv
+    out=DATA/'official-summary.csv'
+    with out.open('w',encoding='utf-8-sig',newline='') as f:
+        w=csv.DictWriter(f,fieldnames=['janpad']+fields); w.writeheader()
+        for j in ['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']:w.writerow(best[j])
+    note('official summary table parse',True,'8 Janpads -> data/official-summary.csv')
+    return out
+
 with sync_playwright() as p:
     browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
     context=browser.new_context(accept_downloads=True,viewport={'width':1600,'height':1000})
@@ -146,16 +184,20 @@ with sync_playwright() as p:
     # Search any captured browser responses/downloads is not needed when export worked.
     browser.close()
 
-# Prefer a valid official export. Do not overwrite incoming if invalid.
+# Prefer a valid official workbook. If unavailable, fall back to the live official 8-Janpad HTML table.
 if downloaded and validate_workbook(downloaded):
     dest=INCOMING/'Daily Report.xlsx'
     shutil.copy2(downloaded,dest)
-    status['ok']=True; status['workbook']=str(dest.relative_to(ROOT))
+    status['ok']=True; status['updateMode']='workbook'; status['workbook']=str(dest.relative_to(ROOT))
     note('fresh Daily Report installed',True,dest)
 else:
-    # A direct downloadable workbook URL may be supplied as a secret later.
-    status['ok']=False
-    note('fresh Daily Report installed',False,'No official export with RepDay + Sheet1 + VBG was detected. Existing published data will be kept.')
+    summary=parse_official_summary_from_tables()
+    if summary:
+        status['ok']=True; status['updateMode']='summary'; status['summary']=str(summary.relative_to(ROOT))
+        note('summary fallback enabled',True,'Official cards/table can refresh without full Excel export')
+    else:
+        status['ok']=False
+        note('fresh official data installed',False,'Neither a valid workbook nor the 8-Janpad official summary table was detected. Previous valid report remains live.')
 
 save_status()
 if not status['ok']:

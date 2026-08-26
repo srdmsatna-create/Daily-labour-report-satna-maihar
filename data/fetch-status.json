@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "updateMode": "summary",
+  "source": "Official VB-G RAM G",
+  "officialDate": "26-08-2026",
+  "note": "Seeded from verified official summary CSV; future GitHub runs parse the official MIS HTML table when full workbook export is unavailable."
+}
