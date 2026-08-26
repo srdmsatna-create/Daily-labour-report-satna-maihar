@@ -24,8 +24,7 @@ Secrets website code में expose नहीं होते; वे के�
 - `data/fetch-status.json` और website status line में fetch result दिखेगा.
 
 ## Schedule
-IST 06:15, 09:15, 12:15, 15:15, 18:15, 21:15 पर automatic refresh; Actions से कभी भी manual Run भी कर सकते हैं.
-
+Automatic refresh **दिन में केवल एक बार, सुबह 07:30 AM IST** पर होगा (7–8 AM window). Actions से manual Run अभी भी उपलब्ध है.
 
 ## V35 Git Push Fix
 If GitHub Action showed `main -> main (fetch first)`, the remote `main` branch changed after the runner checked it out.
@@ -35,7 +34,7 @@ V35 fixes this by:
 - rebasing again immediately before push
 - retrying push up to 4 times if `main` changes during the run
 
-Schedule remains only 07:00 AM and 08:00 AM IST.
+Schedule is now only 07:30 AM IST once daily (inside the 7–8 AM window).
 
 ## V45 — Official summary fallback fix (26-08-2026)
 - Root cause fixed: older workflow published only when a full `RepDay + Sheet1 + VBG` Excel export was detected.
