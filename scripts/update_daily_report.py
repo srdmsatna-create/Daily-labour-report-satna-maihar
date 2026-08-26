@@ -117,6 +117,14 @@ def parse(path):
     if len(daily)!=8:
         raise SystemExit(f'Screen 2 table parse failed: expected 8 Janpads, got {len(daily)}')
 
+    # V46: Screen-2 is authoritative for shared KPIs even when a full workbook is available.
+    dmap={r['janpad']:r for r in daily}
+    for o in official:
+        d=dmap.get(o['janpad'])
+        if not d: continue
+        o['totalGP']=d['totalGP']; o['musterGP']=d['gpsProgress']; o['dysfunctionalGP']=max(0,d['totalGP']-d['gpsProgress'])
+        o['labourAll']=d['labour']; o['mrAll']=d['worksMR']; o['noEkyc']=d['noEkyc']; o['mrs']=d['mrs']
+
     # VBG = work-level add-ons for engineer cards, category-wise work and expenditure buckets.
     v=wb['VBG']; wm={}; cm={}
     inst=re.compile(r'(school|prathmik|madhyamik|shala|vidyalaya|प्राथमिक|माध्यमिक|शाला|विद्यालय)',re.I)

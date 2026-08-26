@@ -111,39 +111,65 @@ def validate_workbook(path):
 
 
 def parse_official_summary_from_tables():
-    """Parse the 8-Janpad official summary directly from captured MIS HTML tables.
-    This is the fallback when the official portal does not expose a downloadable workbook.
+    """V46 fallback: Screen-2 is authoritative for shared daily KPIs.
+    A wider rich table may supply ongoing/category columns. If that wider table is
+    unavailable, preserve the previous valid rich values instead of substituting
+    incompatible Screen-2 columns.
     """
     source=RAW/'mis_tables.json'
     if not source.exists(): return None
     try: tables=json.loads(source.read_text(encoding='utf-8'))
-    except Exception as e:
-        note('official summary table parse',False,e); return None
+    except Exception as e: note('official table parse',False,e); return None
     valid={'AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'}
-    fields=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR']
-    idx=[2,3,4,6,7,8,10,11,12,13,15,16,18,19,20]
+    order=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']
+    rich_fields=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR']
+    rich_idx=[2,3,4,6,7,8,10,11,12,13,15,16,18,19,20]
     def n(v):
         try:return float(str(v).replace(',','').strip() or 0)
         except:return 0.0
-    best={}
+    # Load previous rich values as safe fallback.
+    previous={}
+    old=DATA/'official-summary.csv'
+    if old.exists():
+        try:
+            import csv
+            with old.open(encoding='utf-8-sig',newline='') as f:
+                previous={str(r.get('janpad','')).strip().upper():dict(r) for r in csv.DictReader(f)}
+        except Exception: previous={}
+    best_rich={}; best_screen={}
     for table in tables:
-        found={}
+        rich={}; screen={}
         for r in table:
-            if len(r)<21: continue
-            jan=str(r[1]).strip().upper()
+            if len(r)<2: continue
+            jan=str(r[1]).strip().upper().replace('RAMPUR\nBAGHELAN','RAMPUR BAGHELAN')
+            jan=' '.join(jan.split())
             if jan not in valid: continue
-            z={'janpad':jan}
-            for k,i in zip(fields,idx): z[k]=n(r[i])
-            if z['totalGP']>0 and z['ongoingAll']>0: found[jan]=z
-        if len(found)>len(best): best=found
-    if set(best)!=valid:
-        note('official summary table parse',False,f'Expected 8 Janpads, got {len(best)}'); return None
+            if len(r)>=21:
+                z={'janpad':jan}
+                for k,i in zip(rich_fields,rich_idx): z[k]=n(r[i])
+                if z['totalGP']>0 and z['ongoingAll']>0: rich[jan]=z
+            # Screen-2 row: SNo, Block, Total GP, GP with progress, Labour, Works MR, no-eKYC, Muster Rolls
+            if len(r)>=8:
+                z={'janpad':jan,'totalGP':n(r[2]),'musterGP':n(r[3]),'labourAll':n(r[4]),'mrAll':n(r[5]),'noEkyc':n(r[6]),'mrs':n(r[7])}
+                if z['totalGP']>0 and z['musterGP']>=0 and z['mrs']>=0: screen[jan]=z
+        if len(rich)>len(best_rich): best_rich=rich
+        if len(screen)>len(best_screen): best_screen=screen
+    if set(best_screen)!=valid:
+        note('Screen-2 table parse',False,f'Expected 8 Janpads, got {len(best_screen)}'); return None
+    fields=['janpad','totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','noEkyc','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR']
+    result=[]
+    for j in order:
+        base={k:n(previous.get(j,{}).get(k,0)) for k in fields if k!='janpad'}
+        if j in best_rich: base.update(best_rich[j])
+        sc=best_screen[j]
+        # Screen-2 wins for every shared metric.
+        base.update(sc); base['janpad']=j; base['dysfunctionalGP']=max(0,base['totalGP']-base['musterGP'])
+        result.append(base)
     import csv
     out=DATA/'official-summary.csv'
     with out.open('w',encoding='utf-8-sig',newline='') as f:
-        w=csv.DictWriter(f,fieldnames=['janpad']+fields); w.writeheader()
-        for j in ['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']:w.writerow(best[j])
-    note('official summary table parse',True,'8 Janpads -> data/official-summary.csv')
+        w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(result)
+    note('Screen-2 table parse',True,'8 Janpads authoritative; rich columns preserved/merged')
     return out
 
 with sync_playwright() as p:
