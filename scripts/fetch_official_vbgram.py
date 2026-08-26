@@ -174,7 +174,7 @@ def parse_official_summary_from_tables():
 
 with sync_playwright() as p:
     browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
-    context=browser.new_context(accept_downloads=True,viewport={'width':1600,'height':1000})
+    context=browser.new_context(accept_downloads=True,viewport={'width':1600,'height':1000},extra_http_headers={'Cache-Control':'no-cache','Pragma':'no-cache'})
     if COOKIE:
         # Parse simple Cookie header into cookies for both official hosts.
         cookies=[]
@@ -210,20 +210,29 @@ with sync_playwright() as p:
     # Search any captured browser responses/downloads is not needed when export worked.
     browser.close()
 
-# Prefer a valid official workbook. If unavailable, fall back to the live official 8-Janpad HTML table.
-if downloaded and validate_workbook(downloaded):
+# V49: LIVE PORTAL FIRST. Always parse the current HTML Screen-2 table.
+# A downloaded workbook is still useful for RepDay/VBG/rich fields, but it must NEVER
+# overwrite fresher Screen-2 values shown on the official portal.
+summary=parse_official_summary_from_tables()
+workbook_ok=bool(downloaded and validate_workbook(downloaded))
+if workbook_ok:
     dest=INCOMING/'Daily Report.xlsx'
     shutil.copy2(downloaded,dest)
-    status['ok']=True; status['updateMode']='workbook'; status['workbook']=str(dest.relative_to(ROOT))
+    status['workbook']=str(dest.relative_to(ROOT))
     note('fresh Daily Report installed',True,dest)
+
+if workbook_ok and summary:
+    status['ok']=True; status['updateMode']='workbook+summary'; status['summary']=str(summary.relative_to(ROOT))
+    note('live portal authority enabled',True,'Workbook supplies drill-down/rich fields; current portal Screen-2 overrides all shared KPIs')
+elif summary:
+    status['ok']=True; status['updateMode']='summary'; status['summary']=str(summary.relative_to(ROOT))
+    note('live summary mode enabled',True,'Current official Screen-2 refreshes cards/table; previous rich fields are preserved only where portal does not expose them')
+elif workbook_ok:
+    status['ok']=True; status['updateMode']='workbook'
+    note('workbook-only mode',True,'Live Screen-2 table was unavailable; workbook used as fallback')
 else:
-    summary=parse_official_summary_from_tables()
-    if summary:
-        status['ok']=True; status['updateMode']='summary'; status['summary']=str(summary.relative_to(ROOT))
-        note('summary fallback enabled',True,'Official cards/table can refresh without full Excel export')
-    else:
-        status['ok']=False
-        note('fresh official data installed',False,'Neither a valid workbook nor the 8-Janpad official summary table was detected. Previous valid report remains live.')
+    status['ok']=False
+    note('fresh official data installed',False,'Neither a valid workbook nor the live 8-Janpad official Screen-2 table was detected. Previous valid report remains live.')
 
 save_status()
 if not status['ok']:

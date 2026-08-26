@@ -18,4 +18,24 @@ if mr <= 0: raise SystemExit('Works with MR is zero — reject publish')
 if mrs <= 0: raise SystemExit('Muster Rolls is zero — reject publish')
 if labour <= 0: raise SystemExit('Labour Engagement is zero — reject publish')
 if sm(official,'ongoingAll') <= 0: raise SystemExit('Official ongoing works is zero')
+
+# V49 safety lock: when official-summary.csv exists, published shared KPIs must match it EXACTLY.
+csvp=ROOT/'data'/'official-summary.csv'
+if csvp.exists():
+    import csv
+    with csvp.open(encoding='utf-8-sig',newline='') as f:
+        sr=list(csv.DictReader(f))
+    if len(sr)==8:
+        checks=[('totalGP','totalGP'),('musterGP','gpsProgress'),('labourAll','labour'),('mrAll','worksMR'),('noEkyc','noEkyc'),('mrs','mrs')]
+        om={str(r.get('janpad','')).strip().upper():r for r in official}
+        dm={str(r.get('janpad','')).strip().upper():r for r in daily}
+        for r in sr:
+            j=str(r.get('janpad','')).strip().upper()
+            if j not in om or j not in dm: raise SystemExit(f'Published Janpad missing: {j}')
+            for csvk,autok in checks:
+                target=float(r.get(csvk) or 0)
+                actual=float((dm[j] if autok in ('totalGP','gpsProgress','labour','worksMR','noEkyc','mrs') else om[j]).get(autok) or 0)
+                if abs(target-actual)>0.001:
+                    raise SystemExit(f'LIVE PORTAL mismatch {j} {autok}: portal={target}, published={actual}')
+
 print(json.dumps({'gp':gp,'progress':prog,'dysfunctional':gp-prog,'worksMR':mr,'musterRolls':mrs,'labour':labour,'officialOngoing':sm(official,'ongoingAll'),'source':meta.get('source')},ensure_ascii=False,indent=2))
