@@ -312,22 +312,24 @@ function emusterReportDate(){
   return todayDate().replaceAll('-','/');
 }
 function renderEmuster(){
-  const data=officialFiltered().map((r,i)=>({
-    sno:i+1,district:districtOf(r.janpad),janpad:r.janpad,totalGP:num(r.totalGP),gpProgress:num(r.musterGP),
-    dysfunctionalGP:num(r.dysfunctionalGP),dysPct:pct(r.dysfunctionalGP,r.totalGP),labour:num(r.labourAll),
-    ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),mrPct:pct(r.mrAll,r.ongoingAll),mrs:num(r.mrs||0)
+  const order=['AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
+  const dmap=new Map(dailyFiltered().map(r=>[normJanpad(r.janpad),r]));
+  const data=order.map(j=>dmap.get(j)).filter(Boolean).map((r,i)=>({
+    sno:i+1,janpad:normJanpad(r.janpad),totalGP:num(r.totalGP),gpProgress:num(r.gpsProgress),
+    labour:num(r.labour),worksMR:num(r.worksMR),noEkyc:num(r.noEkyc),mrs:num(r.mrs)
   }));
   lastExport=data;
-  $('viewTitle').textContent='VB-G RAM G Based on e-Muster Issuance';
-  $('viewMeta').textContent=`Official Janpad Summary • as on ${emusterReportDate()} • ${data.length} Janpad`;
-  const cols=12;
-  let h=`<thead><tr class="emuster-title-row"><th colspan="${cols}">VB-G RAM G Based on e-Muster Issuance as on ${esc(emusterReportDate())}</th></tr>
-  <tr class="emuster-group-row"><th rowspan="2">S.No.</th><th rowspan="2">District</th><th rowspan="2">Janpad</th><th rowspan="2">Total No. of Gram Panchayats (GPs)</th><th rowspan="2">No. of GPs with Works in Progress</th><th colspan="2">Dysfunctional GPs</th><th rowspan="2">Unskilled Labour Engagement as per e-Muster Roll</th><th rowspan="2">Ongoing Works</th><th rowspan="2">Work Muster Rolls Issued</th><th rowspan="2">% Muster Issue Against Ongoing Works</th><th rowspan="2">No. of Muster Rolls</th></tr>
-  <tr><th>No.</th><th>%</th></tr></thead><tbody>`;
-  for(const r of data){h+=`<tr>${cell(r.sno,true)}${cell(r.district)}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.gpProgress,true)}${cell(r.dysfunctionalGP,true)}<td class="pct-cell ${r.dysPct>=25?'pct-bad':''}">${r.dysPct.toFixed(1)}%</td>${cell(r.labour,true)}${cell(r.ongoing,true)}${cell(r.worksMR,true)}<td class="pct-cell">${r.mrPct.toFixed(1)}%</td>${cell(r.mrs,true)}</tr>`;}
-  const t={totalGP:sum(data,'totalGP'),gpProgress:sum(data,'gpProgress'),dysfunctionalGP:sum(data,'dysfunctionalGP'),labour:sum(data,'labour'),ongoing:sum(data,'ongoing'),worksMR:sum(data,'worksMR'),mrs:sum(data,'mrs')};
-  h+=`<tr class="total-row"><td></td><td colspan="2">TOTAL</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.dysfunctionalGP,true)}<td>${pct(t.dysfunctionalGP,t.totalGP).toFixed(1)}%</td>${cell(t.labour,true)}${cell(t.ongoing,true)}${cell(t.worksMR,true)}<td>${pct(t.worksMR,t.ongoing).toFixed(1)}%</td>${cell(t.mrs,true)}</tr>`;
-  if(!data.length)h+=`<tr><td colspan="${cols}" class="empty-table">Current filter में e-Muster data नहीं मिला।</td></tr>`;
+  $('viewTitle').textContent='R6.9 Daily Status of VB-G RAM G Based on e-Muster Issuance';
+  $('viewMeta').textContent=`Official Screen-2 • SATNA + MAIHAR 8 Janpad • as on ${emusterReportDate()}`;
+  const cols=8;
+  let h=`<thead><tr class="emuster-title-row"><th colspan="${cols}">R6.9 Daily Status of VB-G RAM G Based on e-Muster Issuance as on ${esc(emusterReportDate())}</th></tr>
+  <tr class="emuster-note-row"><th colspan="${cols}"><i>Official R6.9 Screen-2 format</i></th></tr>
+  <tr class="emuster-group-row"><th>SNo.</th><th>Blocks</th><th>Total No. of Gram Panchayats (GPs)</th><th>No. of Gram Panchayats (GPs) with Works in Progress</th><th>Maximum Expected Unskilled Labour Engagement as per e-Muster Roll*</th><th>No. of Ongoing Works for which Muster Rolls (MRs) have been Issued</th><th>No. of Workers without e-KYC</th><th>No. of Muster Rolls (MRs)</th></tr></thead><tbody>`;
+  const t={totalGP:sum(data,'totalGP'),gpProgress:sum(data,'gpProgress'),labour:sum(data,'labour'),worksMR:sum(data,'worksMR'),noEkyc:sum(data,'noEkyc'),mrs:sum(data,'mrs')};
+  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.noEkyc,true)}${cell(t.mrs,true)}</tr>`;
+  for(const r of data){h+=`<tr>${cell(r.sno,true)}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.gpProgress,true)}${cell(r.labour,true)}${cell(r.worksMR,true)}${cell(r.noEkyc,true)}${cell(r.mrs,true)}</tr>`;}
+  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.noEkyc,true)}${cell(t.mrs,true)}</tr>`;
+  if(!data.length)h+=`<tr><td colspan="${cols}" class="empty-table">Current filter में R6.9 data नहीं मिला।</td></tr>`;
   h+='</tbody>';$('reportTable').innerHTML=h;
 }
 function renderOfficial(){const data=officialFiltered();lastExport=data;$('viewTitle').textContent='Official Janpad Daily Report';$('viewMeta').textContent=`${data.length} Janpad • ${todayDate()}`;let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th colspan="3">Gram Panchayat</th><th colspan="6">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>No e-KYC</th><th>Muster Rolls</th><th>Ongoing</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(districtOf(r.janpad))}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.noEkyc||0,true)}${cell(r.mrs||0,true)}${cell(r.ongoingAll,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${badge(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${badge(r.ekMR,r.ekOngoing)}</td></tr>`}const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','noEkyc','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td>TOTAL</td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.noEkyc,true)}${cell(t.mrs,true)}${cell(t.ongoingAll,true)}<td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
