@@ -158,6 +158,21 @@ def parse(path):
 
 path,source=obtain(); data=parse(path)
 dates=data.pop('_sourceDates',{})
-data['meta']={'mode':'auto','status':'ok','updatedAt':datetime.now(timezone.utc).isoformat(),'source':source,'rowCount':len(data['rows']),'sourceDates':dates}
+# V51 freshness lock: preserve updatedAt when the parsed workbook content is identical.
+old_data=None
+if OUT.exists():
+    try:
+        old_s=OUT.read_text(encoding='utf-8').strip()
+        old_s=re.sub(r'^window\.AUTO_REPORT\s*=\s*','',old_s).rstrip(';')
+        old_data=json.loads(old_s)
+    except Exception:
+        old_data=None
+payload_keys=['title','rows','official','daily','workmix','categorymix']
+old_payload={k:(old_data or {}).get(k) for k in payload_keys}
+new_payload={k:data.get(k) for k in payload_keys}
+changed=json.dumps(old_payload,ensure_ascii=False,sort_keys=True,separators=(',',':'))!=json.dumps(new_payload,ensure_ascii=False,sort_keys=True,separators=(',',':'))
+old_meta=(old_data or {}).get('meta',{}) if isinstance(old_data,dict) else {}
+updated_at=datetime.now(timezone.utc).isoformat() if changed or not old_meta.get('updatedAt') else old_meta.get('updatedAt')
+data['meta']={'mode':'auto','status':'ok','updatedAt':updated_at,'source':source,'rowCount':len(data['rows']),'sourceDates':dates,'dataChangedOnLastFetch':changed}
 OUT.write_text('window.AUTO_REPORT='+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
 print(f'Wrote {OUT} with {len(data["rows"])} GP rows and {len(data["daily"])} Screen-2 Janpad rows')

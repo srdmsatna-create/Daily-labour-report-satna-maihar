@@ -23,6 +23,8 @@ HOME='https://vbgramg.dord.gov.in/vbgramg/home.aspx'
 MIS='https://vbgramgrep.dord.gov.in/VBGRAMG/MISreport.aspx'
 ONGOING='https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=4PmH2eRA9khYNUNqz1h5yt9D8POKLA7Afp0nercX3xt22K65u-hNco55SZiMHr78IufQr-Pyxw1-2tJEz-65UMtG5kOTBzCEHurJmRrAtoAIfVSTK-qhJdX02vLZMWrVbwM-oS9xX58g6SiO5ODhhFid9RqKvnwTnS-hLkXfa1-25phIp66JlphIcilUU7cK'
 REPORT_URL=os.environ.get('VBGRAM_DAILY_REPORT_URL','').strip() or MIS
+DIRECT_XLSX_URL=os.environ.get('VBGRAM_DAILY_REPORT_XLSX_URL','').strip() or os.environ.get('DAILY_REPORT_XLSX_URL','').strip()
+DIRECT_ONGOING_CSV_URL=os.environ.get('VBGRAM_ONGOING_CSV_URL','').strip()
 USERNAME=os.environ.get('VBGRAM_USERNAME','').strip()
 PASSWORD=os.environ.get('VBGRAM_PASSWORD','').strip()
 COOKIE=os.environ.get('VBGRAM_COOKIE','').strip()
@@ -36,6 +38,29 @@ def save_status():
     status['finishedAt']=datetime.now(timezone.utc).isoformat()
     (DATA/'fetch-status.json').write_text(json.dumps(status,ensure_ascii=False,indent=2),encoding='utf-8')
     (ROOT/'auto-status.js').write_text('window.AUTO_FETCH_STATUS='+json.dumps(status,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
+
+
+def direct_download(url, name):
+    if not url: return None
+    try:
+        import urllib.request
+        req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache','Pragma':'no-cache'})
+        with urllib.request.urlopen(req,timeout=90) as r:
+            b=r.read()
+        if len(b)<500:
+            raise ValueError(f'download too small: {len(b)} bytes')
+        target=RAW/name
+        target.write_bytes(b)
+        note(f'direct source downloaded: {name}',True,f'{len(b)} bytes')
+        return target
+    except Exception as e:
+        note(f'direct source download failed: {name}',False,e)
+        return None
+
+# V51 primary path: direct machine-readable sources, when configured.
+# This avoids CAPTCHA/browser fragility. Browser scraping remains a fallback.
+direct_workbook=direct_download(DIRECT_XLSX_URL,'Daily_Report_direct.xlsx')
+direct_ongoing=direct_download(DIRECT_ONGOING_CSV_URL,'Ongoing_Works_direct.csv')
 
 try:
     from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
@@ -196,8 +221,8 @@ with sync_playwright() as p:
     # Capture MIS and Ongoing independently. V50 deliberately keeps two exports:
     # one workbook for RepDay/Sheet1/VBG, and one dynamic_work_details CSV for
     # work-level Ongoing details. Previously the first download blocked the second.
-    downloaded=None
-    ongoing_download=None
+    downloaded=direct_workbook if validate_workbook(direct_workbook) else None
+    ongoing_download=direct_ongoing
     for url,label in [(REPORT_URL,'mis'),(ONGOING,'ongoing')]:
         try:
             r=page.goto(url,wait_until='domcontentloaded',timeout=90000)
@@ -207,8 +232,8 @@ with sync_playwright() as p:
             table_dump(page,label)
             html=page.content(); (RAW/f'{label}.html').write_text(html,encoding='utf-8')
             got=try_download(page)
-            if label=='mis': downloaded=got
-            else: ongoing_download=got
+            if label=='mis' and not downloaded: downloaded=got
+            elif label=='ongoing' and not ongoing_download: ongoing_download=got
         except Exception as e:
             note(f'{label} opened',False,e)
 

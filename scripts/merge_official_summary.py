@@ -22,13 +22,24 @@ def main():
         if z['totalGP']<=0 or z['musterGP']<=0: raise SystemExit(f'Invalid Screen-2 row: {z["janpad"]}')
         z['dysfunctionalGP']=max(0,z['totalGP']-z['musterGP'])
         clean.append(z)
-    data=load_auto(); data['official']=clean
-    data['daily']=[{'janpad':o['janpad'],'totalGP':o['totalGP'],'gpsProgress':o['musterGP'],'labour':o['labourAll'],'worksMR':o['mrAll'],'noEkyc':o['noEkyc'],'mrs':o['mrs']} for o in clean]
-    meta=data.setdefault('meta',{}); meta.update({'mode':'auto','status':'ok','updatedAt':datetime.now(timezone.utc).isoformat(),'source':'Official VB-G RAM G Screen-2 + rich summary','officialSummaryRows':8,'screen2Matched':True})
+    data=load_auto()
+    new_daily=[{'janpad':o['janpad'],'totalGP':o['totalGP'],'gpsProgress':o['musterGP'],'labour':o['labourAll'],'worksMR':o['mrAll'],'noEkyc':o['noEkyc'],'mrs':o['mrs']} for o in clean]
+    # V51 freshness lock: change Last auto update ONLY when report values change.
+    # A successful source check is still visible through auto-status.js/fetch-status.json.
+    before=json.dumps({'official':data.get('official',[]),'daily':data.get('daily',[])},ensure_ascii=False,sort_keys=True,separators=(',',':'))
+    after=json.dumps({'official':clean,'daily':new_daily},ensure_ascii=False,sort_keys=True,separators=(',',':'))
+    changed=(before!=after)
+    data['official']=clean
+    data['daily']=new_daily
+    meta=data.setdefault('meta',{})
+    meta.update({'mode':'auto','status':'ok','source':'Official VB-G RAM G Screen-2 + rich summary','officialSummaryRows':8,'screen2Matched':True})
+    if changed or not meta.get('updatedAt'):
+        meta['updatedAt']=datetime.now(timezone.utc).isoformat()
+    meta['dataChangedOnLastFetch']=changed
     try:
         st=json.loads(STATUS.read_text(encoding='utf-8'))
         if st.get('officialDate'): meta.setdefault('sourceDates',{})['OfficialSummary']=st['officialDate']
     except Exception: pass
     AUTO.write_text('window.AUTO_REPORT='+json.dumps(data,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
-    print('V46: Screen-2 exact shared metrics merged; rich ongoing/category fields preserved.')
+    print('V51: Screen-2 merged. dataChangedOnLastFetch=', changed)
 if __name__=='__main__': main()
