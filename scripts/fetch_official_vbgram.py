@@ -61,6 +61,10 @@ def direct_download(url, name):
 # This avoids CAPTCHA/browser fragility. Browser scraping remains a fallback.
 direct_workbook=direct_download(DIRECT_XLSX_URL,'Daily_Report_direct.xlsx')
 direct_ongoing=direct_download(DIRECT_ONGOING_CSV_URL,'Ongoing_Works_direct.csv')
+if not DIRECT_XLSX_URL:
+    note('direct Daily Report source configured',False,'GitHub secret VBGRAM_DAILY_REPORT_XLSX_URL is empty; unattended fresh workbook update cannot be guaranteed when MIS requires CAPTCHA/session.')
+if not DIRECT_ONGOING_CSV_URL:
+    note('direct Ongoing CSV source configured',False,'GitHub secret VBGRAM_ONGOING_CSV_URL is empty; work-level CSV may remain on the previous committed snapshot.')
 
 try:
     from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
