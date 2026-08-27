@@ -193,8 +193,11 @@ with sync_playwright() as p:
         note('Home opened',bool(r and r.ok),getattr(r,'status',None))
     except Exception as e: note('Home opened',False,e)
 
-    # MIS page: capture tables and try official Excel export.
+    # Capture MIS and Ongoing independently. V50 deliberately keeps two exports:
+    # one workbook for RepDay/Sheet1/VBG, and one dynamic_work_details CSV for
+    # work-level Ongoing details. Previously the first download blocked the second.
     downloaded=None
+    ongoing_download=None
     for url,label in [(REPORT_URL,'mis'),(ONGOING,'ongoing')]:
         try:
             r=page.goto(url,wait_until='domcontentloaded',timeout=90000)
@@ -203,12 +206,74 @@ with sync_playwright() as p:
             page.wait_for_timeout(2500)
             table_dump(page,label)
             html=page.content(); (RAW/f'{label}.html').write_text(html,encoding='utf-8')
-            if not downloaded: downloaded=try_download(page)
+            got=try_download(page)
+            if label=='mis': downloaded=got
+            else: ongoing_download=got
         except Exception as e:
             note(f'{label} opened',False,e)
 
     # Search any captured browser responses/downloads is not needed when export worked.
     browser.close()
+
+# V50: install the official dynamic_work_details work list independently of workbook mode.
+# Prefer the official CSV/XLSX export; if the export control is unavailable, rebuild
+# a CSV from the captured HTML table. This removes the old dated packaged snapshot.
+def install_ongoing_export(path):
+    required=['Janpad / Block Name','Panchayat Name','Work Code','Work Name','Work Status']
+    dest=DATA/'Ongoing_Works_dynamic_work_details_latest.csv'
+    try:
+        rows=None
+        if path and path.suffix.lower()=='.csv':
+            import csv
+            with path.open('r',encoding='utf-8-sig',newline='') as f:
+                rd=csv.DictReader(f)
+                if not set(required).issubset(set(rd.fieldnames or [])):
+                    raise ValueError('expected dynamic_work_details headers not found in CSV')
+                rows=list(rd); fields=rd.fieldnames
+        elif path and path.suffix.lower() in ('.xlsx','.xlsm'):
+            from openpyxl import load_workbook
+            wb=load_workbook(path,read_only=True,data_only=True)
+            found=None
+            for ws in wb.worksheets:
+                vals=list(ws.iter_rows(values_only=True))
+                if not vals: continue
+                hdr=[str(x).strip() if x is not None else '' for x in vals[0]]
+                if set(required).issubset(set(hdr)):
+                    found=(hdr,vals[1:]); break
+            wb.close()
+            if not found: raise ValueError('expected dynamic_work_details headers not found in workbook')
+            fields,raw=found
+            rows=[dict(zip(fields,r)) for r in raw if any(x not in (None,'') for x in r)]
+        else:
+            # HTML table fallback from Playwright capture.
+            source=RAW/'ongoing_tables.json'
+            if source.exists():
+                tables=json.loads(source.read_text(encoding='utf-8'))
+                for t in tables:
+                    if not t: continue
+                    hdr=[str(x).strip() for x in t[0]]
+                    if set(required).issubset(set(hdr)):
+                        fields=hdr
+                        rows=[dict(zip(fields,r+['']*(len(fields)-len(r)))) for r in t[1:] if any(str(x).strip() for x in r)]
+                        break
+        if not rows:
+            note('ongoing work export validation',False,'no usable CSV/XLSX/table found'); return None
+        import csv
+        with dest.open('w',encoding='utf-8-sig',newline='') as f:
+            w=csv.DictWriter(f,fieldnames=fields,extrasaction='ignore'); w.writeheader(); w.writerows(rows)
+        # lightweight row validation
+        with dest.open('r',encoding='utf-8-sig',newline='') as f:
+            rd=csv.DictReader(f); count=sum(1 for _ in rd)
+        if count<=0:
+            dest.unlink(missing_ok=True); note('ongoing work export validation',False,'zero data rows'); return None
+        status['ongoingCsv']=str(dest.relative_to(ROOT))
+        status['ongoingRows']=count
+        note('fresh ongoing work CSV installed',True,f'{dest} rows={count}')
+        return dest
+    except Exception as e:
+        note('ongoing work export validation',False,e); return None
+
+ongoing_csv=install_ongoing_export(ongoing_download)
 
 # V49: LIVE PORTAL FIRST. Always parse the current HTML Screen-2 table.
 # A downloaded workbook is still useful for RepDay/VBG/rich fields, but it must NEVER
