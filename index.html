@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=53"></head>
+<title>SRDM SATNA • VB-G RAM G • 8 Janpad Daily Monitoring</title><link rel="stylesheet" href="styles.css?v=56"></head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
@@ -121,8 +121,10 @@
 
 <nav class="tabs top-tabs clean-tabs no-print">
   <button class="tab active emuster-tab" data-view="emuster">e-Muster Issuance Report</button>
+  <button class="tab state-tab" data-view="state">State / District Report</button>
   <button class="tab" data-view="official">Janpad Daily Report</button>
   <button class="tab" data-view="engineer">Sub Engineer Daily Report</button>
+  <button class="tab ekbagiya-tab" data-view="ekbagiya">एक बगिया माँ के नाम</button>
 </nav>
 
 <section class="compact-controls no-print">
@@ -131,6 +133,21 @@
     <select id="janpadFilter"><option value="ALL">सभी Janpad</option></select>
     <select id="engineerFilter"><option value="ALL">सभी Engineer</option></select>
     <select id="clusterFilter"><option value="ALL">सभी Cluster</option></select>
+    <select id="sortMetric" title="Ranking metric">
+      <option value="AUTO">Sort metric: Auto</option>
+      <option value="totalGP">Total GP</option>
+      <option value="gpsProgress">GP Progress</option>
+      <option value="labour">Labour Engagement</option>
+      <option value="worksMR">Works with MR</option>
+      <option value="ongoing">Total Ongoing Work</option>
+      <option value="mrs">Muster Rolls</option>
+      <option value="ekOngoing">Ek Bagiya Ongoing</option>
+    </select>
+    <select id="sortOrder" title="Highest / Lowest">
+      <option value="DESC">Highest → Lowest</option>
+      <option value="ASC">Lowest → Highest</option>
+      <option value="NAME">Name A → Z</option>
+    </select>
     <button id="resetBtn">Reset</button>
   </div>
   <div class="compact-actions">
@@ -172,4 +189,4 @@
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=49"></script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');</script><script src="ongoing-details.js?v=49"></script><script src="sample-data.js?v=49"></script><script src="app.js?v=49"></script></body></html>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=49"></script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');</script><script src="ongoing-details.js?v=56"></script><script src="sample-data.js?v=56"></script><script src="app.js?v=56"></script></body></html>

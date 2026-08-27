@@ -1083,3 +1083,6 @@ body[data-report-view="official"] .official-grid th{
 .emuster-grid .pct-cell{font-weight:900}
 .emuster-grid .pct-bad{color:#d71920;background:#fff0f0}
 @media(max-width:900px){.compact-controls{align-items:stretch}.compact-actions{width:100%}.compact-actions button{flex:1}.emuster-grid .emuster-title-row th{font-size:16px!important}}
+
+/* V56 Ek Bagiya ongoing dashboard */
+.ekbagiya-tab{font-weight:900}.report-table.ekbagiya-grid{min-width:1540px}.report-table.ekbagiya-grid th:nth-child(-n+4),.report-table.ekbagiya-grid td:nth-child(-n+4){text-align:left}.report-table.ekbagiya-grid td:nth-child(5),.report-table.ekbagiya-grid td:nth-child(6){font-weight:850}.report-table.ekbagiya-grid td:nth-child(7){font-weight:850;color:#a13a29}.report-table.ekbagiya-grid td:nth-child(18){font-weight:900;color:#0d5e46}@media print{.report-table.ekbagiya-grid{min-width:0!important;table-layout:fixed}.report-table.ekbagiya-grid th,.report-table.ekbagiya-grid td{font-size:calc(6.2px * var(--table-font-scale));padding:1.8px;white-space:normal;word-break:break-word}}
