@@ -1,15 +1,12 @@
-# FULL DASHBOARD BUILD
+# Daily Labour Report - Login Build
 
-This version contains a real Dashboard home screen:
-- KPI cards
-- District summary cards
-- Janpad MR% ranking
-- Janpad performance snapshot
-- Janpad Report tab
-- Engineer Report tab
+Includes:
+- Secure Login landing screen
+- Dashboard opens after login
+- Janpad Report and Engineer Report
 - SATNA योग / MAIHAR योग
-- Wrapped compact columns
-- Filters + Print/PDF
-- Dashboard opens by default
+- District-wise grouping and wrapped columns
+- GitHub Pages workflow
 
-Upload all files to repository root.
+Important:
+This login is client-side because GitHub Pages is a static site. It hides the dashboard from casual access but is not strong server-side authentication.

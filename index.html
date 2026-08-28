@@ -59,8 +59,59 @@ tbody tr:nth-child(even):not(.subtotal):not(.grand){background:#f7fafc}
 @media(max-width:650px){main{padding:8px}.hero h1{font-size:25px}.kpis{grid-template-columns:repeat(2,1fr)}.logo{width:100%}}
 @media print{.topbar{display:none}.kpis,.grid2{display:none}body{background:#fff}main{padding:0}.hero{display:none}.panel{border:none;box-shadow:none}.table-wrap{overflow:visible;max-height:none}table{font-size:9px;min-width:0}th,td{padding:4px}}
 </style>
+
+<style id="login-style">
+#loginGate{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,#0b355f,#0b4d7d);display:flex;align-items:center;justify-content:center;padding:24px}
+.login-shell{width:min(1160px,96vw);min-height:520px;background:#fff;border:1px solid rgba(255,255,255,.65);border-radius:32px;overflow:hidden;display:grid;grid-template-columns:1.18fr .9fr;box-shadow:0 25px 70px rgba(0,0,0,.22)}
+.login-brand{background:linear-gradient(135deg,#0b355f,#0c568d);color:#fff;padding:58px 52px;display:flex;flex-direction:column;justify-content:center}
+.login-brand-top{display:flex;gap:26px;align-items:center}
+.mp-badge{width:100px;height:100px;border-radius:28px;background:#ffbd42;color:#0b355f;font-size:34px;font-weight:950;display:flex;align-items:center;justify-content:center}
+.login-brand small{font-size:15px;font-weight:800;letter-spacing:.3px;opacity:.95}
+.login-brand h1{font-size:44px;line-height:1.08;margin:24px 0 12px;max-width:620px}
+.login-brand p{font-size:18px;margin:0;opacity:.92}
+.login-box{padding:54px 44px;display:flex;flex-direction:column;justify-content:center}
+.login-title{display:flex;gap:14px;align-items:center;margin-bottom:28px}
+.lock-icon{width:56px;height:56px;border-radius:17px;background:#eaf3fb;display:flex;align-items:center;justify-content:center;font-size:28px}
+.login-title h2{margin:0;color:#0b355f;font-size:32px}.login-title p{margin:5px 0 0;color:#6982a0}
+.login-box label{font-weight:900;color:#254567;margin:8px 0 7px}
+.login-box input{height:60px;border:1px solid #c6d8ea;border-radius:16px;padding:0 16px;font-size:18px;font-weight:700;background:#f9fbfd;outline:none}
+.login-box input:focus{border-color:#1d6fb1;box-shadow:0 0 0 3px rgba(29,111,177,.10)}
+.login-btn{height:62px;margin-top:18px;border:0;border-radius:16px;background:linear-gradient(90deg,#0f5d9e,#1978bd);color:#fff;font-size:20px;font-weight:900;box-shadow:0 10px 24px rgba(15,93,158,.24)}
+.login-note{text-align:center;margin-top:15px;color:#8aa0b7;font-size:13px;font-weight:800;letter-spacing:.4px}
+.login-error{min-height:22px;margin-top:9px;color:#b42318;font-weight:800}
+@media(max-width:850px){.login-shell{grid-template-columns:1fr}.login-brand{padding:30px}.login-brand h1{font-size:32px}.login-box{padding:30px}.mp-badge{width:78px;height:78px}}
+</style>
+
 </head>
 <body>
+
+<div id="loginGate">
+  <div class="login-shell">
+    <section class="login-brand">
+      <div class="login-brand-top">
+        <div class="mp-badge">MP</div>
+        <div><small>मध्यप्रदेश शासन • पंचायत एवं ग्रामीण विकास विभाग</small>
+          <h1>VB-G RAM G Daily<br>Monitoring Portal</h1>
+          <p>District Satna &amp; Maihar • 8 Janpad • srdmsatna.online</p>
+        </div>
+      </div>
+    </section>
+    <section class="login-box">
+      <div class="login-title">
+        <div class="lock-icon">🔐</div>
+        <div><h2>Secure Login</h2><p>Portal खोलने के लिए Username और Password दर्ज करें</p></div>
+      </div>
+      <label for="loginUser">Username</label>
+      <input id="loginUser" autocomplete="username" placeholder="Username">
+      <label for="loginPass">Password</label>
+      <input id="loginPass" type="password" autocomplete="current-password" placeholder="Password">
+      <button class="login-btn" id="loginBtn" type="button">Login to Dashboard</button>
+      <div class="login-error" id="loginError"></div>
+      <div class="login-note">AUTHORIZED MONITORING ACCESS ONLY</div>
+    </section>
+  </div>
+</div>
+
 <div class="topbar">
   <div class="logo">Daily Labour Dashboard</div>
   <select id="districtFilter"><option value="">सभी District</option></select>
@@ -202,4 +253,31 @@ document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>switchView(b.dataset.
 resetBtn.onclick=()=>{districtFilter.value=janpadFilter.value=engineerFilter.value=clusterFilter.value="";refresh();switchView("dashboard")};
 (async()=>{await loadOfficial();buildEngineerRows();initFilters();refresh();switchView("dashboard");heroSub.textContent=`Official date ${AUTO_FETCH_STATUS?.officialDate||""} • Satna & Maihar • ${official.length} Janpads`;statusNote.textContent=AUTO_FETCH_STATUS?.note||""})().catch(e=>document.body.innerHTML=`<pre style="padding:30px;color:red">${e.message}</pre>`);
 </script>
+
+<script id="login-script">
+(function(){
+  const gate=document.getElementById("loginGate");
+  const u=document.getElementById("loginUser");
+  const p=document.getElementById("loginPass");
+  const btn=document.getElementById("loginBtn");
+  const err=document.getElementById("loginError");
+
+  function tryLogin(){
+    if(u.value==="SRDMSATNA" && p.value==="SRDM@2026"){
+      sessionStorage.setItem("srdmPortalAuth","1");
+      gate.style.display="none";
+      err.textContent="";
+    }else{
+      err.textContent="Username या Password गलत है।";
+      p.value="";
+      p.focus();
+    }
+  }
+
+  if(sessionStorage.getItem("srdmPortalAuth")==="1") gate.style.display="none";
+  btn.addEventListener("click",tryLogin);
+  [u,p].forEach(el=>el.addEventListener("keydown",e=>{if(e.key==="Enter")tryLogin()}));
+})();
+</script>
+
 </body></html>
