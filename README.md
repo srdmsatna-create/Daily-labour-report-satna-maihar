@@ -1,12 +1,16 @@
-# Daily Labour Report - Login Build
+# LOGIN HARD GATE BUILD
 
-Includes:
-- Secure Login landing screen
-- Dashboard opens after login
-- Janpad Report and Engineer Report
+This build always opens the Secure Login screen first.
+The dashboard is physically hidden (`display:none`) until valid login succeeds.
+
+After successful login:
+- Full Dashboard
+- Janpad Report
+- Engineer Report
 - SATNA योग / MAIHAR योग
-- District-wise grouping and wrapped columns
-- GitHub Pages workflow
+- Wrapped compact columns
 
-Important:
-This login is client-side because GitHub Pages is a static site. It hides the dashboard from casual access but is not strong server-side authentication.
+Verification marker after login:
+`LOGIN-HARD-GATE`
+
+Upload/replace ALL repository files, especially index.html.
