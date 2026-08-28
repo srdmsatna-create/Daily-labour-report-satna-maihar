@@ -3,295 +3,203 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Daily Labour Report - Satna & Maihar</title>
+<title>Satna Maihar Daily Labour Dashboard</title>
 <style>
 :root{
-  --navy:#0a345f;--blue:#2465a7;--line:#9fbfe0;--soft:#eef5fb;--head:#cfe2f5;
-  --subtotal:#dfeefb;--grand:#bfd8f1;--green:#0b7a48;--orange:#b76700;--red:#b42318;
-  --card:#fff;--text:#10233c;--muted:#5a7698;--shadow:0 10px 30px rgba(12,54,91,.08)
+ --navy:#082f5b; --blue:#1d65a6; --sky:#eaf4ff; --line:#c9dced; --text:#10243c;
+ --muted:#647b96; --green:#168353; --amber:#c87800; --red:#c0392b; --white:#fff;
+ --shadow:0 10px 26px rgba(12,45,78,.10);
 }
 *{box-sizing:border-box}
-body{margin:0;background:#f4f8fc;color:var(--text);font-family:Inter,Segoe UI,Noto Sans Devanagari,Arial,sans-serif}
-.topbar{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);border-bottom:1px solid #d8e6f3;padding:12px 18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;overflow-x:auto}
-.brand{font-weight:900;color:var(--navy);font-size:20px;margin-right:10px}
-select,button{border:1px solid #c4d8eb;border-radius:12px;background:#fff;padding:10px 14px;font-weight:700;color:#10233c}
+body{margin:0;font-family:Inter,Segoe UI,Noto Sans Devanagari,Arial,sans-serif;background:#f4f8fc;color:var(--text)}
+.topbar{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #d7e5f1;padding:10px 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.logo{font-size:20px;font-weight:900;color:var(--navy);margin-right:8px}
+select,button{height:44px;border:1px solid #c8dcef;border-radius:12px;background:#fff;padding:0 14px;font-weight:750;color:#0c2745}
 button{cursor:pointer}
-button.active{background:var(--navy);color:#fff;border-color:#071f38}
+button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
 .spacer{flex:1}
-main{padding:18px}
-.hero{background:#fff;border:1px solid #c4d8eb;border-radius:18px;box-shadow:var(--shadow);padding:24px 28px;margin-bottom:16px}
-.hero h1{margin:0;color:var(--navy);font-size:34px}
-.hero p{margin:8px 0 0;color:var(--muted)}
-.cards{display:grid;grid-template-columns:repeat(6,minmax(150px,1fr));gap:12px;margin-bottom:16px}
-.card{background:#fff;border:1px solid #d5e4f2;border-radius:16px;padding:16px;box-shadow:var(--shadow)}
-.card .k{font-size:13px;color:var(--muted);font-weight:700}.card .v{font-size:27px;color:var(--navy);font-weight:900;margin-top:5px}
-.panel{background:#fff;border:1px solid #c4d8eb;border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}
-.panel-head{padding:20px 28px;border-bottom:1px solid #d7e5f2}
-.panel-head h2{margin:0;color:var(--navy);font-size:30px}.panel-head p{margin:7px 0 0;color:var(--muted)}
-.table-wrap{overflow:auto;max-height:calc(100vh - 245px)}
-table{border-collapse:separate;border-spacing:0;width:100%;min-width:1250px;font-size:14px}
-th,td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px 9px;vertical-align:middle}
-th:first-child,td:first-child{border-left:1px solid var(--line)}
-thead th{position:sticky;top:0;z-index:5;background:var(--head);color:#002d5b;font-weight:900;text-align:center;
-  white-space:normal;overflow-wrap:anywhere;word-break:normal;line-height:1.05;min-width:78px;max-width:130px}
-tbody tr:nth-child(even):not(.subtotal):not(.grand){background:#f6f9fc}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
-td.center{text-align:center}
-td.wrap{white-space:normal;overflow-wrap:anywhere;line-height:1.08;max-width:145px}
-td.district{font-weight:900}
-.subtotal td{background:var(--subtotal)!important;font-weight:900;border-top:1.5px solid var(--blue);border-bottom:1.5px solid var(--blue)}
-.grand td{background:var(--grand)!important;font-weight:900;border-top:2px solid var(--navy)}
-.badge{display:inline-block;padding:3px 10px;border-radius:999px;font-weight:900}
-.good{background:#dff3e8;color:var(--green)}.mid{background:#fff0cf;color:var(--orange)}.bad{background:#fde2df;color:var(--red)}
+main{padding:16px}
+.hero{border-radius:20px;padding:26px 28px;background:linear-gradient(135deg,#082f5b,#1d65a6);color:#fff;box-shadow:var(--shadow);margin-bottom:16px}
+.hero h1{margin:0;font-size:34px}.hero p{margin:8px 0 0;opacity:.86}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(145px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid #d7e5f1;border-radius:16px;padding:15px;box-shadow:var(--shadow)}
+.kpi .label{font-size:12px;color:var(--muted);font-weight:800}.kpi .value{font-size:26px;font-weight:900;color:var(--navy);margin-top:4px}
+.kpi .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.panel{background:#fff;border:1px solid #d7e5f1;border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.panel-title{padding:16px 18px;border-bottom:1px solid #e2edf6;font-weight:900;color:var(--navy);font-size:18px}
+.panel-body{padding:16px}
+.districts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.district-card{border:1px solid #d7e5f1;border-radius:16px;padding:16px;background:#fbfdff}
+.district-card h3{margin:0 0 12px;color:var(--navy)}
+.mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mini{background:#eef6fd;border-radius:10px;padding:10px}
+.mini b{display:block;color:var(--navy);font-size:18px}.mini span{font-size:11px;color:var(--muted)}
+.rank-row{display:grid;grid-template-columns:35px 130px 1fr 80px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed #dbe7f1}
+.rank-row:last-child{border-bottom:0}.rank-no{font-weight:900;color:var(--navy)}
+.bar{height:9px;background:#e4eef7;border-radius:999px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#3b82c4,#18a66b);border-radius:999px}
+.metric{font-weight:900;text-align:right}
+.table-wrap{overflow:auto;max-height:calc(100vh - 235px)}
+table{border-collapse:separate;border-spacing:0;width:100%;min-width:1380px;font-size:13px}
+th,td{border-right:1px solid #9dbddd;border-bottom:1px solid #9dbddd;padding:8px 9px;vertical-align:middle}
+th:first-child,td:first-child{border-left:1px solid #9dbddd}
+thead th{position:sticky;top:0;z-index:5;background:#cfe2f5;color:#032d58;text-align:center;font-weight:900;
+ white-space:normal;overflow-wrap:anywhere;line-height:1.05;min-width:75px;max-width:125px}
+td.num{text-align:right} td.center{text-align:center} td.wrap{white-space:normal;overflow-wrap:anywhere;max-width:145px;line-height:1.08}
+tbody tr:nth-child(even):not(.subtotal):not(.grand){background:#f7fafc}
+.subtotal td{background:#e0effc!important;font-weight:900;border-top:1.5px solid #2c6dae;border-bottom:1.5px solid #2c6dae}
+.grand td{background:#bfd8f1!important;font-weight:900;border-top:2px solid var(--navy)}
+.badge{display:inline-block;border-radius:999px;padding:3px 9px;font-weight:900}
+.good{background:#dff4e9;color:#087246}.mid{background:#fff0d3;color:#b46400}.bad{background:#fde4e1;color:#b52a1c}
+.report-head{padding:20px 24px;border-bottom:1px solid #d7e5f1}
+.report-head h2{margin:0;color:var(--navy);font-size:28px}.report-head p{margin:6px 0 0;color:var(--muted)}
 .hidden{display:none!important}
-.note{padding:12px 18px;color:var(--muted);font-size:13px}
-@media(max-width:1050px){.cards{grid-template-columns:repeat(3,1fr)}.brand{width:100%}}
-@media(max-width:650px){main{padding:8px}.hero{padding:18px}.hero h1{font-size:26px}.cards{grid-template-columns:repeat(2,1fr)}select,button{padding:9px 10px}}
-@media print{
-  .topbar{display:none!important} body{background:#fff} main{padding:0}.hero{box-shadow:none;border:none;padding:8px 0}
-  .cards{display:none}.panel{box-shadow:none;border:none}.table-wrap{overflow:visible;max-height:none}
-  table{font-size:9px;min-width:0;width:100%}th,td{padding:4px 3px}.panel-head{padding:8px 0}
-}
+.footnote{padding:12px 18px;color:var(--muted);font-size:12px}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}.districts{grid-template-columns:1fr}}
+@media(max-width:650px){main{padding:8px}.hero h1{font-size:25px}.kpis{grid-template-columns:repeat(2,1fr)}.logo{width:100%}}
+@media print{.topbar{display:none}.kpis,.grid2{display:none}body{background:#fff}main{padding:0}.hero{display:none}.panel{border:none;box-shadow:none}.table-wrap{overflow:visible;max-height:none}table{font-size:9px;min-width:0}th,td{padding:4px}}
 </style>
 </head>
 <body>
 <div class="topbar">
-  <div class="brand">VB-G RAM G Daily Labour Dashboard <small style="font-size:11px;color:#6d87a4">v2-DASHBOARD</small></div>
+  <div class="logo">Daily Labour Dashboard</div>
   <select id="districtFilter"><option value="">सभी District</option></select>
   <select id="janpadFilter"><option value="">सभी Janpad</option></select>
   <select id="engineerFilter"><option value="">सभी Engineer</option></select>
   <select id="clusterFilter"><option value="">सभी Cluster</option></select>
-  <select id="sortFilter">
-    <option value="district">District → Janpad</option>
-    <option value="mr_desc">MR % Highest → Lowest</option>
-    <option value="progress_desc">GP Progress Highest → Lowest</option>
-    <option value="labour_desc">Labour Highest → Lowest</option>
-  </select>
-  <button onclick="window.print()">Print / PDF</button>
   <button id="resetBtn">Reset</button>
   <button class="nav active" data-view="dashboard">Dashboard</button>
   <button class="nav" data-view="janpad">Janpad Report</button>
   <button class="nav" data-view="engineer">Engineer Report</button>
   <span class="spacer"></span>
+  <button onclick="window.print()">Print / PDF</button>
 </div>
 
 <main>
 <section id="dashboardView">
   <div class="hero">
-    <h1>Daily Labour Dashboard</h1>
-    <p id="dashSub">Satna & Maihar • Official daily monitoring</p>
+    <h1>Satna–Maihar Daily Labour Dashboard</h1>
+    <p id="heroSub">Official daily monitoring</p>
   </div>
-  <div class="cards" id="cards"></div>
+
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid2">
+    <div class="panel">
+      <div class="panel-title">District Summary</div>
+      <div class="panel-body"><div class="districts" id="districtCards"></div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Janpad MR % Ranking</div>
+      <div class="panel-body" id="ranking"></div>
+    </div>
+  </div>
+
   <div class="panel">
-    <div class="panel-head"><h2>Janpad Performance Overview</h2><p>District-wise grouped view</p></div>
-    <div class="table-wrap"><table id="overviewTable"></table></div>
+    <div class="report-head">
+      <h2>Janpad Performance Snapshot</h2>
+      <p>District-wise overview with key indicators</p>
+    </div>
+    <div class="table-wrap"><table id="dashTable"></table></div>
   </div>
 </section>
 
 <section id="janpadView" class="hidden">
-  <div class="panel">
-    <div class="panel-head">
-      <h2>Official Janpad Daily Report</h2>
-      <p id="janpadSub"></p>
-    </div>
-    <div class="table-wrap"><table id="janpadTable"></table></div>
-  </div>
+ <div class="panel">
+   <div class="report-head"><h2>Official Janpad Daily Report</h2><p id="janpadSub"></p></div>
+   <div class="table-wrap"><table id="janpadTable"></table></div>
+ </div>
 </section>
 
 <section id="engineerView" class="hidden">
-  <div class="panel">
-    <div class="panel-head">
-      <h2>Official Engineer Daily Report</h2>
-      <p id="engineerSub"></p>
-    </div>
-    <div class="table-wrap"><table id="engineerTable"></table></div>
-  </div>
+ <div class="panel">
+   <div class="report-head"><h2>Official Engineer Daily Report</h2><p id="engineerSub"></p></div>
+   <div class="table-wrap"><table id="engineerTable"></table></div>
+ </div>
 </section>
-<div class="note" id="statusNote"></div>
+<div class="footnote" id="statusNote"></div>
 </main>
 
 <script src="auto-data.js"></script>
 <script src="auto-status.js"></script>
 <script>
-const DISTRICT_BY_JANPAD={
-  "MAJHGAWAN":"SATNA","NAGOD":"SATNA","RAMPUR BAGHELAN":"SATNA","SATNA":"SATNA","UNCHAHARA":"SATNA",
-  "AMARPATAN":"MAIHAR","MAIHAR":"MAIHAR","RAMNAGAR":"MAIHAR"
-};
+const DISTRICT_BY_JANPAD={"MAJHGAWAN":"SATNA","NAGOD":"SATNA","RAMPUR BAGHELAN":"SATNA","SATNA":"SATNA","UNCHAHARA":"SATNA","AMARPATAN":"MAIHAR","MAIHAR":"MAIHAR","RAMNAGAR":"MAIHAR"};
 const DISTRICT_ORDER=["SATNA","MAIHAR"];
 const JANPAD_ORDER=["MAJHGAWAN","NAGOD","RAMPUR BAGHELAN","SATNA","UNCHAHARA","AMARPATAN","MAIHAR","RAMNAGAR"];
-const n=v=>Number(v||0), fmt=v=>Math.round(n(v)).toLocaleString("en-IN");
-const pct=(a,b)=>b?100*n(a)/n(b):0;
-const pbadge=v=>`<span class="badge ${v>=10?'good':v>=5?'mid':'bad'}">${v.toFixed(1)}%</span>`;
-const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-
-let official=[], engineerRows=[], currentView="dashboard";
+const n=v=>Number(v||0),fmt=v=>Math.round(n(v)).toLocaleString("en-IN"),pct=(a,b)=>b?100*n(a)/n(b):0;
+const esc=s=>String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const badge=v=>`<span class="badge ${v>=10?'good':v>=5?'mid':'bad'}">${v.toFixed(1)}%</span>`;
+let official=[],engineerRows=[];
 
 async function loadOfficial(){
-  const txt=await fetch("official-summary.csv",{cache:"no-store"}).then(r=>r.text());
-  const lines=txt.trim().split(/\r?\n/); const head=lines[0].split(",");
-  official=lines.slice(1).map(line=>{
-    const vals=line.split(","); const o={}; head.forEach((h,i)=>o[h]=i===0?vals[i]:Number(vals[i]||0));
-    o.district=DISTRICT_BY_JANPAD[o.janpad]||""; return o;
-  });
+ const txt=await fetch("official-summary.csv",{cache:"no-store"}).then(r=>r.text());
+ const lines=txt.trim().split(/\r?\n/),head=lines[0].split(",");
+ official=lines.slice(1).map(line=>{const v=line.split(","),o={};head.forEach((h,i)=>o[h]=i===0?v[i]:Number(v[i]||0));o.district=DISTRICT_BY_JANPAD[o.janpad]||"";return o});
 }
 function buildEngineerRows(){
-  const rows=(window.AUTO_REPORT&&window.AUTO_REPORT.rows)||[];
-  const m=new Map();
-  for(const r of rows){
-    const key=[r.janpad,r.engineer,r.cluster].join("¦");
-    if(!m.has(key)) m.set(key,{janpad:r.janpad,engineer:r.engineer,cluster:r.cluster,district:DISTRICT_BY_JANPAD[r.janpad]||"",
-      totalGP:0,gpProgress:0,labour:0,worksMR:0,ongoing:0,mrs:0});
-    const x=m.get(key); x.totalGP+=n(r.gps);x.gpProgress+=n(r.gpsProgress);x.labour+=n(r.labour);x.worksMR+=n(r.worksMR);x.ongoing+=n(r.ongoing);x.mrs+=n(r.mrs);
-  }
-  // Add PMAY/Ek ongoing from official Janpad source proportionally only at Janpad total? Keep blank at engineer level rather than invent distribution.
-  engineerRows=[...m.values()];
+ const rows=(window.AUTO_REPORT&&AUTO_REPORT.rows)||[],m=new Map();
+ for(const r of rows){
+  const k=[r.janpad,r.engineer,r.cluster].join("|");
+  if(!m.has(k))m.set(k,{district:DISTRICT_BY_JANPAD[r.janpad]||"",janpad:r.janpad,engineer:r.engineer,cluster:r.cluster,totalGP:0,gpProgress:0,labour:0,worksMR:0,ongoing:0,mrs:0});
+  const x=m.get(k);x.totalGP+=n(r.gps);x.gpProgress+=n(r.gpsProgress);x.labour+=n(r.labour);x.worksMR+=n(r.worksMR);x.ongoing+=n(r.ongoing);x.mrs+=n(r.mrs);
+ }
+ engineerRows=[...m.values()];
 }
-function setOptions(el,vals,allLabel){
-  const cur=el.value; el.innerHTML=`<option value="">${allLabel}</option>`+[...new Set(vals.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"hi")).map(v=>`<option>${esc(v)}</option>`).join("");
-  if([...el.options].some(o=>o.value===cur)) el.value=cur;
+function options(el,vals,label){const cur=el.value;el.innerHTML=`<option value="">${label}</option>`+[...new Set(vals.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"hi")).map(v=>`<option>${esc(v)}</option>`).join("");if([...el.options].some(o=>o.value===cur))el.value=cur}
+function initFilters(){options(districtFilter,DISTRICT_ORDER,"सभी District");options(janpadFilter,official.map(x=>x.janpad),"सभी Janpad");options(engineerFilter,engineerRows.map(x=>x.engineer),"सभी Engineer");options(clusterFilter,engineerRows.map(x=>x.cluster),"सभी Cluster")}
+function filterO(){return official.filter(x=>(!districtFilter.value||x.district===districtFilter.value)&&(!janpadFilter.value||x.janpad===janpadFilter.value))}
+function filterE(){return engineerRows.filter(x=>(!districtFilter.value||x.district===districtFilter.value)&&(!janpadFilter.value||x.janpad===janpadFilter.value)&&(!engineerFilter.value||x.engineer===engineerFilter.value)&&(!clusterFilter.value||x.cluster===clusterFilter.value))}
+function sums(rows,ks){const o={};ks.forEach(k=>o[k]=rows.reduce((a,x)=>a+n(x[k]),0));return o}
+function ds(a,b){let d=DISTRICT_ORDER.indexOf(a.district)-DISTRICT_ORDER.indexOf(b.district);if(d)return d;return JANPAD_ORDER.indexOf(a.janpad)-JANPAD_ORDER.indexOf(b.janpad)}
+function renderDashboard(){
+ const r=filterO().sort(ds),s=sums(r,["totalGP","musterGP","dysfunctionalGP","labourAll","mrAll","mrs","ongoingAll","pmayOngoing","ekOngoing"]);
+ const cards=[
+ ["Janpads",r.length,"Filtered"],["Total GP",fmt(s.totalGP),"Gram Panchayat"],["GP Progress",pct(s.musterGP,s.totalGP).toFixed(1)+"%","Progress GP"],
+ ["Labour",fmt(s.labourAll),"All works"],["Works with MR",fmt(s.mrAll),"MR works"],["MR %",pct(s.mrs,s.ongoingAll).toFixed(1)+"%","Muster/Ongoing"],
+ ["Ongoing Works",fmt(s.ongoingAll),"All types"],["PMAY-G Ongoing",fmt(s.pmayOngoing),"PMAY-G"],["Ek Bagiya Ongoing",fmt(s.ekOngoing),"Ek Bagiya"]
+ ];
+ kpis.innerHTML=cards.map(c=>`<div class="kpi"><div class="label">${c[0]}</div><div class="value">${c[1]}</div><div class="sub">${c[2]}</div></div>`).join("");
+ districtCards.innerHTML=DISTRICT_ORDER.filter(d=>!districtFilter.value||d===districtFilter.value).map(d=>{
+  const a=r.filter(x=>x.district===d),z=sums(a,["totalGP","musterGP","labourAll","mrs","ongoingAll","pmayOngoing","ekOngoing"]);
+  return `<div class="district-card"><h3>${d}</h3><div class="mini-grid">
+   <div class="mini"><b>${a.length}</b><span>Janpad</span></div><div class="mini"><b>${fmt(z.totalGP)}</b><span>Total GP</span></div><div class="mini"><b>${pct(z.musterGP,z.totalGP).toFixed(1)}%</b><span>GP Progress</span></div>
+   <div class="mini"><b>${fmt(z.labourAll)}</b><span>Labour</span></div><div class="mini"><b>${pct(z.mrs,z.ongoingAll).toFixed(1)}%</b><span>MR %</span></div><div class="mini"><b>${fmt(z.ongoingAll)}</b><span>Ongoing</span></div>
+  </div></div>`}).join("");
+ const ranked=[...r].sort((a,b)=>pct(b.mrs,b.ongoingAll)-pct(a.mrs,a.ongoingAll));
+ ranking.innerHTML=ranked.map((x,i)=>{const v=pct(x.mrs,x.ongoingAll);return `<div class="rank-row"><div class="rank-no">${i+1}</div><div>${x.janpad}</div><div class="bar"><i style="width:${Math.min(v*4,100)}%"></i></div><div class="metric">${v.toFixed(1)}%</div></div>`}).join("");
+ dashTable.innerHTML=`<thead><tr><th>District</th><th>Janpad</th><th>Total GP</th><th>GP Progress</th><th>GP Progress %</th><th>Labour</th><th>Works with MR</th><th>Ongoing Works</th><th>Muster Rolls</th><th>MR %</th><th>PMAY-G Ongoing</th><th>Ek Bagiya Ongoing</th></tr></thead><tbody>`+
+ r.map(x=>`<tr><td><b>${x.district}</b></td><td>${x.janpad}</td><td class="num">${fmt(x.totalGP)}</td><td class="num">${fmt(x.musterGP)}</td><td class="center">${badge(pct(x.musterGP,x.totalGP))}</td><td class="num">${fmt(x.labourAll)}</td><td class="num">${fmt(x.mrAll)}</td><td class="num">${fmt(x.ongoingAll)}</td><td class="num">${fmt(x.mrs)}</td><td class="center">${badge(pct(x.mrs,x.ongoingAll))}</td><td class="num">${fmt(x.pmayOngoing)}</td><td class="num">${fmt(x.ekOngoing)}</td></tr>`).join("")+"</tbody>";
 }
-function initFilters(){
-  setOptions(districtFilter,DISTRICT_ORDER,"सभी District");
-  setOptions(janpadFilter,official.map(x=>x.janpad),"सभी Janpad");
-  setOptions(engineerFilter,engineerRows.map(x=>x.engineer),"सभी Engineer");
-  setOptions(clusterFilter,engineerRows.map(x=>x.cluster),"सभी Cluster");
+function janpadSubtotal(d,arr){
+ const k=["totalGP","musterGP","dysfunctionalGP","labourAll","mrAll","mrs","ongoingAll","labourIndividual","mrIndividual","labourCommunity","mrCommunity","pmayLabour","pmayOngoing","pmayMR","ekLabour","ekOngoing","ekMR"],s=sums(arr,k);
+ return `<tr class="subtotal"><td colspan="2">${d} योग</td><td class="num">${fmt(s.totalGP)}</td><td class="num">${fmt(s.musterGP)}</td><td class="num">${fmt(s.dysfunctionalGP)}</td><td class="num">${fmt(s.labourAll)}</td><td class="num">${fmt(s.mrAll)}</td><td class="num">${fmt(s.ongoingAll)}</td><td class="num">${fmt(s.mrs)}</td><td>${badge(pct(s.mrs,s.ongoingAll))}</td><td class="num">${fmt(s.labourIndividual)}</td><td class="num">${fmt(s.mrIndividual)}</td><td class="num">${fmt(s.labourCommunity)}</td><td class="num">${fmt(s.mrCommunity)}</td><td class="num">${fmt(s.pmayLabour)}</td><td class="num">${fmt(s.pmayOngoing)}</td><td class="num">${fmt(s.pmayMR)}</td><td>${badge(pct(s.pmayMR,s.pmayOngoing))}</td><td class="num">${fmt(s.ekLabour)}</td><td class="num">${fmt(s.ekOngoing)}</td><td class="num">${fmt(s.ekMR)}</td></tr>`;
 }
-function filters(){
-  return {d:districtFilter.value,j:janpadFilter.value,e:engineerFilter.value,c:clusterFilter.value,s:sortFilter.value};
-}
-function filteredOfficial(){
-  const f=filters(); return official.filter(x=>(!f.d||x.district===f.d)&&(!f.j||x.janpad===f.j));
-}
-function filteredEngineer(){
-  const f=filters(); return engineerRows.filter(x=>(!f.d||x.district===f.d)&&(!f.j||x.janpad===f.j)&&(!f.e||x.engineer===f.e)&&(!f.c||x.cluster===f.c));
-}
-function sumRows(rows, keys){const o={};keys.forEach(k=>o[k]=rows.reduce((a,x)=>a+n(x[k]),0));return o}
-function districtSort(a,b){
-  let d=DISTRICT_ORDER.indexOf(a.district)-DISTRICT_ORDER.indexOf(b.district); if(d)return d;
-  d=JANPAD_ORDER.indexOf(a.janpad)-JANPAD_ORDER.indexOf(b.janpad); if(d)return d;
-  return (a.engineer||"").localeCompare(b.engineer||"","hi")||(a.cluster||"").localeCompare(b.cluster||"","en");
-}
-function customSort(rows,kind,isEngineer=false){
-  rows=[...rows];
-  if(kind==="district") return rows.sort(districtSort);
-  if(kind==="labour_desc") return rows.sort((a,b)=>n(b.labour??b.labourAll)-n(a.labour??a.labourAll));
-  if(kind==="progress_desc") return rows.sort((a,b)=>pct(b.gpProgress??b.musterGP,b.totalGP)-pct(a.gpProgress??a.musterGP,a.totalGP));
-  if(kind==="mr_desc") return rows.sort((a,b)=>pct(b.worksMR??b.mrAll,b.totalGP)-pct(a.worksMR??a.mrAll,a.totalGP));
-  return rows;
-}
-function renderCards(){
-  const r=filteredOfficial(); const s=sumRows(r,["totalGP","musterGP","labourAll","mrAll","ongoingAll","pmayOngoing","ekOngoing"]);
-  cards.innerHTML=[
-    ["Janpads",r.length],["Total GP",fmt(s.totalGP)],["GP Progress",`${pct(s.musterGP,s.totalGP).toFixed(1)}%`],
-    ["Labour",fmt(s.labourAll)],["Works with MR",fmt(s.mrAll)],["MR %",`${pct(s.mrAll,s.ongoingAll).toFixed(1)}%`],
-    ["Ongoing Works",fmt(s.ongoingAll)],["PMAY-G Ongoing",fmt(s.pmayOngoing)],["Ek Bagiya Ongoing",fmt(s.ekOngoing)]
-  ].map(([k,v])=>`<div class="card"><div class="k">${k}</div><div class="v">${v}</div></div>`).join("");
-}
-function janpadRowsHtml(rows, withDistrict=true){
-  let html="", lastD=null, bucket=[];
-  const keys=["totalGP","musterGP","dysfunctionalGP","labourAll","mrAll","ongoingAll","mrs","labourIndividual","mrIndividual","labourCommunity","mrCommunity","pmayLabour","pmayOngoing","pmayMR","ekLabour","ekOngoing","ekMR"];
-  const subtotal=(d,arr)=>{
-    const s=sumRows(arr,keys);
-    return `<tr class="subtotal"><td colspan="2">${esc(d)} योग</td>
-      <td class="num">${fmt(s.totalGP)}</td><td class="num">${fmt(s.musterGP)}</td><td class="num">${fmt(s.dysfunctionalGP)}</td>
-      <td class="num">${fmt(s.labourAll)}</td><td class="num">${fmt(s.mrAll)}</td><td class="num">${fmt(s.ongoingAll)}</td><td class="num">${fmt(s.mrs)}</td>
-      <td class="center">${pbadge(pct(s.mrs,s.ongoingAll))}</td><td class="num">${fmt(s.labourIndividual)}</td><td class="num">${fmt(s.mrIndividual)}</td>
-      <td class="num">${fmt(s.labourCommunity)}</td><td class="num">${fmt(s.mrCommunity)}</td><td class="num">${fmt(s.pmayLabour)}</td><td class="num">${fmt(s.pmayOngoing)}</td>
-      <td class="num">${fmt(s.pmayMR)}</td><td class="center">${pbadge(pct(s.pmayMR,s.pmayOngoing))}</td><td class="num">${fmt(s.ekLabour)}</td><td class="num">${fmt(s.ekOngoing)}</td><td class="num">${fmt(s.ekMR)}</td></tr>`;
-  };
-  for(const x of rows){
-    if(lastD!==null && x.district!==lastD && sortFilter.value==="district"){html+=subtotal(lastD,bucket);bucket=[]}
-    lastD=x.district;bucket.push(x);
-    html+=`<tr><td class="district wrap">${esc(x.district)}</td><td class="wrap">${esc(x.janpad)}</td>
-      <td class="num">${fmt(x.totalGP)}</td><td class="num">${fmt(x.musterGP)}</td><td class="num">${fmt(x.dysfunctionalGP)}</td>
-      <td class="num">${fmt(x.labourAll)}</td><td class="num">${fmt(x.mrAll)}</td><td class="num">${fmt(x.ongoingAll)}</td><td class="num">${fmt(x.mrs)}</td>
-      <td class="center">${pbadge(pct(x.mrs,x.ongoingAll))}</td><td class="num">${fmt(x.labourIndividual)}</td><td class="num">${fmt(x.mrIndividual)}</td>
-      <td class="num">${fmt(x.labourCommunity)}</td><td class="num">${fmt(x.mrCommunity)}</td><td class="num">${fmt(x.pmayLabour)}</td><td class="num">${fmt(x.pmayOngoing)}</td>
-      <td class="num">${fmt(x.pmayMR)}</td><td class="center">${pbadge(pct(x.pmayMR,x.pmayOngoing))}</td><td class="num">${fmt(x.ekLabour)}</td><td class="num">${fmt(x.ekOngoing)}</td><td class="num">${fmt(x.ekMR)}</td></tr>`;
-  }
-  if(bucket.length && sortFilter.value==="district") html+=subtotal(lastD,bucket);
-  const g=sumRows(rows,keys);
-  html+=`<tr class="grand"><td colspan="2">TOTAL</td><td class="num">${fmt(g.totalGP)}</td><td class="num">${fmt(g.musterGP)}</td><td class="num">${fmt(g.dysfunctionalGP)}</td>
-  <td class="num">${fmt(g.labourAll)}</td><td class="num">${fmt(g.mrAll)}</td><td class="num">${fmt(g.ongoingAll)}</td><td class="num">${fmt(g.mrs)}</td><td class="center">${pbadge(pct(g.mrs,g.ongoingAll))}</td>
-  <td class="num">${fmt(g.labourIndividual)}</td><td class="num">${fmt(g.mrIndividual)}</td><td class="num">${fmt(g.labourCommunity)}</td><td class="num">${fmt(g.mrCommunity)}</td>
-  <td class="num">${fmt(g.pmayLabour)}</td><td class="num">${fmt(g.pmayOngoing)}</td><td class="num">${fmt(g.pmayMR)}</td><td class="center">${pbadge(pct(g.pmayMR,g.pmayOngoing))}</td>
-  <td class="num">${fmt(g.ekLabour)}</td><td class="num">${fmt(g.ekOngoing)}</td><td class="num">${fmt(g.ekMR)}</td></tr>`;
-  return html;
-}
-const janpadHead=`<thead><tr>
-<th>District</th><th>Janpad</th><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th>
-<th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th>
-<th>Individual Labour</th><th>Individual Works MR</th><th>Community Labour</th><th>Community Works MR</th>
-<th>PMAY-G Labour</th><th>PMAY-G Ongoing</th><th>PMAY-G MR Issued</th><th>PMAY-G MR %</th>
-<th>Ek Bagiya Labour</th><th>Ek Bagiya Ongoing</th><th>Ek Bagiya MR Issued</th>
-</tr></thead>`;
-
 function renderJanpad(){
-  let r=customSort(filteredOfficial(),sortFilter.value);
-  janpadTable.innerHTML=janpadHead+`<tbody>${janpadRowsHtml(r)}</tbody>`;
-  janpadSub.textContent=`${r.length} Janpad • ${(window.AUTO_FETCH_STATUS&&AUTO_FETCH_STATUS.officialDate)||""} • District-wise grouped with totals`;
+ const r=filterO().sort(ds);let body="",last=null,b=[];
+ for(const x of r){if(last!==null&&x.district!==last){body+=janpadSubtotal(last,b);b=[]}last=x.district;b.push(x);
+ body+=`<tr><td><b>${x.district}</b></td><td class="wrap">${x.janpad}</td><td class="num">${fmt(x.totalGP)}</td><td class="num">${fmt(x.musterGP)}</td><td class="num">${fmt(x.dysfunctionalGP)}</td><td class="num">${fmt(x.labourAll)}</td><td class="num">${fmt(x.mrAll)}</td><td class="num">${fmt(x.ongoingAll)}</td><td class="num">${fmt(x.mrs)}</td><td>${badge(pct(x.mrs,x.ongoingAll))}</td><td class="num">${fmt(x.labourIndividual)}</td><td class="num">${fmt(x.mrIndividual)}</td><td class="num">${fmt(x.labourCommunity)}</td><td class="num">${fmt(x.mrCommunity)}</td><td class="num">${fmt(x.pmayLabour)}</td><td class="num">${fmt(x.pmayOngoing)}</td><td class="num">${fmt(x.pmayMR)}</td><td>${badge(pct(x.pmayMR,x.pmayOngoing))}</td><td class="num">${fmt(x.ekLabour)}</td><td class="num">${fmt(x.ekOngoing)}</td><td class="num">${fmt(x.ekMR)}</td></tr>`}
+ if(b.length)body+=janpadSubtotal(last,b);
+ const g=sums(r,["totalGP","musterGP","dysfunctionalGP","labourAll","mrAll","mrs","ongoingAll","labourIndividual","mrIndividual","labourCommunity","mrCommunity","pmayLabour","pmayOngoing","pmayMR","ekLabour","ekOngoing","ekMR"]);
+ body+=`<tr class="grand"><td colspan="2">TOTAL</td><td class="num">${fmt(g.totalGP)}</td><td class="num">${fmt(g.musterGP)}</td><td class="num">${fmt(g.dysfunctionalGP)}</td><td class="num">${fmt(g.labourAll)}</td><td class="num">${fmt(g.mrAll)}</td><td class="num">${fmt(g.ongoingAll)}</td><td class="num">${fmt(g.mrs)}</td><td>${badge(pct(g.mrs,g.ongoingAll))}</td><td class="num">${fmt(g.labourIndividual)}</td><td class="num">${fmt(g.mrIndividual)}</td><td class="num">${fmt(g.labourCommunity)}</td><td class="num">${fmt(g.mrCommunity)}</td><td class="num">${fmt(g.pmayLabour)}</td><td class="num">${fmt(g.pmayOngoing)}</td><td class="num">${fmt(g.pmayMR)}</td><td>${badge(pct(g.pmayMR,g.pmayOngoing))}</td><td class="num">${fmt(g.ekLabour)}</td><td class="num">${fmt(g.ekOngoing)}</td><td class="num">${fmt(g.ekMR)}</td></tr>`;
+ janpadTable.innerHTML=`<thead><tr><th>District</th><th>Janpad</th><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Individual Labour</th><th>Individual Works MR</th><th>Community Labour</th><th>Community Works MR</th><th>PMAY-G Labour</th><th>PMAY-G Ongoing</th><th>PMAY-G MR Issued</th><th>PMAY-G MR %</th><th>Ek Bagiya Labour</th><th>Ek Bagiya Ongoing</th><th>Ek Bagiya MR Issued</th></tr></thead><tbody>${body}</tbody>`;
+ janpadSub.textContent=`${r.length} Janpad • ${AUTO_FETCH_STATUS?.officialDate||""} • District-wise grouped with totals`;
 }
-function renderOverview(){
-  let r=customSort(filteredOfficial(),"district");
-  overviewTable.innerHTML=`<thead><tr><th>District</th><th>Janpad</th><th>Total GP</th><th>GP Progress</th><th>GP Progress %</th><th>Labour</th><th>Works with MR</th><th>Ongoing Works</th><th>MR %</th><th>PMAY-G Ongoing</th><th>Ek Bagiya Ongoing</th></tr></thead><tbody>`+
-  r.map(x=>`<tr><td class="district">${x.district}</td><td>${x.janpad}</td><td class="num">${fmt(x.totalGP)}</td><td class="num">${fmt(x.musterGP)}</td>
-  <td class="center">${pbadge(pct(x.musterGP,x.totalGP))}</td><td class="num">${fmt(x.labourAll)}</td><td class="num">${fmt(x.mrAll)}</td><td class="num">${fmt(x.ongoingAll)}</td>
-  <td class="center">${pbadge(pct(x.mrs,x.ongoingAll))}</td><td class="num">${fmt(x.pmayOngoing)}</td><td class="num">${fmt(x.ekOngoing)}</td></tr>`).join("")+`</tbody>`;
+function engSubtotal(d,arr){const s=sums(arr,["totalGP","gpProgress","labour","worksMR","ongoing","mrs"]);return `<tr class="subtotal"><td colspan="4">${d} योग</td><td class="num">${fmt(s.totalGP)}</td><td class="num">${fmt(s.gpProgress)}</td><td>${badge(pct(s.gpProgress,s.totalGP))}</td><td class="num">${fmt(s.labour)}</td><td class="num">${fmt(s.worksMR)}</td><td class="num">${fmt(s.ongoing)}</td><td class="num">${fmt(s.mrs)}</td><td>${badge(pct(s.mrs,s.ongoing))}</td></tr>`}
+function renderEngineer(){
+ const r=filterE().sort((a,b)=>ds(a,b)||a.engineer.localeCompare(b.engineer,"hi")||a.cluster.localeCompare(b.cluster));let body="",last=null,b=[];
+ for(const x of r){if(last!==null&&x.district!==last){body+=engSubtotal(last,b);b=[]}last=x.district;b.push(x);
+ body+=`<tr><td><b>${x.district}</b></td><td>${x.janpad}</td><td class="wrap">${esc(x.engineer)}</td><td class="wrap">${esc(x.cluster)}</td><td class="num">${fmt(x.totalGP)}</td><td class="num">${fmt(x.gpProgress)}</td><td>${badge(pct(x.gpProgress,x.totalGP))}</td><td class="num">${fmt(x.labour)}</td><td class="num">${fmt(x.worksMR)}</td><td class="num">${fmt(x.ongoing)}</td><td class="num">${fmt(x.mrs)}</td><td>${badge(pct(x.mrs,x.ongoing))}</td></tr>`}
+ if(b.length)body+=engSubtotal(last,b);
+ const g=sums(r,["totalGP","gpProgress","labour","worksMR","ongoing","mrs"]);
+ body+=`<tr class="grand"><td colspan="4">TOTAL</td><td class="num">${fmt(g.totalGP)}</td><td class="num">${fmt(g.gpProgress)}</td><td>${badge(pct(g.gpProgress,g.totalGP))}</td><td class="num">${fmt(g.labour)}</td><td class="num">${fmt(g.worksMR)}</td><td class="num">${fmt(g.ongoing)}</td><td class="num">${fmt(g.mrs)}</td><td>${badge(pct(g.mrs,g.ongoing))}</td></tr>`;
+ engineerTable.innerHTML=`<thead><tr><th>District</th><th>Janpad</th><th>Engineer</th><th>Cluster</th><th>Total GP</th><th>GP Progress</th><th>GP Progress %</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th></tr></thead><tbody>${body}</tbody>`;
+ engineerSub.textContent=`${r.length} Engineer/Cluster rows • District → Janpad → Engineer • District totals enabled`;
 }
-function renderEngineerOfficial(){
-  let rows=customSort(filteredEngineer(),sortFilter.value,true);
-  const keys=["totalGP","gpProgress","labour","worksMR","ongoing","mrs"];
-  let html="",lastD=null,bucket=[];
-  function sub(d,arr){
-    const s=sumRows(arr,keys);
-    return `<tr class="subtotal"><td colspan="4">${esc(d)} योग</td><td class="num">${fmt(s.totalGP)}</td><td class="num">${fmt(s.gpProgress)}</td>
-      <td class="center">${pbadge(pct(s.gpProgress,s.totalGP))}</td><td class="num">${fmt(s.labour)}</td><td class="num">${fmt(s.worksMR)}</td>
-      <td class="num">${fmt(s.ongoing)}</td><td class="num">${fmt(s.mrs)}</td><td class="center">${pbadge(pct(s.mrs,s.ongoing))}</td></tr>`;
-  }
-  for(const x of rows){
-    if(lastD!==null && x.district!==lastD && sortFilter.value==="district"){html+=sub(lastD,bucket);bucket=[]}
-    lastD=x.district; bucket.push(x);
-    html+=`<tr><td class="district wrap">${esc(x.district)}</td><td class="wrap">${esc(x.janpad)}</td><td class="wrap">${esc(x.engineer)}</td><td class="wrap">${esc(x.cluster)}</td>
-      <td class="num">${fmt(x.totalGP)}</td><td class="num">${fmt(x.gpProgress)}</td><td class="center">${pbadge(pct(x.gpProgress,x.totalGP))}</td>
-      <td class="num">${fmt(x.labour)}</td><td class="num">${fmt(x.worksMR)}</td><td class="num">${fmt(x.ongoing)}</td><td class="num">${fmt(x.mrs)}</td>
-      <td class="center">${pbadge(pct(x.mrs,x.ongoing))}</td></tr>`;
-  }
-  if(bucket.length && sortFilter.value==="district") html+=sub(lastD,bucket);
-  const g=sumRows(rows,keys);
-  html+=`<tr class="grand"><td colspan="4">TOTAL</td><td class="num">${fmt(g.totalGP)}</td><td class="num">${fmt(g.gpProgress)}</td><td class="center">${pbadge(pct(g.gpProgress,g.totalGP))}</td>
-    <td class="num">${fmt(g.labour)}</td><td class="num">${fmt(g.worksMR)}</td><td class="num">${fmt(g.ongoing)}</td><td class="num">${fmt(g.mrs)}</td><td class="center">${pbadge(pct(g.mrs,g.ongoing))}</td></tr>`;
-  engineerTable.innerHTML=`<thead><tr><th>District</th><th>Janpad</th><th>Engineer</th><th>Cluster</th><th>Total GP</th><th>GP Progress</th><th>GP Progress %</th>
-    <th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th></tr></thead><tbody>${html}</tbody>`;
-  engineerSub.textContent=`${rows.length} Engineer/Cluster rows • District → Janpad → Engineer order • District totals enabled`;
-}
-function updateDependentFilters(){
-  const d=districtFilter.value,j=janpadFilter.value;
-  const er=engineerRows.filter(x=>(!d||x.district===d)&&(!j||x.janpad===j));
-  setOptions(janpadFilter,official.filter(x=>!d||x.district===d).map(x=>x.janpad),"सभी Janpad");
-  setOptions(engineerFilter,er.map(x=>x.engineer),"सभी Engineer");
-  setOptions(clusterFilter,er.filter(x=>!engineerFilter.value||x.engineer===engineerFilter.value).map(x=>x.cluster),"सभी Cluster");
-}
-function renderAll(){
-  renderCards();renderOverview();renderJanpad();renderEngineerOfficial();
-}
-function switchView(v){
-  currentView=v;
-  dashboardView.classList.toggle("hidden",v!=="dashboard");janpadView.classList.toggle("hidden",v!=="janpad");engineerView.classList.toggle("hidden",v!=="engineer");
-  document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.view===v));
-}
+function refresh(){renderDashboard();renderJanpad();renderEngineer()}
+function switchView(v){dashboardView.classList.toggle("hidden",v!=="dashboard");janpadView.classList.toggle("hidden",v!=="janpad");engineerView.classList.toggle("hidden",v!=="engineer");document.querySelectorAll(".nav").forEach(b=>b.classList.toggle("active",b.dataset.view===v))}
 document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>switchView(b.dataset.view));
-[districtFilter,janpadFilter,engineerFilter,clusterFilter,sortFilter].forEach(el=>el.addEventListener("change",()=>{updateDependentFilters();renderAll()}));
-resetBtn.onclick=()=>{districtFilter.value=janpadFilter.value=engineerFilter.value=clusterFilter.value="";sortFilter.value="district";initFilters();renderAll()};
-(async()=>{
-  try{
-    await loadOfficial(); buildEngineerRows(); initFilters(); renderAll();
-    switchView("dashboard");
-    const st=window.AUTO_FETCH_STATUS||{};
-    dashSub.textContent=`Satna & Maihar • Official date ${st.officialDate||""} • ${official.length} Janpads`;
-    statusNote.textContent=st.note||"";
-  }catch(e){
-    document.body.innerHTML=`<pre style="padding:30px;color:#b42318">Dashboard load error: ${esc(e.message)}</pre>`;
-  }
-})();
+[districtFilter,janpadFilter,engineerFilter,clusterFilter].forEach(el=>el.onchange=refresh);
+resetBtn.onclick=()=>{districtFilter.value=janpadFilter.value=engineerFilter.value=clusterFilter.value="";refresh();switchView("dashboard")};
+(async()=>{await loadOfficial();buildEngineerRows();initFilters();refresh();switchView("dashboard");heroSub.textContent=`Official date ${AUTO_FETCH_STATUS?.officialDate||""} • Satna & Maihar • ${official.length} Janpads`;statusNote.textContent=AUTO_FETCH_STATUS?.note||""})().catch(e=>document.body.innerHTML=`<pre style="padding:30px;color:red">${e.message}</pre>`);
 </script>
 </body></html>
