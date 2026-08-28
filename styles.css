@@ -26,6 +26,12 @@ body{margin:0;font-family:Inter,"Noto Sans Devanagari",Arial,sans-serif;backgrou
 .report-table thead tr:last-child th{background:var(--head-mid);color:#0d2f56;border-bottom:2px solid var(--grid-strong)}
 .report-table th:first-child,.report-table td:first-child,.report-table th:nth-child(2),.report-table td:nth-child(2){text-align:left}
 .report-table td:nth-child(2){white-space:normal;min-width:112px}.report-table td:nth-child(3){white-space:normal;min-width:78px}
+.report-table.official-grid,.report-table.engineer-grid{min-width:0;table-layout:fixed}
+.report-table.official-grid th,.report-table.official-grid td,.report-table.engineer-grid th,.report-table.engineer-grid td{white-space:normal;word-break:break-word;font-size:9.2px;padding:3px 4px}
+.report-table.official-grid td:nth-child(2),.report-table.engineer-grid td:nth-child(2){min-width:0}
+.report-table tbody tr.subtotal-row{background:#dfe9f5!important;font-weight:850}
+.report-table tbody tr.subtotal-row td{border-top:2px solid var(--grid-strong);border-bottom:2px solid var(--grid-strong)}
+.report-table tbody tr.total-row{background:#c9dbee!important;font-weight:900}
 .report-table tbody tr:nth-child(even):not(.total-row){background:var(--stripe)}.report-table tbody tr:hover:not(.total-row){background:#edf5ff}
 .report-table tbody td{border-color:#92a7bf}
 .report-table .total-row td{font-weight:900;background:var(--total);color:#0b2c50;border-top:2.4px solid var(--grid-strong);border-bottom:2.4px solid var(--grid-strong)}
