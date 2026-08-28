@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-08-28T15:52:47.517972+00:00",
+  "startedAt": "2026-08-28T16:21:33.977443+00:00",
   "ok": false,
   "steps": [
     {
@@ -18,7 +18,12 @@
       "detail": "401"
     },
     {
-      "step": "mis opened",
+      "step": "mis opened (attempt 1)",
+      "ok": false,
+      "detail": "401"
+    },
+    {
+      "step": "mis opened (attempt 2)",
       "ok": false,
       "detail": "401"
     },
@@ -28,7 +33,12 @@
       "detail": "0"
     },
     {
-      "step": "ongoing opened",
+      "step": "ongoing opened (attempt 1)",
+      "ok": false,
+      "detail": "401"
+    },
+    {
+      "step": "ongoing opened (attempt 2)",
       "ok": false,
       "detail": "401"
     },
@@ -54,5 +64,5 @@
     }
   ],
   "source": "Official VB-G RAM G",
-  "finishedAt": "2026-08-28T15:52:57.126629+00:00"
+  "finishedAt": "2026-08-28T16:21:55.565147+00:00"
 }
