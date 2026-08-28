@@ -202,8 +202,20 @@ def parse_official_summary_from_tables():
     return out
 
 with sync_playwright() as p:
-    browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
-    context=browser.new_context(accept_downloads=True,viewport={'width':1600,'height':1000},extra_http_headers={'Cache-Control':'no-cache','Pragma':'no-cache'})
+    browser=p.chromium.launch(headless=True,args=['--no-sandbox','--disable-blink-features=AutomationControlled'])
+    context=browser.new_context(
+        accept_downloads=True,
+        viewport={'width':1600,'height':1000},
+        user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
+        locale='en-IN',
+        extra_http_headers={
+            'Cache-Control':'no-cache',
+            'Pragma':'no-cache',
+            'Accept-Language':'en-IN,en;q=0.9,hi;q=0.8',
+            'Upgrade-Insecure-Requests':'1',
+        },
+    )
+    context.add_init_script("Object.defineProperty(navigator, 'webdriver', {get: () => undefined});")
     if COOKIE:
         # Parse simple Cookie header into cookies for both official hosts.
         cookies=[]
@@ -216,9 +228,9 @@ with sync_playwright() as p:
         except Exception as e: note('session cookie loaded',False,e)
     page=context.new_page()
 
-    # Home warms cookies/session.
+    # Home warms cookies/session. Not fatal if it fails/401s (separate host).
     try:
-        r=page.goto(HOME,wait_until='domcontentloaded',timeout=60000)
+        r=page.goto(HOME,wait_until='networkidle',timeout=60000)
         note('Home opened',bool(r and r.ok),getattr(r,'status',None))
     except Exception as e: note('Home opened',False,e)
 
@@ -228,18 +240,28 @@ with sync_playwright() as p:
     downloaded=direct_workbook if validate_workbook(direct_workbook) else None
     ongoing_download=direct_ongoing
     for url,label in [(REPORT_URL,'mis'),(ONGOING,'ongoing')]:
-        try:
-            r=page.goto(url,wait_until='domcontentloaded',timeout=90000)
-            note(f'{label} opened',bool(r and r.ok),getattr(r,'status',None))
-            maybe_login(page)
-            page.wait_for_timeout(2500)
-            table_dump(page,label)
-            html=page.content(); (RAW/f'{label}.html').write_text(html,encoding='utf-8')
-            got=try_download(page)
-            if label=='mis' and not downloaded: downloaded=got
-            elif label=='ongoing' and not ongoing_download: ongoing_download=got
-        except Exception as e:
-            note(f'{label} opened',False,e)
+        ok=False
+        for attempt in (1,2):
+            try:
+                r=page.goto(url,wait_until='networkidle',timeout=90000)
+                status_ok=bool(r and r.ok)
+                note(f'{label} opened (attempt {attempt})',status_ok,getattr(r,'status',None))
+                if not status_ok and attempt==1:
+                    page.wait_for_timeout(4000)  # let any bot-check / retry-after settle
+                    continue
+                maybe_login(page)
+                page.wait_for_timeout(3000)
+                table_dump(page,label)
+                html=page.content(); (RAW/f'{label}.html').write_text(html,encoding='utf-8')
+                got=try_download(page)
+                if label=='mis' and not downloaded: downloaded=got
+                elif label=='ongoing' and not ongoing_download: ongoing_download=got
+                ok=True
+                break
+            except Exception as e:
+                note(f'{label} opened (attempt {attempt})',False,e)
+        if not ok:
+            note(f'{label} opened',False,'both attempts failed')
 
     # Search any captured browser responses/downloads is not needed when export worked.
     browser.close()
