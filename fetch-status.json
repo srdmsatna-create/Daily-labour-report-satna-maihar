@@ -1,20 +1,20 @@
 {
-  "startedAt": "2026-08-29T04:37:46.403691+00:00",
+  "startedAt": "2026-08-29T04:49:06.842405+00:00",
   "ok": true,
   "source": "Official VB-G RAM G",
   "steps": [
     {
-      "step": "manual official screenshot received (ALL/ALL)",
+      "step": "manual official screenshot received (Individual Land + PMAY-G House)",
       "ok": true,
-      "detail": "R6.9 Screen-2, 29-08-2026"
+      "detail": "R6.9 Screen-2, RepDay 29/08/2026"
     },
     {
-      "step": "Screen-2 table parse",
+      "step": "PMAY-G Labour + MR-issued updated",
       "ok": true,
-      "detail": "8 Janpads authoritative; manually verified"
+      "detail": "8 Janpads updated"
     }
   ],
   "officialDate": "29-08-2026",
-  "note": "Manual update: GitHub Actions cloud IP is blocked (401) by the official portal, so data is refreshed via periodic manual capture. PMAY-G/Ek Bagiya sub-columns unchanged this update (no new screenshot for those categories today).",
-  "finishedAt": "2026-08-29T04:37:46.403707+00:00"
+  "note": "Manual update: PMAY-G Labour and MR-issued refreshed for 29-08-2026. Other sections unchanged since last update.",
+  "finishedAt": "2026-08-29T04:49:06.842427+00:00"
 }
