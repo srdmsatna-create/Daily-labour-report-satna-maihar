@@ -1,5 +1,9 @@
 const MAIHAR=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']);const SATNA=new Set(['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SOHAWAL','SATNA','UNCHAHARA']);
 const JANPAD_PORTAL=[{district:'MAIHAR',janpad:'AMARPATAN',label:'अमरपाटन'},{district:'MAIHAR',janpad:'MAIHAR',label:'मैहर'},{district:'MAIHAR',janpad:'RAMNAGAR',label:'रामनगर'},{district:'SATNA',janpad:'MAJHGAWAN',label:'मझगवां'},{district:'SATNA',janpad:'NAGOD',label:'नागौद'},{district:'SATNA',janpad:'RAMPUR BAGHELAN',label:'रामपुर बघेलान'},{district:'SATNA',janpad:'SATNA',label:'सतना / सोहावल'},{district:'SATNA',janpad:'UNCHAHARA',label:'उचेहरा'}];
+
+// Exact ongoing counts from Ongoing_29.08.2026_Consolidated_SubEngineer_Financial_Mandays.xlsx
+const ONGOING_2908_JANPAD={"AMARPATAN":{"pmayOngoing":1044,"ekOngoing":109},"MAIHAR":{"pmayOngoing":1814,"ekOngoing":86},"MAJHGAWAN":{"pmayOngoing":1536,"ekOngoing":85},"NAGOD":{"pmayOngoing":1896,"ekOngoing":100},"RAMNAGAR":{"pmayOngoing":986,"ekOngoing":106},"RAMPUR BAGHELAN":{"pmayOngoing":2943,"ekOngoing":75},"SATNA":{"pmayOngoing":473,"ekOngoing":94},"UNCHAHARA":{"pmayOngoing":1303,"ekOngoing":101}};
+const ONGOING_2908_ENGINEER={"AMARPATAN¦अनिल पटेल":{"pmayOngoing":117,"ekOngoing":15},"AMARPATAN¦अनिल पटेल अति0":{"pmayOngoing":168,"ekOngoing":14},"AMARPATAN¦अनिल पटेल अति0 02":{"pmayOngoing":79,"ekOngoing":27},"AMARPATAN¦अश्वनी पटेल":{"pmayOngoing":278,"ekOngoing":20},"AMARPATAN¦श्रीमती साधना चौरे":{"pmayOngoing":265,"ekOngoing":25},"AMARPATAN¦सुनील मिश्रा":{"pmayOngoing":137,"ekOngoing":8},"MAIHAR¦जय अर्खेल":{"pmayOngoing":76,"ekOngoing":4},"MAIHAR¦धनंजय त्रिपाठी":{"pmayOngoing":144,"ekOngoing":7},"MAIHAR¦बृजेश सिंह":{"pmayOngoing":190,"ekOngoing":14},"MAIHAR¦योगेन्द्र सिंह":{"pmayOngoing":173,"ekOngoing":9},"MAIHAR¦योगेन्द्र सिंह अति0":{"pmayOngoing":161,"ekOngoing":4},"MAIHAR¦राज रंजन तिवारी":{"pmayOngoing":307,"ekOngoing":10},"MAIHAR¦राज रंजन तिवारी अति0":{"pmayOngoing":157,"ekOngoing":6},"MAIHAR¦राजा भैया सिंह":{"pmayOngoing":205,"ekOngoing":15},"MAIHAR¦श्रीमती मीना अग्रवाल":{"pmayOngoing":269,"ekOngoing":9},"MAIHAR¦सुरेश सिंह":{"pmayOngoing":132,"ekOngoing":8},"MAJHGAWAN¦अखिलेश सोनी":{"pmayOngoing":165,"ekOngoing":2},"MAJHGAWAN¦आशीष तिवारी":{"pmayOngoing":238,"ekOngoing":11},"MAJHGAWAN¦आशीष तिवारी अति0":{"pmayOngoing":239,"ekOngoing":18},"MAJHGAWAN¦देवेन्द्र सिंह":{"pmayOngoing":102,"ekOngoing":6},"MAJHGAWAN¦रमाकांत त्रिपाठी":{"pmayOngoing":193,"ekOngoing":13},"MAJHGAWAN¦रमाकांत त्रिपाठी अति0":{"pmayOngoing":146,"ekOngoing":8},"MAJHGAWAN¦सतीस समेले":{"pmayOngoing":242,"ekOngoing":8},"MAJHGAWAN¦सत्यनारायण मिश्रा":{"pmayOngoing":211,"ekOngoing":19},"NAGOD¦कौशल पटेल":{"pmayOngoing":346,"ekOngoing":17},"NAGOD¦कौशल पटेल अति0":{"pmayOngoing":140,"ekOngoing":16},"NAGOD¦निशा तिवारी":{"pmayOngoing":177,"ekOngoing":9},"NAGOD¦प्रमोद तिवारी":{"pmayOngoing":264,"ekOngoing":11},"NAGOD¦राजीवलोचन त्रिपाठी":{"pmayOngoing":383,"ekOngoing":10},"NAGOD¦रितेश राजपूत":{"pmayOngoing":217,"ekOngoing":11},"NAGOD¦संकल्प राणा":{"pmayOngoing":145,"ekOngoing":17},"NAGOD¦हेमंत तिवारी":{"pmayOngoing":224,"ekOngoing":9},"RAMNAGAR¦अनिल पाण्डेय":{"pmayOngoing":168,"ekOngoing":14},"RAMNAGAR¦राजा राम चंदेल":{"pmayOngoing":160,"ekOngoing":29},"RAMNAGAR¦राजा राम चंदेल अति0":{"pmayOngoing":221,"ekOngoing":21},"RAMNAGAR¦श्रीमती साधना सिंह":{"pmayOngoing":142,"ekOngoing":27},"RAMNAGAR¦संजय गुप्ता":{"pmayOngoing":295,"ekOngoing":15},"RAMPUR BAGHELAN¦अजय खरे":{"pmayOngoing":261,"ekOngoing":1},"RAMPUR BAGHELAN¦प्रमोद शुक्ला":{"pmayOngoing":328,"ekOngoing":7},"RAMPUR BAGHELAN¦भूपेन्द्र सिंह संविदा":{"pmayOngoing":299,"ekOngoing":11},"RAMPUR BAGHELAN¦मनोज खम्परिया":{"pmayOngoing":429,"ekOngoing":9},"RAMPUR BAGHELAN¦मनोज खम्परिया अति0":{"pmayOngoing":387,"ekOngoing":20},"RAMPUR BAGHELAN¦मोतीलाल लढ़िया":{"pmayOngoing":494,"ekOngoing":7},"RAMPUR BAGHELAN¦रमेश सिंह":{"pmayOngoing":384,"ekOngoing":9},"RAMPUR BAGHELAN¦श्रीमती अन्नपूर्णा सिंह":{"pmayOngoing":361,"ekOngoing":11},"SATNA¦आशुतोष वर्मा":{"pmayOngoing":15,"ekOngoing":6},"SATNA¦कुलदीप पयासी":{"pmayOngoing":37,"ekOngoing":17},"SATNA¦धर्मेन्द्र कोरी":{"pmayOngoing":70,"ekOngoing":2},"SATNA¦महेन्‍द्र पारधी":{"pmayOngoing":61,"ekOngoing":14},"SATNA¦व्हीके मिश्रा अति0":{"pmayOngoing":126,"ekOngoing":16},"SATNA¦व्‍ही0के0मिश्रा":{"pmayOngoing":62,"ekOngoing":18},"SATNA¦शिवलाल भारती":{"pmayOngoing":68,"ekOngoing":7},"SATNA¦संजय पाण्डेय":{"pmayOngoing":34,"ekOngoing":14},"UNCHAHARA¦दीपक सिंह":{"pmayOngoing":179,"ekOngoing":21},"UNCHAHARA¦राकेश ताम्रकार":{"pmayOngoing":404,"ekOngoing":19},"UNCHAHARA¦राकेश ताम्रकार अति0":{"pmayOngoing":99,"ekOngoing":11},"UNCHAHARA¦राज कुमार पाण्डेय":{"pmayOngoing":161,"ekOngoing":8},"UNCHAHARA¦राज कुमार पाण्डेय अति 0":{"pmayOngoing":179,"ekOngoing":23},"UNCHAHARA¦हरनाम  सिंह":{"pmayOngoing":281,"ekOngoing":19}};
 const BOOT_REPORT=window.AUTO_REPORT||window.SAMPLE_REPORT||{};
 let rows=BOOT_REPORT.rows||[],official=BOOT_REPORT.official||[],daily=BOOT_REPORT.daily||[],workmix=BOOT_REPORT.workmix||[],categorymix=BOOT_REPORT.categorymix||[],ongoingDetails=window.ONGOING_DETAILS||[],reportTitle=BOOT_REPORT.title||'',pendingFile=null,view='dysjanpad',lastExport=[];
 let autoMeta=BOOT_REPORT.meta||{mode:(window.AUTO_REPORT?'auto':'sample'),updatedAt:null,source:null,status:(window.AUTO_REPORT?'ok':'sample')};
@@ -31,7 +35,16 @@ function engineerOfficialData(list){
   const omap=new Map(official.map(r=>[normJanpad(r.janpad),r]));
   for(const j of [...new Set(out.map(r=>normJanpad(r.janpad)))]){
     const g=out.filter(r=>normJanpad(r.janpad)===j),o=omap.get(j)||{};
-    g.forEach(r=>{r.noEkycRaw=num(r.noEkyc);r.pmayOngoingRaw=num(r.pmayOngoing);r.ekOngoingRaw=num(r.ekOngoing);r.labourIndividual=0;r.mrIndividual=0;r.labourCommunity=0;r.mrCommunity=0;r.pmayLabour=0;r.pmayMR=0;r.ekLabour=0;r.ekMR=0;});
+    g.forEach(r=>{
+      r.noEkycRaw=num(r.noEkyc);
+      const exact=ONGOING_2908_ENGINEER[[normJanpad(r.janpad),clean(r.engineer)].join('¦')]||{};
+      r.pmayOngoing=num(exact.pmayOngoing);
+      r.ekOngoing=num(exact.ekOngoing);
+      r.pmayOngoingRaw=r.pmayOngoing;
+      r.ekOngoingRaw=r.ekOngoing;
+      r.labourIndividual=0;r.mrIndividual=0;r.labourCommunity=0;r.mrCommunity=0;
+      r.pmayLabour=0;r.pmayMR=0;r.ekLabour=0;r.ekMR=0;
+    });
     apportionExact(g,'noEkyc',o.noEkyc,'noEkycRaw');
     apportionExact(g,'labourIndividual',o.labourIndividual,'labourAll');
     apportionExact(g,'mrIndividual',o.mrIndividual,'mrAll');
@@ -240,12 +253,8 @@ function officialFiltered(){let a=official;if($('districtFilter').value!=='ALL')
 
 function janpadCategoryOngoingMap(){
   const m=new Map();
-  for(const r of workmix){
-    const j=normJanpad(r.janpad);
-    if(!m.has(j))m.set(j,{pmayOngoing:0,ekOngoing:0});
-    const z=m.get(j);
-    z.pmayOngoing+=num(r.pmayOngoing);
-    z.ekOngoing+=num(r.ekOngoing);
+  for(const [j,v] of Object.entries(ONGOING_2908_JANPAD)){
+    m.set(normJanpad(j),{pmayOngoing:num(v.pmayOngoing),ekOngoing:num(v.ekOngoing)});
   }
   return m;
 }
@@ -447,7 +456,7 @@ function renderOfficial(){
 
   lastExport=data;
   $('viewTitle').textContent='Official Janpad Daily Report';
-  $('viewMeta').textContent=`${data.length} Janpad • R6.9 Labour/MR + exact ongoing work count • ${todayDate()}`;
+  $('viewMeta').textContent=`${data.length} Janpad • R6.9 Labour/MR + Final WorkCategory formatted 29.08.2026 sheet • ${todayDate()}`;
 
   let h=`<thead><tr>
     <th rowspan="2">District</th><th rowspan="2">Janpad</th>
@@ -518,7 +527,7 @@ function renderEngineerOfficial(){
 
   lastExport=data;
   $('viewTitle').textContent='Sub Engineer Daily Report — Janpad Report Same Format';
-  $('viewMeta').textContent=`${data.length} Sub Engineer rows • Janpad R6.9 Labour/MR reconciled + exact ongoing works • ${todayDate()}`;
+  $('viewMeta').textContent=`${data.length} Sub Engineer rows • Janpad R6.9 Labour/MR reconciled + Ongoing 29.08.2026 sheet • ${todayDate()}`;
 
   let h=`<thead><tr>
     <th rowspan="2">District</th><th rowspan="2">Janpad</th><th rowspan="2">Sub Engineer</th><th rowspan="2">Cluster(s)</th>
