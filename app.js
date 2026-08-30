@@ -31,13 +31,14 @@ function engineerOfficialData(list){
   const omap=new Map(official.map(r=>[normJanpad(r.janpad),r]));
   for(const j of [...new Set(out.map(r=>normJanpad(r.janpad)))]){
     const g=out.filter(r=>normJanpad(r.janpad)===j),o=omap.get(j)||{};
-    g.forEach(r=>{r.noEkycRaw=num(r.noEkyc);r.pmayOngoingRaw=num(r.pmayOngoing);r.ekOngoingRaw=num(r.ekOngoing);r.labourIndividual=0;r.mrIndividual=0;r.labourCommunity=0;r.mrCommunity=0;r.pmayMR=0;r.ekLabour=0;r.ekMR=0;});
+    g.forEach(r=>{r.noEkycRaw=num(r.noEkyc);r.pmayOngoingRaw=num(r.pmayOngoing);r.ekOngoingRaw=num(r.ekOngoing);r.labourIndividual=0;r.mrIndividual=0;r.labourCommunity=0;r.mrCommunity=0;r.pmayLabour=0;r.pmayMR=0;r.ekLabour=0;r.ekMR=0;});
     apportionExact(g,'noEkyc',o.noEkyc,'noEkycRaw');
     apportionExact(g,'labourIndividual',o.labourIndividual,'labourAll');
     apportionExact(g,'mrIndividual',o.mrIndividual,'mrAll');
     apportionExact(g,'labourCommunity',o.labourCommunity,'labourAll');
     apportionExact(g,'mrCommunity',o.mrCommunity,'mrAll');
     apportionExact(g,'pmayOngoing',o.pmayOngoing,'pmayOngoingRaw');
+    apportionExact(g,'pmayLabour',o.pmayLabour,'labourAll');
     apportionExact(g,'pmayMR',o.pmayMR,'pmayOngoing');
     apportionExact(g,'ekOngoing',o.ekOngoing,'ekOngoingRaw');
     apportionExact(g,'ekLabour',o.ekLabour,'ekOngoing');
@@ -421,7 +422,68 @@ function renderJanpadDysfunctional(){
   $('reportTable').innerHTML=h;
 }
 
-function renderOfficial(){const data=sortRows(officialFiltered().map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP)})),'ongoing',['janpad']);lastExport=data;$('viewTitle').textContent='Official Janpad Daily Report';$('viewMeta').textContent=`${data.length} Janpad • ${todayDate()}`;let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th colspan="3">Gram Panchayat</th><th colspan="5">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(districtOf(r.janpad))}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${badge(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${badge(r.ekMR,r.ekOngoing)}</td></tr>`}const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td>TOTAL</td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}<td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
+function renderOfficial(){
+  const data=sortRows(officialFiltered().map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP)})),'ongoing',['janpad']);
+  lastExport=data;
+  $('viewTitle').textContent='Official Janpad Daily Report';
+  $('viewMeta').textContent=`${data.length} Janpad • ${todayDate()}`;
+
+  let h=`<thead><tr>
+    <th rowspan="2">District</th><th rowspan="2">Janpad</th>
+    <th colspan="3">Gram Panchayat</th>
+    <th colspan="5">All Types of Works / Screen-2</th>
+    <th colspan="2">Individual Land (Cat-IV)</th>
+    <th colspan="3">Community Works</th>
+    <th colspan="2">PMAY-G</th>
+    <th colspan="2">Ek Bagiya</th>
+  </tr><tr>
+    <th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th>
+    <th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th>
+    <th>Labour</th><th>Muster Rolls</th>
+    <th>Labour</th><th>Works MR</th><th>Share %</th>
+    <th>Labour</th><th>Muster Rolls</th>
+    <th>Labour</th><th>Muster Rolls</th>
+  </tr></thead><tbody>`;
+
+  for(const r of data){
+    h+=`<tr>
+      ${cell(districtOf(r.janpad))}${cell(r.janpad)}
+      ${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}
+      ${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}
+      <td>${badge(r.mrAll,r.ongoingAll)}</td>
+      ${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}
+      ${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}
+      <td>${badge(r.mrCommunity,r.mrAll)}</td>
+      ${cell(r.pmayLabour,true)}${cell(r.pmayMR,true)}
+      ${cell(r.ekLabour,true)}${cell(r.ekMR,true)}
+    </tr>`;
+  }
+
+  const keys=[
+    'totalGP','musterGP','dysfunctionalGP',
+    'labourAll','mrAll','ongoingAll','mrs',
+    'labourIndividual','mrIndividual',
+    'labourCommunity','mrCommunity',
+    'pmayLabour','pmayMR',
+    'ekLabour','ekMR'
+  ],t={};
+  keys.forEach(k=>t[k]=sum(data,k));
+
+  h+=`<tr class="total-row">
+    <td>TOTAL</td><td></td>
+    ${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}
+    ${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}
+    <td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>
+    ${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}
+    ${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}
+    <td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>
+    ${cell(t.pmayLabour,true)}${cell(t.pmayMR,true)}
+    ${cell(t.ekLabour,true)}${cell(t.ekMR,true)}
+  </tr></tbody>`;
+
+  $('reportTable').innerHTML=h;
+}
+
 function renderEngineerOfficial(){const data=sortRows(engineerOfficialData(filteredRows()).map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP),ekOngoing:num(r.ekOngoing)})),'ongoing',['engineer','janpad']);lastExport=data;$('viewTitle').textContent='Sub Engineer Daily Report — Janpad Report Same Format';$('viewMeta').textContent=`${data.length} Sub Engineer rows • Official Janpad totals reconciled • ${todayDate()}`;let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th rowspan="2">Sub Engineer</th><th rowspan="2">Cluster(s)</th><th colspan="3">Gram Panchayat</th><th colspan="5">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${badge(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${badge(r.ekMR,r.ekOngoing)}</td></tr>`}const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td>TOTAL</td><td></td><td></td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}<td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
 function standardTable(data,cols,title){lastExport=data;$('viewTitle').textContent=title;$('viewMeta').textContent=`${fmt(data.length)} rows • ${todayDate()}`;const nums=new Set(cols.filter(x=>x[2]).map(x=>x[0]));let h='<thead><tr>'+cols.map(c=>`<th>${c[1]}</th>`).join('')+'<th>MR Coverage</th></tr></thead><tbody>';for(const r of data){h+='<tr>'+cols.map(c=>cell(r[c[0]],nums.has(c[0]))).join('')+`<td>${badge(r.worksMR,r.ongoing)}</td></tr>`}const total={};nums.forEach(k=>total[k]=sum(data,k));h+=`<tr class="total-row">${cols.map((c,i)=>`<td>${i===0?'TOTAL':nums.has(c[0])?fmt(total[c[0]]):''}</td>`).join('')}<td>${pct(total.worksMR,total.ongoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
 
