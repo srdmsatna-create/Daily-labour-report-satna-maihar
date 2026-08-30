@@ -20,10 +20,32 @@ def main():
         z={'janpad':str(r['janpad']).strip().upper()}
         for k in NUMFIELDS:z[k]=num(r.get(k,0))
         if z['totalGP']<=0 or z['musterGP']<=0: raise SystemExit(f'Invalid Screen-2 row: {z["janpad"]}')
-        z['dysfunctionalGP']=max(0,z['totalGP']-z['musterGP'])
         clean.append(z)
     data=load_auto()
-    new_daily=[{'janpad':o['janpad'],'totalGP':o['totalGP'],'gpsProgress':o['musterGP'],'labour':o['labourAll'],'worksMR':o['mrAll'],'noEkyc':o['noEkyc'],'mrs':o['mrs']} for o in clean]
+    new_daily = [{
+        'janpad': o['janpad'],
+        'totalGP': o['totalGP'],
+        'gpsProgress': o['musterGP'],
+        'dysfunctionalGP': o['dysfunctionalGP'],
+
+        'labour': o['labourAll'],
+        'worksMR': o['mrAll'],
+        'ongoing': o['ongoingAll'],
+        'mrs': o['mrs'],
+
+        'labourIndividual': o['labourIndividual'],
+        'mrIndividual': o['mrIndividual'],
+
+        'labourCommunity': o['labourCommunity'],
+        'mrCommunity': o['mrCommunity'],
+
+        'pmayOngoing': o['pmayOngoing'],
+        'pmayMR': o['pmayMR'],
+
+        'ekLabour': o['ekLabour'],
+        'ekOngoing': o['ekOngoing'],
+        'ekMR': o['ekMR']
+    } for o in clean]
     # V51 freshness lock: change Last auto update ONLY when report values change.
     # A successful source check is still visible through auto-status.js/fetch-status.json.
     before=json.dumps({'official':data.get('official',[]),'daily':data.get('daily',[])},ensure_ascii=False,sort_keys=True,separators=(',',':'))

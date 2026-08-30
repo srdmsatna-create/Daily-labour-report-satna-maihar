@@ -41,86 +41,95 @@ def fetch_table():
 def parse_table(html):
     rows = re.findall(r'<tr[^>]*>(.*?)</tr>', html, re.S)
     data = {}
+
     for r in rows:
         cells = re.findall(r'<td[^>]*>(.*?)</td>', r, re.S)
         clean = [re.sub('<[^>]+>', '', c).strip() for c in cells]
         clean = [c for c in clean if c != '']
-        if len(clean) < 7:
+
+        if len(clean) < 20:
             continue
+
         name = clean[0].upper().strip()
-        # Match against known janpad names (allow partial match for wrapped names)
+
+        # Match against known janpad names
         for j in JANPAD_ORDER:
             if j in name or name in j:
                 nums = []
+
                 for c in clean[1:]:
                     n = re.sub(r'[^\d.]', '', c)
                     nums.append(float(n) if n else 0)
-                if len(nums) >= 6:
+
+                if len(nums) >= 20:
                     data[j] = {
-                        'totalGP': nums[0], 'musterGP': nums[1], 'labourAll': nums[2],
-                        'mrAll': nums[3], 'noEkyc': nums[4], 'mrs': nums[5],
+                        'totalGP': nums[0],
+                        'musterGP': nums[1],
+                        'dysfunctionalGP': nums[2],
+
+                        'labourAll': nums[3],
+                        'mrAll': nums[4],
+                        'ongoingAll': nums[5],
+                        'mrs': nums[6],
+                         'labourIndividual': nums[8],
+                        'mrIndividual': nums[9],
+
+                        'labourCommunity': nums[10],
+                        'mrCommunity': nums[11],
+
+                        'pmayOngoing': nums[13],
+                        'pmayMR': nums[14],
+
+                        'ekLabour': nums[16],
+                        'ekOngoing': nums[17],
+                        'ekMR': nums[18],
                     }
+
                 break
+
     return data
+
 
 def update_csv(new_data):
     rows = []
+
     with open(CSV_PATH, encoding='utf-8-sig', newline='') as f:
         reader = csv.DictReader(f)
         fieldnames = reader.fieldnames
+
         for r in reader:
             j = r['janpad'].strip().upper()
+
             if j in new_data:
                 d = new_data[j]
+
                 r['totalGP'] = str(int(d['totalGP']))
                 r['musterGP'] = str(int(d['musterGP']))
-                r['dysfunctionalGP'] = str(max(0, int(d['totalGP']) - int(d['musterGP'])))
+                r['dysfunctionalGP'] = str(int(d['dysfunctionalGP']))
+
                 r['labourAll'] = str(int(d['labourAll']))
                 r['mrAll'] = str(int(d['mrAll']))
-                r['noEkyc'] = str(int(d['noEkyc']))
+                r['ongoingAll'] = str(int(d['ongoingAll']))
                 r['mrs'] = str(int(d['mrs']))
+
+                r['labourIndividual'] = str(int(d['labourIndividual']))
+                r['mrIndividual'] = str(int(d['mrIndividual']))
+
+                r['labourCommunity'] = str(int(d['labourCommunity']))
+                r['mrCommunity'] = str(int(d['mrCommunity']))
+
+                r['pmayOngoing'] = str(int(d['pmayOngoing']))
+                r['pmayMR'] = str(int(d['pmayMR']))
+
+                r['ekLabour'] = str(int(d['ekLabour']))
+                r['ekOngoing'] = str(int(d['ekOngoing']))
+                r['ekMR'] = str(int(d['ekMR']))
+
             rows.append(r)
+
     with open(CSV_PATH, 'w', encoding='utf-8-sig', newline='') as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         w.writerows(rows)
+
     print(f"Updated {CSV_PATH} for {len(new_data)} janpads")
-
-def update_status(ok, note):
-    today = datetime.now().strftime('%d-%m-%Y')
-    status = {
-        'startedAt': datetime.now(timezone.utc).isoformat(),
-        'ok': ok,
-        'source': 'Official VB-G RAM G (local PC fetch)',
-        'steps': [{'step': 'local browser fetch', 'ok': ok, 'detail': note}],
-        'officialDate': today,
-        'note': note,
-    }
-    status['finishedAt'] = datetime.now(timezone.utc).isoformat()
-    STATUS_JSON.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
-    STATUS_JS.write_text(
-        'window.AUTO_FETCH_STATUS=' + json.dumps(status, ensure_ascii=False, separators=(',', ':')) + ';\n',
-        encoding='utf-8'
-    )
-
-def main():
-    if 'PASTE_YOUR' in REPORT_URL:
-        print("ERROR: Edit this file and paste your R6.9 report link into REPORT_URL first.")
-        sys.exit(1)
-    try:
-        html = fetch_table()
-        data = parse_table(html)
-        if len(data) < 8:
-            print(f"WARNING: only found {len(data)}/8 janpads. Not updating (data may be wrong).")
-            update_status(False, f"Only {len(data)}/8 janpads parsed; kept previous data.")
-            sys.exit(1)
-        update_csv(data)
-        update_status(True, f"{len(data)}/8 janpads updated from local PC fetch.")
-        print("SUCCESS. Now run: python scripts/merge_official_summary.py")
-    except Exception as e:
-        print(f"FAILED: {e}")
-        update_status(False, str(e))
-        sys.exit(1)
-
-if __name__ == '__main__':
-    main()
