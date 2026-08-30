@@ -39,20 +39,26 @@ def fetch_table():
         return html
 
 def parse_table(html):
+    # Save the raw page for debugging if parsing fails
+    debug_path = ROOT / "debug_page.html"
+    debug_path.write_text(html, encoding='utf-8')
+
     rows = re.findall(r'<tr[^>]*>(.*?)</tr>', html, re.S)
+    print(f"DEBUG: found {len(rows)} <tr> rows total in page")
+
     data = {}
     for r in rows:
-        cells = re.findall(r'<td[^>]*>(.*?)</td>', r, re.S)
+        cells = re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>', r, re.S)
         clean = [re.sub('<[^>]+>', '', c).strip() for c in cells]
         clean = [c for c in clean if c != '']
-        if len(clean) < 7:
+        # Row shape is: [SNo, BlockName, TotalGP, GPProgress, Labour, MR, noEKYC, MRs]
+        if len(clean) < 8:
             continue
-        name = clean[0].upper().strip()
-        # Match against known janpad names (allow partial match for wrapped names)
+        name = clean[1].upper().strip()
         for j in JANPAD_ORDER:
             if j in name or name in j:
                 nums = []
-                for c in clean[1:]:
+                for c in clean[2:8]:
                     n = re.sub(r'[^\d.]', '', c)
                     nums.append(float(n) if n else 0)
                 if len(nums) >= 6:
@@ -61,6 +67,10 @@ def parse_table(html):
                         'mrAll': nums[3], 'noEkyc': nums[4], 'mrs': nums[5],
                     }
                 break
+
+    print(f"DEBUG: matched {len(data)}/8 janpads: {list(data.keys())}")
+    if len(data) < 8:
+        print(f"DEBUG: raw page saved to {debug_path} for inspection")
     return data
 
 def update_csv(new_data):

@@ -1,7 +1,15 @@
 {
+  "startedAt": "2026-08-30T03:48:00.548668+00:00",
   "ok": true,
-  "updateMode": "summary",
-  "source": "Official VB-G RAM G",
-  "officialDate": "26-08-2026",
-  "note": "Seeded from verified official summary CSV; future GitHub runs parse the official MIS HTML table when full workbook export is unavailable."
+  "source": "Official VB-G RAM G (local PC fetch)",
+  "steps": [
+    {
+      "step": "local browser fetch",
+      "ok": true,
+      "detail": "8/8 janpads updated from local PC fetch."
+    }
+  ],
+  "officialDate": "30-08-2026",
+  "note": "8/8 janpads updated from local PC fetch.",
+  "finishedAt": "2026-08-30T03:48:00.548697+00:00"
 }

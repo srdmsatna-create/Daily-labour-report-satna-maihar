@@ -1,1 +1,1 @@
-window.AUTO_FETCH_STATUS={"ok":false,"finishedAt":null,"source":"Official VB-G RAM G","steps":[],"note":"Automation package installed; first GitHub Action run pending."};
+window.AUTO_FETCH_STATUS={"startedAt":"2026-08-30T03:48:00.548668+00:00","ok":true,"source":"Official VB-G RAM G (local PC fetch)","steps":[{"step":"local browser fetch","ok":true,"detail":"8/8 janpads updated from local PC fetch."}],"officialDate":"30-08-2026","note":"8/8 janpads updated from local PC fetch.","finishedAt":"2026-08-30T03:48:00.548697+00:00"};
