@@ -10,6 +10,7 @@ const ONGOING_SOURCE_LOCK={
   lockThrough:'2026-09-06',
   rule:'PMAY and Ek Bagiya ongoing works use the fixed Excel/CSV source; R6.9 is used only for Labour and Muster Rolls.'
 };
+const ONE_WEEK_ONGOING_LOCK={source:'Final WorkCategory 30-08-2026',from:'30-08-2026',through:'06-09-2026',pmayOngoing:11995,ekBagiyaOngoing:756};
 const BOOT_REPORT=window.AUTO_REPORT||window.SAMPLE_REPORT||{};
 let rows=BOOT_REPORT.rows||[],official=BOOT_REPORT.official||[],daily=BOOT_REPORT.daily||[],workmix=BOOT_REPORT.workmix||[],categorymix=BOOT_REPORT.categorymix||[],ongoingDetails=window.ONGOING_DETAILS||[],reportTitle=BOOT_REPORT.title||'',pendingFile=null,view='dysjanpad',lastExport=[];
 let autoMeta=BOOT_REPORT.meta||{mode:(window.AUTO_REPORT?'auto':'sample'),updatedAt:null,source:null,status:(window.AUTO_REPORT?'ok':'sample')};
@@ -748,7 +749,7 @@ $('csvBtn').addEventListener('click',()=>{
   a.download=`daily-report-${view}-${todayDate()}.xls`;
   a.click();
   URL.revokeObjectURL(a.href);
-});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
+});if($('csvBtn')){$('csvBtn').textContent='Download in Excel';$('csvBtn').title='Current report Excel download';}initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
 // V6: Font size and Portrait/Landscape print controls
 (function(){
   let fontScale=1;
