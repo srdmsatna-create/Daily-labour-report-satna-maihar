@@ -1,16 +1,5 @@
 const MAIHAR=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']);const SATNA=new Set(['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SOHAWAL','SATNA','UNCHAHARA']);
 const JANPAD_PORTAL=[{district:'MAIHAR',janpad:'AMARPATAN',label:'अमरपाटन'},{district:'MAIHAR',janpad:'MAIHAR',label:'मैहर'},{district:'MAIHAR',janpad:'RAMNAGAR',label:'रामनगर'},{district:'SATNA',janpad:'MAJHGAWAN',label:'मझगवां'},{district:'SATNA',janpad:'NAGOD',label:'नागौद'},{district:'SATNA',janpad:'RAMPUR BAGHELAN',label:'रामपुर बघेलान'},{district:'SATNA',janpad:'SATNA',label:'सतना / सोहावल'},{district:'SATNA',janpad:'UNCHAHARA',label:'उचेहरा'}];
-
-// Exact ongoing counts from Ongoing_29.08.2026_Consolidated_SubEngineer_Financial_Mandays.xlsx
-const ONGOING_2908_JANPAD={"AMARPATAN":{"pmayOngoing":1044,"ekOngoing":109},"MAIHAR":{"pmayOngoing":1814,"ekOngoing":86},"MAJHGAWAN":{"pmayOngoing":1536,"ekOngoing":85},"NAGOD":{"pmayOngoing":1896,"ekOngoing":100},"RAMNAGAR":{"pmayOngoing":986,"ekOngoing":106},"RAMPUR BAGHELAN":{"pmayOngoing":2943,"ekOngoing":75},"SATNA":{"pmayOngoing":473,"ekOngoing":94},"UNCHAHARA":{"pmayOngoing":1303,"ekOngoing":101}};
-const ONGOING_2908_ENGINEER={"AMARPATAN¦अनिल पटेल":{"pmayOngoing":117,"ekOngoing":15},"AMARPATAN¦अनिल पटेल अति0":{"pmayOngoing":168,"ekOngoing":14},"AMARPATAN¦अनिल पटेल अति0 02":{"pmayOngoing":79,"ekOngoing":27},"AMARPATAN¦अश्वनी पटेल":{"pmayOngoing":278,"ekOngoing":20},"AMARPATAN¦श्रीमती साधना चौरे":{"pmayOngoing":265,"ekOngoing":25},"AMARPATAN¦सुनील मिश्रा":{"pmayOngoing":137,"ekOngoing":8},"MAIHAR¦जय अर्खेल":{"pmayOngoing":76,"ekOngoing":4},"MAIHAR¦धनंजय त्रिपाठी":{"pmayOngoing":144,"ekOngoing":7},"MAIHAR¦बृजेश सिंह":{"pmayOngoing":190,"ekOngoing":14},"MAIHAR¦योगेन्द्र सिंह":{"pmayOngoing":173,"ekOngoing":9},"MAIHAR¦योगेन्द्र सिंह अति0":{"pmayOngoing":161,"ekOngoing":4},"MAIHAR¦राज रंजन तिवारी":{"pmayOngoing":307,"ekOngoing":10},"MAIHAR¦राज रंजन तिवारी अति0":{"pmayOngoing":157,"ekOngoing":6},"MAIHAR¦राजा भैया सिंह":{"pmayOngoing":205,"ekOngoing":15},"MAIHAR¦श्रीमती मीना अग्रवाल":{"pmayOngoing":269,"ekOngoing":9},"MAIHAR¦सुरेश सिंह":{"pmayOngoing":132,"ekOngoing":8},"MAJHGAWAN¦अखिलेश सोनी":{"pmayOngoing":165,"ekOngoing":2},"MAJHGAWAN¦आशीष तिवारी":{"pmayOngoing":238,"ekOngoing":11},"MAJHGAWAN¦आशीष तिवारी अति0":{"pmayOngoing":239,"ekOngoing":18},"MAJHGAWAN¦देवेन्द्र सिंह":{"pmayOngoing":102,"ekOngoing":6},"MAJHGAWAN¦रमाकांत त्रिपाठी":{"pmayOngoing":193,"ekOngoing":13},"MAJHGAWAN¦रमाकांत त्रिपाठी अति0":{"pmayOngoing":146,"ekOngoing":8},"MAJHGAWAN¦सतीस समेले":{"pmayOngoing":242,"ekOngoing":8},"MAJHGAWAN¦सत्यनारायण मिश्रा":{"pmayOngoing":211,"ekOngoing":19},"NAGOD¦कौशल पटेल":{"pmayOngoing":346,"ekOngoing":17},"NAGOD¦कौशल पटेल अति0":{"pmayOngoing":140,"ekOngoing":16},"NAGOD¦निशा तिवारी":{"pmayOngoing":177,"ekOngoing":9},"NAGOD¦प्रमोद तिवारी":{"pmayOngoing":264,"ekOngoing":11},"NAGOD¦राजीवलोचन त्रिपाठी":{"pmayOngoing":383,"ekOngoing":10},"NAGOD¦रितेश राजपूत":{"pmayOngoing":217,"ekOngoing":11},"NAGOD¦संकल्प राणा":{"pmayOngoing":145,"ekOngoing":17},"NAGOD¦हेमंत तिवारी":{"pmayOngoing":224,"ekOngoing":9},"RAMNAGAR¦अनिल पाण्डेय":{"pmayOngoing":168,"ekOngoing":14},"RAMNAGAR¦राजा राम चंदेल":{"pmayOngoing":160,"ekOngoing":29},"RAMNAGAR¦राजा राम चंदेल अति0":{"pmayOngoing":221,"ekOngoing":21},"RAMNAGAR¦श्रीमती साधना सिंह":{"pmayOngoing":142,"ekOngoing":27},"RAMNAGAR¦संजय गुप्ता":{"pmayOngoing":295,"ekOngoing":15},"RAMPUR BAGHELAN¦अजय खरे":{"pmayOngoing":261,"ekOngoing":1},"RAMPUR BAGHELAN¦प्रमोद शुक्ला":{"pmayOngoing":328,"ekOngoing":7},"RAMPUR BAGHELAN¦भूपेन्द्र सिंह संविदा":{"pmayOngoing":299,"ekOngoing":11},"RAMPUR BAGHELAN¦मनोज खम्परिया":{"pmayOngoing":429,"ekOngoing":9},"RAMPUR BAGHELAN¦मनोज खम्परिया अति0":{"pmayOngoing":387,"ekOngoing":20},"RAMPUR BAGHELAN¦मोतीलाल लढ़िया":{"pmayOngoing":494,"ekOngoing":7},"RAMPUR BAGHELAN¦रमेश सिंह":{"pmayOngoing":384,"ekOngoing":9},"RAMPUR BAGHELAN¦श्रीमती अन्नपूर्णा सिंह":{"pmayOngoing":361,"ekOngoing":11},"SATNA¦आशुतोष वर्मा":{"pmayOngoing":15,"ekOngoing":6},"SATNA¦कुलदीप पयासी":{"pmayOngoing":37,"ekOngoing":17},"SATNA¦धर्मेन्द्र कोरी":{"pmayOngoing":70,"ekOngoing":2},"SATNA¦महेन्‍द्र पारधी":{"pmayOngoing":61,"ekOngoing":14},"SATNA¦व्हीके मिश्रा अति0":{"pmayOngoing":126,"ekOngoing":16},"SATNA¦व्‍ही0के0मिश्रा":{"pmayOngoing":62,"ekOngoing":18},"SATNA¦शिवलाल भारती":{"pmayOngoing":68,"ekOngoing":7},"SATNA¦संजय पाण्डेय":{"pmayOngoing":34,"ekOngoing":14},"UNCHAHARA¦दीपक सिंह":{"pmayOngoing":179,"ekOngoing":21},"UNCHAHARA¦राकेश ताम्रकार":{"pmayOngoing":404,"ekOngoing":19},"UNCHAHARA¦राकेश ताम्रकार अति0":{"pmayOngoing":99,"ekOngoing":11},"UNCHAHARA¦राज कुमार पाण्डेय":{"pmayOngoing":161,"ekOngoing":8},"UNCHAHARA¦राज कुमार पाण्डेय अति 0":{"pmayOngoing":179,"ekOngoing":23},"UNCHAHARA¦हरनाम  सिंह":{"pmayOngoing":281,"ekOngoing":19}};
-const ONGOING_SOURCE_LOCK={
-  source:'Final WorkCategory 30-08-2026',
-  csv:'data/ongoing-category-lock-2026-08-30.csv',
-  lockThrough:'2026-09-06',
-  rule:'PMAY and Ek Bagiya ongoing works use the fixed Excel/CSV source; R6.9 is used only for Labour and Muster Rolls.'
-};
-const ONE_WEEK_ONGOING_LOCK={source:'Final WorkCategory 30-08-2026',from:'30-08-2026',through:'06-09-2026',pmayOngoing:11995,ekBagiyaOngoing:756};
 const BOOT_REPORT=window.AUTO_REPORT||window.SAMPLE_REPORT||{};
 let rows=BOOT_REPORT.rows||[],official=BOOT_REPORT.official||[],daily=BOOT_REPORT.daily||[],workmix=BOOT_REPORT.workmix||[],categorymix=BOOT_REPORT.categorymix||[],ongoingDetails=window.ONGOING_DETAILS||[],reportTitle=BOOT_REPORT.title||'',pendingFile=null,view='dysjanpad',lastExport=[];
 let autoMeta=BOOT_REPORT.meta||{mode:(window.AUTO_REPORT?'auto':'sample'),updatedAt:null,source:null,status:(window.AUTO_REPORT?'ok':'sample')};
@@ -42,25 +31,15 @@ function engineerOfficialData(list){
   const omap=new Map(official.map(r=>[normJanpad(r.janpad),r]));
   for(const j of [...new Set(out.map(r=>normJanpad(r.janpad)))]){
     const g=out.filter(r=>normJanpad(r.janpad)===j),o=omap.get(j)||{};
-    g.forEach(r=>{
-      r.noEkycRaw=num(r.noEkyc);
-      const exact=ONGOING_2908_ENGINEER[[normJanpad(r.janpad),clean(r.engineer)].join('¦')]||{};
-      r.pmayOngoing=num(exact.pmayOngoing);
-      r.ekOngoing=num(exact.ekOngoing);
-      r.pmayOngoingRaw=r.pmayOngoing;
-      r.ekOngoingRaw=r.ekOngoing;
-      r.labourIndividual=0;r.mrIndividual=0;r.labourCommunity=0;r.mrCommunity=0;
-      r.pmayLabour=0;r.pmayMR=0;r.ekLabour=0;r.ekMR=0;
-    });
+    g.forEach(r=>{r.noEkycRaw=num(r.noEkyc);r.pmayOngoingRaw=num(r.pmayOngoing);r.ekOngoingRaw=num(r.ekOngoing);r.labourIndividual=0;r.mrIndividual=0;r.labourCommunity=0;r.mrCommunity=0;r.pmayMR=0;r.ekLabour=0;r.ekMR=0;});
     apportionExact(g,'noEkyc',o.noEkyc,'noEkycRaw');
     apportionExact(g,'labourIndividual',o.labourIndividual,'labourAll');
     apportionExact(g,'mrIndividual',o.mrIndividual,'mrAll');
     apportionExact(g,'labourCommunity',o.labourCommunity,'labourAll');
     apportionExact(g,'mrCommunity',o.mrCommunity,'mrAll');
-    // PMAY/Ek ongoing counts come from exact ongoing work-level data (workmix).
-    // Do not overwrite them with R6.9 MR-issued counts.
-    apportionExact(g,'pmayLabour',o.pmayLabour,'labourAll');
+    apportionExact(g,'pmayOngoing',o.pmayOngoing,'pmayOngoingRaw');
     apportionExact(g,'pmayMR',o.pmayMR,'pmayOngoing');
+    apportionExact(g,'ekOngoing',o.ekOngoing,'ekOngoingRaw');
     apportionExact(g,'ekLabour',o.ekLabour,'ekOngoing');
     apportionExact(g,'ekMR',o.ekMR,'ekOngoing');
   }
@@ -258,14 +237,6 @@ function renderPriorityAlerts(list){
 }
 function officialFiltered(){let a=official;if($('districtFilter').value!=='ALL')a=a.filter(r=>districtOf(r.janpad)===$('districtFilter').value);if($('janpadFilter').value!=='ALL')a=a.filter(r=>r.janpad===$('janpadFilter').value);return a}
 
-function janpadCategoryOngoingMap(){
-  const m=new Map();
-  for(const [j,v] of Object.entries(ONGOING_2908_JANPAD)){
-    m.set(normJanpad(j),{pmayOngoing:num(v.pmayOngoing),ekOngoing:num(v.ekOngoing)});
-  }
-  return m;
-}
-
 function finalWorkCategory(name,wt,fy){
  const n=clean(name),w=clean(wt),t=(n+' '+w).toLowerCase(),start=n.toLowerCase().trim();
  const has=(re)=>re.test(t), starts=(re)=>re.test(start);
@@ -450,152 +421,8 @@ function renderJanpadDysfunctional(){
   $('reportTable').innerHTML=h;
 }
 
-function renderOfficial(){
-  const om=janpadCategoryOngoingMap();
-  const data=sortRows(officialFiltered().map(r=>{
-    const x=om.get(normJanpad(r.janpad))||{};
-    return {...r,
-      ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP),
-      pmayOngoingDisplay:num(x.pmayOngoing),
-      ekOngoingDisplay:num(x.ekOngoing)
-    };
-  }),'ongoing',['janpad']);
-
-  lastExport=data;
-  $('viewTitle').textContent='Official Janpad Daily Report';
-  $('viewMeta').textContent=`${data.length} Janpad • R6.9 Labour/MR + Final WorkCategory formatted 29.08.2026 sheet • ${todayDate()}`;
-
-  let h=`<thead><tr>
-    <th rowspan="2">District</th><th rowspan="2">Janpad</th>
-    <th colspan="3">Gram Panchayat</th>
-    <th colspan="5">All Types of Works / Screen-2</th>
-    <th colspan="2">Individual Land (Cat-IV)</th>
-    <th colspan="3">Community Works</th>
-    <th colspan="4">PMAY-G</th>
-    <th colspan="4">Ek Bagiya</th>
-  </tr><tr>
-    <th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th>
-    <th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th>
-    <th>Labour</th><th>Muster Rolls</th>
-    <th>Labour</th><th>Works MR</th><th>Share %</th>
-    <th>Labour</th><th>Ongoing Works</th><th>Muster Rolls</th><th>MR %</th>
-    <th>Labour</th><th>Ongoing Works</th><th>Muster Rolls</th><th>MR %</th>
-  </tr></thead><tbody>`;
-
-  for(const r of data){
-    h+=`<tr>
-      ${cell(districtOf(r.janpad))}${cell(r.janpad)}
-      ${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}
-      ${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}
-      <td>${badge(r.mrAll,r.ongoingAll)}</td>
-      ${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}
-      ${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}
-      <td>${badge(r.mrCommunity,r.mrAll)}</td>
-      ${cell(r.pmayLabour,true)}${cell(r.pmayOngoingDisplay,true)}${cell(r.pmayMR,true)}
-      <td>${badge(r.pmayMR,r.pmayOngoingDisplay)}</td>
-      ${cell(r.ekLabour,true)}${cell(r.ekOngoingDisplay,true)}${cell(r.ekMR,true)}
-      <td>${badge(r.ekMR,r.ekOngoingDisplay)}</td>
-    </tr>`;
-  }
-
-  const keys=[
-    'totalGP','musterGP','dysfunctionalGP',
-    'labourAll','mrAll','ongoingAll','mrs',
-    'labourIndividual','mrIndividual',
-    'labourCommunity','mrCommunity',
-    'pmayLabour','pmayOngoingDisplay','pmayMR',
-    'ekLabour','ekOngoingDisplay','ekMR'
-  ],t={};
-  keys.forEach(k=>t[k]=sum(data,k));
-
-  h+=`<tr class="total-row">
-    <td>TOTAL</td><td></td>
-    ${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}
-    ${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}
-    <td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>
-    ${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}
-    ${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}
-    <td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>
-    ${cell(t.pmayLabour,true)}${cell(t.pmayOngoingDisplay,true)}${cell(t.pmayMR,true)}
-    <td>${pct(t.pmayMR,t.pmayOngoingDisplay).toFixed(1)}%</td>
-    ${cell(t.ekLabour,true)}${cell(t.ekOngoingDisplay,true)}${cell(t.ekMR,true)}
-    <td>${pct(t.ekMR,t.ekOngoingDisplay).toFixed(1)}%</td>
-  </tr></tbody>`;
-
-  $('reportTable').innerHTML=h;
-}
-
-function renderEngineerOfficial(){
-  const data=sortRows(engineerOfficialData(filteredRows()).map(r=>({...r,
-    ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP),
-    pmayLabour:num(r.pmayLabour),pmayOngoing:num(r.pmayOngoing),pmayMR:num(r.pmayMR),
-    ekLabour:num(r.ekLabour),ekOngoing:num(r.ekOngoing),ekMR:num(r.ekMR)
-  })),'ongoing',['engineer','janpad']);
-
-  lastExport=data;
-  $('viewTitle').textContent='Sub Engineer Daily Report — Janpad Report Same Format';
-  $('viewMeta').textContent=`${data.length} Sub Engineer rows • Janpad R6.9 Labour/MR reconciled + Ongoing 29.08.2026 sheet • ${todayDate()}`;
-
-  let h=`<thead><tr>
-    <th rowspan="2">District</th><th rowspan="2">Janpad</th><th rowspan="2">Sub Engineer</th><th rowspan="2">Cluster(s)</th>
-    <th colspan="3">Gram Panchayat</th>
-    <th colspan="5">All Types of Works / Screen-2</th>
-    <th colspan="2">Individual Land (Cat-IV)</th>
-    <th colspan="3">Community Works</th>
-    <th colspan="4">PMAY-G</th>
-    <th colspan="4">Ek Bagiya</th>
-  </tr><tr>
-    <th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th>
-    <th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th>
-    <th>Labour</th><th>Muster Rolls</th>
-    <th>Labour</th><th>Works MR</th><th>Share %</th>
-    <th>Labour</th><th>Ongoing Works</th><th>Muster Rolls</th><th>MR %</th>
-    <th>Labour</th><th>Ongoing Works</th><th>Muster Rolls</th><th>MR %</th>
-  </tr></thead><tbody>`;
-
-  for(const r of data){
-    h+=`<tr>
-      ${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}
-      ${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}
-      ${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}
-      <td>${badge(r.mrAll,r.ongoingAll)}</td>
-      ${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}
-      ${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}
-      <td>${badge(r.mrCommunity,r.mrAll)}</td>
-      ${cell(r.pmayLabour,true)}${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}
-      <td>${badge(r.pmayMR,r.pmayOngoing)}</td>
-      ${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}
-      <td>${badge(r.ekMR,r.ekOngoing)}</td>
-    </tr>`;
-  }
-
-  const keys=[
-    'totalGP','musterGP','dysfunctionalGP',
-    'labourAll','mrAll','mrs','ongoingAll',
-    'labourIndividual','mrIndividual',
-    'labourCommunity','mrCommunity',
-    'pmayLabour','pmayOngoing','pmayMR',
-    'ekLabour','ekOngoing','ekMR'
-  ],t={};
-  keys.forEach(k=>t[k]=sum(data,k));
-
-  h+=`<tr class="total-row">
-    <td>TOTAL</td><td></td><td></td><td></td>
-    ${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}
-    ${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}
-    <td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>
-    ${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}
-    ${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}
-    <td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>
-    ${cell(t.pmayLabour,true)}${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}
-    <td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>
-    ${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}
-    <td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td>
-  </tr></tbody>`;
-
-  $('reportTable').innerHTML=h;
-}
-
+function renderOfficial(){const data=sortRows(officialFiltered().map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP)})),'ongoing',['janpad']);lastExport=data;$('viewTitle').textContent='Official Janpad Daily Report';$('viewMeta').textContent=`${data.length} Janpad • ${todayDate()}`;let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th colspan="3">Gram Panchayat</th><th colspan="5">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(districtOf(r.janpad))}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${badge(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${badge(r.ekMR,r.ekOngoing)}</td></tr>`}const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td>TOTAL</td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}<td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
+function renderEngineerOfficial(){const data=sortRows(engineerOfficialData(filteredRows()).map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP),ekOngoing:num(r.ekOngoing)})),'ongoing',['engineer','janpad']);lastExport=data;$('viewTitle').textContent='Sub Engineer Daily Report — Janpad Report Same Format';$('viewMeta').textContent=`${data.length} Sub Engineer rows • Official Janpad totals reconciled • ${todayDate()}`;let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th rowspan="2">Sub Engineer</th><th rowspan="2">Cluster(s)</th><th colspan="3">Gram Panchayat</th><th colspan="5">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${badge(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${badge(r.ekMR,r.ekOngoing)}</td></tr>`}const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td>TOTAL</td><td></td><td></td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}<td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
 function standardTable(data,cols,title){lastExport=data;$('viewTitle').textContent=title;$('viewMeta').textContent=`${fmt(data.length)} rows • ${todayDate()}`;const nums=new Set(cols.filter(x=>x[2]).map(x=>x[0]));let h='<thead><tr>'+cols.map(c=>`<th>${c[1]}</th>`).join('')+'<th>MR Coverage</th></tr></thead><tbody>';for(const r of data){h+='<tr>'+cols.map(c=>cell(r[c[0]],nums.has(c[0]))).join('')+`<td>${badge(r.worksMR,r.ongoing)}</td></tr>`}const total={};nums.forEach(k=>total[k]=sum(data,k));h+=`<tr class="total-row">${cols.map((c,i)=>`<td>${i===0?'TOTAL':nums.has(c[0])?fmt(total[c[0]]):''}</td>`).join('')}<td>${pct(total.worksMR,total.ongoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
 
 function mandaysGenerationData(){
@@ -738,18 +565,7 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   updatePortalHeading();
   render();
 }));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}render()}));
-$('csvBtn').addEventListener('click',()=>{
-  if(!lastExport.length)return;
-  const keys=Object.keys(lastExport[0]);
-  const escX=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const rowsHtml=lastExport.map(r=>'<tr>'+keys.map(k=>'<td>'+escX(r[k])+'</td>').join('')+'</tr>').join('');
-  const html='\ufeff<html><head><meta charset="utf-8"></head><body><table border="1"><thead><tr>'+keys.map(k=>'<th>'+escX(k)+'</th>').join('')+'</tr></thead><tbody>'+rowsHtml+'</tbody></table></body></html>';
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'}));
-  a.download=`daily-report-${view}-${todayDate()}.xls`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-});if($('csvBtn')){$('csvBtn').textContent='Download in Excel';$('csvBtn').title='Current report Excel download';}initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
+$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
 // V6: Font size and Portrait/Landscape print controls
 (function(){
   let fontScale=1;
@@ -1145,3 +961,75 @@ function initPptExportUI(){
 }
 
 ;['sortMetric','sortOrder'].forEach(id=>{const el=$(id);if(el)el.addEventListener('change',render)});
+
+/* ================================================================
+   SRDM RECOVERY DONE PATCH - 30-08-2026
+   Source: Recovery Done Works matched by Work Code
+   ================================================================ */
+(function(){
+  function recoverySource(){
+    const d=$('districtFilter')?.value||'ALL',j=$('janpadFilter')?.value||'ALL',e=$('engineerFilter')?.value||'ALL',c=$('clusterFilter')?.value||'ALL',k=$('categoryFilter')?.value||'ALL';
+    return (ongoingDetails||[]).filter(r=>num(r.recoveryWork)>0 &&
+      (d==='ALL'||districtOf(r.janpad)===d) && (j==='ALL'||clean(r.janpad)===j) &&
+      (e==='ALL'||clean(r.engineer)===e) && (c==='ALL'||clean(r.cluster)===c) &&
+      (k==='ALL'||(clean(r.finalCategory)||finalWorkCategory(r.name,r.type,r.fy))===k));
+  }
+  function recoveryCountForScope(scope){
+    let a=recoverySource();
+    if(scope.district)a=a.filter(r=>districtOf(r.janpad)===scope.district);
+    if(scope.janpad)a=a.filter(r=>clean(r.janpad)===scope.janpad);
+    if(scope.engineer)a=a.filter(r=>clean(r.engineer)===scope.engineer);
+    if(scope.cluster)a=a.filter(r=>clean(r.cluster)===scope.cluster);
+    if(scope.gp)a=a.filter(r=>clean(r.panchayat)===scope.gp);
+    if(scope.code)a=a.filter(r=>clean(r.code)===scope.code);
+    if(scope.category)a=a.filter(r=>(clean(r.finalCategory)||finalWorkCategory(r.name,r.type,r.fy))===scope.category);
+    if(view==='ekbagiya')a=a.filter(r=>['Ek Bagiya','Ek Bagiya Maa Ke Naam'].includes(clean(r.finalCategory)||finalWorkCategory(r.name,r.type,r.fy)));
+    return a.length;
+  }
+  function renderRecoveryDone(){
+    const src=recoverySource(); const m=new Map();
+    for(const r of src){const key=[clean(r.janpad),clean(r.engineer)||'Unmapped',clean(r.cluster)||'Unmapped'].join('¦');
+      if(!m.has(key))m.set(key,{district:districtOf(r.janpad),janpad:r.janpad,engineer:r.engineer||'Unmapped',cluster:r.cluster||'Unmapped',recoveryWork:0,recoveryAmount:0,totalWorks:0});
+      const x=m.get(key);x.recoveryWork+=num(r.recoveryWork)||1;x.recoveryAmount+=num(r.recoveryAmount);
+    }
+    const all=correctedWorkFiltered(); const tm=aggregate(all,['janpad','engineer','cluster'],['workCount']);
+    const tmap=new Map(tm.map(x=>[[clean(x.janpad),clean(x.engineer),clean(x.cluster)].join('¦'),num(x.workCount)]));
+    let data=[...m.values()]; data.forEach(x=>{x.totalWorks=tmap.get([clean(x.janpad),clean(x.engineer),clean(x.cluster)].join('¦'))||0;x.recoveryPct=x.totalWorks?x.recoveryWork*100/x.totalWorks:0});
+    data.sort((a,b)=>num(b.recoveryWork)-num(a.recoveryWork)||clean(a.janpad).localeCompare(clean(b.janpad),'hi')||clean(a.engineer).localeCompare(clean(b.engineer),'hi'));
+    lastExport=data;$('viewTitle').textContent='Work Recovery Done — Sub Engineer Wise';
+    $('viewMeta').textContent=`${fmt(src.length)} recovery-done works • Work Code matched • Recovery Amount ₹ ${num(sum(src,'recoveryAmount')).toLocaleString('en-IN',{maximumFractionDigits:2})} • ${todayDate()}`;
+    let h='<thead><tr><th>District</th><th>Janpad</th><th>Sub Engineer / Upyantri</th><th>Cluster</th><th>Total Ongoing Works</th><th>Recovery Work Count</th><th>Recovery %</th><th>Recovery Amount ₹</th></tr></thead><tbody>';
+    for(const r of data)h+=`<tr>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.totalWorks,true)}${cell(r.recoveryWork,true)}<td>${r.recoveryPct.toFixed(1)}%</td><td>${num(r.recoveryAmount).toLocaleString('en-IN',{maximumFractionDigits:2})}</td></tr>`;
+    const tw=sum(data,'totalWorks'),rw=sum(data,'recoveryWork'),ra=sum(data,'recoveryAmount');h+=`<tr class="total-row"><td>TOTAL</td><td></td><td></td><td></td>${cell(tw,true)}${cell(rw,true)}<td>${tw?(rw*100/tw).toFixed(1):'0.0'}%</td><td>${num(ra).toLocaleString('en-IN',{maximumFractionDigits:2})}</td></tr>`;
+    if(!data.length)h+='<tr><td colspan="8" class="empty-table">Current filter में Recovery Done Work नहीं मिला।</td></tr>';h+='</tbody>';$('reportTable').innerHTML=h;
+  }
+  function addRecoveryColumn(){
+    if(view==='recovery')return;
+    const table=$('reportTable'); if(!table)return;
+    const headRows=table.querySelectorAll('thead tr'); if(!headRows.length)return;
+    const lastHead=headRows[headRows.length-1]; if([...lastHead.cells].some(c=>/Recovery Work/i.test(c.textContent)))return;
+    const th=document.createElement('th');th.textContent='Recovery Work';lastHead.appendChild(th);
+    // In multi-row headers, add a standalone top-row group cell too so spans remain understandable.
+    if(headRows.length>1){const top=headRows[0];const g=document.createElement('th');g.textContent='Recovery';g.rowSpan=headRows.length;top.appendChild(g);th.remove();}
+    const headers=[...lastHead.cells].map(c=>clean(c.textContent));
+    function idx(rx){return headers.findIndex(h=>rx.test(h));}
+    const iJan=idx(/^Janpad$/i),iEng=idx(/^(Sub Engineer|Engineer|Sub Engineer \/ Upyantri|Engineer \/ Upyantri)$/i),iCl=idx(/^Cluster/i),iGp=idx(/^(GP|Gram Panchayat)$/i),iCode=idx(/^Work Code$/i),iCat=idx(/^Work Category$/i),iDist=idx(/^District$/i);
+    const body=[...table.querySelectorAll('tbody tr')];
+    for(const tr of body){const td=[...tr.cells]; const total=td.length&&clean(td[0].textContent)==='TOTAL';let n;
+      if(total)n=recoverySource().length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp])scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=recoveryCountForScope(scope)}
+      const c=document.createElement('td');c.textContent=fmt(n);if(n>0)c.className='bucket-good';tr.appendChild(c);
+    }
+  }
+  const originalRender=render;
+  render=function(){if(view==='recovery')return renderRecoveryDone();const x=originalRender();addRecoveryColumn();return x;};
+  function installRecoveryTab(){
+    if(document.querySelector('.tab[data-view="recovery"]'))return;
+    const first=document.querySelector('.tab');if(!first||!first.parentElement)return;
+    const b=document.createElement('button');b.className='tab';b.dataset.view='recovery';b.textContent='Work Recovery Done';
+    b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view='recovery';render();document.querySelector('.report-card')?.scrollIntoView({behavior:'smooth',block:'start'});});
+    first.parentElement.appendChild(b);
+  }
+  installRecoveryTab();
+  addRecoveryColumn();
+})();
+/* END SRDM RECOVERY DONE PATCH */
