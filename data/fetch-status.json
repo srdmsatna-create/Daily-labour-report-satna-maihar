@@ -1,15 +1,15 @@
 {
-  "startedAt": "2026-08-31T08:23:13.786412+00:00",
+  "startedAt": "2026-08-31T10:49:07.801312+00:00",
   "ok": true,
-  "source": "Official VB-G RAM G R6.9 local full-category direct-filter fetch",
+  "source": "Official VB-G RAM G R6.9 (local PC fetch)",
   "steps": [
     {
-      "step": "ALL + Individual + PMAY + Ek Bagiya",
+      "step": "R6.9 category fetch",
       "ok": true,
-      "detail": "8/8 Janpads. ALL=2165/1299; Individual=1473/1168; PMAY=1224/1034; Ek Bagiya=209/115."
+      "detail": "8/8 Janpads. Individual Labour/MR=1473/1168; PMAY Labour/MR=1224/1034; Ek Bagiya Labour/MR=209/115."
     }
   ],
   "officialDate": "31-08-2026",
-  "note": "8/8 Janpads. ALL=2165/1299; Individual=1473/1168; PMAY=1224/1034; Ek Bagiya=209/115.",
-  "finishedAt": "2026-08-31T08:23:13.786412+00:00"
+  "note": "8/8 Janpads. Individual Labour/MR=1473/1168; PMAY Labour/MR=1224/1034; Ek Bagiya Labour/MR=209/115.",
+  "finishedAt": "2026-08-31T10:49:07.801349+00:00"
 }
