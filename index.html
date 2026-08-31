@@ -2295,294 +2295,221 @@ function initPptExportUI(){
 })();
 /* END SRDM RECOVERY DONE PATCH */
 </script>
-<!-- SRDM_MANDAYS_FILTER_ALERT_START -->
-<style>
-.srdm-manday-tools{
-  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
-  margin:8px 0 10px;padding:10px 12px;background:#fff;
-  border:1px solid #cbd9e8;border-radius:12px;
-}
-.srdm-manday-tools label{font-size:11px;font-weight:850;color:#173a62}
-.srdm-manday-tools select{
-  min-width:170px;padding:8px 10px;border:1px solid #c4d3e4;
-  border-radius:9px;background:#fff;font-weight:750;color:#0e2d52;
-}
-.srdm-zero-alert{
-  margin:8px 0 10px;padding:11px 13px;border:1px solid #efc9a4;
-  border-left:5px solid #d36d18;border-radius:12px;background:#fff9f2;
-}
-.srdm-zero-alert h3{margin:0 0 6px;font-size:15px;color:#7b3e07}
-.srdm-zero-alert .sum{font-size:12px;color:#5c4b3e;margin-bottom:7px}
-.srdm-zero-group{
-  padding:7px 9px;margin-top:6px;border:1px solid #ead8c7;
-  border-radius:9px;background:#fff;
-}
-.srdm-zero-group b{color:#15395f}
-.srdm-zero-gps{margin-top:3px;font-size:11.5px;line-height:1.45;color:#3f5368}
-.srdm-manday-hidden{display:none!important}
-</style>
-<script>
-(function(){
-  function txt(el){return String(el?.textContent||'').replace(/\s+/g,' ').trim()}
-  function num(v){
-    const n=Number(String(v||'').replace(/,/g,'').replace(/[^\d.-]/g,''));
-    return Number.isFinite(n)?n:0;
-  }
-
-  function bodyRows(){
-    const table=document.getElementById('reportTable');
-    return table?[...table.querySelectorAll('tbody tr')].filter(r=>!r.classList.contains('total-row')):[];
-  }
-
-  function parseGps(cell){
-    const x=txt(cell);
-    if(!x||x==='-'||x==='0') return [];
-    return x.split(',').map(s=>s.trim()).filter(Boolean);
-  }
-
-  function ensureMandayControls(){
-    if(document.body?.dataset?.reportView!=='mandaysgen') return;
-    const card=document.querySelector('.report-card');
-    const table=document.getElementById('reportTable');
-    if(!card||!table) return;
-
-    let tools=document.getElementById('srdmMandayTools');
-    if(!tools){
-      tools=document.createElement('div');
-      tools.id='srdmMandayTools';
-      tools.className='srdm-manday-tools';
-      tools.innerHTML=`
-        <label>Sub Engineer
-          <select id="srdmMandayEngineer"><option value="ALL">सभी Sub Engineer</option></select>
-        </label>
-        <label>Cluster
-          <select id="srdmMandayCluster"><option value="ALL">सभी Cluster</option></select>
-        </label>
-        <label>Month / Period
-          <select id="srdmMandayPeriod">
-            <option value="TOTAL">Total FY</option>
-            <option value="APR_JUN">01 Apr-30 Jun</option>
-            <option value="JUL_TODAY">01 Jul-Today</option>
-          </select>
-        </label>
-        <button type="button" id="srdmMandayReset">Reset</button>`;
-      const wrap=table.closest('.table-wrap');
-      card.insertBefore(tools,wrap||table);
-
-      const alert=document.createElement('div');
-      alert.id='srdmMandayAlert';
-      alert.className='srdm-zero-alert';
-      tools.insertAdjacentElement('afterend',alert);
-
-      ['srdmMandayEngineer','srdmMandayCluster','srdmMandayPeriod']
-        .forEach(id=>document.getElementById(id).addEventListener('change',applyMandayMonitor));
-      document.getElementById('srdmMandayReset').addEventListener('click',()=>{
-        document.getElementById('srdmMandayEngineer').value='ALL';
-        document.getElementById('srdmMandayCluster').value='ALL';
-        document.getElementById('srdmMandayPeriod').value='TOTAL';
-        applyMandayMonitor();
-      });
-    }
-
-    populateMandayFilters();
-    applyMandayMonitor();
-  }
-
-  function populateMandayFilters(){
-    const engSel=document.getElementById('srdmMandayEngineer');
-    const cluSel=document.getElementById('srdmMandayCluster');
-    if(!engSel||!cluSel) return;
-
-    const currentEng=engSel.value,currentClu=cluSel.value;
-    const rows=bodyRows();
-    const eng=[...new Set(rows.map(r=>txt(r.children[2])).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'hi'));
-    const clu=[...new Set(rows.map(r=>txt(r.children[3])).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'hi'));
-
-    engSel.innerHTML='<option value="ALL">सभी Sub Engineer</option>'+eng.map(v=>`<option>${v}</option>`).join('');
-    cluSel.innerHTML='<option value="ALL">सभी Cluster</option>'+clu.map(v=>`<option>${v}</option>`).join('');
-    if([...engSel.options].some(o=>o.value===currentEng)) engSel.value=currentEng;
-    if([...cluSel.options].some(o=>o.value===currentClu)) cluSel.value=currentClu;
-  }
-
-  function visibleRows(){
-    const eng=document.getElementById('srdmMandayEngineer')?.value||'ALL';
-    const clu=document.getElementById('srdmMandayCluster')?.value||'ALL';
-    const rows=bodyRows();
-    const out=[];
-    for(const r of rows){
-      const e=txt(r.children[2]),c=txt(r.children[3]);
-      const show=(eng==='ALL'||e===eng)&&(clu==='ALL'||c===clu);
-      r.classList.toggle('srdm-manday-hidden',!show);
-      if(show) out.push(r);
-    }
-    return out;
-  }
-
-  function selectedPeriodZero(row,period){
-    const t=row.children;
-    const apr=num(txt(t[9]));
-    const jul=num(txt(t[10]));
-    if(period==='APR_JUN'){
-      return {mandays:apr,gps:parseGps(t[6]),label:'01 Apr-30 Jun'};
-    }
-    if(period==='JUL_TODAY'){
-      return {mandays:jul,gps:parseGps(t[8]),label:'01 Jul-Today'};
-    }
-    const gps=[...new Set([...parseGps(t[6]),...parseGps(t[8])])];
-    return {mandays:apr+jul,gps,label:'Total FY'};
-  }
-
-  function renderDynamicTotal(rows,period){
-    const table=document.getElementById('reportTable');
-    if(!table) return;
-    const tr=table.querySelector('tbody tr.total-row');
-    if(!tr) return;
-    const td=[...tr.children];
-    if(td.length<11) return;
-
-    const indexes=[4,5,7,9,10,12,13,14,15,17];
-    indexes.forEach(ix=>{
-      let total=0;
-      rows.forEach(r=>total+=num(txt(r.children[ix])));
-      if(td[ix]) td[ix].textContent=total.toLocaleString('en-IN');
-    });
-
-    const gpTotal=rows.reduce((a,r)=>a+num(txt(r.children[4])),0);
-    let zeroTotal=0;
-    rows.forEach(r=>zeroTotal+=selectedPeriodZero(r,period).gps.length);
-    if(td[11]) td[11].textContent=(gpTotal?(zeroTotal*100/gpTotal):0).toFixed(1)+'%';
-  }
-
-  function renderZeroAlert(rows,period){
-    const box=document.getElementById('srdmMandayAlert');
-    if(!box) return;
-
-    const groups=[];
-    let zeroGpTotal=0;
-
-    rows.forEach(r=>{
-      const z=selectedPeriodZero(r,period);
-      if(!z.gps.length) return;
-      zeroGpTotal+=z.gps.length;
-      groups.push({
-        janpad:txt(r.children[1]),
-        engineer:txt(r.children[2]),
-        cluster:txt(r.children[3]),
-        gps:z.gps
-      });
-    });
-
-    const periodLabel=period==='APR_JUN'?'01 Apr-30 Jun':period==='JUL_TODAY'?'01 Jul-Today':'Total FY';
-    if(!groups.length){
-      box.innerHTML=`<h3>Zero Mandays Alert - ${periodLabel}</h3>
-        <div class="sum">Selected filter में कोई Zero Mandays GP नहीं मिली।</div>`;
-      return;
-    }
-
-    groups.sort((a,b)=>b.gps.length-a.gps.length||a.engineer.localeCompare(b.engineer,'hi'));
-    box.innerHTML=`<h3>Zero Mandays Alert - ${periodLabel}</h3>
-      <div class="sum"><b>${groups.length}</b> Sub Engineer/Cluster rows में <b>${zeroGpTotal}</b> GP Zero Mandays हैं।</div>`+
-      groups.map(g=>`<div class="srdm-zero-group">
-        <b>${g.engineer}</b> - ${g.cluster} - ${g.janpad}
-        <div class="srdm-zero-gps"><b>Zero GP (${g.gps.length}):</b> ${g.gps.join(', ')}</div>
-      </div>`).join('');
-  }
-
-  function applyMandayMonitor(){
-    if(document.body?.dataset?.reportView!=='mandaysgen') return;
-    const rows=visibleRows();
-    const period=document.getElementById('srdmMandayPeriod')?.value||'TOTAL';
-    renderDynamicTotal(rows,period);
-    renderZeroAlert(rows,period);
-
-    const meta=document.getElementById('viewMeta');
-    if(meta){
-      const eng=document.getElementById('srdmMandayEngineer')?.value||'ALL';
-      const clu=document.getElementById('srdmMandayCluster')?.value||'ALL';
-      const lab=period==='APR_JUN'?'01 Apr-30 Jun':period==='JUL_TODAY'?'01 Jul-Today':'Total FY';
-      meta.textContent=`Mandays Monitoring - ${lab} - Sub Engineer: ${eng==='ALL'?'All':eng} - Cluster: ${clu==='ALL'?'All':clu} - ${todayDate()}`;
-    }
-  }
-
-  const obs=new MutationObserver(()=>{
-    if(document.body?.dataset?.reportView==='mandaysgen') setTimeout(ensureMandayControls,50);
-  });
-  obs.observe(document.body,{subtree:true,childList:true});
-  document.addEventListener('click',()=>setTimeout(ensureMandayControls,80));
-  setTimeout(ensureMandayControls,300);
-})();
-</script>
-<!-- SRDM_MANDAYS_FILTER_ALERT_END -->
 
 <script src="mandays-advanced-data.js"></script>
 <script src="recovery-subeng-data.js"></script>
 
-<!-- SRDM_MANDAYS_FINAL_V5_START -->
+
+
+<!-- SRDM_MANDAYS_FINAL_V7_START -->
+<style>
+#srdmMandayFinalTools{display:flex;gap:8px;flex-wrap:wrap;align-items:end;margin:10px 0;padding:10px 12px;background:#fff;border:1px solid #c8d7e8;border-radius:12px}
+#srdmMandayFinalTools label{font-size:11px;font-weight:800;color:#12385f}
+#srdmMandayFinalTools select{display:block;margin-top:3px;min-width:160px;padding:8px 10px;border:1px solid #bfd0e2;border-radius:9px;background:#fff;font-weight:700}
+#srdmMandayFinalTools button{padding:9px 16px;border:1px solid #b9cce0;border-radius:9px;background:#fff;font-weight:800}
+#srdmMandayAlertFinal{margin:8px 0 10px;padding:11px 13px;border:1px solid #efc9a4;border-left:5px solid #d36d18;border-radius:12px;background:#fff9f2}
+#srdmMandayAlertFinal h3{margin:0 0 6px;color:#7b3e07}
+.srdm-zero-group{padding:7px 9px;margin-top:6px;border:1px solid #ead8c7;border-radius:9px;background:#fff}
+.srdm-zero-gps{font-size:11.5px;margin-top:3px}
+.srdm-row-hide{display:none!important}
+</style>
 <script>
 (function(){
-  function norm(v){return String(v||'').replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/\s+/g,' ').trim().toUpperCase()}
-  function txt(el){return String(el?.textContent||'').replace(/\s+/g,' ').trim()}
-  function num(v){const x=Number(String(v||'').replace(/,/g,''));return Number.isFinite(x)?x:0}
-  function k(j,e,c){return norm(j)+'|'+norm(e)+'|'+norm(c)}
-  function districtOfJanpad(j){return ['MAIHAR','AMARPATAN','RAMNAGAR'].includes(norm(j))?'MAIHAR':'SATNA'}
+ const MONTHS=['All','April','May','June','July','August'];
 
-  const REC = window.SRDM_RECOVERY_BY_SUBENG || {};
+ function norm(v){return String(v||'').replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/\s+/g,' ').trim().toUpperCase()}
+ function txt(el){return String(el?.textContent||'').replace(/\s+/g,' ').trim()}
+ function num(v){const x=Number(String(v||'').replace(/,/g,''));return Number.isFinite(x)?x:0}
+ function districtOf(j){return ['MAIHAR','AMARPATAN','RAMNAGAR'].includes(norm(j))?'MAIHAR':'SATNA'}
+ function key(j,e,c){return norm(j)+'|'+norm(e)+'|'+norm(c)}
+ function monthly(){return Array.isArray(window.SRDM_MONTHLY_MANDAYS_ADV)?window.SRDM_MONTHLY_MANDAYS_ADV:[]}
+ function ongoing(){return window.SRDM_ONGOING_BY_SUBENG||{}}
+ function recovery(){return window.SRDM_RECOVERY_BY_SUBENG||{}}
 
-  function applyFinal(){
-    if(document.body?.dataset?.reportView!=='mandaysgen') return;
-    const table=document.getElementById('reportTable');
-    if(!table) return;
+ function getExistingRows(){
+   const table=document.getElementById('reportTable');
+   if(!table)return [];
+   return [...table.querySelectorAll('tbody tr')].filter(r=>!r.classList.contains('total-row'));
+ }
 
-    // Recovery header
-    [...table.querySelectorAll('thead th')].forEach(th=>{
-      if(/^\s*Recovery\s*$/i.test(txt(th)) || /Number Of Recovery Work/i.test(txt(th))){
-        th.textContent='Number Of Recovery Work';
-      }
-    });
+ function ensureControls(){
+   if(document.body?.dataset?.reportView!=='mandaysgen')return;
+   const table=document.getElementById('reportTable'); if(!table)return;
+   if(document.getElementById('srdmMandayFinalTools'))return;
 
-    let recoveryTotal=0;
-    let visibleGroups=0;
+   document.getElementById('srdmMandayTools')?.remove();
+   document.getElementById('srdmMandayAlert')?.remove();
+   document.getElementById('srdmMonthSummary')?.remove();
 
-    [...table.querySelectorAll('tbody tr')].forEach(tr=>{
-      const td=[...tr.children];
-      if(!td.length) return;
+   const box=document.createElement('div');
+   box.id='srdmMandayFinalTools';
+   box.innerHTML=`
+     <label>District<select id="srdmDistrict"><option value="ALL">सभी District</option></select></label>
+     <label>Janpad<select id="srdmJanpad"><option value="ALL">सभी Janpad</option></select></label>
+     <label>Sub Engineer<select id="srdmEngineer"><option value="ALL">सभी Sub Engineer</option></select></label>
+     <label>Cluster<select id="srdmCluster"><option value="ALL">सभी Cluster</option></select></label>
+     <label>Month<select id="srdmMonth">${MONTHS.map(m=>`<option value="${m}">${m}</option>`).join('')}</select></label>
+     <button type="button" id="srdmReset">Reset</button>`;
+   const wrap=table.closest('.table-wrap');
+   (wrap||table).insertAdjacentElement('beforebegin',box);
 
-      if(tr.classList.contains('total-row')){
-        // Last column recovery total
-        if(td[td.length-1]) td[td.length-1].textContent=recoveryTotal.toLocaleString('en-IN');
-        return;
-      }
+   const alert=document.createElement('div');
+   alert.id='srdmMandayAlertFinal';
+   box.insertAdjacentElement('afterend',alert);
 
-      const jan=txt(td[1]);
-      const eng=txt(td[2]);
+   ['srdmDistrict','srdmJanpad','srdmEngineer','srdmCluster','srdmMonth'].forEach(id=>{
+     document.getElementById(id).addEventListener('change',()=>{
+       cascadeOptions();
+       applyAll();
+     });
+   });
+   document.getElementById('srdmReset').addEventListener('click',()=>{
+     ['srdmDistrict','srdmJanpad','srdmEngineer','srdmCluster'].forEach(id=>document.getElementById(id).value='ALL');
+     document.getElementById('srdmMonth').value='All';
+     cascadeOptions();applyAll();
+   });
 
-      // If V3 inserted ongoing columns, Cluster is index 6; otherwise index 3.
-      const cluster=(td.length>6 && td[3]?.dataset?.srdmOngoing==='1') ? txt(td[6]) : txt(td[3]);
+   cascadeOptions();
+ }
 
-      // Fill District if blank
-      if(td[0] && !txt(td[0])) td[0].textContent=districtOfJanpad(jan);
+ function setOptions(id, values, allLabel){
+   const sel=document.getElementById(id); if(!sel)return;
+   const cur=sel.value;
+   sel.innerHTML=`<option value="ALL">${allLabel}</option>`+values.map(v=>`<option value="${v}">${v}</option>`).join('');
+   if([...sel.options].some(o=>o.value===cur))sel.value=cur;else sel.value='ALL';
+ }
 
-      const rec=Number(REC[k(jan,eng,cluster)]||0);
-      if(td[td.length-1]) td[td.length-1].textContent=rec.toLocaleString('en-IN');
+ function cascadeOptions(){
+   const d=document.getElementById('srdmDistrict')?.value||'ALL';
+   const j=document.getElementById('srdmJanpad')?.value||'ALL';
+   const e=document.getElementById('srdmEngineer')?.value||'ALL';
 
-      if(!tr.classList.contains('srdm-manday-hidden')){
-        recoveryTotal += rec;
-        visibleGroups += 1;
-      }
-    });
+   const data=monthly();
+   const districts=[...new Set(data.map(r=>districtOf(r.janpad)))].sort();
+   setOptions('srdmDistrict',districts,'सभी District');
 
-    const meta=document.getElementById('viewMeta');
-    if(meta){
-      meta.dataset.srdmFinal='1';
-    }
-  }
+   const janpads=[...new Set(data.filter(r=>d==='ALL'||districtOf(r.janpad)===d).map(r=>r.janpad))].sort();
+   setOptions('srdmJanpad',janpads,'सभी Janpad');
 
-  document.addEventListener('change',()=>setTimeout(applyFinal,60));
-  document.addEventListener('click',()=>setTimeout(applyFinal,80));
-  new MutationObserver(()=>setTimeout(applyFinal,60)).observe(document.body,{subtree:true,childList:true});
-  setTimeout(applyFinal,350);
+   const engineers=[...new Set(data.filter(r=>(d==='ALL'||districtOf(r.janpad)===d)&&(j==='ALL'||r.janpad===j)).map(r=>r.engineer))].sort((a,b)=>String(a).localeCompare(String(b),'hi'));
+   setOptions('srdmEngineer',engineers,'सभी Sub Engineer');
+
+   const clusters=[...new Set(data.filter(r=>(d==='ALL'||districtOf(r.janpad)===d)&&(j==='ALL'||r.janpad===j)&&(e==='ALL'||r.engineer===e)).map(r=>r.cluster))].sort();
+   setOptions('srdmCluster',clusters,'सभी Cluster');
+ }
+
+ function ensureOngoingColumns(){
+   const table=document.getElementById('reportTable'); if(!table)return;
+   const top=table.querySelector('thead tr'); if(!top)return;
+   if([...table.querySelectorAll('thead th')].some(h=>txt(h)==='Total Ongoing Work'))return;
+
+   const ths=[...top.children];
+   const ei=ths.findIndex(h=>/Sub\s*Engineer/i.test(txt(h)));
+   if(ei<0)return;
+   const ref=ths[ei].nextSibling;
+   for(const title of ['Total Ongoing Work','Individual Work','Community Work']){
+     const th=document.createElement('th'); th.rowSpan=2; th.textContent=title; top.insertBefore(th,ref);
+   }
+
+   getExistingRows().forEach(tr=>{
+     const td=[...tr.children],jan=txt(td[1]),eng=txt(td[2]),cl=txt(td[3]);
+     const z=ongoing()[key(jan,eng,cl)]||{total:0,individual:0,community:0};
+     const refCell=td[3];
+     [z.total,z.individual,z.community].forEach(v=>{
+       const c=document.createElement('td');c.dataset.srdmOngoing='1';c.textContent=Number(v||0).toLocaleString('en-IN');tr.insertBefore(c,refCell);
+     });
+   });
+
+   const totalRow=table.querySelector('tbody tr.total-row');
+   if(totalRow){
+     const td=[...totalRow.children],refCell=td[3]||null;
+     for(let i=0;i<3;i++){const c=document.createElement('td');c.dataset.srdmOngoingTotal=String(i);totalRow.insertBefore(c,refCell)}
+   }
+ }
+
+ function rowInfo(tr){
+   const td=[...tr.children];
+   const jan=txt(td[1]),eng=txt(td[2]);
+   const cl=(td[3]?.dataset?.srdmOngoing==='1')?txt(td[6]):txt(td[3]);
+   return {jan,eng,cl,district:districtOf(jan)};
+ }
+
+ function filters(){
+   return {
+     d:document.getElementById('srdmDistrict')?.value||'ALL',
+     j:document.getElementById('srdmJanpad')?.value||'ALL',
+     e:document.getElementById('srdmEngineer')?.value||'ALL',
+     c:document.getElementById('srdmCluster')?.value||'ALL',
+     m:document.getElementById('srdmMonth')?.value||'All'
+   }
+ }
+
+ function matches(r,f){
+   return (f.d==='ALL'||districtOf(r.janpad)===f.d)&&
+          (f.j==='ALL'||r.janpad===f.j)&&
+          (f.e==='ALL'||r.engineer===f.e)&&
+          (f.c==='ALL'||r.cluster===f.c);
+ }
+
+ function applyRows(){
+   const f=filters();
+   getExistingRows().forEach(tr=>{
+     const x=rowInfo(tr);
+     const show=(f.d==='ALL'||x.district===f.d)&&(f.j==='ALL'||x.jan===f.j)&&(f.e==='ALL'||x.eng===f.e)&&(f.c==='ALL'||x.cl===f.c);
+     tr.classList.toggle('srdm-row-hide',!show);
+   });
+ }
+
+ function fixRecoveryAndTotals(){
+   const table=document.getElementById('reportTable');if(!table)return;
+   [...table.querySelectorAll('thead th')].forEach(h=>{if(/^\s*Recovery\s*$/i.test(txt(h))||/Number Of Recovery Work/i.test(txt(h)))h.textContent='Number Of Recovery Work'});
+
+   let rec=0,total=0,ind=0,comm=0;
+   getExistingRows().forEach(tr=>{
+     const x=rowInfo(tr), td=[...tr.children];
+     const rv=Number(recovery()[key(x.jan,x.eng,x.cl)]||0);
+     if(td[td.length-1])td[td.length-1].textContent=rv.toLocaleString('en-IN');
+     if(!tr.classList.contains('srdm-row-hide')){
+       rec+=rv;
+       if(td[3]?.dataset?.srdmOngoing==='1'){total+=num(txt(td[3]));ind+=num(txt(td[4]));comm+=num(txt(td[5]))}
+     }
+   });
+   const tr=table.querySelector('tbody tr.total-row');
+   if(tr){
+     const td=[...tr.children];
+     if(td[3]?.dataset?.srdmOngoingTotal!==undefined){td[3].textContent=total.toLocaleString('en-IN');td[4].textContent=ind.toLocaleString('en-IN');td[5].textContent=comm.toLocaleString('en-IN')}
+     if(td[td.length-1])td[td.length-1].textContent=rec.toLocaleString('en-IN');
+   }
+ }
+
+ function renderAlert(){
+   const f=filters(), data=monthly().filter(r=>matches(r,f));
+   const zero=data.filter(r=>Number(f.m==='All'?r.All:r[f.m]||0)===0);
+   const groups=new Map();
+   zero.forEach(r=>{
+     const kk=key(r.janpad,r.engineer,r.cluster);
+     if(!groups.has(kk))groups.set(kk,{janpad:r.janpad,engineer:r.engineer,cluster:r.cluster,gps:[]});
+     groups.get(kk).gps.push(r.panchayat);
+   });
+   const arr=[...groups.values()].sort((a,b)=>b.gps.length-a.gps.length);
+   const total=data.reduce((a,r)=>a+Number(f.m==='All'?r.All:r[f.m]||0),0);
+   const box=document.getElementById('srdmMandayAlertFinal');
+   if(box)box.innerHTML=`<h3>Zero Mandays Alert - ${f.m}</h3><div><b>${arr.length}</b> Sub Engineer/Cluster groups में <b>${zero.length}</b> GP Zero Mandays हैं। Total Mandays: <b>${total.toLocaleString('en-IN')}</b></div>`+
+      arr.map(g=>`<div class="srdm-zero-group"><b>${g.engineer}</b> - ${g.cluster} - ${g.janpad}<div class="srdm-zero-gps"><b>Zero GP (${g.gps.length}):</b> ${g.gps.join(', ')}</div></div>`).join('');
+   const meta=document.getElementById('viewMeta');
+   if(meta)meta.textContent=`Mandays Monitoring - District: ${f.d==='ALL'?'All':f.d} - Janpad: ${f.j==='ALL'?'All':f.j} - Sub Engineer: ${f.e==='ALL'?'All':f.e} - Cluster: ${f.c==='ALL'?'All':f.c} - Month: ${f.m} - ${todayDate()}`;
+ }
+
+ function applyAll(){
+   if(document.body?.dataset?.reportView!=='mandaysgen')return;
+   ensureControls();ensureOngoingColumns();applyRows();fixRecoveryAndTotals();renderAlert();
+ }
+
+ document.addEventListener('click',()=>setTimeout(applyAll,80));
+ new MutationObserver(()=>setTimeout(applyAll,70)).observe(document.body,{subtree:true,childList:true});
+ setTimeout(applyAll,350);
 })();
 </script>
-<!-- SRDM_MANDAYS_FINAL_V5_END -->
+<!-- SRDM_MANDAYS_FINAL_V7_END -->
 
 </body></html>
