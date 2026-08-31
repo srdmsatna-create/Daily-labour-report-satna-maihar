@@ -2514,4 +2514,75 @@ function initPptExportUI(){
 </script>
 <!-- SRDM_MANDAYS_FILTER_ALERT_END -->
 
+<script src="mandays-advanced-data.js"></script>
+<script src="recovery-subeng-data.js"></script>
+
+<!-- SRDM_MANDAYS_FINAL_V5_START -->
+<script>
+(function(){
+  function norm(v){return String(v||'').replace(/[\u200B-\u200D\uFEFF]/g,'').replace(/\s+/g,' ').trim().toUpperCase()}
+  function txt(el){return String(el?.textContent||'').replace(/\s+/g,' ').trim()}
+  function num(v){const x=Number(String(v||'').replace(/,/g,''));return Number.isFinite(x)?x:0}
+  function k(j,e,c){return norm(j)+'|'+norm(e)+'|'+norm(c)}
+  function districtOfJanpad(j){return ['MAIHAR','AMARPATAN','RAMNAGAR'].includes(norm(j))?'MAIHAR':'SATNA'}
+
+  const REC = window.SRDM_RECOVERY_BY_SUBENG || {};
+
+  function applyFinal(){
+    if(document.body?.dataset?.reportView!=='mandaysgen') return;
+    const table=document.getElementById('reportTable');
+    if(!table) return;
+
+    // Recovery header
+    [...table.querySelectorAll('thead th')].forEach(th=>{
+      if(/^\s*Recovery\s*$/i.test(txt(th)) || /Number Of Recovery Work/i.test(txt(th))){
+        th.textContent='Number Of Recovery Work';
+      }
+    });
+
+    let recoveryTotal=0;
+    let visibleGroups=0;
+
+    [...table.querySelectorAll('tbody tr')].forEach(tr=>{
+      const td=[...tr.children];
+      if(!td.length) return;
+
+      if(tr.classList.contains('total-row')){
+        // Last column recovery total
+        if(td[td.length-1]) td[td.length-1].textContent=recoveryTotal.toLocaleString('en-IN');
+        return;
+      }
+
+      const jan=txt(td[1]);
+      const eng=txt(td[2]);
+
+      // If V3 inserted ongoing columns, Cluster is index 6; otherwise index 3.
+      const cluster=(td.length>6 && td[3]?.dataset?.srdmOngoing==='1') ? txt(td[6]) : txt(td[3]);
+
+      // Fill District if blank
+      if(td[0] && !txt(td[0])) td[0].textContent=districtOfJanpad(jan);
+
+      const rec=Number(REC[k(jan,eng,cluster)]||0);
+      if(td[td.length-1]) td[td.length-1].textContent=rec.toLocaleString('en-IN');
+
+      if(!tr.classList.contains('srdm-manday-hidden')){
+        recoveryTotal += rec;
+        visibleGroups += 1;
+      }
+    });
+
+    const meta=document.getElementById('viewMeta');
+    if(meta){
+      meta.dataset.srdmFinal='1';
+    }
+  }
+
+  document.addEventListener('change',()=>setTimeout(applyFinal,60));
+  document.addEventListener('click',()=>setTimeout(applyFinal,80));
+  new MutationObserver(()=>setTimeout(applyFinal,60)).observe(document.body,{subtree:true,childList:true});
+  setTimeout(applyFinal,350);
+})();
+</script>
+<!-- SRDM_MANDAYS_FINAL_V5_END -->
+
 </body></html>
