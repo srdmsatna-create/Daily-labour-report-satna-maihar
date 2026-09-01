@@ -75,20 +75,27 @@ echo.
 %PYTHON_CMD% "%UPDATER%"
 if errorlevel 1 (
     echo.
-    echo ERROR: Data update failed.
-    echo Please read the error shown above.
-    pause
-    exit /b 1
+    echo WARNING: Official data fetch failed.
+    echo Existing dashboard data will be preserved.
+    echo UI / other local file changes will still be published to GitHub.
+    echo.
+    set "DATA_FETCH_FAILED=1"
+) else (
+    echo.
+    echo Official data fetch: OK
+    set "DATA_FETCH_FAILED=0"
 )
-
-echo.
-echo Official data fetch: OK
 
 REM ------------------------------------------------------------
 REM 3. Rebuild dashboard data if merge/build scripts exist
 REM ------------------------------------------------------------
 echo [3/6] Rebuilding dashboard data files...
 set "BUILD_DONE=0"
+
+if "%DATA_FETCH_FAILED%"=="1" (
+    echo Data fetch failed - skipping rebuild to preserve existing dashboard data.
+    goto :AFTER_BUILD
+)
 
 if exist "scripts\merge_official_summary.py" (
     %PYTHON_CMD% "scripts\merge_official_summary.py"
@@ -114,6 +121,7 @@ if "!BUILD_DONE!"=="0" (
     echo Dashboard data rebuild: OK
 )
 
+:AFTER_BUILD
 REM ------------------------------------------------------------
 REM 4. Basic verification
 REM ------------------------------------------------------------

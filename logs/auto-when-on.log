@@ -1,0 +1,266 @@
+
+============================================================
+START Tue 09/01/2026 10:31:10.72
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1467/1188; PMAY Labour/MR=1245/1066; Ek Bagiya Labour/MR=193/106.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | Individual Labour/MR=1467/1188 | PMAY Labour/MR=1245/1066 | Ek Bagiya Labour/MR=193/106 | changed=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main e85c7b7] Automatic VBGRAMG update when laptop online
+ 4 files changed, 15 insertions(+), 15 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   c332cd0..e85c7b7  main -> main
+END Tue 09/01/2026 10:31:47.85 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 10:33:10.25
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+
+============================================================
+START Tue 09/01/2026 11:33:10.20
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1467/1188; PMAY Labour/MR=1245/1066; Ek Bagiya Labour/MR=193/106.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main b3bc242] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   5e5e937..b3bc242  main -> main
+END Tue 09/01/2026 11:33:51.52 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 12:33:10.21
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+
+============================================================
+START Tue 09/01/2026 13:33:10.24
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1467/1188; PMAY Labour/MR=1245/1066; Ek Bagiya Labour/MR=193/106.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main d9bfeed] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   fe676e1..d9bfeed  main -> main
+END Tue 09/01/2026 13:34:07.43 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 19:04:38.88
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1467/1188; PMAY Labour/MR=1245/1066; Ek Bagiya Labour/MR=193/106.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 0a62a9e] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   d9bfeed..0a62a9e  main -> main
+END Tue 09/01/2026 19:05:32.24 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 19:33:10.78
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1467/1188; PMAY Labour/MR=1245/1066; Ek Bagiya Labour/MR=193/106.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 55207e5] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   0a62a9e..55207e5  main -> main
+END Tue 09/01/2026 19:33:58.28 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 20:33:10.76
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   55207e5..83eca68  main       -> origin/main
+Updating 55207e5..83eca68
+Created autostash: dfb823a
+Fast-forward
+ index(1) (1).html | 2230 -----------------------------------------------------
+ index.html        |  100 ++-
+ 2 files changed, 68 insertions(+), 2262 deletions(-)
+ delete mode 100644 index(1) (1).html
+Applied autostash.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1467/1188; PMAY Labour/MR=1245/1066; Ek Bagiya Labour/MR=193/106.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main dc05336] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   83eca68..dc05336  main -> main
+END Tue 09/01/2026 20:34:10.06 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 21:33:10.65
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1496/1210; PMAY Labour/MR=1270/1086; Ek Bagiya Labour/MR=197/108.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main a9bf8de] Automatic VBGRAMG update when laptop online
+ 4 files changed, 11 insertions(+), 11 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   dc05336..a9bf8de  main -> main
+END Tue 09/01/2026 21:33:51.50 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 22:58:35.70
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1498/1212; PMAY Labour/MR=1271/1087; Ek Bagiya Labour/MR=197/108.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main f1ca902] Automatic VBGRAMG update when laptop online
+ 4 files changed, 7 insertions(+), 7 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   a9bf8de..f1ca902  main -> main
+END Tue 09/01/2026 22:59:20.06 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/01/2026 23:33:10.71
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   f1ca902..525560b  main       -> origin/main
+Updating f1ca902..525560b
+Created autostash: a0a5154
+Fast-forward
+ index(5) (1).html                                  | 2894 ++++++++++++++++++++
+ index(5).html                                      | 2894 ++++++++++++++++++++
+ index_backup_01-09-2026.html                       | 2871 +++++++++++++++++++
+ ...x_backup_01-09-2026_SRDM_all_links_updated.html | 2894 ++++++++++++++++++++
+ index_backup_01-09-2026_SRDM_apps_added.html       | 2893 +++++++++++++++++++
+ index_backup_01-09-2026_SRDM_apps_links_added.html | 2894 ++++++++++++++++++++
+ 6 files changed, 17340 insertions(+)
+ create mode 100644 index(5) (1).html
+ create mode 100644 index(5).html
+ create mode 100644 index_backup_01-09-2026.html
+ create mode 100644 index_backup_01-09-2026_SRDM_all_links_updated.html
+ create mode 100644 index_backup_01-09-2026_SRDM_apps_added.html
+ create mode 100644 index_backup_01-09-2026_SRDM_apps_links_added.html
+Applied autostash.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1498/1212; PMAY Labour/MR=1271/1087; Ek Bagiya Labour/MR=197/108.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 01f279c] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   525560b..01f279c  main -> main
+END Tue 09/01/2026 23:34:02.87 SUCCESS-PUSHED
+
+============================================================
+START Wed 09/02/2026  0:33:10.84
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   01f279c..2df73b0  main       -> origin/main
+Updating 01f279c..2df73b0
+Created autostash: b2e05b6
+Fast-forward
+ index_01-09-2026_ONLY_SRDM_APPS.html | 2883 +++++++++++++++++++++++++++++++++
+ index_FINAL_CORRECTED.html           | 2894 ++++++++++++++++++++++++++++++++++
+ index_V67_FINAL_01-09-2026.html      | 2830 +++++++++++++++++++++++++++++++++
+ 3 files changed, 8607 insertions(+)
+ create mode 100644 index_01-09-2026_ONLY_SRDM_APPS.html
+ create mode 100644 index_FINAL_CORRECTED.html
+ create mode 100644 index_V67_FINAL_01-09-2026.html
+Applied autostash.
+[2/6] Fetch official VB-G RAM G data
+FAILED: R6.9 filters not found: expected 3 dropdowns.
+ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.

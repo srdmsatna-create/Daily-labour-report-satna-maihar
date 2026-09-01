@@ -1,0 +1,16 @@
+from pathlib import Path
+import json,re,sys
+root=Path(r"C:\Users\welcome\Daily-labour-report-satna-maihar")
+s=(root/"auto-data.js").read_text(encoding="utf-8").strip()
+s=re.sub(r"^window\.AUTO_REPORT\s*=\s*","",s).rstrip(";")
+d=json.loads(s)
+rows=d.get("official",[])
+p=int(sum(float(x.get("pmayOngoing",0) or 0) for x in rows))
+e=int(sum(float(x.get("ekOngoing",0) or 0) for x in rows))
+print("PMAY-G Ongoing Total =",p)
+print("Ek Bagiya Ongoing Total =",e)
+if p!=11995 or e!=756: sys.exit("LOCK VERIFICATION FAILED")
+idx=(root/"index.html").read_text(encoding="utf-8")
+if "Excel Download" not in idx: sys.exit("Excel button missing")
+if "SRDM_DIRECT_FINAL_FIX_V2_01_09_2026" not in idx: sys.exit("UI marker missing")
+print("INDEX UI VERIFY OK")
