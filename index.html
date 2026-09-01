@@ -1159,19 +1159,6 @@ body[data-report-view="official"] .official-grid th{
 }
 </style>
 
-
-
-
-
-
-
-
-<style id="srdmCleanSingleTablePrintFinalStyle">
-/* SRDM_CLEAN_SINGLE_TABLE_PRINT_FINAL_01_09_2026 */
-.excel-btn{background:#16794b!important;color:white!important;border-color:#16794b!important;font-weight:900!important}
-.report-table th,.report-table td{font-size:calc(11.2px * var(--table-font-scale))!important;line-height:1.25!important}
-</style>
-
 </head>
 <body>
 <div id="v64-banner" style="position:sticky;top:0;z-index:99999;background:#0b7a3b;color:white;padding:8px 14px;text-align:center;font:900 14px/1.2 Arial,sans-serif;letter-spacing:.5px">V64 NEW MODULES ACTIVE • 29-08-2026</div>
@@ -1905,11 +1892,11 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   }
   updatePortalHeading();
   render();
-}));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;const o=$('printOrientation');if(o){o.value='portrait';o.dispatchEvent(new Event('change'));}render()}));
+}));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}render()}));
 $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
 // V6: Font size and Portrait/Landscape print controls
 (function(){
-  let fontScale=1.18;
+  let fontScale=1.12;
   const root=document.documentElement;
   const minus=document.getElementById('fontMinusBtn');
   const plus=document.getElementById('fontPlusBtn');
@@ -2787,241 +2774,33 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 <!-- SRDM_ZERO_FORCE_V2_END -->
 
 
-</head><body>'+
-      '<h2>'+esc(title)+'</h2><p>'+esc(meta)+'</p>'+table.outerHTML+'
-</head><body>
-      <section class="page"><h1></h1><div class="meta"> • A4 Portrait • Part A</div><h2>GP / Screen-2 / Individual Land</h2>${makeTable(hA,rowsA,8.5)}</section>
-      <section class="page"><h1></h1><div class="meta"> • A4 Portrait • Part B</div><h2>Community / PMAY-G / Ek Bagiya / Recovery</h2>${makeTable(hB,rowsB,8.5)}</section>
-    
-</head>
-    <body>
-      <h1></h1>
-      <div class="meta"></div>
-      <div class="sheet">${table}</div>
-    
-<script id="srdmCleanSingleTablePrintFinalScript">
-/* SRDM_CLEAN_SINGLE_TABLE_PRINT_FINAL_01_09_2026 */
+<style id="srdmSafeExcelStyle">
+.excel-btn{background:#16794b!important;color:#fff!important;border-color:#16794b!important;font-weight:900!important}
+</style>
+<script id="srdmSafeExcelOnly">
 (function(){
-  function byId(id){ return document.getElementById(id); }
-  function safeText(v){
-    return String(v == null ? "" : v)
-      .replace(/&/g,"&amp;")
-      .replace(/</g,"&lt;")
-      .replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;");
-  }
-  function cleanTableHtml(){
-    var t = byId("reportTable");
-    if(!t) return "";
-    var c = t.cloneNode(true);
-    var bad = c.querySelectorAll("script,style,template,noscript");
-    for(var i=0;i<bad.length;i++) bad[i].remove();
-    var all = c.querySelectorAll("*");
-    for(var j=0;j<all.length;j++){
-      all[j].style.transform="none";
-      all[j].style.rotate="none";
-      all[j].style.writingMode="horizontal-tb";
-    }
-    return c.outerHTML;
-  }
-  function doPrint(ev){
-    if(ev){
-      ev.preventDefault();
-      ev.stopPropagation();
-      if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
-    }
-    var orient = byId("printOrientation");
-    var mode = orient && orient.value==="portrait" ? "portrait" : "landscape";
-    var title = byId("viewTitle") ? byId("viewTitle").textContent : "VBGRAMG Report";
-    var meta = byId("viewMeta") ? byId("viewMeta").textContent : "";
-    var table = cleanTableHtml();
-    if(!table) return;
-
-    var page = mode==="portrait" ? "A4 portrait" : "A4 landscape";
-    var font = mode==="portrait" ? "6.8px" : "8.0px";
-
-    var html = '<!doctype html><html><head><meta charset="utf-8"><title>'+safeText(title)+'</title>'+
-      '<style>'+
-      '@page{size:'+page+';margin:6mm}'+
-      '*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;transform:none!important}'+
-      'body{font-family:Arial,sans-serif;color:#142238}'+
-      'h1{font-size:16px;line-height:1.1;margin:0 0 2px;color:#0b3159}'+
-      '.meta{font-size:9px;color:#607286;margin:0 0 6px}'+
-      'table{width:100%!important;min-width:0!important;max-width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;font-size:'+font+'!important;transform:none!important;writing-mode:horizontal-tb!important}'+
-      'th,td{border:1px solid #7293b5!important;padding:2.4px 1.8px!important;text-align:center!important;vertical-align:middle!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.15!important;transform:none!important;writing-mode:horizontal-tb!important}'+
-      'th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}'+
-      '.badge{font-size:inherit!important;padding:1px 2px!important}'+
-      '</style></head><body>'+
-      '<h1>'+safeText(title)+'</h1><div class="meta">'+safeText(meta)+'</div>'+
-      table+
-      '</body></html>';
-
-    var w = window.open("","_blank","width=1180,height=900");
-    if(!w){ alert("Print popup blocked है।"); return; }
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(function(){ w.print(); },400);
-  }
-
-  var orient = byId("printOrientation");
-  if(orient){
-    orient.disabled=false;
-    orient.title="Portrait या Landscape चुनें";
-  }
-
-  var btn = byId("printBtn");
-  if(btn){
-    btn.textContent="Print / PDF";
-    btn.addEventListener("click",doPrint,true);
-  }
-
-  var excel = byId("excelBtn");
-  if(excel){
-    excel.addEventListener("click",function(){
-      var title = byId("viewTitle") ? byId("viewTitle").textContent : "VBGRAMG Report";
-      var meta = byId("viewMeta") ? byId("viewMeta").textContent : "";
-      var table = cleanTableHtml();
-      if(!table) return;
-      var html = '<html><head><meta charset="utf-8"></head><body><h2>'+safeText(title)+'</h2><p>'+safeText(meta)+'</p>'+table+'</body></html>';
-      var blob = new Blob(["\ufeff",html],{type:"application/vnd.ms-excel;charset=utf-8"});
-      var a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "VBGRAMG-current-report.xls";
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      setTimeout(function(){ URL.revokeObjectURL(a.href); },500);
-    });
-  }
-})();
-</script>
-
-</body></html>`;
-  }
-
-  function singlePagePrint(e){
-    if(e){
-      e.preventDefault();
-      e.stopPropagation();
-      e.stopImmediatePropagation();
-    }
-
-    const orientation=$id('printOrientation')?.value==='portrait' ? 'portrait' : 'landscape';
-    const html=buildPrintHtml(orientation);
-    if(!html)return;
-
-    const w=window.open('','_blank','width=1180,height=900');
-    if(!w){
-      alert('Print popup blocked है। Browser में pop-up allow करें।');
-      return;
-    }
-
-    w.document.open();
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(()=>w.print(),450);
-  }
-
-  const orient=$id('printOrientation');
-  if(orient){
-    orient.disabled=false;
-    orient.title='Portrait या Landscape चुनें';
-  }
-
-  const btn=$id('printBtn');
-  if(btn){
-    btn.textContent='Print / PDF';
-    btn.addEventListener('click',singlePagePrint,true);
-  }
-})();
-</script>
-
-</body></html>`;
-  }
-
-  function genericHtml(mode){
-    const table=$id('reportTable');
-    if(!table)return null;
-    const title=$id('viewTitle')?.textContent||'VBGRAMG Report';
-    const meta=$id('viewMeta')?.textContent||'';
-    const isLandscape=mode==='landscape';
-    const wide=(currentView()==='official'||currentView()==='engineer');
-    const font=isLandscape?(wide?7.3:8.8):(wide?6.4:8.8);
-    const pageSize=isLandscape?'A4 landscape':'A4 portrait';
-
-    return `<!doctype html><html><head><meta charset="utf-8"><title></title>
-    <style>
-      @page{size:${pageSize};margin:7mm}
-      *{box-sizing:border-box}
-      body{font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#132238;margin:0}
-      h1{font-size:18px;color:#0b3159;margin:0}
-      .meta{font-size:10px;color:#64748b;margin:3px 0 10px}
-      .print-box{width:100%;overflow:visible}
-      table{width:100%!important;min-width:0!important;border-collapse:collapse!important;table-layout:fixed!important;font-size:${font}px!important}
-      th,td{border:1px solid #7596b8!important;padding:2.6px 2px!important;text-align:center!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;line-height:1.18!important}
-      th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}
-      .badge{font-size:inherit!important;padding:1px 3px!important}
-    </style></head><body>
-      <h1></h1>
-      <div class="meta"> • ${isLandscape?'A4 Landscape':'A4 Portrait'}</div>
-      <div class="print-box"></div>
-    </body></html>`;
-  }
-
-  function doPrint(){
-    const orientation=$id('printOrientation')?.value==='portrait'?'portrait':'landscape';
-    const v=currentView();
-    let html=null;
-
-    if(orientation==='portrait' && (v==='official'||v==='engineer')){
-      html=portraitOfficialHtml();
-    }
-    if(!html)html=genericHtml(orientation);
-    if(!html)return;
-
-    const w=window.open('','_blank','width=1100,height=900');
-    if(!w){alert('Print popup blocked है। Browser में pop-up allow करें।');return;}
-    w.document.open();w.document.write(html);w.document.close();w.focus();
-    setTimeout(()=>w.print(),350);
-  }
-
-  const orient=$id('printOrientation');
-  if(orient){
-    orient.disabled=false;
-    orient.title='Portrait या Landscape चुनें';
-    if(!['portrait','landscape'].includes(orient.value))orient.value='landscape';
-  }
-
-  const old=$id('printBtn');
-  if(old){
-    const b=old.cloneNode(true);
-    old.parentNode.replaceChild(b,old);
-    b.textContent='Print / PDF';
-    b.addEventListener('click',doPrint);
-  }
-})();
-</script>
-
-</body></html>';
-    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff',html],{type:'application/vnd.ms-excel;charset=utf-8'}));
-    a.download='VBGRAMG-'+(cv()||'report')+'-'+new Date().toISOString().slice(0,10)+'.xls';
-    document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500);
-  }
-
-  function tbl(h,rows){return '<table><thead><tr>'+h.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+
-      rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></body></html></body></html>';
-    }
-    const w=window.open('','_blank','width=900,height=1000');if(!w){alert('Print popup blocked है।');return;}
-    w.document.open();w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
-  }
-
-  document.getElementById('excelBtn')?.addEventListener('click',excelDownload);
-  const old=document.getElementById('printBtn');if(old){const b=old.cloneNode(true);old.parentNode.replaceChild(b,old);b.addEventListener('click',printPortrait);}
-  const orient=document.getElementById('printOrientation');if(orient){orient.disabled=false;orient.title='Portrait या Landscape चुनें';}
-  document.documentElement.style.setProperty('--table-font-scale','1.18');
+  var b=document.getElementById("excelBtn");
+  if(!b)return;
+  b.addEventListener("click",function(){
+    var t=document.getElementById("reportTable");
+    if(!t)return;
+    var c=t.cloneNode(true);
+    var bad=c.querySelectorAll("script,style,template,noscript");
+    for(var i=0;i<bad.length;i++){bad[i].remove();}
+    var title=document.getElementById("viewTitle");
+    var meta=document.getElementById("viewMeta");
+    var html="<html><head><meta charset='utf-8'></head><body><h2>"+
+      (title?title.textContent:"VBGRAMG Report")+"</h2><p>"+
+      (meta?meta.textContent:"")+"</p>"+c.outerHTML+"</body></html>";
+    var blob=new Blob(["\ufeff",html],{type:"application/vnd.ms-excel;charset=utf-8"});
+    var a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="VBGRAMG-current-report.xls";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},500);
+  });
 })();
 </script>
 
