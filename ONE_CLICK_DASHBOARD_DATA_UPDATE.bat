@@ -77,24 +77,24 @@ if errorlevel 1 (
     echo.
     echo WARNING: Official data fetch failed.
     echo Existing dashboard data will be preserved.
-    echo UI / other local file changes will still be published to GitHub.
+    echo UI and other local file changes will still be published to GitHub.
     echo.
-    set "DATA_FETCH_FAILED=1"
+    set DATA_FETCH_FAILED=1
 ) else (
     echo.
     echo Official data fetch: OK
-    set "DATA_FETCH_FAILED=0"
+    set DATA_FETCH_FAILED=0
 )
 
 REM ------------------------------------------------------------
 REM 3. Rebuild dashboard data if merge/build scripts exist
 REM ------------------------------------------------------------
 echo [3/6] Rebuilding dashboard data files...
-set "BUILD_DONE=0"
+set BUILD_DONE=0
 
 if "%DATA_FETCH_FAILED%"=="1" (
     echo Data fetch failed - skipping rebuild to preserve existing dashboard data.
-    goto :AFTER_BUILD
+    goto AFTER_BUILD
 )
 
 if exist "scripts\merge_official_summary.py" (
