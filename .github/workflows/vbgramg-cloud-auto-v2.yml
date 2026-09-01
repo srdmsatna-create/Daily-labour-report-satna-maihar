@@ -1,0 +1,104 @@
+name: VBGRAMG Cloud Auto Update V2 Safe
+
+on:
+  schedule:
+    # 07:00 AM IST = 01:30 UTC
+    - cron: "30 1 * * *"
+    # 08:00 AM IST = 02:30 UTC
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: vbgramg-auto-update-v2
+  cancel-in-progress: false
+
+jobs:
+  update-dashboard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+
+      - name: Fetch official VB-G RAM G data safely
+        id: fetch
+        continue-on-error: true
+        run: |
+          python scripts_local/local_auto_update_cloud_v2.py
+
+      - name: Upload cloud diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: vbgramg-cloud-diagnostics
+          path: |
+            diagnostics/**
+            data/fetch-status.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Stop safely when official source is blocked
+        if: steps.fetch.outcome != 'success'
+        shell: bash
+        run: |
+          echo "Official VB-G RAM G cloud fetch failed."
+          echo "Diagnostic HTML/PNG/JSON has been uploaded as an artifact."
+          echo "No stale or partial dashboard data will be committed."
+          exit 1
+
+      - name: Merge dashboard data
+        run: |
+          python scripts/merge_official_summary.py
+
+      - name: Validate generated files
+        shell: bash
+        run: |
+          test -f data/official-summary.csv
+          test -f data/fetch-status.json
+          test -f auto-data.js
+          test -f auto-status.js
+
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          s=Path("auto-data.js").read_text(encoding="utf-8")
+          s=re.sub(r"^window\.AUTO_REPORT\s*=\s*","",s.strip()).rstrip(";")
+          d=json.loads(s)
+          assert len(d.get("official",[])) == 8, "official rows must be exactly 8"
+          assert len(d.get("daily",[])) == 8, "daily rows must be exactly 8"
+          print("Safety validation OK: 8/8 Janpads")
+          PY
+
+      - name: Commit and push only verified fresh data
+        shell: bash
+        run: |
+          git config user.name "VBGRAMG Auto Update"
+          git config user.email "actions@users.noreply.github.com"
+
+          git add data/official-summary.csv data/fetch-status.json auto-data.js auto-status.js
+
+          if git diff --cached --quiet; then
+            echo "Official source checked successfully; no actual data change."
+            exit 0
+          fi
+
+          git commit -m "Automatic verified VBGRAMG dashboard update"
+          git pull --rebase
+          git push
