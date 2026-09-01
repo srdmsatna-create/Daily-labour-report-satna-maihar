@@ -1159,6 +1159,7 @@ body[data-report-view="official"] .official-grid th{
 }
 </style>
 
+<link rel="stylesheet" href="srdm-readable-print-final.css?v=20260901v2">
 </head>
 <body>
 <div id="v64-banner" style="position:sticky;top:0;z-index:99999;background:#0b7a3b;color:white;padding:8px 14px;text-align:center;font:900 14px/1.2 Arial,sans-serif;letter-spacing:.5px">V64 NEW MODULES ACTIVE • 29-08-2026</div>
@@ -2774,34 +2775,8 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 <!-- SRDM_ZERO_FORCE_V2_END -->
 
 
-<style id="srdmSafeExcelStyle">
-.excel-btn{background:#16794b!important;color:#fff!important;border-color:#16794b!important;font-weight:900!important}
-</style>
-<script id="srdmSafeExcelOnly">
-(function(){
-  var b=document.getElementById("excelBtn");
-  if(!b)return;
-  b.addEventListener("click",function(){
-    var t=document.getElementById("reportTable");
-    if(!t)return;
-    var c=t.cloneNode(true);
-    var bad=c.querySelectorAll("script,style,template,noscript");
-    for(var i=0;i<bad.length;i++){bad[i].remove();}
-    var title=document.getElementById("viewTitle");
-    var meta=document.getElementById("viewMeta");
-    var html="<html><head><meta charset='utf-8'></head><body><h2>"+
-      (title?title.textContent:"VBGRAMG Report")+"</h2><p>"+
-      (meta?meta.textContent:"")+"</p>"+c.outerHTML+"</body></html>";
-    var blob=new Blob(["\ufeff",html],{type:"application/vnd.ms-excel;charset=utf-8"});
-    var a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);
-    a.download="VBGRAMG-current-report.xls";
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(function(){URL.revokeObjectURL(a.href);},500);
-  });
-})();
-</script>
 
+
+
+<script src="srdm-readable-print-final.js?v=20260901v2"></script>
 </body></html>
