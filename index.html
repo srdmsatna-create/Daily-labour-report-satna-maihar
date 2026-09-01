@@ -1160,27 +1160,16 @@ body[data-report-view="official"] .official-grid th{
 </style>
 
 
-<style id="srdmDirectFinalV2Style">
-/* SRDM_DIRECT_FINAL_FIX_V2_01_09_2026 */
-.excel-btn{background:#147a4a!important;color:#fff!important;border-color:#147a4a!important;font-weight:900!important}
-.report-table th,.report-table td{font-size:calc(11.2px * var(--table-font-scale))!important;line-height:1.30!important;padding:5px 4px!important}
-.report-table th{font-weight:900!important}
-@media print{@page{size:A4 portrait!important;margin:8mm!important}}
-</style>
 
 
-<style id="srdmPrintBothOrientationStyle">
-/* SRDM_PRINT_BOTH_ORIENTATION_PDF_FIT_01_09_2026 */
-#printOrientation{
-  min-width:112px!important;
-  font-weight:850!important;
-  color:#123b69!important;
-  background:#fff!important;
-}
-@media print{
-  html,body{overflow:visible!important}
-  .table-wrap,.report-wrap,.report-card{overflow:visible!important}
-}
+
+
+
+
+<style id="srdmCleanSingleTablePrintFinalStyle">
+/* SRDM_CLEAN_SINGLE_TABLE_PRINT_FINAL_01_09_2026 */
+.excel-btn{background:#16794b!important;color:white!important;border-color:#16794b!important;font-weight:900!important}
+.report-table th,.report-table td{font-size:calc(11.2px * var(--table-font-scale))!important;line-height:1.25!important}
 </style>
 
 </head>
@@ -2798,162 +2787,118 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 <!-- SRDM_ZERO_FORCE_V2_END -->
 
 
-<script id="srdmDirectFinalV2Script">
-/* SRDM_DIRECT_FINAL_FIX_V2_01_09_2026 */
-(function(){
-  const REC={AMARPATAN:61,MAIHAR:41,MAJHGAWAN:51,NAGOD:155,RAMNAGAR:67,'RAMPUR BAGHELAN':44,SATNA:59,UNCHAHARA:71};
-  const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const n=v=>{const x=Number(v)||0;return Number.isInteger(x)?x.toLocaleString('en-IN'):x.toLocaleString('en-IN',{maximumFractionDigits:2})};
-  const pc=(a,b)=>Number(b)?((Number(a)||0)*100/Number(b)).toFixed(1)+'%':'0.0%';
-  const cv=()=>{try{return view||''}catch(e){return ''}};
-  const cr=()=>{try{return Array.isArray(lastExport)?lastExport:[]}catch(e){return []}};
-  const dist=j=>{try{return districtOf(j)}catch(e){return ''}};
-
-  function excelDownload(){
-    const table=document.getElementById('reportTable');if(!table)return;
-    const title=document.getElementById('viewTitle')?.textContent||'VBGRAMG Report';
-    const meta=document.getElementById('viewMeta')?.textContent||'';
-    const html='<!doctype html><html><head><meta charset="utf-8"><style>'+
-      'body{font-family:Arial,sans-serif}h2{color:#0b3159;font-size:16px}table{border-collapse:collapse;width:100%;font-size:11px}'+
-      'th,td{border:1px solid #7d9bb9;padding:5px}th{background:#cfe0f5;color:#0a3158;font-weight:800}</style></head><body>'+
+</head><body>'+
       '<h2>'+esc(title)+'</h2><p>'+esc(meta)+'</p>'+table.outerHTML+'
-<script id="srdmPrintBothOrientationScript">
-/* SRDM_PRINT_BOTH_ORIENTATION_PDF_FIT_01_09_2026 */
-(function(){
-  const $id=id=>document.getElementById(id);
-  const esc=v=>String(v??'')
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-
-  function currentView(){ try{return view||''}catch(e){return ''} }
-  function currentRows(){ try{return Array.isArray(lastExport)?lastExport:[]}catch(e){return []} }
-  function district(j){ try{return districtOf(j)}catch(e){return ''} }
-  function num(v){
-    const n=Number(v)||0;
-    return Number.isInteger(n)?n.toLocaleString('en-IN'):n.toLocaleString('en-IN',{maximumFractionDigits:2});
-  }
-  function pct(a,b){
-    return Number(b)?((Number(a)||0)*100/Number(b)).toFixed(1)+'%':'0.0%';
-  }
-  function makeTable(headers,rows,fontSize){
-    return `<table style="font-size:${fontSize}px"><thead><tr>${headers.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-  }
-
-  function portraitOfficialHtml(){
-    const data=currentRows(), v=currentView();
-    if(!data.length)return null;
-    const engineer=v==='engineer';
-    const preH=engineer?['District','Janpad','Sub Engineer','Cluster']:['District','Janpad'];
-    const prefix=r=>engineer
-      ? [r.district||district(r.janpad),r.janpad,r.engineer||'',r.cluster||'']
-      : [district(r.janpad),r.janpad];
-
-    const REC={AMARPATAN:61,MAIHAR:41,MAJHGAWAN:51,NAGOD:155,RAMNAGAR:67,'RAMPUR BAGHELAN':44,SATNA:59,UNCHAHARA:71};
-
-    const hA=preH.concat(['Total GP','GP Progress','Dysfunctional','Labour','Works with MR','Total Ongoing','Muster Rolls','MR %','Individual Labour','Individual Works MR']);
-    const rowsA=data.map(r=>prefix(r).concat([
-      num(r.totalGP),num(r.musterGP),num(r.dysfunctionalGP),
-      num(r.labourAll),num(r.mrAll),num(r.ongoingAll),num(r.mrs),
-      pct(r.mrAll,r.ongoingAll),num(r.labourIndividual),num(r.mrIndividual)
-    ]));
-
-    const hB=preH.concat(['Community Labour','Community Works MR','Share %','PMAY-G Ongoing','PMAY-G MR Issued','PMAY MR %','Ek Bagiya Labour','Ek Bagiya Ongoing','Ek Bagiya MR Issued','Ek Bagiya MR %','Recovery']);
-    const rowsB=data.map(r=>prefix(r).concat([
-      num(r.labourCommunity),num(r.mrCommunity),pct(r.mrCommunity,r.mrAll),
-      num(r.pmayOngoing),num(r.pmayMR),pct(r.pmayMR,r.pmayOngoing),
-      num(r.ekLabour),num(r.ekOngoing),num(r.ekMR),pct(r.ekMR,r.ekOngoing),
-      REC[String(r.janpad||'').trim().toUpperCase()]??''
-    ]));
-
-    const title=$id('viewTitle')?.textContent||'Official Janpad Daily Report';
-    const meta=$id('viewMeta')?.textContent||'';
-
-    return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title>
-    <style>
-      @page{size:A4 portrait;margin:8mm}
-      *{box-sizing:border-box}
-      body{font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#132238;margin:0}
-      h1{font-size:18px;margin:0;color:#0b3159}
-      .meta{font-size:10px;color:#64748b;margin:3px 0 10px}
-      h2{font-size:13px;color:#0b3159;margin:0 0 6px}
-      .page{page-break-after:always}.page:last-child{page-break-after:auto}
-      table{width:100%;border-collapse:collapse;table-layout:fixed}
-      th,td{border:1px solid #7596b8;padding:3px 2px;text-align:center;vertical-align:middle;word-break:break-word}
-      th{background:#cfe0f5;color:#0a3158;font-weight:800}
-      tbody tr:nth-child(even){background:#f5f8fc}
-    </style></head><body>
-      <section class="page"><h1>${esc(title)}</h1><div class="meta">${esc(meta)} • A4 Portrait • Part A</div><h2>GP / Screen-2 / Individual Land</h2>${makeTable(hA,rowsA,8.5)}</section>
-      <section class="page"><h1>${esc(title)}</h1><div class="meta">${esc(meta)} • A4 Portrait • Part B</div><h2>Community / PMAY-G / Ek Bagiya / Recovery</h2>${makeTable(hB,rowsB,8.5)}</section>
+</head><body>
+      <section class="page"><h1></h1><div class="meta"> • A4 Portrait • Part A</div><h2>GP / Screen-2 / Individual Land</h2>${makeTable(hA,rowsA,8.5)}</section>
+      <section class="page"><h1></h1><div class="meta"> • A4 Portrait • Part B</div><h2>Community / PMAY-G / Ek Bagiya / Recovery</h2>${makeTable(hB,rowsB,8.5)}</section>
     
-<script id="srdmSinglePagePrintScript">
-/* SRDM_SINGLE_PAGE_PRINT_NO_SPLIT_01_09_2026 */
-(function(){
-  const $id=id=>document.getElementById(id);
-
-  function esc(v){
-    return String(v??'')
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;');
-  }
-
-  function currentView(){
-    try{return view||''}catch(e){return ''}
-  }
-
-  function cleanTable(){
-    const src=$id('reportTable');
-    if(!src)return null;
-    const t=src.cloneNode(true);
-    t.querySelectorAll('script,style,template,noscript').forEach(x=>x.remove());
-    t.querySelectorAll('*').forEach(el=>{
-      if(el.style){
-        el.style.transform='none';
-        el.style.rotate='none';
-        el.style.writingMode='horizontal-tb';
-      }
-    });
-    return t.outerHTML;
-  }
-
-  function buildPrintHtml(orientation){
-    const table=cleanTable();
-    if(!table)return null;
-
-    const title=$id('viewTitle')?.textContent||'VBGRAMG Report';
-    const meta=$id('viewMeta')?.textContent||'';
-    const v=currentView();
-    const isLand=orientation==='landscape';
-
-    let font=9.2;
-    if(v==='official') font=isLand?7.7:6.4;
-    else if(v==='engineer') font=isLand?6.8:5.8;
-    else if(v==='ongoingdetail') font=isLand?6.2:5.4;
-    else font=isLand?8.8:8.0;
-
-    const pageSize=isLand?'A4 landscape':'A4 portrait';
-
-    return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title>
-    <style>
-      @page{size:${pageSize};margin:6mm}
-      *{box-sizing:border-box}
-      html,body{margin:0!important;padding:0!important;background:#fff!important;transform:none!important;rotate:none!important}
-      body{font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#142238}
-      h1{font-size:16px;line-height:1.1;margin:0 0 2px;color:#0b3159}
-      .meta{font-size:9px;line-height:1.1;color:#607286;margin:0 0 6px}
-      .sheet{width:100%;max-width:100%;overflow:visible!important;transform:none!important}
-      table{width:100%!important;min-width:0!important;max-width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;font-size:${font}px!important;transform:none!important;rotate:none!important;writing-mode:horizontal-tb!important}
-      th,td{border:1px solid #7293b5!important;padding:2.2px 1.6px!important;text-align:center!important;vertical-align:middle!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;line-height:1.12!important;transform:none!important;rotate:none!important;writing-mode:horizontal-tb!important}
-      th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}
-      .badge{font-size:inherit!important;padding:1px 2px!important}
-      script,style,template,noscript{display:none!important}
-    </style></head>
+</head>
     <body>
-      <h1>${esc(title)}</h1>
-      <div class="meta">${esc(meta)}</div>
+      <h1></h1>
+      <div class="meta"></div>
       <div class="sheet">${table}</div>
-    </body></html>`;
+    
+<script id="srdmCleanSingleTablePrintFinalScript">
+/* SRDM_CLEAN_SINGLE_TABLE_PRINT_FINAL_01_09_2026 */
+(function(){
+  function byId(id){ return document.getElementById(id); }
+  function safeText(v){
+    return String(v == null ? "" : v)
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;");
+  }
+  function cleanTableHtml(){
+    var t = byId("reportTable");
+    if(!t) return "";
+    var c = t.cloneNode(true);
+    var bad = c.querySelectorAll("script,style,template,noscript");
+    for(var i=0;i<bad.length;i++) bad[i].remove();
+    var all = c.querySelectorAll("*");
+    for(var j=0;j<all.length;j++){
+      all[j].style.transform="none";
+      all[j].style.rotate="none";
+      all[j].style.writingMode="horizontal-tb";
+    }
+    return c.outerHTML;
+  }
+  function doPrint(ev){
+    if(ev){
+      ev.preventDefault();
+      ev.stopPropagation();
+      if(ev.stopImmediatePropagation) ev.stopImmediatePropagation();
+    }
+    var orient = byId("printOrientation");
+    var mode = orient && orient.value==="portrait" ? "portrait" : "landscape";
+    var title = byId("viewTitle") ? byId("viewTitle").textContent : "VBGRAMG Report";
+    var meta = byId("viewMeta") ? byId("viewMeta").textContent : "";
+    var table = cleanTableHtml();
+    if(!table) return;
+
+    var page = mode==="portrait" ? "A4 portrait" : "A4 landscape";
+    var font = mode==="portrait" ? "6.8px" : "8.0px";
+
+    var html = '<!doctype html><html><head><meta charset="utf-8"><title>'+safeText(title)+'</title>'+
+      '<style>'+
+      '@page{size:'+page+';margin:6mm}'+
+      '*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;transform:none!important}'+
+      'body{font-family:Arial,sans-serif;color:#142238}'+
+      'h1{font-size:16px;line-height:1.1;margin:0 0 2px;color:#0b3159}'+
+      '.meta{font-size:9px;color:#607286;margin:0 0 6px}'+
+      'table{width:100%!important;min-width:0!important;max-width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;font-size:'+font+'!important;transform:none!important;writing-mode:horizontal-tb!important}'+
+      'th,td{border:1px solid #7293b5!important;padding:2.4px 1.8px!important;text-align:center!important;vertical-align:middle!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.15!important;transform:none!important;writing-mode:horizontal-tb!important}'+
+      'th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}'+
+      '.badge{font-size:inherit!important;padding:1px 2px!important}'+
+      '</style></head><body>'+
+      '<h1>'+safeText(title)+'</h1><div class="meta">'+safeText(meta)+'</div>'+
+      table+
+      '</body></html>';
+
+    var w = window.open("","_blank","width=1180,height=900");
+    if(!w){ alert("Print popup blocked है।"); return; }
+    w.document.open();
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    setTimeout(function(){ w.print(); },400);
+  }
+
+  var orient = byId("printOrientation");
+  if(orient){
+    orient.disabled=false;
+    orient.title="Portrait या Landscape चुनें";
+  }
+
+  var btn = byId("printBtn");
+  if(btn){
+    btn.textContent="Print / PDF";
+    btn.addEventListener("click",doPrint,true);
+  }
+
+  var excel = byId("excelBtn");
+  if(excel){
+    excel.addEventListener("click",function(){
+      var title = byId("viewTitle") ? byId("viewTitle").textContent : "VBGRAMG Report";
+      var meta = byId("viewMeta") ? byId("viewMeta").textContent : "";
+      var table = cleanTableHtml();
+      if(!table) return;
+      var html = '<html><head><meta charset="utf-8"></head><body><h2>'+safeText(title)+'</h2><p>'+safeText(meta)+'</p>'+table+'</body></html>';
+      var blob = new Blob(["\ufeff",html],{type:"application/vnd.ms-excel;charset=utf-8"});
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "VBGRAMG-current-report.xls";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); },500);
+    });
+  }
+})();
+</script>
+
+</body></html>`;
   }
 
   function singlePagePrint(e){
@@ -3007,7 +2952,7 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
     const font=isLandscape?(wide?7.3:8.8):(wide?6.4:8.8);
     const pageSize=isLandscape?'A4 landscape':'A4 portrait';
 
-    return `<!doctype html><html><head><meta charset="utf-8"><title>${esc(title)}</title>
+    return `<!doctype html><html><head><meta charset="utf-8"><title></title>
     <style>
       @page{size:${pageSize};margin:7mm}
       *{box-sizing:border-box}
@@ -3020,9 +2965,9 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
       th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}
       .badge{font-size:inherit!important;padding:1px 3px!important}
     </style></head><body>
-      <h1>${esc(title)}</h1>
-      <div class="meta">${esc(meta)} • ${isLandscape?'A4 Landscape':'A4 Portrait'}</div>
-      <div class="print-box">${table.outerHTML}</div>
+      <h1></h1>
+      <div class="meta"> • ${isLandscape?'A4 Landscape':'A4 Portrait'}</div>
+      <div class="print-box"></div>
     </body></html>`;
   }
 
@@ -3067,33 +3012,7 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
   }
 
   function tbl(h,rows){return '<table><thead><tr>'+h.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>'+
-      rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table>'}
-
-  function officialPrint(){
-    const data=cr(),v=cv(),eng=v==='engineer';if(!data.length)return null;
-    const preH=eng?['District','Janpad','Sub Engineer','Cluster']:['District','Janpad'];
-    const A=preH.concat(['Total GP','GP Progress','Dysfunctional','Labour','Works with MR','Total Ongoing','Muster Rolls','MR %','Individual Labour','Individual Works MR']);
-    const B=preH.concat(['Community Labour','Community Works MR','Share %','PMAY-G Ongoing','PMAY-G MR Issued','PMAY MR %','Ek Bagiya Labour','Ek Bagiya Ongoing','Ek Bagiya MR Issued','Ek Bagiya MR %','Recovery']);
-    const prefix=r=>eng?[r.district||dist(r.janpad),r.janpad,r.engineer||'',r.cluster||'']:[dist(r.janpad),r.janpad];
-    const AR=data.map(r=>prefix(r).concat([n(r.totalGP),n(r.musterGP),n(r.dysfunctionalGP),n(r.labourAll),n(r.mrAll),n(r.ongoingAll),n(r.mrs),pc(r.mrAll,r.ongoingAll),n(r.labourIndividual),n(r.mrIndividual)]));
-    const BR=data.map(r=>prefix(r).concat([n(r.labourCommunity),n(r.mrCommunity),pc(r.mrCommunity,r.mrAll),n(r.pmayOngoing),n(r.pmayMR),pc(r.pmayMR,r.pmayOngoing),n(r.ekLabour),n(r.ekOngoing),n(r.ekMR),pc(r.ekMR,r.ekOngoing),REC[String(r.janpad||'').trim().toUpperCase()]??'']));
-    const title=document.getElementById('viewTitle')?.textContent||'Official Janpad Daily Report';
-    const meta=document.getElementById('viewMeta')?.textContent||'';
-    return '<!doctype html><html><head><meta charset="utf-8"><style>@page{size:A4 portrait;margin:8mm}body{font-family:Arial,sans-serif;color:#132238;margin:0}'+
-      'h1{font-size:18px;color:#0b3159;margin:0}.meta{font-size:10px;color:#64748b;margin:3px 0 9px}h2{font-size:13px;color:#0b3159}.page{page-break-after:always}.page:last-child{page-break-after:auto}'+
-      'table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:8.5px}th,td{border:1px solid #7596b8;padding:3px 2px;text-align:center;word-break:break-word}th{background:#cfe0f5;color:#0a3158;font-weight:800}</style></head><body>'+
-      '<section class="page"><h1>'+esc(title)+'</h1><div class="meta">'+esc(meta)+' • Portrait</div><h2>Part A — GP / Screen-2 / Individual Land</h2>'+tbl(A,AR)+'</section>'+
-      '<section class="page"><h1>'+esc(title)+'</h1><div class="meta">'+esc(meta)+' • Portrait</div><h2>Part B — Community / PMAY-G / Ek Bagiya / Recovery</h2>'+tbl(B,BR)+'</section></body></html>';
-  }
-
-  function printPortrait(){
-    let html=null;const v=cv();if(v==='official'||v==='engineer')html=officialPrint();
-    if(!html){
-      const table=document.getElementById('reportTable');if(!table)return;
-      const title=document.getElementById('viewTitle')?.textContent||'VBGRAMG Report';
-      const meta=document.getElementById('viewMeta')?.textContent||'';
-      html='<!doctype html><html><head><meta charset="utf-8"><style>@page{size:A4 portrait;margin:8mm}body{font-family:Arial,sans-serif}table{width:100%;border-collapse:collapse;font-size:9px}th,td{border:1px solid #7596b8;padding:4px;text-align:center;word-break:break-word}th{background:#cfe0f5}</style></head><body><h1>'+
-        esc(title)+'</h1><div>'+esc(meta)+'</div>'+table.outerHTML+'</body></html>';
+      rows.map(r=>'<tr>'+r.map(x=>'<td>'+esc(x)+'</td>').join('')+'</tr>').join('')+'</tbody></table></body></html></body></html>';
     }
     const w=window.open('','_blank','width=900,height=1000');if(!w){alert('Print popup blocked है।');return;}
     w.document.open();w.document.write(html);w.document.close();w.focus();setTimeout(()=>w.print(),300);
