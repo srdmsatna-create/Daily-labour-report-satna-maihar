@@ -1306,6 +1306,18 @@ button,.tab,.srdm-app-card{-webkit-tap-highlight-color:transparent}
 @media(max-width:720px){#v64MainTabs{grid-template-columns:1fr 1fr!important;gap:9px!important;padding:10px!important}#v64MainTabs .tab{min-height:54px!important;font-size:12px!important;padding:11px 31px 11px 12px!important}}
 @media(max-width:460px){#v64MainTabs{grid-template-columns:1fr!important}}
 @media(prefers-reduced-motion:reduce){#v64MainTabs .tab::before{animation:none!important}}
+
+/* V20: report modules live inside the SRDM Applications grid. */
+.srdm-app-grid .report-module-card{position:relative;min-height:126px!important;text-align:left!important;padding:18px 42px 18px 18px!important}
+.srdm-app-grid .report-module-card .module-indicator{position:absolute;right:15px;top:15px;width:10px;height:10px;border-radius:50%;background:var(--app-accent);animation:srdmAppIndicator 1.35s ease-in-out infinite;box-shadow:0 0 0 0 var(--app-shadow)}
+.srdm-app-grid .report-module-card.active{background:linear-gradient(135deg,var(--app-accent),var(--app-dark))!important;color:#fff!important;border-color:var(--app-dark)!important}
+.srdm-app-grid .report-module-card.active .srdm-app-copy strong,.srdm-app-grid .report-module-card.active .srdm-app-copy span{color:#fff!important}
+.srdm-app-grid .report-module-card[data-view="categorysubeng"]{--app-accent:#7543d4;--app-soft:#f3efff;--app-dark:#5330a1;--app-shadow:rgba(117,67,212,.30)}
+.srdm-app-grid .report-module-card[data-view="categoryworks"]{--app-accent:#0877ef;--app-soft:#edf6ff;--app-dark:#0458b5;--app-shadow:rgba(8,119,239,.30)}
+.srdm-app-grid .report-module-card[data-view="dysjanpad"]{--app-accent:#d83b4f;--app-soft:#fff0f2;--app-dark:#a52134;--app-shadow:rgba(216,59,79,.30)}
+.srdm-app-grid .report-module-card[data-view="recovery"]{--app-accent:#7b5a45;--app-soft:#f8f2ed;--app-dark:#533c2e;--app-shadow:rgba(123,90,69,.30)}
+@keyframes srdmAppIndicator{0%,100%{opacity:.42;transform:scale(.76);box-shadow:0 0 0 0 var(--app-shadow)}50%{opacity:1;transform:scale(1.18);box-shadow:0 0 0 7px transparent}}
+@media(prefers-reduced-motion:reduce){.srdm-app-grid .report-module-card .module-indicator{animation:none!important}}
 </style></head>
 <body>
 <div class="login-screen" id="loginScreen">
@@ -2965,6 +2977,31 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 <!-- SRDM_ZERO_FORCE_V2_END -->
 
 
+<script id="SRDM_REPORT_MODULES_IN_APPLICATION_GRID_V20">
+(function(){
+  const grid=document.querySelector('#srdmApplications .srdm-app-grid');
+  const nav=document.getElementById('v64MainTabs');
+  if(!grid||!nav)return;
+  ['mandaysgen','category','ekbagiya','engineer','dysfunctional','official','state'].forEach(view=>grid.querySelector('[data-srdm-view="'+view+'"]')?.remove());
+  const meta={
+    mandaysgen:['◉','VB-G RAM G Daily Monitoring','Mandays generation & daily progress'],category:['◔','Work Category Summary','Category-wise monitoring summary'],
+    categorysubeng:['⌘','Category × Sub Engineer','Category and Sub Engineer analysis'],categoryworks:['▦','Category Work Details','Work-level category details'],
+    dysjanpad:['⚑','Janpad Dysfunctional GP','Janpad-wise problem GP tracking'],dysfunctional:['⚠','Sub Engineer Dysfunctional GP','Sub Engineer-wise problem GP tracking'],
+    state:['◫','State / District Report','District and state comparison view'],official:['▤','Janpad Daily Report','Official Janpad monitoring report'],
+    engineer:['↗','Sub Engineer Daily Report','Engineer and cluster monitoring'],ekbagiya:['♣','एक बगिया माँ के नाम','Work, expenditure and progress dashboard'],
+    recovery:['₹','Work Recovery Done','Sub Engineer-wise recovery monitoring']
+  };
+  [...nav.querySelectorAll('.tab[data-view]')].forEach(tab=>{
+    if(tab.hidden||tab.id==='srdmZeroForceBtn')return;
+    const info=meta[tab.dataset.view]||['•',tab.textContent.trim(),'Monitoring report'];
+    tab.classList.add('srdm-app-card','report-module-card');
+    tab.innerHTML='<span class="srdm-app-icon">'+info[0]+'</span><span class="srdm-app-copy"><strong>'+info[1]+'</strong><span>'+info[2]+'</span></span><span class="module-indicator" aria-hidden="true"></span>';
+    grid.appendChild(tab);
+  });
+  nav.remove();
+})();
+</script>
+
 <script id="SRDM_EGOV_LAUNCHER_JS_V1">
 (function(){
   function openView(view){
@@ -2973,7 +3010,7 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
   }
   document.addEventListener('click',function(e){
     var card=e.target.closest('.srdm-app-card[data-srdm-view]');
-    if(card){e.preventDefault();openView(card.getAttribute('data-srdm-view'));return;}
+    if(card&&!card.classList.contains('tab')){e.preventDefault();openView(card.getAttribute('data-srdm-view'));return;}
     var zero=e.target.closest('#srdmZeroLauncher');
     if(zero){e.preventDefault();var b=document.getElementById('srdmZeroForceBtn');if(b)b.click();setTimeout(function(){var a=document.getElementById('srdmV8Alert')||document.getElementById('v64MainTabs');if(a)a.scrollIntoView({behavior:'smooth',block:'start'});},120);return;}
     var stats=e.target.closest('#vbgStatisticsLauncher');
