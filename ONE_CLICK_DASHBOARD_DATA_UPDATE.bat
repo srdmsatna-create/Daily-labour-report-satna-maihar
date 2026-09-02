@@ -95,6 +95,18 @@ if exist "scripts_local\update_satna_block_statistics.py" (
 )
 
 REM ------------------------------------------------------------
+REM YUKTDHARA_AUTO_UPDATE_V1
+
+%PYTHON_CMD% "scripts_local\update_yuktdhara_monitoring.py" --update-only
+
+if errorlevel 1 (echo ERROR: Yuktdhara update failed.& pause& exit /b 1)
+
+
+
+REM MUSTER_EMB_AUTO_UPDATE_V1
+%PYTHON_CMD% "scripts_local\update_muster_emb_monitoring.py" --update-only
+if errorlevel 1 (echo ERROR: Muster e-MB update failed.& pause& exit /b 1)
+
 REM 3. Rebuild dashboard data if merge/build scripts exist
 REM ------------------------------------------------------------
 echo [3/6] Rebuilding dashboard data files...
