@@ -1178,6 +1178,20 @@ body[data-report-view="official"] .official-grid th{
 @media(max-width:680px){.srdm-app-launcher{margin-top:12px}.srdm-app-launcher-head{align-items:flex-start;flex-direction:column}.srdm-app-launcher-title{font-size:21px}.srdm-app-grid{grid-template-columns:1fr;gap:11px}.srdm-app-card{min-height:94px;padding:14px 16px}.srdm-app-icon{width:56px;height:56px;flex-basis:56px;font-size:25px}.srdm-app-copy strong{font-size:17px}}
 @media print{.srdm-app-launcher{display:none!important}}
 
+/* SRDM_ALL_CARD_COLOUR_LAYOUT_V9: all existing cards preserved */
+.srdm-app-card[data-srdm-view="mandaysgen"]{border:3px solid #0877ef!important}.srdm-app-card[data-srdm-view="mandaysgen"] .srdm-app-icon{background:#0877ef;color:#fff}
+.srdm-app-card[data-srdm-view="category"]{border:3px solid #8737df!important}.srdm-app-card[data-srdm-view="category"] .srdm-app-icon{background:#8737df;color:#fff}
+.srdm-app-card[data-srdm-view="ekbagiya"]{border:3px solid #0aa568!important}.srdm-app-card[data-srdm-view="ekbagiya"] .srdm-app-icon{background:#0aa568;color:#fff}
+.srdm-app-card[data-srdm-view="engineer"]{border:3px solid #f47b05!important}.srdm-app-card[data-srdm-view="engineer"] .srdm-app-icon{background:#f47b05;color:#fff}
+#srdmZeroLauncher{border:3px solid #ee2d58!important}#srdmZeroLauncher .srdm-app-icon{background:#ee2d58;color:#fff}
+.srdm-app-card[data-srdm-view="dysfunctional"]{border:3px solid #04a0b4!important}.srdm-app-card[data-srdm-view="dysfunctional"] .srdm-app-icon{background:#04a0b4;color:#fff}
+.srdm-app-card[data-srdm-view="official"]{border:3px solid #c38a00!important}.srdm-app-card[data-srdm-view="official"] .srdm-app-icon{background:#c38a00;color:#fff}
+.srdm-app-card[data-srdm-view="state"]{border:3px solid #3655cf!important}.srdm-app-card[data-srdm-view="state"] .srdm-app-icon{background:#3655cf;color:#fff}
+.srdm-app-card.vbg-stat-launcher{border:3px solid #bd2eac!important}.srdm-app-card.vbg-stat-launcher .srdm-app-icon{background:#bd2eac;color:#fff}
+#yuktdharaLauncher{border:3px solid #7543d4!important;background:#fff!important}#yuktdharaLauncher .srdm-app-icon{background:#7543d4!important;color:#fff!important}
+#musterEmbLauncher{border:3px solid #f25b08!important;background:#fff!important}#musterEmbLauncher .srdm-app-icon{background:#f25b08!important;color:#fff!important}
+.srdm-app-new{animation:srdmNewBlink 1.5s ease-in-out infinite}@keyframes srdmNewBlink{50%{opacity:.58;transform:scale(.97)}}
+
 /* VB-GRAM G official-style statistics strip */
 .vbg-stat-section{margin:26px 0 24px;padding:24px 0 8px;border-top:1px solid #edf1f5}
 .vbg-stat-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
@@ -1199,7 +1213,10 @@ body[data-report-view="official"] .official-grid th{
 
 </style>
 
-</head>
+<!-- SRDM_MUSTER_EMB_STYLE_START --><style>
+#musterEmbLauncher{--app-accent:#e65100!important;--app-soft:#fff3e8!important;--app-shadow:#e6510055!important;border-color:#e65100!important;background:linear-gradient(135deg,#fff0e3,#fff 75%)!important}
+#musterEmbLauncher .srdm-app-icon{background:#e65100!important;color:#fff!important}.muster-emb-section{margin:18px 0;background:#fff;border:2px solid #e65100;border-radius:20px;padding:12px;box-shadow:0 10px 28px #e6510022}.muster-emb-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}.muster-emb-head h2{margin:0;color:#b33d00}.muster-emb-pill{background:#fff0e3;color:#a43700;border-radius:999px;padding:6px 10px;font-weight:900;font-size:11px}.muster-emb-wrap{overflow:auto}.muster-emb-table{width:100%;border-collapse:collapse;min-width:1080px;table-layout:fixed}.muster-emb-table th{background:#b33d00;color:#fff;padding:7px 3px;border:1px solid #d26932;font-size:10px;line-height:1.15;white-space:normal}.muster-emb-table td{padding:6px 4px;border:1px solid #f0d2c2;text-align:right;font-size:11px;font-weight:700;overflow-wrap:anywhere}.muster-emb-table td:nth-child(2),.muster-emb-table td:nth-child(3),.muster-emb-table td:nth-child(11){text-align:left}.muster-emb-table th:nth-child(1){width:34px}.muster-emb-table th:nth-child(2){width:92px}.muster-emb-table th:nth-child(3){width:145px}.muster-emb-table th:nth-child(4),.muster-emb-table th:nth-child(5),.muster-emb-table th:nth-child(7){width:64px}.muster-emb-table th:nth-child(6){width:82px}.muster-emb-table th:nth-child(8),.muster-emb-table th:nth-child(9){width:92px}.muster-emb-table th:nth-child(10){width:105px}.muster-emb-table th:nth-child(11){width:135px}.muster-emb-table tbody tr:nth-child(even){background:#fff8f3}.muster-emb-table .total-row{background:#ffe6d5!important;color:#8b2e00;font-weight:950}.muster-emb-source{text-align:right;margin-top:8px;font-size:11px;color:#667085}
+</style><!-- SRDM_MUSTER_EMB_STYLE_END --></head>
 <body>
 <div id="v64-banner" style="position:sticky;top:0;z-index:99999;background:#0b7a3b;color:white;padding:8px 14px;text-align:center;font:900 14px/1.2 Arial,sans-serif;letter-spacing:.5px">V64 NEW MODULES ACTIVE • 29-08-2026</div>
 <div class="login-screen" id="loginScreen">
@@ -1307,9 +1324,6 @@ body[data-report-view="official"] .official-grid th{
     <button type="button" class="srdm-app-card" data-srdm-view="dysfunctional">
       <span class="srdm-app-icon">⚠</span><span class="srdm-app-copy"><strong>Dysfunctional GP Monitor</strong><span>Sub Engineer-wise problem GP tracking</span></span>
     </button>
-    <button type="button" class="srdm-app-card" id="yuktdharaLauncher">
-      <span class="srdm-app-icon">⌖</span><span class="srdm-app-copy"><strong>Yuktdhara Monitoring Report</strong><span>Bhuvan GP planning • Sub Engineer-wise status</span></span><span class="srdm-app-new">New</span>
-    </button>
     <button type="button" class="srdm-app-card" data-srdm-view="official">
       <span class="srdm-app-icon">▤</span><span class="srdm-app-copy"><strong>Janpad Daily Report</strong><span>Official Janpad monitoring report</span></span>
     </button>
@@ -1320,9 +1334,36 @@ body[data-report-view="official"] .official-grid th{
     <a class="srdm-app-card vbg-stat-launcher" id="vbgStatisticsPortalLink" href="https://vbgramgrep.dord.gov.in/VBGRAMG/vbgramg_ataglance/At_a_glance.aspx" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
       <span class="srdm-app-icon">▥</span><span class="srdm-app-copy"><strong>VB-GRAM G Statistics</strong><span>FY 2026-27 official statistics snapshot</span></span><span class="srdm-app-new">New</span>
     </a>
+    <!-- SRDM_BHUVAN_YUKTDHARA_CARD_START -->
+    <button type="button" class="srdm-app-card" id="yuktdharaLauncher" style="--app-accent:#6f42c1;--app-soft:#f3edff;--app-shadow:#6f42c155;border-color:#6f42c1;background:linear-gradient(135deg,#f2ebff,#fff 75%)">
+      <span class="srdm-app-icon" style="background:#6f42c1;color:#fff">⌖</span><span class="srdm-app-copy"><strong>Yuktdhara Monitoring Report</strong><span>FY 2026-27 • Sub Engineer-wise monitoring</span></span><span class="srdm-app-new">New</span>
+    </button>
+    <!-- SRDM_BHUVAN_YUKTDHARA_CARD_END -->
   </div>
 </section>
 
+
+<!-- SRDM_BHUVAN_YUKTDHARA_REPORT_START -->
+<section class="yuktdhara-section no-print" id="yuktdharaMonitoring" aria-label="Bhuvan Yuktdhara Sub Engineer-wise Report" style="margin:18px 0;background:#fff;border:2px solid #6f42c1;border-radius:20px;padding:18px;box-shadow:0 10px 28px #6f42c122">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:13px">
+    <div><h2 style="margin:0;color:#54299b">Yuktdhara Monitoring Report</h2><small>Bhuvan NRSC • SATNA (5 Janpad) + MAIHAR (3 Janpad) • Official status dated 02-09-2026</small></div>
+    <span style="background:#efe6ff;color:#54299b;border-radius:999px;padding:7px 12px;font-weight:900;font-size:12px">695 GP</span>
+  </div>
+  <div id="yuktdharaSubEngineerApp"></div>
+</section>
+<script src="yuktdhara-data.js"></script>
+<script src="yuktdhara-subengineer.js"></script>
+<script>
+(function(){
+  var button=document.getElementById('yuktdharaLauncher');
+  if(button)button.addEventListener('click',function(event){
+    event.preventDefault();
+    var report=document.getElementById('yuktdharaMonitoring');
+    if(report)report.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+})();
+</script>
+<!-- SRDM_BHUVAN_YUKTDHARA_REPORT_END -->
 
 <section class="vbg-stat-section no-print" id="vbgStatistics" aria-label="VB-GRAM G Statistics FY 2026-2027">
   <div class="vbg-stat-head">
@@ -2883,6 +2924,4 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 })();
 </script>
 
-<script src="yuktdhara-data.js?v=02092026"></script>
-<script src="yuktdhara-module.js?v=02092026"></script>
-</body></html>
+<!-- SRDM_MUSTER_EMB_CARD_START --><button type="button" class="srdm-app-card" id="musterEmbLauncher"><span class="srdm-app-icon">M</span><span class="srdm-app-copy"><strong>Muster Roll &amp; e-MB Monitoring</strong><span>FY 2026-27 • Satna block-wise status</span></span><span class="srdm-app-new">New</span></button><script>(function(){var y=document.getElementById('musterEmbLauncher');if(!y)return;var a=document.getElementById('yuktdharaLauncher');if(a){a.insertAdjacentElement('afterend',y);return}var c=document.querySelectorAll('button,a,.srdm-app-card');for(var i=0;i<c.length;i++){var x=(c[i].innerText||'').replace(/\s+/g,' ').toLowerCase();if(x.indexOf('vb-gram g statistics')>=0||x.indexOf('vb-g ram g statistics')>=0){c[i].insertAdjacentElement('afterend',y);break}}})();</script><!-- SRDM_MUSTER_EMB_CARD_END --><!-- SRDM_MUSTER_EMB_SECTION_START --><section class="muster-emb-section no-print" id="musterEmbMonitoring"><div class="muster-emb-head"><div><h2>Muster Roll &amp; e-MB Monitoring Report</h2><small>R4.4 • SATNA • Gram Panchayat-wise + Sub Engineer mapping</small></div><span class="muster-emb-pill">FY 2026-2027</span></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px"><select id="musterBlockFilter" style="padding:10px;border:1px solid #e65100;border-radius:9px"><option value="ALL">— सभी जनपद —</option></select><select id="musterEngineerFilter" style="padding:10px;border:1px solid #e65100;border-radius:9px"><option value="ALL">— सभी उपयंत्री —</option></select><button type="button" onclick="window.print()" style="padding:10px 16px;border:0;border-radius:9px;background:#123f73;color:#fff;font-weight:800">प्रिंट / PDF बनाएँ</button><button type="button" id="musterCsv" style="padding:10px 16px;border:1px solid #123f73;border-radius:9px;background:#fff;color:#123f73;font-weight:800">Excel डाउनलोड</button></div><div id="musterZeroAlert" style="display:none;margin:8px 0 12px;padding:10px 12px;border:2px solid #dc2626;border-radius:12px;background:#fff1f2;color:#991b1b;font-size:12px;line-height:1.5"></div><div class="muster-emb-wrap"><table class="muster-emb-table"><thead><tr><th>क्र.</th><th>जनपद</th><th>ग्राम पंचायत</th><th>कुल MR जारी</th><th>कुल MR भरे</th><th>e-MB भरा (TA/JE)</th><th>e-MB रहित</th><th>e-MB लंबित (T+5)</th><th>e-MB सत्यापित (AE)</th><th>सत्यापन लंबित (T+5)</th><th>उपयंत्री</th></tr></thead><tbody id="musterEmbBody"><tr><td colspan="11">Official data loading…</td></tr></tbody></table></div><div class="muster-emb-source"><span id="musterEmbDate">FY 2026-27</span> • <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/MusterRolle_EMBStatus.aspx?payload=ZXiXTJ0HzQl7fz4W7woa23KDguzp-Is4I63qmc6Kyc1jl3ibJtUhejzlAtv-fAxwYpqJyyVqtiJi6sPlWJ357Cb4q5KyW0qMVPUtVVbI2jF4KrNWijPnHjLZhYy2hn-IsDls6eL7mtZ3bO4TEFNgNLvBwskkuj-k-JBiAHVCc1URsDldWZBA_b0p11E4y43kiQmP7PzLsOsegcEuX8tvBUfVun1-KPT6ttJfedEcB7dCuEcZY6uUT99T_4E5JucKgEhkZbRWFH7ERjpKjdJv4w" target="_blank" rel="noopener noreferrer">Portal पर खोलें</a></div></section><script src="muster-emb-data.js"></script><script>(function(){const d=window.MUSTER_EMB_REPORT,b=document.getElementById('musterEmbBody'),bf=document.getElementById('musterBlockFilter'),ef=document.getElementById('musterEngineerFilter'),k=['issued','filled','embFilled','noEmb','pendingEmb','verifiedAE','pendingVerification'],n=new Intl.NumberFormat('en-IN');if(!d||!Array.isArray(d.gpRows)){b.innerHTML='<tr><td colspan="11">Official GP data unavailable</td></tr>';return}const uniq=a=>[...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'hi'));uniq(d.gpRows.map(r=>r.block)).forEach(x=>bf.add(new Option(x,x)));function engineers(){const old=ef.value;ef.innerHTML='<option value="ALL">— सभी उपयंत्री —</option>';uniq(d.gpRows.filter(r=>bf.value==='ALL'||r.block===bf.value).map(r=>r.engineer)).forEach(x=>ef.add(new Option(x,x)));if([...ef.options].some(o=>o.value===old))ef.value=old}function render(){const rows=d.gpRows.filter(r=>(bf.value==='ALL'||r.block===bf.value)&&(ef.value==='ALL'||r.engineer===ef.value)),t=Object.fromEntries(k.map(x=>[x,0]));b.innerHTML=rows.map((r,i)=>{k.forEach(x=>t[x]+=Number(r[x]||0));return `<tr><td>${i+1}</td><td><b>${r.block}</b></td><td>${r.panchayat}</td>${k.map(x=>`<td>${n.format(r[x]||0)}</td>`).join('')}<td><b>${r.engineer||'Unmapped'}</b></td></tr>`}).join('')+`<tr class="total-row"><td></td><td>TOTAL</td><td>${n.format(rows.length)} GP</td>${k.map(x=>`<td>${n.format(t[x])}</td>`).join('')}<td></td></tr>`}bf.onchange=()=>{engineers();render()};ef.onchange=render;engineers();render();document.getElementById('musterCsv').onclick=()=>{const rows=d.gpRows.filter(r=>(bf.value==='ALL'||r.block===bf.value)&&(ef.value==='ALL'||r.engineer===ef.value)),head=['Janpad','Gram Panchayat','MR Issued','MR Filled','e-MB Filled','No e-MB','Pending e-MB','AE Verified','Pending Verification','Upyantri'],csv=[head,...rows.map(r=>[r.block,r.panchayat,...k.map(x=>r[x]),r.engineer])].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\\r\\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='Muster_eMB_Engineer_GP_Report.csv';a.click()};document.getElementById('musterEmbDate').textContent=`FY ${d.financialYear} • Last updated ${d.officialDate||'portal'} • ${d.gpRows.length} GP`;document.getElementById('musterEmbLauncher')?.addEventListener('click',()=>document.getElementById('musterEmbMonitoring')?.scrollIntoView({behavior:'smooth'}));})();</script><script>(function(){var d=window.MUSTER_EMB_REPORT,e=document.getElementById('musterZeroAlert');if(!d||!e||!Array.isArray(d.gpRows))return;var z=d.gpRows.filter(function(r){return Number(r.issued||0)===0});if(!z.length)return;e.style.display='block';e.innerHTML='<b>⚠ Muster Roll जारी नहीं — '+z.length+' Gram Panchayat Alert</b><br>'+z.map(function(r){return '<span style="display:inline-block;margin:4px 7px 0 0;padding:3px 7px;border-radius:999px;background:#fee2e2"><b>'+r.panchayat+'</b> • '+r.block+' • '+(r.engineer||'Unmapped')+'</span>'}).join('');})();</script><!-- SRDM_MUSTER_EMB_SECTION_END --></body></html>
