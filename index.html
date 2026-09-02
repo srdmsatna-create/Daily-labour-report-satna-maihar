@@ -1283,6 +1283,29 @@ button,.tab,.srdm-app-card{-webkit-tap-highlight-color:transparent}
 .srdm-app-card[data-srdm-view="state"] .srdm-app-icon{background:var(--app-accent)!important;color:#fff!important}
 #yuktdharaLauncher{--app-accent:#7537bd!important;--app-soft:#f4edff!important;--app-dark:#54258e!important;--app-shadow:rgba(117,55,189,.30)!important}
 #musterEmbLauncher{--app-accent:#e65100!important;--app-soft:#fff3e8!important;--app-dark:#a83b00!important;--app-shadow:rgba(230,81,0,.30)!important}
+
+/* V19: boxed report menus with unique colours and live indicator. */
+#v64MainTabs{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(205px,1fr))!important;gap:12px!important;padding:14px!important;background:linear-gradient(145deg,#f8fbff,#eef5fb)!important;border:1px solid #cfdeeb!important;border-radius:20px!important;box-shadow:0 12px 32px rgba(21,65,103,.10)!important}
+#v64MainTabs .tab{--menu:#1769aa;--menu-soft:#eef7ff;--menu-dark:#0d4f82;--menu-glow:rgba(23,105,170,.28);position:relative!important;width:100%!important;min-height:58px!important;padding:13px 38px 13px 17px!important;text-align:left!important;border:2px solid var(--menu)!important;border-radius:16px!important;background:linear-gradient(145deg,var(--menu-soft),#fff 76%)!important;color:var(--menu-dark)!important;box-shadow:0 7px 17px var(--menu-glow)!important;font-weight:900!important;overflow:hidden!important}
+#v64MainTabs .tab::before{content:"";position:absolute;right:14px;top:50%;width:10px;height:10px;margin-top:-5px;border-radius:50%;background:var(--menu);box-shadow:0 0 0 0 var(--menu-glow);animation:srdmMenuBlink 1.35s ease-in-out infinite}
+#v64MainTabs .tab:hover,#v64MainTabs .tab:focus-visible{transform:translateY(-3px)!important;background:linear-gradient(145deg,var(--menu-soft),#fff 56%)!important;border-color:var(--menu-dark)!important;box-shadow:0 13px 25px var(--menu-glow)!important;color:var(--menu-dark)!important}
+#v64MainTabs .tab.active{background:linear-gradient(135deg,var(--menu),var(--menu-dark))!important;color:#fff!important;border-color:var(--menu-dark)!important;box-shadow:0 13px 27px var(--menu-glow)!important}
+#v64MainTabs .tab.active::before{background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.18)}
+#v64MainTabs .tab[data-view="mandaysgen"]{--menu:#11884f;--menu-soft:#eaf9f1;--menu-dark:#086237;--menu-glow:rgba(17,136,79,.30)}
+#v64MainTabs .tab[data-view="category"]{--menu:#eb7a12;--menu-soft:#fff4e8;--menu-dark:#b95505;--menu-glow:rgba(235,122,18,.30)}
+#v64MainTabs .tab[data-view="categorysubeng"]{--menu:#7543d4;--menu-soft:#f3efff;--menu-dark:#5330a1;--menu-glow:rgba(117,67,212,.30)}
+#v64MainTabs .tab[data-view="categoryworks"]{--menu:#0877ef;--menu-soft:#edf6ff;--menu-dark:#0458b5;--menu-glow:rgba(8,119,239,.30)}
+#v64MainTabs .tab[data-view="dysjanpad"]{--menu:#d83b4f;--menu-soft:#fff0f2;--menu-dark:#a52134;--menu-glow:rgba(216,59,79,.30)}
+#v64MainTabs .tab[data-view="dysfunctional"]{--menu:#c52978;--menu-soft:#fff0f7;--menu-dark:#921b56;--menu-glow:rgba(197,41,120,.30)}
+#v64MainTabs .tab[data-view="state"]{--menu:#4056c7;--menu-soft:#eef1ff;--menu-dark:#2b3b96;--menu-glow:rgba(64,86,199,.30)}
+#v64MainTabs .tab[data-view="official"]{--menu:#b58400;--menu-soft:#fff9e7;--menu-dark:#7d5d00;--menu-glow:rgba(181,132,0,.31)}
+#v64MainTabs .tab[data-view="engineer"]{--menu:#008d9e;--menu-soft:#ebfbfd;--menu-dark:#006673;--menu-glow:rgba(0,141,158,.30)}
+#v64MainTabs .tab[data-view="ekbagiya"]{--menu:#da3180;--menu-soft:#fff0f7;--menu-dark:#a81f5f;--menu-glow:rgba(218,49,128,.30)}
+#v64MainTabs .tab[data-view="recovery"]{--menu:#7b5a45;--menu-soft:#f8f2ed;--menu-dark:#533c2e;--menu-glow:rgba(123,90,69,.30)}
+@keyframes srdmMenuBlink{0%,100%{opacity:.45;transform:scale(.78);box-shadow:0 0 0 0 var(--menu-glow)}50%{opacity:1;transform:scale(1.18);box-shadow:0 0 0 7px transparent}}
+@media(max-width:720px){#v64MainTabs{grid-template-columns:1fr 1fr!important;gap:9px!important;padding:10px!important}#v64MainTabs .tab{min-height:54px!important;font-size:12px!important;padding:11px 31px 11px 12px!important}}
+@media(max-width:460px){#v64MainTabs{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){#v64MainTabs .tab::before{animation:none!important}}
 </style></head>
 <body>
 <div class="login-screen" id="loginScreen">
@@ -1445,7 +1468,7 @@ button,.tab,.srdm-app-card{-webkit-tap-highlight-color:transparent}
 <div id="v63BuildMarker" style="display:none">V64-FORCE-VISIBLE-2026-08-29</div><section class="auto-card"><div id="autoStatus">Auto update status…</div></section>
 
 <nav class="tabs top-tabs clean-tabs no-print" id="v64MainTabs" style="display:flex!important;flex-wrap:wrap!important;overflow:visible!important;height:auto!important;max-height:none!important;">
-  <button class="tab mandays-tab active" data-view="mandaysgen" style="border:2px solid #0b7a3b!important;background:#e9f7ef!important;color:#075c2d!important">Mandays Generation</button><button type="button" id="srdmZeroForceBtn" hidden aria-hidden="true" style="display:none!important">Zero Mandays Generation</button>
+  <button class="tab mandays-tab active" data-view="mandaysgen">Mandays Generation</button><button type="button" id="srdmZeroForceBtn" hidden aria-hidden="true" style="display:none!important">Zero Mandays Generation</button>
   <button class="tab category-tab" data-view="category">Work Category Summary</button>
   <button class="tab category-tab" data-view="categorysubeng">Category × Sub Engineer</button>
   <button class="tab category-tab" data-view="categoryworks">Category Work Details</button>
