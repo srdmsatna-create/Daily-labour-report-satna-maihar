@@ -1,0 +1,50 @@
+[Wed 09/02/2026  9:33:11.63] ============================================================
+[Wed 09/02/2026  9:33:11.63] Starting SRDM dashboard update from C:\Users\welcome\Daily-labour-report-satna-maihar
+SUCCESS: The scheduled task "SRDM Daily Report 8AM" has successfully been created.
+[Wed 09/02/2026  9:33:11.99] Scheduler ready: SRDM Daily Report 8AM at 08:00 local Windows time.
+Already up to date.
+[Wed 09/02/2026  9:33:13.26] official-summary.csv missing; searching Git history...
+fatal: path 'data/official-summary.csv' exists on disk, but not in '66e3131bfdbe9ba8242441c467282c6a9efa9e8c'
+[Wed 09/02/2026  9:33:13.50] ERROR: Could not restore official-summary.csv from Git history.
+[Wed 09/02/2026  9:33:13.51] Finished with exit code 26.
+[Wed 09/02/2026  9:38:22.49] ============================================================
+[Wed 09/02/2026  9:38:22.51] Starting SRDM dashboard update from C:\Users\welcome\Daily-labour-report-satna-maihar
+SUCCESS: The scheduled task "SRDM Daily Report 8AM" has successfully been created.
+[Wed 09/02/2026  9:38:22.85] Scheduler ready: SRDM Daily Report 8AM at 08:00 local Windows time.
+Already up to date.
+[Wed 09/02/2026  9:38:24.07] official-summary.csv missing; searching Git history...
+[Wed 09/02/2026  9:38:24.27] Restored official-summary.csv from repository history.
+[Wed 09/02/2026  9:38:24.29] Running official data fetch and dashboard rebuild...
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1419/1153; PMAY Labour/MR=1231/1048; Ek Bagiya Labour/MR=166/91.
+Next: python scripts\merge_official_summary.py
+[Wed 09/02/2026  9:38:45.68] Validation passed. Publishing generated files...
+[main 39cd862] Auto update dashboard data Wed 09/02/2026  9:38:45.86
+ 3 files changed, 16 insertions(+), 7 deletions(-)
+ create mode 100644 data/official-summary.csv
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+[Wed 09/02/2026  9:38:46.09] ERROR: Final git pull/rebase failed. Push was not attempted.
+[Wed 09/02/2026  9:38:46.11] Finished with exit code 35.
+[Wed 09/02/2026  9:41:27.82] ============================================================
+[Wed 09/02/2026  9:41:27.82] Starting SRDM dashboard update from C:\Users\welcome\Daily-labour-report-satna-maihar
+SUCCESS: The scheduled task "SRDM Daily Report 8AM" has successfully been created.
+[Wed 09/02/2026  9:41:28.19] Scheduler ready: SRDM Daily Report 8AM at 08:00 local Windows time.
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+Created autostash: 29fc384
+Current branch main is up to date.
+Applied autostash.
+[Wed 09/02/2026  9:41:29.84] Running official data fetch and dashboard rebuild...
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1419/1153; PMAY Labour/MR=1231/1048; Ek Bagiya Labour/MR=166/91.
+Next: python scripts\merge_official_summary.py
+[Wed 09/02/2026  9:41:52.74] Validation passed. Publishing generated files...
+[main e1a051a] Auto update dashboard data Wed 09/02/2026  9:41:52.92
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+Created autostash: 557a572
+Current branch main is up to date.
+Applied autostash.
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   fd5b400..e1a051a  main -> main
+[Wed 09/02/2026  9:41:58.19] SUCCESS: Dashboard data pushed. GitHub Pages may take 1-3 minutes.
+[Wed 09/02/2026  9:41:58.21] Finished with exit code 0.
