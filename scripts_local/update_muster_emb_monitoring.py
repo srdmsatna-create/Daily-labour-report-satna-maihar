@@ -80,7 +80,9 @@ def install():
     for name in ("STYLE","CARD","SECTION"):
         s=re.sub(rf"(?s)<!-- SRDM_MUSTER_EMB_{name}_START -->.*?<!-- SRDM_MUSTER_EMB_{name}_END -->","",s)
     p=s.lower().rfind("</head>"); s=s[:p]+STYLE+s[p:]
-    p=s.lower().rfind("</body>"); s=s[:p]+CARD+SECTION+s[p:]
+    # Keep the CSV row separator escaped inside the generated JavaScript.
+    safe_section=SECTION.replace("join('\r\n')","join('\\\\r\\\\n')")
+    p=s.lower().rfind("</body>"); s=s[:p]+CARD+safe_section+s[p:]
     index.write_text(s,encoding="utf-8")
     target=ROOT/"scripts_local"/"update_muster_emb_monitoring.py";target.parent.mkdir(exist_ok=True);shutil.copy2(Path(__file__),target)
     bat=ROOT/"ONE_CLICK_DASHBOARD_DATA_UPDATE.bat"
