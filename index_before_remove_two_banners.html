@@ -1243,12 +1243,52 @@ body[data-report-view="official"] .official-grid th{
 </header>
 <main class="shell">
 
+<section class="premium-hero">
+  <div class="hero-left">
+    <div class="hero-badges">
+      <span class="hero-badge gold">VB-G RAM G 2026-27</span>
+      <span class="hero-badge blue">District Monitoring</span>
+    </div>
+    <h2 id="heroJanpadTitle">SATNA + MAIHAR • 8 JANPAD</h2>
+    <p id="heroJanpadSub">Official Daily Monitoring • Engineer • Cluster • Gram Panchayat</p>
+    <div class="hero-actions no-print">
+      <button type="button" data-janpad-home="ALL" class="hero-primary">सभी 8 जनपद</button>
+      <button type="button" id="heroDataBtn" class="hero-secondary">Daily Report देखें</button>
+    </div>
+  </div>
+  <div class="hero-side">
+    <div class="hero-seal">
+      <span class="seal-top">मध्यप्रदेश</span>
+      <strong>SRDM</strong>
+      <span class="seal-bottom">SATNA • MAIHAR</span>
+    </div>
+    <div class="hero-update">
+      <span>AUTO UPDATE</span>
+      <b>07:00 AM</b>
+      <b>08:00 AM</b>
+    </div>
+  </div>
+</section>
+
+
 <section class="srdm-app-launcher no-print" id="srdmApplications" aria-label="SRDM Applications">
   <div class="srdm-app-launcher-head">
     <h2 class="srdm-app-launcher-title">SRDM Applications</h2>
     <div class="srdm-app-launcher-note">Quick access • SATNA &amp; MAIHAR</div>
   </div>
   <div class="srdm-app-grid">
+    <a class="srdm-app-card" href="https://planner.nregsmp.org/reports/hierarchy.php?financialYearId=2" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+      <span class="srdm-app-icon">🌐</span><span class="srdm-app-copy"><strong>Planner Application</strong><span>Planner portal • Satna block report</span></span><span class="srdm-app-new">New</span>
+    </a>
+    <a class="srdm-app-card" href="https://sipri.mp.gov.in/sipri/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+      <span class="srdm-app-icon">💧</span><span class="srdm-app-copy"><strong>SIPRI Portal</strong><span>Official SIPRI portal</span></span>
+    </a>
+    <a class="srdm-app-card" href="https://jgsa.nregsmp.org/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+      <span class="srdm-app-icon">📈</span><span class="srdm-app-copy"><strong>Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong><span>Official JGSA portal</span></span><span class="srdm-app-new">New</span>
+    </a>
+    <a class="srdm-app-card" href="https://geoportal.mp.gov.in/RIMS/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+      <span class="srdm-app-icon">👥</span><span class="srdm-app-copy"><strong>Road Information &amp; Management System (RIMS)</strong><span>Official RIMS geoportal</span></span>
+    </a>
     <button type="button" class="srdm-app-card" data-srdm-view="mandaysgen">
       <span class="srdm-app-icon">◉</span><span class="srdm-app-copy"><strong>VB-G RAM G Daily Monitoring</strong><span>Mandays generation &amp; daily progress</span></span>
     </button>
@@ -1274,9 +1314,9 @@ body[data-report-view="official"] .official-grid th{
       <span class="srdm-app-icon">◫</span><span class="srdm-app-copy"><strong>State / District Report</strong><span>District and state comparison view</span></span>
     </button>
 
-    <button type="button" class="srdm-app-card vbg-stat-launcher" id="vbgStatisticsLauncher">
+    <a class="srdm-app-card vbg-stat-launcher" id="vbgStatisticsPortalLink" href="https://vbgramgrep.dord.gov.in/VBGRAMG/vbgramg_ataglance/At_a_glance.aspx" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
       <span class="srdm-app-icon">▥</span><span class="srdm-app-copy"><strong>VB-GRAM G Statistics</strong><span>FY 2026-27 official statistics snapshot</span></span><span class="srdm-app-new">New</span>
-    </button>
+    </a>
   </div>
 </section>
 
@@ -1284,8 +1324,8 @@ body[data-report-view="official"] .official-grid th{
 <section class="vbg-stat-section no-print" id="vbgStatistics" aria-label="VB-GRAM G Statistics FY 2026-2027">
   <div class="vbg-stat-head">
     <div class="vbg-stat-title-wrap">
-      <h2 class="vbg-stat-title">SATNA Block-wise VB-GRAM G Statistics</h2>
-      <span class="vbg-stat-pill">Official At-a-Glance • FY 2026-2027</span>
+      <h2 class="vbg-stat-title">VB-GRAM G Statistics</h2>
+      <span class="vbg-stat-pill">VB-GRAM G • FY 2026-2027</span>
     </div>
     <div class="vbg-stat-fy" aria-label="Financial year 2026-2027">
       <button type="button" class="vbg-stat-arrow" aria-label="Previous financial year" disabled>‹</button>
@@ -1293,29 +1333,28 @@ body[data-report-view="official"] .official-grid th{
       <button type="button" class="vbg-stat-arrow" aria-label="Next financial year" disabled>›</button>
     </div>
   </div>
-  <div class="table-wrap vbg-block-table-wrap">
-    <table class="report-table vbg-block-table">
-      <thead><tr><th>SN</th><th>Block</th><th>Total Workers</th><th>Active Workers</th><th>Active Worker %</th><th>HH Benefitted</th><th>Person Days Generated</th><th>Women Participation %</th><th>Assets Created</th><th>Total Exp (₹ Lakh)</th></tr></thead>
-      <tbody id="vbgBlockStatsBody"><tr><td colspan="10">Official Satna block data loading…</td></tr></tbody>
-    </table>
+  <div class="vbg-stat-grid">
+    <div class="vbg-stat-card"><span class="vbg-stat-value">89,62,568</span><span class="vbg-stat-label">Active Workers</span></div>
+    <div class="vbg-stat-card"><span class="vbg-stat-value">1,85,29,919</span><span class="vbg-stat-label">Total Workers</span></div>
+    <div class="vbg-stat-card"><span class="vbg-stat-value">3,68,187</span><span class="vbg-stat-label">HH Benefitted</span></div>
+    <div class="vbg-stat-card"><span class="vbg-stat-value">69,51,014</span><span class="vbg-stat-label">Person Days Generated</span></div>
+    <div class="vbg-stat-card"><span class="vbg-stat-value">7,52,774</span><span class="vbg-stat-label">DBT Transactions</span></div>
+    <div class="vbg-stat-card"><span class="vbg-stat-value">39.52%</span><span class="vbg-stat-label">Women Participation %</span></div>
+    <div class="vbg-stat-card"><span class="vbg-stat-value">25,343</span><span class="vbg-stat-label">Assets Created</span></div>
+    <div class="vbg-stat-card"><span class="vbg-stat-value">48.37%</span><span class="vbg-stat-label">Active Worker %</span></div>
   </div>
-  <div class="vbg-stat-source"><span id="vbgBlockOfficialDate">FY 2026-27</span> • <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/vbgramg_ataglance/At_a_glance.aspx" target="_blank" rel="noopener noreferrer">Source Summary</a></div>
+  <div class="vbg-stat-source">FY 2026-27 ^&bull; <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/vbgramg_ataglance/At_a_glance.aspx" target="_blank" rel="noopener noreferrer">Source Summary</a></div>
 </section>
-<script src="vbg-block-stats.js"></script>
-<script>
-(function(){
-  const data=window.VBG_BLOCK_STATS, body=document.getElementById('vbgBlockStatsBody');
-  if(!body||!data||!Array.isArray(data.rows)){if(body)body.innerHTML='<tr><td colspan="10">Official block data unavailable</td></tr>';return;}
-  const nf=new Intl.NumberFormat('en-IN'), n=v=>Number(v||0), rows=data.rows;
-  body.innerHTML=rows.map((r,i)=>`<tr><td>${i+1}</td><td><b>${r.block}</b></td><td>${nf.format(n(r.totalWorkers))}</td><td>${nf.format(n(r.activeWorkers))}</td><td>${n(r.activeWorkerPct).toFixed(2)}%</td><td>${nf.format(n(r.hhBenefitted))}</td><td>${nf.format(n(r.personDays))}</td><td>${n(r.womenPct).toFixed(2)}%</td><td>${nf.format(n(r.assetsCreated))}</td><td>${n(r.totalExpenditureLakh).toFixed(2)}</td></tr>`).join('');
-  const sums=rows.reduce((a,r)=>(['totalWorkers','activeWorkers','hhBenefitted','personDays','assetsCreated','totalExpenditureLakh'].forEach(k=>a[k]+=n(r[k])),a),{totalWorkers:0,activeWorkers:0,hhBenefitted:0,personDays:0,assetsCreated:0,totalExpenditureLakh:0});
-  const activePct=sums.totalWorkers?sums.activeWorkers*100/sums.totalWorkers:0;
-  const womenPct=sums.personDays?rows.reduce((a,r)=>a+n(r.personDays)*n(r.womenPct),0)/sums.personDays:0;
-  body.insertAdjacentHTML('beforeend',`<tr class="total-row"><td></td><td>SATNA TOTAL</td><td>${nf.format(sums.totalWorkers)}</td><td>${nf.format(sums.activeWorkers)}</td><td>${activePct.toFixed(2)}%</td><td>${nf.format(sums.hhBenefitted)}</td><td>${nf.format(sums.personDays)}</td><td>${womenPct.toFixed(2)}%</td><td>${nf.format(sums.assetsCreated)}</td><td>${sums.totalExpenditureLakh.toFixed(2)}</td></tr>`);
-  const d=document.getElementById('vbgBlockOfficialDate');if(d)d.textContent=`FY ${data.financialYear} • As on ${data.officialDate||'official portal'}`;
-})();
-</script>
 
+<section class="selected-janpad-banner no-print" id="selectedJanpadBanner">
+  <div class="selected-icon">↗</div>
+  <div>
+    <span>SCHEME AT A GLANCE</span>
+    <h2 id="selectedJanpadTitle">सभी 8 जनपद</h2>
+    <p id="selectedJanpadDistrict">District Maihar + District Satna</p>
+  </div>
+  <button type="button" id="changeJanpadBtn">Janpad बदलें</button>
+</section>
 <div id="v63BuildMarker" style="display:none">V64-FORCE-VISIBLE-2026-08-29</div><section class="auto-card"><div id="autoStatus">Auto update status…</div></section>
 
 <nav class="tabs top-tabs clean-tabs no-print" id="v64MainTabs" style="display:flex!important;flex-wrap:wrap!important;overflow:visible!important;height:auto!important;max-height:none!important;">

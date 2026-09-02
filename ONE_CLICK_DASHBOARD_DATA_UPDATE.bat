@@ -84,6 +84,16 @@ if errorlevel 1 (
 echo.
 echo Official data fetch: OK
 
+if exist "scripts_local\update_satna_block_statistics.py" (
+    echo Updating Satna block-wise At-a-Glance statistics...
+    %PYTHON_CMD% "scripts_local\update_satna_block_statistics.py"
+    if errorlevel 1 (
+        echo ERROR: Satna block statistics update failed. Publishing stopped.
+        pause
+        exit /b 1
+    )
+)
+
 REM ------------------------------------------------------------
 REM 3. Rebuild dashboard data if merge/build scripts exist
 REM ------------------------------------------------------------
