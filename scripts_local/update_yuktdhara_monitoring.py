@@ -72,6 +72,31 @@ def read_existing_mapping():
     try: return json.loads(m.group(1)).get("mapping",[])
     except Exception: return []
 
+def norm_key(v):
+    return re.sub(r"[^A-Z0-9\u0900-\u097F]+","",str(v or "").strip().upper())
+
+def norm_janpad(v):
+    value=norm_key(v)
+    return "RAMPURBAGHELAN" if value in {"RAMPORBAGHELAN","RAMPURBAGHELAN"} else value
+
+def read_auto_mapping():
+    path=ROOT/"auto-data.js"
+    if not path.exists(): return {}
+    raw=path.read_text(encoding="utf-8",errors="ignore")
+    m=re.search(r"window\.AUTO_REPORT\s*=\s*(\{.*\})\s*;?\s*$",raw,re.S)
+    if not m: return {}
+    try: rows=json.loads(m.group(1)).get("rows",[])
+    except Exception: return {}
+    out={}
+    for row in rows:
+        gp=row.get("panchayat") or row.get("gp")
+        if not gp: continue
+        out[(norm_janpad(row.get("janpad")),norm_key(gp))]={
+            "engineer":str(row.get("engineer") or "Unmapped").strip(),
+            "cluster":str(row.get("cluster") or "Unmapped").strip(),
+        }
+    return out
+
 def fetch_bhuvan_detail():
     query=urllib.parse.urlencode({"level":"district","state":"17","district":"1712","back":"/planner_v3/yuktdhara_dashboard/public_dashboard/index.php?state=17&district=1712&go=1"})
     lists={name:fetch_bhuvan_list(page,query) for name,page in BHUVAN_LISTS.items()}
@@ -80,12 +105,19 @@ def fetch_bhuvan_detail():
     home=get_text(BHUVAN_INDEX)
     dm=re.search(r"Data\s+last\s+updated\s*:\s*([^<]+)",home,re.I)
     as_of=clean(dm.group(1)) if dm else datetime.now().strftime("%d-%m-%Y")
-    mapping=read_existing_mapping()
+    old={(norm_janpad(x.get("janpad")),norm_key(x.get("gp"))):x for x in read_existing_mapping()}
+    auto=read_auto_mapping()
+    mapping=[]
+    for gp in lists["master"]:
+        k=(norm_janpad(gp["janpad"]),norm_key(gp["gp"]))
+        found=auto.get(k) or old.get(k) or {}
+        mapping.append({"janpad":gp["janpad"],"gp":gp["gp"],"engineer":found.get("engineer") or "Unmapped","cluster":found.get("cluster") or "Unmapped"})
+    mapped=sum(1 for x in mapping if str(x.get("engineer","")).strip().lower() not in {"","unmapped"})
     payload={
         "asOf":as_of,"officialUrl":BHUVAN_INDEX,
         "counts":{k:len(v) for k,v in lists.items()},
         "lists":lists,"mapping":mapping,
-        "validation":{"masterMapped":len(mapping),"masterUnmapped":max(0,len(lists["master"])-len(mapping)),"unmappedKeys":[]},
+        "validation":{"masterMapped":mapped,"masterUnmapped":len(mapping)-mapped,"unmappedKeys":[]},
     }
     (ROOT/"yuktdhara-data.js").write_text("window.YUKTDHARA_DATA="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
     print("Bhuvan Yuktdhara live GP detail updated: "+", ".join(f"{k}={len(v)}" for k,v in lists.items()))
