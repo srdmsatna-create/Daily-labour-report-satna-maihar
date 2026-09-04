@@ -439,3 +439,293 @@ See https://aka.ms/gcm/credstores for more information.
 bash: line 1: /dev/tty: No such device or address
 error: failed to execute prompt script (exit code 1)
 fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Wed 09/02/2026 15:33:12.73
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1419/1153; PMAY Labour/MR=1231/1048; Ek Bagiya Labour/MR=166/91.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 268420a] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Wed 09/02/2026 16:33:10.69
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+warning: in the working copy of 'README_HINDI.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: 5db2f80
+
+============================================================
+START Wed 09/02/2026 21:04:09.58
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Wed 09/02/2026 21:33:11.00
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1475/1202; PMAY Labour/MR=1270/1084; Ek Bagiya Labour/MR=180/103.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 5d88531] Automatic VBGRAMG update when laptop online
+ 4 files changed, 13 insertions(+), 13 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Wed 09/02/2026 22:33:10.99
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1475/1202; PMAY Labour/MR=1270/1084; Ek Bagiya Labour/MR=180/103.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 080d145] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Wed 09/02/2026 23:33:10.98
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1475/1202; PMAY Labour/MR=1270/1084; Ek Bagiya Labour/MR=180/103.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main ad08d44] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Thu 09/03/2026  8:01:50.00
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1383/1135; PMAY Labour/MR=1183/1016; Ek Bagiya Labour/MR=177/104.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 0bf22ee] Automatic VBGRAMG update when laptop online
+ 4 files changed, 15 insertions(+), 15 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   5e8bd48..0bf22ee  main -> main
+END Thu 09/03/2026  8:03:29.89 SUCCESS-PUSHED
+
+============================================================
+START Thu 09/03/2026  8:04:32.12
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1383/1135; PMAY Labour/MR=1183/1016; Ek Bagiya Labour/MR=177/104.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 67a8bd4] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   0bf22ee..67a8bd4  main -> main
+END Thu 09/03/2026  8:05:05.07 SUCCESS-PUSHED
+
+============================================================
+START Thu 09/03/2026  8:33:10.66
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1383/1135; PMAY Labour/MR=1183/1016; Ek Bagiya Labour/MR=177/104.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main c3cd523] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   67a8bd4..c3cd523  main -> main
+END Thu 09/03/2026  8:33:50.71 SUCCESS-PUSHED
+
+============================================================
+START Thu 09/03/2026 18:57:11.73
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1383/1135; PMAY Labour/MR=1183/1016; Ek Bagiya Labour/MR=177/104.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 31e3696] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Thu 09/03/2026 18:59:49.61
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: 9d2c93b
+
+============================================================
+START Thu 09/03/2026 19:33:10.68
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Thu 09/03/2026 21:33:18.67
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Fri 09/04/2026  9:25:07.51
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Fri 09/04/2026  9:33:10.44
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
