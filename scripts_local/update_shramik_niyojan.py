@@ -56,7 +56,10 @@ def district(block):
 
 def month_values_after(cells, entity_index):
     values = [number(x) for x in cells[entity_index + 1 :]]
-    if len(values) < 6:
+    # Accept only the complete April-to-March monthly Persondays table.
+    # Shorter summary tables on the same portal page also contain block names
+    # and were previously mistaken for month-wise data.
+    if len(values) < 12:
         return None
     return {"august": values[4], "september": values[5]}
 
