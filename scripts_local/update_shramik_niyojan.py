@@ -17,7 +17,7 @@ OUT = ROOT / "shramik-niyojan-data.js"
 
 CURRENT_URL = os.environ.get(
     "SHRAMIK_FY2627_URL",
-    "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Household&Digest=kG%2fjf+M7b1AUbpMqWwepqQ",
+    "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Persondays&Digest=kG%2fjf+M7b1AUbpMqWwepqQ",
 )
 
 TARGETS = {
