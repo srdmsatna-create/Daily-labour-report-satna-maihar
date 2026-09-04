@@ -8,7 +8,7 @@ REM ============================================================
 
 title SRDM SATNA - One Click Dashboard Data Update
 
-for %%I in ("%~dp0.") do set "REPO=%%~fI"
+set "REPO=C:\Users\welcome\Daily-labour-report-satna-maihar"
 
 cls
 echo ============================================================
