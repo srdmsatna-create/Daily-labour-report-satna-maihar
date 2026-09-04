@@ -31,7 +31,10 @@ def fetch():
     if len(rows)!=8: raise RuntimeError(f"Expected 8 Yuktdhara blocks, got {len(rows)}")
     m=re.search(r'id="ContentPlaceHolder1_Shedule_updated_date"[^>]*>([^<]+)',source,re.I)
     payload={"title":"R33.1 Yuktdhara Monitoring Report","financialYear":"2026-2027","district":"SATNA","officialDate":clean(m.group(1)) if m else "","updatedAt":datetime.now(timezone.utc).isoformat(),"source":URL,"rows":rows}
-    (ROOT/"yuktdhara-data.js").write_text("window.YUKTDHARA_REPORT="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
+    # Keep the detailed Bhuvan Sub Engineer dataset in yuktdhara-data.js intact.
+    # The live VB-G RAM G block summary is a different schema and must use its
+    # own file; otherwise the detailed Yuktdhara dashboard becomes blank.
+    (ROOT/"yuktdhara-official-data.js").write_text("window.YUKTDHARA_REPORT="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
     print("Yuktdhara official data updated: 8 blocks")
 
 STYLE='''<!-- SRDM_YUKTDHARA_STYLE_START --><style>
