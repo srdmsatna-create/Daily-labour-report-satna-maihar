@@ -1,6 +1,8 @@
 (function(){
 'use strict';
 const D=window.YUKTDHARA_DATA,root=document.getElementById('yuktdharaSubEngineerApp');if(!D||!root)return;
+const outer=document.getElementById('yuktdharaMonitoring'),outerHead=outer&&outer.querySelector(':scope > div:first-child');
+if(outerHead){const meta=outerHead.querySelector('small'),badge=outerHead.querySelector('span');if(meta)meta.textContent=`Bhuvan NRSC • SATNA (5 Janpad) + MAIHAR (3 Janpad) • Live status ${D.asOf||''}`;if(badge)badge.textContent=`${Number((D.counts||{}).master||0).toLocaleString('en-IN')} GP`;}
 const M=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']),S=new Set(['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']);
 const $=id=>document.getElementById(id),e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),n=v=>String(v??'').trim().toUpperCase().replace(/[^A-Z0-9\u0900-\u097F]+/g,''),nj=v=>n(v)==='RAMPORBAGHELAN'?'RAMPURBAGHELAN':n(v),key=(j,g)=>nj(j)+'|'+n(g),district=j=>M.has(j)?'MAIHAR':S.has(j)?'SATNA':'OTHER',jp=j=>j==='SATNA'?'SOHAWAL':j,fmt=v=>Number(v||0).toLocaleString('en-IN');
 const lists=D.lists||{},mm=new Map((D.mapping||[]).map(x=>[key(x.janpad,x.gp),x])),sets={};Object.entries(lists).forEach(([k,v])=>sets[k]=new Set((v||[]).map(x=>key(x.janpad,x.gp))));

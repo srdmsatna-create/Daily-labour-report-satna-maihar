@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import html, json, re, shutil, sys, urllib.request
+import csv, html, io, json, re, shutil, sys, urllib.parse, urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -14,11 +14,81 @@ def get_root():
 ROOT = get_root()
 URL = "https://vbgramgrep.dord.gov.in/vbgramg/Yuktdhara_rpt.aspx?payload=rCItcjm0CAVylohlZQkZjREFUa1xC6visCYEM0yVs67VaqioyxBCF688LA6322WU3bsunwYrI7BVFuRIR3HXqJNQs-qn1odYSxziqGDRC7BS3v_-Is3IxQ63YS7DPMBWl9i8fMAEd-pmNJZ20jlsU96bVjBZPAyyn0edeHjldrqYnKWc8JexV1kz0st7PjblPoRnRaxatyr0lgarVnCeZlXp733ThiyKU47IOkx9woZKpr5sQhAu1tZdsmlVw-RE"
 BLOCKS = {"AMARPATAN","MAIHAR","MAJHGAWAN","NAGOD","RAMNAGAR","RAMPUR BAGHELAN","SATNA","UNCHAHARA"}
+BHUVAN_BASE = "https://bhuvan-app2.nrsc.gov.in/planner_v3/yuktdhara_dashboard/public_dashboard/"
+BHUVAN_INDEX = BHUVAN_BASE + "index.php?state=17&district=1712&go=1"
+BHUVAN_LISTS = {
+    "master": "view_panchayats_started1.php",
+    "started": "view_panchayats_started.php",
+    "submitted": "view_panchayats.php",
+    "notStarted": "view_panchayats_notstarted.php",
+    "gasApproved": "view_panchayats_gas_approved.php",
+}
 
 def clean(v): return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", "", v or ""))).strip()
 def num(v):
     try: return int(float(re.sub(r"[^0-9.-]", "", v.replace(",", "")) or 0))
     except Exception: return 0
+
+def get_text(url):
+    req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Cache-Control":"no-cache"})
+    return urllib.request.urlopen(req,timeout=120).read().decode("utf-8","ignore")
+
+def parse_bhuvan_gp_rows(source):
+    out=[]
+    for tr in re.findall(r"<tr[^>]*>(.*?)</tr>",source,re.I|re.S):
+        cells=[clean(x) for x in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>",tr,re.I|re.S)]
+        if len(cells)>=5 and cells[-2].upper() in BLOCKS and cells[-1]:
+            out.append({"janpad":cells[-2].upper(),"gp":cells[-1].upper()})
+    seen=set(); unique=[]
+    for row in out:
+        k=(row["janpad"],row["gp"])
+        if k not in seen: seen.add(k); unique.append(row)
+    return unique
+
+def fetch_bhuvan_list(page, query):
+    page_url=BHUVAN_BASE+page+"?"+query
+    source=get_text(page_url)
+    m=re.search(r'<a[^>]+href=["\']([^"\']+)["\'][^>]*>\s*(?:<[^>]+>\s*)*Download\s+Summary\s+Report',source,re.I|re.S)
+    if not m:
+        raise RuntimeError(f"Bhuvan CSV link not found: {page}")
+    csv_url=urllib.parse.urljoin(page_url,html.unescape(m.group(1)))
+    content=get_text(csv_url)
+    rows=[]
+    for cells in csv.reader(io.StringIO(content)):
+        if len(cells)>=5 and cells[-2].strip().upper() in BLOCKS and cells[-1].strip():
+            rows.append({"janpad":cells[-2].strip().upper(),"gp":cells[-1].strip().upper()})
+    seen=set(); unique=[]
+    for row in rows:
+        k=(row["janpad"],row["gp"])
+        if k not in seen: seen.add(k); unique.append(row)
+    return unique
+
+def read_existing_mapping():
+    path=ROOT/"yuktdhara-data.js"
+    if not path.exists(): return []
+    raw=path.read_text(encoding="utf-8",errors="ignore")
+    m=re.search(r"window\.YUKTDHARA_DATA\s*=\s*(\{.*\})\s*;?\s*$",raw,re.S)
+    if not m: return []
+    try: return json.loads(m.group(1)).get("mapping",[])
+    except Exception: return []
+
+def fetch_bhuvan_detail():
+    query=urllib.parse.urlencode({"level":"district","state":"17","district":"1712","back":"/planner_v3/yuktdhara_dashboard/public_dashboard/index.php?state=17&district=1712&go=1"})
+    lists={name:fetch_bhuvan_list(page,query) for name,page in BHUVAN_LISTS.items()}
+    if len(lists["master"]) < 690:
+        raise RuntimeError(f"Bhuvan master GP list incomplete: {len(lists['master'])}")
+    home=get_text(BHUVAN_INDEX)
+    dm=re.search(r"Data\s+last\s+updated\s*:\s*([^<]+)",home,re.I)
+    as_of=clean(dm.group(1)) if dm else datetime.now().strftime("%d-%m-%Y")
+    mapping=read_existing_mapping()
+    payload={
+        "asOf":as_of,"officialUrl":BHUVAN_INDEX,
+        "counts":{k:len(v) for k,v in lists.items()},
+        "lists":lists,"mapping":mapping,
+        "validation":{"masterMapped":len(mapping),"masterUnmapped":max(0,len(lists["master"])-len(mapping)),"unmappedKeys":[]},
+    }
+    (ROOT/"yuktdhara-data.js").write_text("window.YUKTDHARA_DATA="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
+    print("Bhuvan Yuktdhara live GP detail updated: "+", ".join(f"{k}={len(v)}" for k,v in lists.items()))
 
 def fetch():
     req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0","Cache-Control":"no-cache"})
@@ -36,6 +106,7 @@ def fetch():
     # own file; otherwise the detailed Yuktdhara dashboard becomes blank.
     (ROOT/"yuktdhara-official-data.js").write_text("window.YUKTDHARA_REPORT="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
     print("Yuktdhara official data updated: 8 blocks")
+    fetch_bhuvan_detail()
 
 STYLE='''<!-- SRDM_YUKTDHARA_STYLE_START --><style>
 #yuktdharaLauncher{--app-accent:#6f42c1!important;--app-soft:#f3edff!important;--app-shadow:#6f42c155!important;border-color:#6f42c1!important;background:linear-gradient(135deg,#f2ebff,#fff 75%)!important}
