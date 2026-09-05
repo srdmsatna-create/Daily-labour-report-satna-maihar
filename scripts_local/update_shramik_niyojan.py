@@ -61,7 +61,13 @@ def month_values_after(cells, entity_index):
     # and were previously mistaken for month-wise data.
     if len(values) < 12:
         return None
-    return {"august": values[4], "september": values[5]}
+    months = ("april", "may", "june", "july", "august", "september",
+              "october", "november", "december", "january", "february", "march")
+    result = dict(zip(months, values[:12]))
+    # The dashboard period is 01 July through the portal's latest available day.
+    # Future months are zero on the official report, so this remains valid all FY.
+    result["julToday"] = sum(result[m] for m in months[3:])
+    return result
 
 
 def parse_block_rows(source):
@@ -146,6 +152,8 @@ def fetch_report(page, url, require_all_blocks=True):
         page.goto(detail_url, wait_until="domcontentloaded", timeout=90000)
         page.wait_for_timeout(800)
         gp_rows[block] = parse_gp_rows(page.content())
+    if require_all_blocks and sum(len(x) for x in gp_rows.values()) < 650:
+        raise RuntimeError("Persondays GP detail is incomplete; existing live data was preserved")
     return blocks, gp_rows, report_date(source)
 
 
@@ -238,6 +246,23 @@ def main():
             **calc(values["target"], values["august"], values["september"], days),
         })
 
+    # One official monthly Persondays record per Janpad + Gram Panchayat.  Ek
+    # Bagiya uses this table once per GP, preventing the same GP total from
+    # being multiplied by every ongoing work located in that GP.
+    gp_mandays_rows = []
+    for block in ORDER:
+        for gp, values in sorted(current_gp.get(block, {}).items()):
+            owner = mapping.get((block, gp), {"engineer": "Unmapped", "cluster": "Unmapped"})
+            gp_mandays_rows.append({
+                "district": district(block), "janpad": block, "panchayat": gp,
+                "engineer": owner["engineer"], "cluster": owner["cluster"],
+                "july": values["july"], "august": values["august"],
+                "september": values["september"], "october": values["october"],
+                "november": values["november"], "december": values["december"],
+                "january": values["january"], "february": values["february"],
+                "march": values["march"], "julToday": values["julToday"],
+            })
+
     payload = {
         "title": "श्रमिक नियोजन",
         "financialYear": "2026-2027",
@@ -248,13 +273,16 @@ def main():
         "targetTotal": sum(x["target"] for x in janpad_rows),
         "rows": janpad_rows,
         "engineerRows": engineer_rows,
+        "gpMandaysRows": gp_mandays_rows,
+        "gpMandaysSource": CURRENT_URL,
         "warnings": [x for x in [previous_warning] if x],
     }
     OUT.write_text(
         "window.SHRAMIK_NIYOJAN=" + json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + ";\n",
         encoding="utf-8",
     )
-    print(f"Shramik Niyojan updated: 8 Janpads, {len(engineer_rows)} Sub Engineer rows, as on {official_date}")
+    print(f"Shramik Niyojan updated: 8 Janpads, {len(engineer_rows)} Sub Engineer rows, "
+          f"{len(gp_mandays_rows)} GP live mandays rows, as on {official_date}")
 
 
 if __name__ == "__main__":

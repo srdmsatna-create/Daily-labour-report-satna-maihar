@@ -328,18 +328,22 @@ function ekBagiyaFiltered(){
 }
 function renderEkBagiyaDashboard(){
   const src=ekBagiyaFiltered().filter(r=>['2025-2026','2026-2027'].includes(clean(r.fy)));
+  const liveReport=window.SHRAMIK_NIYOJAN||{},liveRows=Array.isArray(liveReport.gpMandaysRows)?liveReport.gpMandaysRows:[];
+  const gpKey=(janpad,panchayat)=>[clean(janpad).toUpperCase(),clean(panchayat).toUpperCase()].join('¦');
+  const liveByGp=new Map(liveRows.map(r=>[gpKey(r.janpad,r.panchayat),num(r.julToday)]));
+  if(!liveRows.length){$('viewTitle').textContent='एक बगिया माँ के नाम — Ongoing Works Dashboard';$('viewMeta').textContent='Official live 01 Jul–Today Persondays अभी उपलब्ध नहीं है। Auto Update चलाएँ; पुराने दोहराए हुए आंकड़े प्रदर्शित नहीं किए गए हैं।';$('reportTable').innerHTML='<tbody><tr><td class="empty-table">Live portal data unavailable — run_daily_update.bat चलाएँ।</td></tr></tbody>';return}
   const m=new Map();
   const bucket=p=>p<=0?'b0':p<=25?'b25':p<=60?'b60':p<=75?'b75':p<=90?'b90':'b90p';
   for(const r of src){
     const key=[r.janpad,r.engineer,r.cluster].map(clean).join('¦');
-    if(!m.has(key))m.set(key,{district:districtOf(r.janpad),janpad:r.janpad,engineer:r.engineer,cluster:r.cluster,workCount:0,activeWorks:0,nilMandays:0,nregaAprJunMandays:0,julyMandays:0,totalSanction:0,totalBooked:0,b0:0,b25:0,b60:0,b75:0,b90:0,b90p:0});
-    const x=m.get(key),ep=num(r.expPct);x.workCount++;x.nregaAprJunMandays+=num(r.nregaAprJunMandays);x.julyMandays+=num(r.julyMandays);if(num(r.julyMandays)>0)x.activeWorks++;else x.nilMandays++;x.totalSanction+=num(r.sanction);x.totalBooked+=num(r.booked);x[bucket(ep)]++;
+    if(!m.has(key))m.set(key,{district:districtOf(r.janpad),janpad:r.janpad,engineer:r.engineer,cluster:r.cluster,workCount:0,activeWorks:0,nilMandays:0,nregaAprJunMandays:0,julyMandays:0,totalSanction:0,totalBooked:0,b0:0,b25:0,b60:0,b75:0,b90:0,b90p:0,_gps:new Set()});
+    const x=m.get(key),ep=num(r.expPct),gk=gpKey(r.janpad,r.panchayat),liveMandays=liveByGp.get(gk)||0;x.workCount++;if(!x._gps.has(gk)){x._gps.add(gk);x.nregaAprJunMandays+=num(r.nregaAprJunMandays);x.julyMandays+=liveMandays}if(liveMandays>0)x.activeWorks++;else x.nilMandays++;x.totalSanction+=num(r.sanction);x.totalBooked+=num(r.booked);x[bucket(ep)]++;
   }
   let data=[...m.values()].map(r=>({...r,remaining:Math.max(0,r.totalSanction-r.totalBooked),expPct:r.totalSanction?r.totalBooked*100/r.totalSanction:0,ongoing:num(r.workCount),ekOngoing:num(r.workCount),labour:num(r.julyMandays)}));
   data=sortRows(data,'ekOngoing',['engineer','janpad','cluster']);
   lastExport=data;$('viewTitle').textContent='एक बगिया माँ के नाम — Ongoing Works Dashboard';
-  const totalWorks=src.length,q1=sum(src,'nregaAprJunMandays'),july=sum(src,'julyMandays'),active=src.filter(r=>num(r.julyMandays)>0).length,nil=totalWorks-active,sanc=sum(src,'sanction'),book=sum(src,'booked'),rem=Math.max(0,sanc-book),ep=sanc?book*100/sanc:0;
-  $('viewMeta').textContent=`Corrected Final Work Category • FY 2025-26 & 2026-27 • ${fmt(totalWorks)} ongoing works • NREGA Apr–Jun mandays ${fmt(q1)} • 1 Jul–Today Ek Bagiya mandays ${fmt(july)} • Active ${fmt(active)} • NIL ${fmt(nil)} • ${todayDate()}`;
+  const totalWorks=src.length,q1=sum(data,'nregaAprJunMandays'),july=sum(data,'julyMandays'),active=sum(data,'activeWorks'),nil=sum(data,'nilMandays'),sanc=sum(src,'sanction'),book=sum(src,'booked'),rem=Math.max(0,sanc-book),ep=sanc?book*100/sanc:0;
+  $('viewMeta').textContent=`Official VB-G RAM G Persondays • प्रत्येक Ek Bagiya GP केवल एक बार • FY 2025-26 & 2026-27 • ${fmt(totalWorks)} ongoing works • NREGA Apr–Jun mandays ${fmt(q1)} • 1 Jul–Today Ek Bagiya mandays ${fmt(july)} • Active ${fmt(active)} • NIL ${fmt(nil)} • Portal date ${liveReport.officialDate||todayDate()}`;
   let h=`<thead><tr><th>District</th><th>Janpad</th><th>Sub Engineer / Upyantri</th><th>Cluster</th><th>Ek Bagiya Ongoing</th><th>Current FY Active</th><th>NIL 1 Jul–Today Mandays</th><th>NREGA Mandays<br>01 Apr–30 Jun</th><th>Ek Bagiya Mandays<br>01 Jul–Today</th><th>0%</th><th>1–25%</th><th>26–60%</th><th>61–75%</th><th>76–90%</th><th>&gt;90%</th><th>Sanction ₹ Lakh</th><th>Booked ₹ Lakh</th><th>Remaining ₹ Lakh</th><th>Exp %</th></tr></thead><tbody>`;
   for(const r of data){h+=`<tr>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.workCount,true)}${cell(r.activeWorks,true)}${cell(r.nilMandays,true)}${cell(r.nregaAprJunMandays,true)}${cell(r.julyMandays,true)}${cell(r.b0,true)}${cell(r.b25,true)}${cell(r.b60,true)}${cell(r.b75,true)}${cell(r.b90,true)}${cell(r.b90p,true)}<td>${moneyLakh(r.totalSanction)}</td><td>${moneyLakh(r.totalBooked)}</td><td>${moneyLakh(r.remaining)}</td><td>${r.expPct.toFixed(1)}%</td></tr>`}
   const ks=['workCount','activeWorks','nilMandays','nregaAprJunMandays','julyMandays','b0','b25','b60','b75','b90','b90p','totalSanction','totalBooked','remaining'],t={};ks.forEach(k=>t[k]=sum(data,k));
