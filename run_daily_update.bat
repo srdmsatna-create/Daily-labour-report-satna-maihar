@@ -15,6 +15,7 @@ set "LOG_FILE=%LOG_DIR%\srdm-auto-update.log"
 set "LOCK_DIR=%TEMP%\srdm_satna_all_reports.lock"
 set "PY_CMD="
 set "EXIT_CODE=0"
+set "GIT_TMP_LOG=%TEMP%\srdm_git_%RANDOM%_%RANDOM%.log"
 set /a REPORT_OK=0
 set /a REPORT_FAILED=0
 
@@ -59,8 +60,12 @@ if errorlevel 1 (
 )
 
 call :log [1/7] Syncing latest repository code...
-git pull --rebase --autostash >>"%LOG_FILE%" 2>&1
-if errorlevel 1 (
+git pull --rebase --autostash >"%GIT_TMP_LOG%" 2>&1
+set "GIT_RESULT=!ERRORLEVEL!"
+type "%GIT_TMP_LOG%" >>"%LOG_FILE%"
+type "%GIT_TMP_LOG%"
+del /q "%GIT_TMP_LOG%" >nul 2>&1
+if not "!GIT_RESULT!"=="0" (
   call :log ERROR: Initial git pull/rebase failed. Publishing stopped safely.
   set "EXIT_CODE=25"
   goto :finish
@@ -184,8 +189,12 @@ if errorlevel 1 (
   goto :finish
 )
 
-git pull --rebase --autostash >>"%LOG_FILE%" 2>&1
-if errorlevel 1 (
+git pull --rebase --autostash >"%GIT_TMP_LOG%" 2>&1
+set "GIT_RESULT=!ERRORLEVEL!"
+type "%GIT_TMP_LOG%" >>"%LOG_FILE%"
+type "%GIT_TMP_LOG%"
+del /q "%GIT_TMP_LOG%" >nul 2>&1
+if not "!GIT_RESULT!"=="0" (
   call :log ERROR: Final git pull/rebase failed. Push was not attempted.
   set "EXIT_CODE=35"
   goto :finish
