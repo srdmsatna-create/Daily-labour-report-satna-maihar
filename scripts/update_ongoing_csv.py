@@ -122,6 +122,7 @@ def main():
                 'nregaAprJunMandays': num(pick(r, '01 Apr–30 Jun')),
                 'julyMandays': num(pick(r, '01 Jul–Today')),
                 'recoveryDone': old.get('recoveryDone', old.get('recoveryDoneWork', '')),
+                'recoveryWork': num(old.get('recoveryWork', 1 if old.get('recoveryDone', old.get('recoveryDoneWork', False)) else 0)),
                 'recoveryAmount': num(old.get('recoveryAmount', old.get('recoveryAmountRs', 0))),
                 'recoveryWorkCount': num(old.get('recoveryWorkCount', 0)),
             })
