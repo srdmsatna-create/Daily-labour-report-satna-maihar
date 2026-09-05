@@ -286,15 +286,16 @@ function finalWorkCategory(name,wt,fy){
  if(/other/.test(rw))return 'Other Works';
  return w||'Other Works';
 }
+function canonicalCategoryName(v){const s=clean(v);if(/^(?:pmay\s*-?\s*g|pmayg)(?:\s+houses?)?$/i.test(s))return 'PMAY-G';if(/^(?:gravel|greval|grewal)\s*road$/i.test(s))return 'Gravel Road';return s}
 function resolvedFinalCategory(r){
- const derived=finalWorkCategory(r.name,r.type,r.fy),t=(clean(r.name)+' '+clean(r.type)).toLowerCase();
- if(/\bpmay\b|pmay[- ]?g|pradhan\s*mantri\s*awas/i.test(t))return 'PMAY-G';
+ const derived=finalWorkCategory(r.name,r.type,r.fy),raw=canonicalCategoryName(r.finalCategory),t=(clean(r.name)+' '+clean(r.type)+' '+raw).toLowerCase();
+ if(/\bpmay\b|pmay[- ]?g|pmayg|pradhan\s*mantri\s*awas/i.test(t))return 'PMAY-G';
  if(/amrit\s*sarovar|अमृत\s*सरोवर/i.test(t))return 'Amrit Sarovar';
  if(derived==='Ek Bagiya')return 'Ek Bagiya';
  if(derived==='Gravel Road')return 'Gravel Road';
- return clean(r.finalCategory)||derived;
+ return raw||canonicalCategoryName(derived);
 }
-function categoryFiltered(){const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value,k=$('categoryFilter')?.value||'ALL';return categorymix.filter(r=>(d==='ALL'||districtOf(r.janpad)===d)&&(j==='ALL'||r.janpad===j)&&(e==='ALL'||r.engineer===e)&&(c==='ALL'||r.cluster===c)&&(k==='ALL'||r.category===k))}
+function categoryFiltered(){const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value,k=canonicalCategoryName($('categoryFilter')?.value||'ALL');return categorymix.map(r=>({...r,category:canonicalCategoryName(r.category)})).filter(r=>(d==='ALL'||districtOf(r.janpad)===d)&&(j==='ALL'||r.janpad===j)&&(e==='ALL'||r.engineer===e)&&(c==='ALL'||r.cluster===c)&&(k==='ALL'||r.category===k))}
 function correctedWorkFiltered(){const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value,k=$('categoryFilter')?.value||'ALL',s=$('workStatusFilter')?.value||'ALL';return ongoingDetails.filter(r=>{const cat=resolvedFinalCategory(r);return (d==='ALL'||districtOf(r.janpad)===d)&&(j==='ALL'||r.janpad===j)&&(e==='ALL'||r.engineer===e)&&(c==='ALL'||r.cluster===c)&&(k==='ALL'||cat===k)&&(s==='ALL'||clean(r.status).toUpperCase()===s.toUpperCase())})}
 function rebuildCorrectedWorkData(){
  const wm=new Map(),cm=new Map(),bucket=p=>p<=0?'b0':p<=25?'b25':p<=60?'b60':p<=75?'b75':p<=90?'b90':'b90p';
@@ -1025,17 +1026,17 @@ function initPptExportUI(){
     if(view==='recovery')return;
     const table=$('reportTable'); if(!table)return;
     const headRows=table.querySelectorAll('thead tr'); if(!headRows.length)return;
-    const lastHead=headRows[headRows.length-1]; if([...lastHead.cells].some(c=>/Recovery Work/i.test(c.textContent)))return;
-    const th=document.createElement('th');th.textContent='Recovery Work';lastHead.appendChild(th);
+    const lastHead=headRows[headRows.length-1]; if([...lastHead.cells].some(c=>/Recovery Work|वसूली वाले कार्य/i.test(c.textContent)))return;
+    const th=document.createElement('th');th.className='recovery-work-col';th.textContent='वसूली वाले कार्य';lastHead.appendChild(th);
     // In multi-row headers, add a standalone top-row group cell too so spans remain understandable.
-    if(headRows.length>1){const top=headRows[0];const g=document.createElement('th');g.textContent='Recovery';g.rowSpan=headRows.length;top.appendChild(g);th.remove();}
+    if(headRows.length>1){const top=headRows[0];const g=document.createElement('th');g.className='recovery-work-col';g.textContent='वसूली वाले कार्य';g.rowSpan=headRows.length;top.appendChild(g);th.remove();}
     const headers=[...lastHead.cells].map(c=>clean(c.textContent));
     function idx(rx){return headers.findIndex(h=>rx.test(h));}
     const iJan=idx(/^Janpad$/i),iEng=idx(/^(Sub Engineer|Engineer|Sub Engineer \/ Upyantri|Engineer \/ Upyantri)$/i),iCl=idx(/^Cluster/i),iGp=idx(/^(GP|Gram Panchayat)$/i),iCode=idx(/^Work Code$/i),iCat=idx(/^Work Category$/i),iDist=idx(/^District$/i);
     const body=[...table.querySelectorAll('tbody tr')];
     for(const tr of body){const td=[...tr.cells]; const total=td.length&&clean(td[0].textContent)==='TOTAL';let n;
       if(total)n=recoverySource().length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp])scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=recoveryCountForScope(scope)}
-      const c=document.createElement('td');c.textContent=fmt(n);if(n>0)c.className='bucket-good';tr.appendChild(c);
+      const c=document.createElement('td');c.textContent=fmt(n);c.className=`recovery-work-col ${total?'recovery-total':n>0?'recovery-positive':'recovery-zero'}`;tr.appendChild(c);
     }
   }
   const originalRender=render;
