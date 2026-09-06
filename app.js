@@ -1030,11 +1030,18 @@ function initPptExportUI(){
     const th=document.createElement('th');th.className='recovery-work-col';th.textContent='वसूली वाले कार्य';['width','min-width','max-width'].forEach(p=>th.style.setProperty(p,'68px','important'));th.style.setProperty('font-size','20px','important');th.style.setProperty('background','#0f766e','important');th.style.setProperty('color','#fff','important');lastHead.appendChild(th);
     // In multi-row headers, add a standalone top-row group cell too so spans remain understandable.
     if(headRows.length>1){const top=headRows[0];const g=document.createElement('th');g.className='recovery-work-col';g.textContent='वसूली वाले कार्य';g.rowSpan=headRows.length;['width','min-width','max-width'].forEach(p=>g.style.setProperty(p,'68px','important'));g.style.setProperty('font-size','20px','important');g.style.setProperty('background','#0f766e','important');g.style.setProperty('color','#fff','important');top.appendChild(g);th.remove();}
-    const headers=[...lastHead.cells].map(c=>clean(c.textContent));
-    function idx(rx){return headers.findIndex(h=>rx.test(h));}
-    const iJan=idx(/^Janpad$/i),iEng=idx(/^(Sub Engineer|Engineer|Sub Engineer \/ Upyantri|Engineer \/ Upyantri)$/i),iCl=idx(/^Cluster/i),iGp=idx(/^(GP|Gram Panchayat)$/i),iCode=idx(/^Work Code$/i),iCat=idx(/^Work Category$/i),iDist=idx(/^District$/i);
+    // Read every header row. District/Janpad/Engineer are often rowspan cells
+    // in the first row; reading only the last row made every detail row use
+    // the full recovery source total (for example 549).
+    function idx(rx){
+      for(const row of headRows){
+        for(const h of row.cells){if(rx.test(clean(h.textContent)))return h.cellIndex;}
+      }
+      return -1;
+    }
+    const iJan=idx(/^Janpad$/i),iEng=idx(/^(Sub Engineer|Engineer|Sub Engineer \/ Upyantri|Engineer \/ Upyantri)$/i),iCl=idx(/^Cluster(?:\(s\))?/i),iGp=idx(/^(GP|Gram Panchayat)$/i),iCode=idx(/^Work Code$/i),iCat=idx(/^(Final )?Work Category$/i),iDist=idx(/^District$/i);
     const body=[...table.querySelectorAll('tbody tr')];
-    for(const tr of body){const td=[...tr.cells]; const total=td.length&&clean(td[0].textContent)==='TOTAL';let n;
+    for(const tr of body){const td=[...tr.cells]; const total=td.slice(0,5).some(c=>/^TOTAL$|^योग$/i.test(clean(c.textContent)));let n;
       if(total)n=recoverySource().length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp])scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=recoveryCountForScope(scope)}
       const c=document.createElement('td');c.textContent=fmt(n);c.className=`recovery-work-col ${total?'recovery-total':n>0?'recovery-positive':'recovery-zero'}`;['width','min-width','max-width'].forEach(p=>c.style.setProperty(p,'68px','important'));c.style.setProperty('font-size','20px','important');c.style.setProperty('background',total?'#0f766e':n>0?'#dcfce7':'#f8fafc','important');c.style.setProperty('color',total?'#fff':n>0?'#166534':'#64748b','important');tr.appendChild(c);
     }
