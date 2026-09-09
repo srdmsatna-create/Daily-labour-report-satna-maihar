@@ -56,10 +56,10 @@
 }
 
 </style>
-<script>(function(){if(sessionStorage.getItem('ekBagiyaAuth')!=='ok'){window.location.replace('index.html')}})();</script></head><body>
+</head><body>
 <div class="govbar"><span><b>मध्यप्रदेश शासन</b> · पंचायत एवं ग्रामीण विकास विभाग</span><span>District Monitoring Dashboard · SATNA / MAIHAR</span></div>
 <header class="masthead"><div class="brandrow"><div class="brandlock"><div class="seal">🌱</div><div><div class="eyebrow">Ek Bagiya Maa Ke Naam · Review & Monitoring</div><div class="brandtitle">एक बगिया माँ के नाम डैशबोर्ड</div><div class="brandsub">उपयंत्री-वार प्रगति · मजदूरी · सामग्री · मानव दिवस · भुगतान स्थिति</div></div></div><div class="updatepill">डेटा स्थिति<strong>09 सितंबर 2026</strong>756 सत्यापित कार्य · Official MIS 6.12</div></div></header>
-<div class="navshell"><nav class="topnav"><button class="navbtn active" onclick="showView('rank')">📊 उपयंत्री रैंकिंग</button><button class="navbtn" onclick="showView('dash')">👷 उपयंत्री डैशबोर्ड</button><button class="navbtn" onclick="showView('progress')">📋 आज की प्रगति 09.09</button><span class="navspacer"></span><button class="navaction" onclick="downloadExcelWorkbook(this)">Excel डाउनलोड</button><button class="navaction" onclick="downloadCSV()">CSV डाउनलोड</button><button class="navaction" onclick="makePDF()">Print / PDF</button><button class="navaction logout" onclick="logout()">Logout</button></nav></div>
+<div class="navshell"><nav class="topnav"><button class="navbtn active" onclick="showView('rank')">📊 उपयंत्री रैंकिंग</button><button class="navbtn" onclick="showView('dash')">👷 उपयंत्री डैशबोर्ड</button><button class="navbtn" onclick="showView('progress')">📋 आज की प्रगति 09.09</button><span class="navspacer"></span><button class="navaction" onclick="downloadExcelWorkbook(this)">Excel डाउनलोड</button><button class="navaction" onclick="downloadCSV()">CSV डाउनलोड</button><button class="navaction" onclick="makePDF()">Print / PDF</button><button class="navaction logout" onclick="logout()">मुख्य पोर्टल</button></nav></div>
 <div class="app">
 <section class="overview" id="overviewStats"></section>
 <div class="workspace"><aside class="filters"><div class="filterhead"><strong>फिल्टर / Filters</strong><button class="clear" onclick="clearFilters()">Reset</button></div>
@@ -107,7 +107,7 @@ function setExpFromDetail(v){document.getElementById('exp').value=v;renderAll();
 function renderOverview(){let rows=baseRows();let t=totalRow(rows);let score=+t['Overall Achievement']||0;let nish=+t['Nishfal Work Count']||0;let vas=+t['Vasuli Rashi ₹']||0;let stats=[['Total Works',t['Sanction Works'],'','All filtered works'],['Sanction ₹ Lakh',t['Sanctioned cost(lakhs)'],'','Total sanctioned'],['Overall Score',score.toFixed(2),'green','Weighted by works'],['Current FY Mandays',t['VBGRAMG Current FY Mandays'],'green','VBGRAMG 2026-27'],['Nishfal Works',nish,'red','Attention required'],['Vasuli ₹',fmt(vas),'amber','Recovery amount']];document.getElementById('overviewStats').innerHTML=stats.map(x=>`<div class="stat ${x[2]}"><div class="v">${fmt(x[1])}</div><div class="l">${x[0]}</div><div class="s">${x[3]}</div></div>`).join('')}
 function renderAll(){renderOverview();if(currentView==='rank')renderRank();else if(currentView==='progress')renderProgress();else renderCards()}
 function makePDF(){renderAll();setTimeout(()=>window.print(),150)}
-function logout(){sessionStorage.removeItem('ekBagiyaAuth');window.location.replace('index.html')}
+function logout(){window.location.replace('../')}
 function downloadCSV(){let rows=baseRows(),cols=currentView==='progress'?progressCols:rankCols;let csv=[cols.join(',')].concat(rows.map(r=>cols.map(c=>'"'+String(r[c]??'').replace(/"/g,'""')+'"').join(','))).join('\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=currentView==='progress'?'engineer_progress_09_09_2026.csv':'upyantri_dashboard.csv';a.click()}
 refreshFilters();renderAll();
 </script></body></html>
