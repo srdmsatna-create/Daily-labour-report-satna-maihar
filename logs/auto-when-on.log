@@ -1110,3 +1110,302 @@ AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
 To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
    d43437e..e676a1e  main -> main
 END Sun 09/06/2026  7:33:43.05 SUCCESS-PUSHED
+
+============================================================
+START Sun 09/06/2026  8:33:12.86
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1334/1086; PMAY Labour/MR=1125/965; Ek Bagiya Labour/MR=184/107.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 79cc50b] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   f973d17..79cc50b  main -> main
+END Sun 09/06/2026  8:34:00.41 SUCCESS-PUSHED
+
+============================================================
+START Sun 09/06/2026  9:33:10.93
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1334/1086; PMAY Labour/MR=1125/965; Ek Bagiya Labour/MR=184/107.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 7243218] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   79cc50b..7243218  main -> main
+END Sun 09/06/2026  9:33:58.67 SUCCESS-PUSHED
+
+============================================================
+START Sun 09/06/2026 10:33:10.91
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1334/1086; PMAY Labour/MR=1125/965; Ek Bagiya Labour/MR=184/107.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 735c057] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   7243218..735c057  main -> main
+END Sun 09/06/2026 10:33:52.22 SUCCESS-PUSHED
+
+============================================================
+START Sun 09/06/2026 11:33:10.98
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1334/1086; PMAY Labour/MR=1125/965; Ek Bagiya Labour/MR=184/107.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=11995 | Ek Bagiya Ongoing=756 | lock_active=True
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+
+============================================================
+START Sun 09/06/2026 11:50:48.62
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+^C
+============================================================
+START Mon 09/07/2026  7:20:20.55
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1274/1038; PMAY Labour/MR=1075/923; Ek Bagiya Labour/MR=173/100.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=923 | Ek Bagiya Ongoing=100 | lock_active=False
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main bdf81db] Automatic VBGRAMG update when laptop online
+ 4 files changed, 15 insertions(+), 15 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Mon 09/07/2026  7:26:44.26
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: fe9ad95
+
+============================================================
+START Mon 09/07/2026  7:33:12.14
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/07/2026  8:33:11.30
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/07/2026  9:53:49.34
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/07/2026  9:56:14.49
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Tue 09/08/2026  7:57:21.27
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Tue 09/08/2026  8:00:03.47
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Tue 09/08/2026  8:33:10.76
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: remote helper 'https' aborted session
+^C
+============================================================
+START Wed 09/09/2026  8:49:32.18
+============================================================
+Waiting for network...
+
+============================================================
+START Wed 09/09/2026  8:52:24.39
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Wed 09/09/2026 20:54:07.89
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Wed 09/09/2026 20:56:59.62
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Wed 09/09/2026 21:33:10.75
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
