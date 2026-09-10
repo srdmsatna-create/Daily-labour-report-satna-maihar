@@ -18,27 +18,30 @@
   const gpKey=(j,p)=>[clean(j).toUpperCase(),clean(p).toUpperCase()].join('¦');
   function filteredWorks(){
     const [df,jf,ef,cf]=filters.map(x=>x.value),seen=new Set();
-    return (window.ONGOING_DETAILS||[]).filter(r=>{
-      if(!['2025-2026','2026-2027'].includes(clean(r.fy)))return false;
-      if(!['Ek Bagiya','Ek Bagiya Maa Ke Naam'].includes(clean(r.finalCategory)))return false;
-      const district=['AMARPATAN','MAIHAR','RAMNAGAR'].includes(clean(r.janpad).toUpperCase())?'MAIHAR':'SATNA';
-      if(df!=='ALL'&&district!==df||jf!=='ALL'&&r.janpad!==jf||ef!=='ALL'&&r.engineer!==ef||cf!=='ALL'&&r.cluster!==cf)return false;
-      const code=clean(r.code);if(code&&seen.has(code))return false;if(code)seen.add(code);return true;
+    const source=typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS)?WORK_DETAILS:[];
+    return source.filter(r=>{
+      if(!['2025-2026','2026-2027'].includes(clean(r['Fin Year'])))return false;
+      const district=clean(r.Zila)||(['AMARPATAN','MAIHAR','RAMNAGAR'].includes(clean(r.Janpad).toUpperCase())?'MAIHAR':'SATNA');
+      if(df!=='ALL'&&district!==df||jf!=='ALL'&&r.Janpad!==jf||ef!=='ALL'&&r.Upyantri!==ef||cf!=='ALL'&&r.Cluster!==cf)return false;
+      const code=clean(r['Work Code']);if(code&&seen.has(code))return false;if(code)seen.add(code);return true;
     });
   }
   function render(){
     if(document.body.dataset.reportView!=='ekbagiya')return;
-    const live=window.SHRAMIK_NIYOJAN||{},liveRows=Array.isArray(live.gpMandaysRows)?live.gpMandaysRows:[],liveMap=new Map(liveRows.map(r=>[gpKey(r.janpad,r.panchayat),num(r.julToday)]));
-    if(!liveRows.length){summary.textContent='Official live Persondays उपलब्ध नहीं है। Auto Update चलाएँ।';grid.innerHTML='<div class="ebk-empty">पुराने दोहराए हुए मानव दिवस KPI में नहीं दिखाए गए हैं।</div>';return}
+    const rows=filteredWorks();
+    if(!rows.length){summary.textContent='चयनित filter में Report Card data उपलब्ध नहीं है।';grid.innerHTML='<div class="ebk-empty">कोई KPI कार्ड नहीं मिला।</div>';return}
     const groups=new Map();
-    filteredWorks().forEach(r=>{
-      const key=[clean(r.janpad),clean(r.engineer),clean(r.cluster)].join('¦'),gk=gpKey(r.janpad,r.panchayat),mandays=liveMap.get(gk)||0;
-      if(!groups.has(key))groups.set(key,{janpad:r.janpad,engineer:r.engineer||'Unmapped',cluster:r.cluster||'Unmapped',works:0,active:0,nil:0,mandays:0,sanction:0,booked:0,gps:new Set()});
-      const x=groups.get(key);x.works++;if(mandays>0)x.active++;else x.nil++;if(!x.gps.has(gk)){x.gps.add(gk);x.mandays+=mandays}x.sanction+=num(r.sanction);x.booked+=num(r.booked);
+    rows.forEach(r=>{
+      const key=[clean(r.Janpad),clean(r.Upyantri),clean(r.Cluster)].join('¦');
+      if(!groups.has(key))groups.set(key,{janpad:r.Janpad,engineer:r.Upyantri||'Unmapped',cluster:r.Cluster||'Unmapped',works:0,active:0,nil:0,mandays:0,sanction:0,booked:0,gps:new Set()});
+      const x=groups.get(key),currentMandays=num(r['Mandays 2026-2027']);
+      if(clean(r['Work Status']).toLowerCase()==='ongoing')x.works++;
+      if(currentMandays>0)x.active++;else x.nil++;
+      x.mandays+=currentMandays;x.sanction+=num(r['Sanction Amount Total']);x.booked+=num(r['Overall Total Booked']);x.gps.add(gpKey(r.Janpad,r['Panchayat Name']));
     });
-    let cards=[...groups.values()].map(x=>{x.expPct=x.sanction?100*x.booked/x.sanction:0;x.nilPct=x.works?100*x.nil/x.works:0;x.status=(x.mandays===0||x.nilPct>=75||x.expPct<5)?'poor':(x.nilPct>=40||x.expPct<15?'watch':'good');return x});
+    let cards=[...groups.values()].map(x=>{x.expPct=x.sanction?100*x.booked/x.sanction:0;x.nilPct=(x.active+x.nil)?100*x.nil/(x.active+x.nil):0;x.status=(x.mandays===0||x.nilPct>=75||x.expPct<5)?'poor':(x.nilPct>=40||x.expPct<15?'watch':'good');return x});
     cards=cards.filter(x=>(statusFilter.value==='ALL'||x.status===statusFilter.value)&&(issueFilter.value==='ALL'||issueFilter.value==='zeroMandays'&&x.mandays===0||issueFilter.value==='nilWorks'&&x.nil>0||issueFilter.value==='lowExp'&&x.expPct<15)).sort((a,b)=>({poor:0,watch:1,good:2}[a.status]-{poor:0,watch:1,good:2}[b.status])||b.nilPct-a.nilPct||a.janpad.localeCompare(b.janpad)||a.engineer.localeCompare(b.engineer,'hi'));
-    const count={poor:0,watch:0,good:0};cards.forEach(x=>count[x.status]++);summary.textContent=`${cards.length} उपयंत्री–क्लस्टर • खराब ${count.poor} • सुधार आवश्यक ${count.watch} • अच्छी प्रगति ${count.good} • Portal date ${live.officialDate||''}`;
+    const count={poor:0,watch:0,good:0};cards.forEach(x=>count[x.status]++);summary.textContent=`${cards.length} उपयंत्री–क्लस्टर • खराब ${count.poor} • सुधार आवश्यक ${count.watch} • अच्छी प्रगति ${count.good} • Report Card parameters`;
     if(!cards.length){grid.innerHTML='<div class="ebk-empty">चयनित filter में कोई KPI कार्ड नहीं मिला।</div>';return}
     grid.innerHTML=cards.map(x=>{const label=x.status==='poor'?'खराब प्रगति':x.status==='watch'?'सुधार आवश्यक':'अच्छी प्रगति';return `<article class="ebk-card ${x.status}"><div class="ebk-top"><div><div class="ebk-name">${esc(x.engineer)}</div><div class="ebk-place">${esc(x.janpad)} • ${esc(x.cluster)} • ${fmt(x.gps.size)} GP</div></div><span class="ebk-badge">${label}</span></div><div class="ebk-stats"><div class="ebk-stat"><b>${fmt(x.works)}</b><span>Ongoing कार्य</span></div><div class="ebk-stat"><b>${fmt(x.mandays)}</b><span>01 Jul–Today मानव दिवस</span></div><div class="ebk-stat"><b>${fmt(x.active)}</b><span>Active कार्य</span></div><div class="ebk-stat"><b>${fmt(x.nil)}</b><span>NIL कार्य</span></div><div class="ebk-stat"><b>${x.nilPct.toFixed(1)}%</b><span>NIL अनुपात</span></div><div class="ebk-stat"><b>${x.expPct.toFixed(1)}%</b><span>व्यय प्रगति</span></div></div><div class="ebk-money"><div>स्वीकृति ₹ लाख<b>${lakh(x.sanction)}</b></div><div>व्यय ₹ लाख<b>${lakh(x.booked)}</b></div><div>शेष ₹ लाख<b>${lakh(Math.max(0,x.sanction-x.booked))}</b></div></div>${x.status==='poor'?'<div class="ebk-alert">⚠ प्राथमिक समीक्षा आवश्यक</div>':''}</article>`}).join('');
   }
@@ -46,3 +49,4 @@
   new MutationObserver(render).observe(document.body,{attributes:true,attributeFilter:['data-report-view']});
   render();
 })();
+
