@@ -15,6 +15,15 @@
   table.closest('.table-wrap').parentNode.insertBefore(panel,table.closest('.table-wrap'));
   const grid=document.getElementById('ebkGrid'),summary=document.getElementById('ebkSummary'),statusFilter=document.getElementById('ebkStatus'),issueFilter=document.getElementById('ebkIssue');
   const clean=v=>String(v??'').trim(),num=v=>Number(v)||0,fmt=v=>new Intl.NumberFormat('en-IN').format(Math.round(num(v))),lakh=v=>(num(v)/100000).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const firstNum=(r,keys)=>{for(const k of keys){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')return num(r[k])}return 0};
+  function mandaysOf(r){
+    const before=firstNum(r,['Mandays Before 31 March 2026','Mandays From Work Start Date To 31 March 2026','Mandays 2025-2026','Previous Mandays']);
+    const july=firstNum(r,['Mandays 01 Jul-Till Date','Mandays 01 Jul–Till Date','01 Jul-Till Date Mandays','July Mandays','Mandays 2026-2027','Mandays Generated Current FY']);
+    const totalSource=firstNum(r,['Total Mandays Generated','Total Mandays']);
+    const aprExplicit=firstNum(r,['Mandays 01 Apr-30 Jun','Mandays 01 Apr–30 Jun','01 Apr-30 Jun Mandays','01 Apr–30 Jun Mandays','Apr-Jun Mandays','NREGA Apr-Jun Mandays']);
+    const aprJun=aprExplicit||Math.max(0,totalSource-before-july);
+    return {before,aprJun,july,total:before+aprJun+july};
+  }
   const gpKey=(j,p)=>[clean(j).toUpperCase(),clean(p).toUpperCase()].join('¦');
   function filteredWorks(){
     const [df,jf,ef,cf]=filters.map(x=>x.value),seen=new Set();
@@ -29,11 +38,12 @@
   function syncReportColumns(rows){
     const head=table.querySelector('thead tr');if(!head)return;
     ['Verified Works','>90%'].forEach(label=>{const target=[...head.cells].find(h=>clean(h.textContent)===label);if(target){const i=target.cellIndex;table.querySelectorAll('tr').forEach(tr=>{if(tr.cells[i])tr.cells[i].remove()})}});
-    if(head.querySelector('.ebk-prior-mandays'))return;
     const aprJun=[...head.cells].find(h=>/Mandays\s*01 Apr.?30 Jun/i.test(clean(h.textContent)));if(!aprJun)return;
-    const insertAt=aprJun.cellIndex,byEngineer=new Map(),byJanpad=new Map();let all=0;
-    rows.forEach(r=>{const v=num(r['Previous Mandays']),k=[clean(r.Janpad),clean(r.Upyantri),clean(r.Cluster)].join('¦'),j=clean(r.Janpad);byEngineer.set(k,(byEngineer.get(k)||0)+v);byJanpad.set(j,(byJanpad.get(j)||0)+v);all+=v});
-    const th=document.createElement('th');th.className='ebk-prior-mandays';th.innerHTML='Mandays From Work Start Date<br>To 31 March 2026';head.insertBefore(th,aprJun);
+    if(head.querySelector('.ebk-prior-mandays'))return;
+    aprJun.innerHTML='Mandays<br>Before 31 March 2026';aprJun.classList.add('ebk-before-mandays');
+    const insertAt=aprJun.cellIndex+1,byEngineer=new Map(),byJanpad=new Map();let all=0;
+    rows.forEach(r=>{const v=mandaysOf(r).aprJun,k=[clean(r.Janpad),clean(r.Upyantri),clean(r.Cluster)].join('¦'),j=clean(r.Janpad);byEngineer.set(k,(byEngineer.get(k)||0)+v);byJanpad.set(j,(byJanpad.get(j)||0)+v);all+=v});
+    const th=document.createElement('th');th.className='ebk-prior-mandays';th.innerHTML='Mandays<br>01 Apr–30 Jun 2026';head.insertBefore(th,head.cells[insertAt]||null);
     table.querySelectorAll('tbody tr').forEach(tr=>{const td=[...tr.cells],first=clean(td[0]?.textContent),jan=clean(td[1]?.textContent),eng=clean(td[2]?.textContent),cl=clean(td[3]?.textContent);let v=0;
       if(/^ALL TOTAL$/i.test(first)||/^TOTAL$/i.test(first))v=all;
       else if(/ TOTAL$/i.test(jan))v=byJanpad.get(jan.replace(/\s+TOTAL$/i,''))||0;
@@ -49,17 +59,17 @@
     const groups=new Map();
     rows.forEach(r=>{
       const key=[clean(r.Janpad),clean(r.Upyantri),clean(r.Cluster)].join('¦');
-      if(!groups.has(key))groups.set(key,{janpad:r.Janpad,engineer:r.Upyantri||'Unmapped',cluster:r.Cluster||'Unmapped',works:0,active:0,nil:0,mandays:0,sanction:0,bookedWage:0,bookedMaterial:0,booked:0,gps:new Set()});
-      const x=groups.get(key),currentMandays=num(r['Mandays 2026-2027']);
+      if(!groups.has(key))groups.set(key,{janpad:r.Janpad,engineer:r.Upyantri||'Unmapped',cluster:r.Cluster||'Unmapped',works:0,active:0,nil:0,beforeMandays:0,aprJunMandays:0,julyMandays:0,mandays:0,sanction:0,bookedWage:0,bookedMaterial:0,booked:0,gps:new Set()});
+      const x=groups.get(key),md=mandaysOf(r),currentMandays=md.july;
       if(clean(r['Work Status']).toLowerCase()==='ongoing')x.works++;
       if(currentMandays>0)x.active++;else x.nil++;
-      x.mandays+=currentMandays;x.sanction+=num(r['Sanction Amount Total']);x.bookedWage+=num(r['Overall Booked Wages']);x.bookedMaterial+=num(r['Overall Booked Material']);x.booked+=num(r['Overall Total Booked']);x.gps.add(gpKey(r.Janpad,r['Panchayat Name']));
+      x.beforeMandays+=md.before;x.aprJunMandays+=md.aprJun;x.julyMandays+=md.july;x.mandays+=md.total;x.sanction+=num(r['Sanction Amount Total']);x.bookedWage+=num(r['Overall Booked Wages']);x.bookedMaterial+=num(r['Overall Booked Material']);x.booked+=num(r['Overall Total Booked']);x.gps.add(gpKey(r.Janpad,r['Panchayat Name']));
     });
     let cards=[...groups.values()].map(x=>{x.expPct=x.sanction?100*x.booked/x.sanction:0;x.nilPct=(x.active+x.nil)?100*x.nil/(x.active+x.nil):0;x.status=(x.mandays===0||x.nilPct>=75||x.expPct<5)?'poor':(x.nilPct>=40||x.expPct<15?'watch':'good');return x});
     cards=cards.filter(x=>(statusFilter.value==='ALL'||x.status===statusFilter.value)&&(issueFilter.value==='ALL'||issueFilter.value==='zeroMandays'&&x.mandays===0||issueFilter.value==='nilWorks'&&x.nil>0||issueFilter.value==='lowExp'&&x.expPct<15)).sort((a,b)=>({poor:0,watch:1,good:2}[a.status]-{poor:0,watch:1,good:2}[b.status])||b.nilPct-a.nilPct||a.janpad.localeCompare(b.janpad)||a.engineer.localeCompare(b.engineer,'hi'));
     const count={poor:0,watch:0,good:0};cards.forEach(x=>count[x.status]++);summary.textContent=`${cards.length} उपयंत्री–क्लस्टर • खराब ${count.poor} • सुधार आवश्यक ${count.watch} • अच्छी प्रगति ${count.good} • Report Card parameters`;
     if(!cards.length){grid.innerHTML='<div class="ebk-empty">चयनित filter में कोई KPI कार्ड नहीं मिला।</div>';return}
-    grid.innerHTML=cards.map(x=>{const label=x.status==='poor'?'खराब प्रगति':x.status==='watch'?'सुधार आवश्यक':'अच्छी प्रगति';return `<article class="ebk-card ${x.status}"><div class="ebk-top"><div><div class="ebk-name">${esc(x.engineer)}</div><div class="ebk-place">${esc(x.janpad)} • ${esc(x.cluster)} • ${fmt(x.gps.size)} GP</div></div><span class="ebk-badge">${label}</span></div><div class="ebk-stats"><div class="ebk-stat"><b>${fmt(x.works)}</b><span>Ongoing कार्य</span></div><div class="ebk-stat"><b>${fmt(x.mandays)}</b><span>01 Jul–Today मानव दिवस</span></div><div class="ebk-stat"><b>${fmt(x.active)}</b><span>Active कार्य</span></div><div class="ebk-stat"><b>${fmt(x.nil)}</b><span>NIL कार्य</span></div><div class="ebk-stat"><b>${x.nilPct.toFixed(1)}%</b><span>NIL अनुपात</span></div><div class="ebk-stat"><b>${x.expPct.toFixed(1)}%</b><span>व्यय प्रगति</span></div></div><div class="ebk-money"><div>स्वीकृति ₹ लाख<b>${lakh(x.sanction)}</b></div><div>Booked Wages ₹ लाख<b>${lakh(x.bookedWage)}</b></div><div>Booked Material ₹ लाख<b>${lakh(x.bookedMaterial)}</b></div><div>Total Booked ₹ लाख<b>${lakh(x.booked)}</b></div><div>शेष ₹ लाख<b>${lakh(Math.max(0,x.sanction-x.booked))}</b></div></div>${x.status==='poor'?'<div class="ebk-alert">⚠ प्राथमिक समीक्षा आवश्यक</div>':''}</article>`}).join('');
+    grid.innerHTML=cards.map(x=>{const label=x.status==='poor'?'खराब प्रगति':x.status==='watch'?'सुधार आवश्यक':'अच्छी प्रगति';return `<article class="ebk-card ${x.status}"><div class="ebk-top"><div><div class="ebk-name">${esc(x.engineer)}</div><div class="ebk-place">${esc(x.janpad)} • ${esc(x.cluster)} • ${fmt(x.gps.size)} GP</div></div><span class="ebk-badge">${label}</span></div><div class="ebk-stats"><div class="ebk-stat"><b>${fmt(x.works)}</b><span>Ongoing कार्य</span></div><div class="ebk-stat"><b>${fmt(x.beforeMandays)}</b><span>Before 31 March 2026</span></div><div class="ebk-stat"><b>${fmt(x.aprJunMandays)}</b><span>01 Apr–30 Jun 2026</span></div><div class="ebk-stat"><b>${fmt(x.julyMandays)}</b><span>01 Jul–Till Date</span></div><div class="ebk-stat"><b>${fmt(x.mandays)}</b><span>Total Mandays Generated</span></div><div class="ebk-stat"><b>${fmt(x.active)}</b><span>Active कार्य</span></div><div class="ebk-stat"><b>${fmt(x.nil)}</b><span>NIL कार्य</span></div><div class="ebk-stat"><b>${x.nilPct.toFixed(1)}%</b><span>NIL अनुपात</span></div><div class="ebk-stat"><b>${x.expPct.toFixed(1)}%</b><span>व्यय प्रगति</span></div></div><div class="ebk-money"><div>स्वीकृति ₹ लाख<b>${lakh(x.sanction)}</b></div><div>Booked Wages ₹ लाख<b>${lakh(x.bookedWage)}</b></div><div>Booked Material ₹ लाख<b>${lakh(x.bookedMaterial)}</b></div><div>Total Booked ₹ लाख<b>${lakh(x.booked)}</b></div><div>शेष ₹ लाख<b>${lakh(Math.max(0,x.sanction-x.booked))}</b></div></div>${x.status==='poor'?'<div class="ebk-alert">⚠ प्राथमिक समीक्षा आवश्यक</div>':''}</article>`}).join('');
   }
   statusFilter.addEventListener('change',render);issueFilter.addEventListener('change',render);filters.forEach(x=>x.addEventListener('change',()=>setTimeout(render,0)));
   new MutationObserver(render).observe(document.body,{attributes:true,attributeFilter:['data-report-view']});
