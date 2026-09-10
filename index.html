@@ -1569,7 +1569,7 @@ body.srdm-report-focus #yuktdharaMonitoring.srdm-standalone-report-open,body.srd
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=49"></script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');document.write('<script src="ongoing-details.js?live='+Date.now()+'"><\/script>');</script><script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=49"></script><script src="ek-bagiya/data.js?v=20260910"></script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');document.write('<script src="ongoing-details.js?live='+Date.now()+'"><\/script>');</script><script>
 /* Embedded ongoing-details.js - EXCEL FINAL CATEGORY V8 */
 window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
 </script><script>
@@ -1901,39 +1901,48 @@ function renderOngoingAllSummary(){
 function ekBagiyaFiltered(){
   const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value;
   const seen=new Set();
-  return ongoingDetails.filter(r=>{
-    if(d!=='ALL'&&districtOf(r.janpad)!==d)return false;
-    if(j!=='ALL'&&r.janpad!==j)return false;
-    if(e!=='ALL'&&r.engineer!==e)return false;
-    if(c!=='ALL'&&r.cluster!==c)return false;
-    if((resolvedFinalCategory(r))!=='Ek Bagiya Maa Ke Naam' && (resolvedFinalCategory(r))!=='Ek Bagiya')return false;
-    const code=clean(r.code); if(code&&seen.has(code))return false; if(code)seen.add(code);
+  const source=typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS)?WORK_DETAILS:[];
+  return source.filter(r=>{
+    if(d!=='ALL'&&clean(r.Zila)!==d)return false;
+    if(j!=='ALL'&&clean(r.Janpad)!==j)return false;
+    if(e!=='ALL'&&clean(r.Upyantri)!==e)return false;
+    if(c!=='ALL'&&clean(r.Cluster)!==c)return false;
+    const code=clean(r['Work Code']); if(code&&seen.has(code))return false; if(code)seen.add(code);
     return true;
   });
 }
 function renderEkBagiyaDashboard(){
-  const src=ekBagiyaFiltered().filter(r=>['2025-2026','2026-2027'].includes(clean(r.fy)));
-  const liveReport=window.SHRAMIK_NIYOJAN||{},liveRows=Array.isArray(liveReport.gpMandaysRows)?liveReport.gpMandaysRows:[];
-  const gpKey=(janpad,panchayat)=>[clean(janpad).toUpperCase(),clean(panchayat).toUpperCase()].join('¦');
-  const liveByGp=new Map(liveRows.map(r=>[gpKey(r.janpad,r.panchayat),num(r.julToday)]));
-  if(!liveRows.length){$('viewTitle').textContent='एक बगिया माँ के नाम — Ongoing Works Dashboard';$('viewMeta').textContent='Official live 01 Jul–Today Persondays अभी उपलब्ध नहीं है। Auto Update चलाएँ; पुराने दोहराए हुए आंकड़े प्रदर्शित नहीं किए गए हैं।';$('reportTable').innerHTML='<tbody><tr><td class="empty-table">Live portal data unavailable — run_daily_update.bat चलाएँ।</td></tr></tbody>';return}
+  const src=ekBagiyaFiltered();
   const m=new Map();
   const bucket=p=>p<=0?'b0':p<=25?'b25':p<=60?'b60':p<=75?'b75':p<=90?'b90':'b90p';
   for(const r of src){
-    const key=[r.janpad,r.engineer,r.cluster].map(clean).join('¦');
-    if(!m.has(key))m.set(key,{district:districtOf(r.janpad),janpad:r.janpad,engineer:r.engineer,cluster:r.cluster,workCount:0,activeWorks:0,nilMandays:0,nregaAprJunMandays:0,julyMandays:0,totalSanction:0,totalBooked:0,b0:0,b25:0,b60:0,b75:0,b90:0,b90p:0,_gps:new Set()});
-    const x=m.get(key),ep=num(r.expPct),gk=gpKey(r.janpad,r.panchayat),liveMandays=liveByGp.get(gk)||0;x.workCount++;if(!x._gps.has(gk)){x._gps.add(gk);x.nregaAprJunMandays+=num(r.nregaAprJunMandays);x.julyMandays+=liveMandays}if(liveMandays>0)x.activeWorks++;else x.nilMandays++;x.totalSanction+=num(r.sanction);x.totalBooked+=num(r.booked);x[bucket(ep)]++;
+    const key=[r.Janpad,r.Upyantri,r.Cluster].map(clean).join('¦');
+    if(!m.has(key))m.set(key,{district:r.Zila,janpad:r.Janpad,engineer:r.Upyantri,cluster:r.Cluster,workCount:0,ongoing:0,activeWorks:0,nilMandays:0,nregaAprJunMandays:0,julyMandays:0,totalMandays:0,wageSanction:0,materialSanction:0,totalSanction:0,nregaWage:0,nregaMaterial:0,nregaBooked:0,vbgWage:0,vbgMaterial:0,vbgBooked:0,bookedWage:0,bookedMaterial:0,totalBooked:0,paidWage:0,paidMaterial:0,paidSince:0,duesWage:0,duesMaterial:0,recoveryWorks:0,recoveryAmount:0,b0:0,b25:0,b60:0,b75:0,b90:0,b90p:0});
+    const x=m.get(key),ep=num(r['Overall Expenditure %']);
+    x.workCount++;if(clean(r['Work Status']).toLowerCase()==='ongoing')x.ongoing++;
+    x.nregaAprJunMandays+=num(r['Mandays 2025-2026']);x.julyMandays+=num(r['Mandays 2026-2027']);x.totalMandays+=num(r['Total Mandays']);
+    if(num(r['Mandays 2026-2027'])>0)x.activeWorks++;else x.nilMandays++;
+    x.wageSanction+=num(r['Wage Sanctioned']);x.materialSanction+=num(r['Material Sanctioned']);x.totalSanction+=num(r['Sanction Amount Total']);
+    x.nregaWage+=num(r['MGNREGA Booked Wages Till 30 June']);x.nregaMaterial+=num(r['MGNREGA Booked Material Till 30 June']);x.nregaBooked+=num(r['MGNREGA Total Booked Till 30 June']);
+    x.vbgWage+=num(r['VBGRAMG Booked Wages']);x.vbgMaterial+=num(r['VBGRAMG Booked Material']);x.vbgBooked+=num(r['VBGRAMG Total Booked']);
+    x.bookedWage+=num(r['Overall Booked Wages']);x.bookedMaterial+=num(r['Overall Booked Material']);x.totalBooked+=num(r['Overall Total Booked']);
+    x.paidWage+=num(r['Wage Amount Paid since inception']);x.paidMaterial+=num(r['Material Amount Paid since inception']);x.paidSince+=num(r['Total Amount Paid since inception']);
+    x.duesWage+=num(r['Remaining Wages']);x.duesMaterial+=num(r['Remaining Material']);
+    if(num(r['Vasuli Rashi ₹'])>0||num(r['Nishfal Work'])>0)x.recoveryWorks++;x.recoveryAmount+=num(r['Vasuli Rashi ₹']);x[bucket(ep)]++;
   }
-  let data=[...m.values()].map(r=>({...r,remaining:Math.max(0,r.totalSanction-r.totalBooked),expPct:r.totalSanction?r.totalBooked*100/r.totalSanction:0,ongoing:num(r.workCount),ekOngoing:num(r.workCount),labour:num(r.julyMandays)}));
-  data=sortRows(data,'ekOngoing',['engineer','janpad','cluster']);
+  let data=[...m.values()].map(r=>({...r,remaining:Math.max(0,r.totalSanction-r.totalBooked),expPct:r.totalSanction?r.totalBooked*100/r.totalSanction:0,ekOngoing:r.ongoing,labour:r.julyMandays}));
+  data=sortRows(data,'ongoing',['engineer','janpad','cluster']);
   lastExport=data;$('viewTitle').textContent='एक बगिया माँ के नाम — Ongoing Works Dashboard';
-  const totalWorks=src.length,q1=sum(data,'nregaAprJunMandays'),july=sum(data,'julyMandays'),active=sum(data,'activeWorks'),nil=sum(data,'nilMandays'),sanc=sum(src,'sanction'),book=sum(src,'booked'),rem=Math.max(0,sanc-book),ep=sanc?book*100/sanc:0;
-  $('viewMeta').textContent=`Official VB-G RAM G Persondays • प्रत्येक Ek Bagiya GP केवल एक बार • FY 2025-26 & 2026-27 • ${fmt(totalWorks)} ongoing works • NREGA Apr–Jun mandays ${fmt(q1)} • 1 Jul–Today Ek Bagiya mandays ${fmt(july)} • Active ${fmt(active)} • NIL ${fmt(nil)} • Portal date ${liveReport.officialDate||todayDate()}`;
-  let h=`<thead><tr><th>District</th><th>Janpad</th><th>Sub Engineer / Upyantri</th><th>Cluster</th><th>Ek Bagiya Ongoing</th><th>Current FY Active</th><th>NIL 1 Jul–Today Mandays</th><th>NREGA Mandays<br>01 Apr–30 Jun</th><th>Ek Bagiya Mandays<br>01 Jul–Today</th><th>0%</th><th>1–25%</th><th>26–60%</th><th>61–75%</th><th>76–90%</th><th>&gt;90%</th><th>Sanction ₹ Lakh</th><th>Booked ₹ Lakh</th><th>Remaining ₹ Lakh</th><th>Exp %</th></tr></thead><tbody>`;
-  for(const r of data){h+=`<tr>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.workCount,true)}${cell(r.activeWorks,true)}${cell(r.nilMandays,true)}${cell(r.nregaAprJunMandays,true)}${cell(r.julyMandays,true)}${cell(r.b0,true)}${cell(r.b25,true)}${cell(r.b60,true)}${cell(r.b75,true)}${cell(r.b90,true)}${cell(r.b90p,true)}<td>${moneyLakh(r.totalSanction)}</td><td>${moneyLakh(r.totalBooked)}</td><td>${moneyLakh(r.remaining)}</td><td>${r.expPct.toFixed(1)}%</td></tr>`}
-  const ks=['workCount','activeWorks','nilMandays','nregaAprJunMandays','julyMandays','b0','b25','b60','b75','b90','b90p','totalSanction','totalBooked','remaining'],t={};ks.forEach(k=>t[k]=sum(data,k));
-  h+=`<tr class="total-row"><td>TOTAL</td><td></td><td></td><td></td>${cell(t.workCount,true)}${cell(t.activeWorks,true)}${cell(t.nilMandays,true)}${cell(t.nregaAprJunMandays,true)}${cell(t.julyMandays,true)}${cell(t.b0,true)}${cell(t.b25,true)}${cell(t.b60,true)}${cell(t.b75,true)}${cell(t.b90,true)}${cell(t.b90p,true)}<td>${moneyLakh(t.totalSanction)}</td><td>${moneyLakh(t.totalBooked)}</td><td>${moneyLakh(t.remaining)}</td><td>${ep.toFixed(1)}%</td></tr>`;
-  if(!data.length)h+=`<tr><td colspan="19" class="empty-table">Current filter में Ek Bagiya ongoing work नहीं मिला।</td></tr>`;
+  const q1=sum(data,'nregaAprJunMandays'),q2=sum(data,'julyMandays'),qt=sum(data,'totalMandays'),tw=sum(data,'workCount');
+  $('viewMeta').textContent=`Correct Work Code matched data • ${fmt(tw)} verified works • 01 Apr–30 Jun Mandays ${fmt(q1)} • 01 Jul–Till Date Mandays ${fmt(q2)} • Total Mandays ${fmt(qt)} • Recovery/Vasuli works ${fmt(sum(data,'recoveryWorks'))}`;
+  const cols=['workCount','ongoing','activeWorks','nilMandays','nregaAprJunMandays','julyMandays','totalMandays','b0','b25','b60','b75','b90','b90p','recoveryWorks','wageSanction','materialSanction','totalSanction','nregaWage','nregaMaterial','nregaBooked','vbgWage','vbgMaterial','vbgBooked','bookedWage','bookedMaterial','totalBooked','paidWage','paidMaterial','paidSince','duesWage','duesMaterial','remaining'];
+  let h=`<thead><tr><th>District</th><th>Janpad</th><th>Sub Engineer / Upyantri</th><th>Cluster</th><th>Verified Works</th><th>Ek Bagiya Ongoing</th><th>Current FY Active</th><th>NIL 01 Jul–Till Date</th><th>Mandays<br>01 Apr–30 Jun</th><th>Mandays<br>01 Jul–Till Date</th><th>Total Mandays Generated</th><th>0%</th><th>1–25%</th><th>26–60%</th><th>61–75%</th><th>76–90%</th><th>&gt;90%</th><th>Recovery/Vasuli Works</th><th>Sanction Wages ₹ Lakh</th><th>Sanction Material ₹ Lakh</th><th>Total Sanction ₹ Lakh</th><th>Booked Wage<br>01 Apr–30 Jun</th><th>Booked Material<br>01 Apr–30 Jun</th><th>Total Booked<br>01 Apr–30 Jun</th><th>Booked Wage<br>01 Jul–Till Date</th><th>Booked Material<br>01 Jul–Till Date</th><th>Total Booked<br>01 Jul–Till Date</th><th>Booked Wages ₹ Lakh</th><th>Booked Material ₹ Lakh</th><th>Total Booked ₹ Lakh</th><th>Paid Wage Since ₹ Lakh</th><th>Paid Material Since ₹ Lakh</th><th>Paid Since ₹ Lakh</th><th>Dues Wage ₹ Lakh</th><th>Dues Material ₹ Lakh</th><th>Remaining ₹ Lakh</th><th>Exp %</th></tr></thead><tbody>`;
+  const nums=r=>[r.workCount,r.ongoing,r.activeWorks,r.nilMandays,r.nregaAprJunMandays,r.julyMandays,r.totalMandays,r.b0,r.b25,r.b60,r.b75,r.b90,r.b90p,r.recoveryWorks].map(v=>cell(v,true)).join('');
+  const cash=r=>[r.wageSanction,r.materialSanction,r.totalSanction,r.nregaWage,r.nregaMaterial,r.nregaBooked,r.vbgWage,r.vbgMaterial,r.vbgBooked,r.bookedWage,r.bookedMaterial,r.totalBooked,r.paidWage,r.paidMaterial,r.paidSince,r.duesWage,r.duesMaterial,r.remaining].map(v=>`<td>${moneyLakh(v)}</td>`).join('');
+  for(const r of data)h+=`<tr>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${nums(r)}${cash(r)}<td>${r.expPct.toFixed(1)}%</td></tr>`;
+  const t={};cols.forEach(k=>t[k]=sum(data,k));t.expPct=t.totalSanction?t.totalBooked*100/t.totalSanction:0;
+  h+=`<tr class="total-row"><td>TOTAL</td><td></td><td></td><td></td>${nums(t)}${cash(t)}<td>${t.expPct.toFixed(1)}%</td></tr>`;
+  if(!data.length)h+=`<tr><td colspan="37" class="empty-table">Current filter में Ek Bagiya work नहीं मिला।</td></tr>`;
   h+='</tbody>';$('reportTable').innerHTML=h;
 }
 function renderCategoryBuckets(){const src=categoryFiltered();const data=aggregate(src,['category'],['workCount','totalSanction','totalBooked','b0','b25','b60','b75','b90','b90p']).sort((a,b)=>num(b.workCount)-num(a.workCount)||clean(a.category).localeCompare(clean(b.category),'hi'));data.forEach(r=>r.expPct=r.totalSanction?num(r.totalBooked)*100/num(r.totalSanction):0);lastExport=data;$('viewTitle').textContent='Final Category-wise Ongoing Work Buckets';$('viewMeta').textContent=`${fmt(data.length)} Final Categories • Established Final Work Category Rules • Expenditure = Booked Since Inception ÷ Total Sanction • ${todayDate()}`;let h=`<thead><tr><th>Work Category</th><th>Total Works</th><th>0%</th><th>1%–25%</th><th>26%–60%</th><th>61%–75%</th><th>76%–90%</th><th>&gt;90%</th><th>Sanction ₹ Lakh</th><th>Booked ₹ Lakh</th><th>Exp %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(r.category)}${cell(r.workCount,true)}<td class="bucket-zero">${fmt(r.b0)}</td>${cell(r.b25,true)}${cell(r.b60,true)}${cell(r.b75,true)}${cell(r.b90,true)}<td class="bucket-good">${fmt(r.b90p)}</td><td>${moneyLakh(r.totalSanction)}</td><td>${moneyLakh(r.totalBooked)}</td><td><span class="exp-pct-chip ${r.expPct===0?'critical':r.expPct<=25?'low':r.expPct>90?'good':''}">${r.expPct.toFixed(1)}%</span></td></tr>`}const t={};['workCount','totalSanction','totalBooked','b0','b25','b60','b75','b90','b90p'].forEach(k=>t[k]=sum(data,k));const ep=t.totalSanction?t.totalBooked*100/t.totalSanction:0;h+=`<tr class="total-row"><td>TOTAL</td>${cell(t.workCount,true)}${cell(t.b0,true)}${cell(t.b25,true)}${cell(t.b60,true)}${cell(t.b75,true)}${cell(t.b90,true)}${cell(t.b90p,true)}<td>${moneyLakh(t.totalSanction)}</td><td>${moneyLakh(t.totalBooked)}</td><td>${ep.toFixed(1)}%</td></tr>`;if(!data.length)h+=`<tr><td colspan="11" class="empty-table">Current filter में Category data नहीं मिला।</td></tr>`;h+='</tbody>';$('reportTable').innerHTML=h}
@@ -2599,7 +2608,7 @@ function initPptExportUI(){
     if(!data.length)h+='<tr><td colspan="8" class="empty-table">Current filter में Recovery Done Work नहीं मिला।</td></tr>';h+='</tbody>';$('reportTable').innerHTML=h;
   }
   function addRecoveryColumn(){
-    if(view==='recovery')return;
+    if(view==='recovery'||view==='ekbagiya')return;
     const table=$('reportTable'); if(!table)return;
     const headRows=table.querySelectorAll('thead tr'); if(!headRows.length)return;
     const lastHead=headRows[headRows.length-1]; if([...lastHead.cells].some(c=>/Recovery Work|वसूली वाले कार्य/i.test(c.textContent)))return;
@@ -3028,7 +3037,7 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
     categorysubeng:['⌘','Category × Sub Engineer','Category and Sub Engineer analysis'],categoryworks:['▦','Category Work Details','Work-level category details'],
     dysjanpad:['⚑','Janpad Dysfunctional GP','Janpad-wise problem GP tracking'],dysfunctional:['⚠','Sub Engineer Dysfunctional GP','Sub Engineer-wise problem GP tracking'],
     state:['◫','State / District Report','District and state comparison view'],official:['▤','Janpad Daily Report','Official Janpad monitoring report'],
-    engineer:['↗','Sub Engineer Daily Report','Engineer and cluster monitoring'],ekbagiya:['♣','एक बगिया माँ के नाम','Work, expenditure and progress dashboard'],
+    engineer:['↗','Sub Engineer Daily Report','Engineer and cluster monitoring'],ekbagiya:['<img src="ek-bagiya/icon.png" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:14px">','एक बगिया माँ के नाम','Work, expenditure and progress dashboard'],
     recovery:['₹','Work Recovery Done','Sub Engineer-wise recovery monitoring']
   };
   [...nav.querySelectorAll('.tab[data-view]')].forEach(tab=>{
