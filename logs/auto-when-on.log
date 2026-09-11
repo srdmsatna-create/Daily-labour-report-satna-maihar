@@ -1613,3 +1613,27 @@ Already up to date.
 [2/6] Fetch official VB-G RAM G data
 FAILED: R6.9 filters not found: expected 3 dropdowns.
 ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.
+
+============================================================
+START Fri 09/11/2026  8:04:30.66
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Current branch main is up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1485/1216; PMAY Labour/MR=1214/1069; Ek Bagiya Labour/MR=230/124.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=1069 | Ek Bagiya Ongoing=124 | lock_active=False
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main 65bfc03] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
