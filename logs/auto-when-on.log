@@ -1637,3 +1637,82 @@ See https://aka.ms/gcm/credstores for more information.
 bash: line 1: /dev/tty: No such device or address
 error: failed to execute prompt script (exit code 1)
 fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Fri 09/11/2026  8:33:10.64
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1485/1216; PMAY Labour/MR=1214/1069; Ek Bagiya Labour/MR=230/124.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | PMAY Ongoing=1069 | Ek Bagiya Ongoing=124 | lock_active=False
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main d61ad07] Automatic VBGRAMG update when laptop online
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+[6/6] Push
+fatal: Unable to persist credentials with the 'wincredman' credential store.
+See https://aka.ms/gcm/credstores for more information.
+bash: line 1: /dev/tty: No such device or address
+error: failed to execute prompt script (exit code 1)
+fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Sat 09/12/2026  7:58:34.27
+============================================================
+Waiting for network...
+ERROR: Internet not available.
+
+============================================================
+START Sat 09/12/2026  8:01:19.42
+============================================================
+Waiting for network...
+ERROR: Internet not available.
+
+============================================================
+START Sat 09/12/2026  8:33:11.07
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: fab50a1
+
+============================================================
+START Sat 09/12/2026  9:33:10.78
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sat 09/12/2026 10:33:10.73
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
