@@ -1,111 +1,14 @@
 /* SRDM FINAL READABLE PRINT + NAV ICON JS */
 (function(){
   "use strict";
+  var ROAD_THUMB="data:image/jpeg;base64,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";
   function byId(id){ return document.getElementById(id); }
   function esc(v){return String(v==null?"":v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
-
-  function iconFor(el){
-    var key=(el.getAttribute('data-view')||'')+' '+(el.textContent||'');
-    key=key.toLowerCase();
-    var map=[
-      [/official|daily|overview|summary|dashboard/, '▦'],
-      [/district|zila/, '◆'],
-      [/janpad|block/, '▥'],
-      [/engineer|upyantri|sub engineer/, '⚙'],
-      [/cluster/, '⌘'],
-      [/gram panchayat|\bgp\b|panchayat/, '⌂'],
-      [/category|shreni/, '▤'],
-      [/ongoing|work details|works/, '☷'],
-      [/ek bagi|बगिया/, '♣'],
-      [/mandays|labour|persondays/, '♟'],
-      [/expenditure|expense|booked/, '₹'],
-      [/recovery|vasuli|वसूली/, '↺'],
-      [/muster|mr\b/, '✓'],
-      [/emuster|e-muster/, '☑'],
-      [/priority|alert/, '!'],
-      [/dysfunctional|nil|zero/, '⚠'],
-      [/state/, '◉'],
-      [/download|excel|csv/, '⇩'],
-      [/print|pdf/, '⎙']
-    ];
-    for(var i=0;i<map.length;i++) if(map[i][0].test(key)) return map[i][1];
-    return '•';
-  }
-
-  function installIcons(root){
-    root=root||document;
-    var nodes=root.querySelectorAll('.tab,[data-view],.sidebar a,.sidebar button,.nav-item,.menu-item');
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      if(el.dataset.srdmIcon==='1') continue;
-      if(el.querySelector('.srdm-nav-icon')){el.dataset.srdmIcon='1';continue;}
-      var span=document.createElement('span');
-      span.className='srdm-nav-icon';
-      span.setAttribute('aria-hidden','true');
-      span.textContent=iconFor(el);
-      el.insertBefore(span,el.firstChild);
-      el.dataset.srdmIcon='1';
-    }
-  }
-
-  function ensurePortalIcons(root){
-    root=root||document;
-    function setIcon(selector,symbol,label){
-      var cards=root.querySelectorAll ? root.querySelectorAll(selector) : [];
-      for(var i=0;i<cards.length;i++){
-        var icon=cards[i].querySelector('.srdm-app-icon');
-        if(icon){icon.textContent=symbol;icon.setAttribute('aria-label',label);}
-      }
-    }
-    setIcon('.srdm-portal-sipri','🌐','SIPRI portal');
-    setIcon('.srdm-portal-jgsa','💧','Jal Ganga Sanvardhan Abhiyan');
-  }
-
-  function cleanedTable(){
-    var src=byId('reportTable'); if(!src)return null;
-    var t=src.cloneNode(true),bad=t.querySelectorAll('script,style,template,noscript,.srdm-nav-icon');
-    for(var i=0;i<bad.length;i++)bad[i].remove();
-    var all=t.querySelectorAll('*');
-    for(var j=0;j<all.length;j++){
-      all[j].removeAttribute('width');
-      all[j].style.transform='none';all[j].style.rotate='none';all[j].style.writingMode='horizontal-tb';all[j].style.whiteSpace='normal';
-    }
-    return t.outerHTML;
-  }
-
-  function printCurrent(ev){
-    if(ev){ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();}
-    var orientation='landscape',sel=byId('printOrientation'); if(sel&&sel.value==='portrait')orientation='portrait';
-    var table=cleanedTable(); if(!table)return;
-    var title=byId('viewTitle')?byId('viewTitle').textContent:'VBGRAMG Report';
-    var meta=byId('viewMeta')?byId('viewMeta').textContent:'';
-    var font=orientation==='portrait'?'8.6px':'10.6px';
-    var page=orientation==='portrait'?'A4 portrait':'A4 landscape';
-    var html="<!doctype html><html><head><meta charset='utf-8'><title>"+esc(title)+"</title><style>"+
-      "@page{size:"+page+";margin:5mm}*{box-sizing:border-box}html,body{margin:0!important;padding:0!important;background:#fff!important;transform:none!important;rotate:none!important}"+
-      "body{font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#132238}h1{font-size:18px;line-height:1.1;margin:0 0 3px;color:#0b3159}.meta{font-size:10px;line-height:1.15;color:#607286;margin:0 0 7px}.sheet{width:100%;max-width:100%;overflow:visible!important}"+
-      "table{width:100%!important;min-width:0!important;max-width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;font-size:"+font+"!important;transform:none!important;writing-mode:horizontal-tb!important}"+
-      "th,td{border:1px solid #688cb2!important;padding:3.6px 2.4px!important;text-align:center!important;vertical-align:middle!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;line-height:1.22!important;transform:none!important;rotate:none!important;writing-mode:horizontal-tb!important}"+
-      "th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}script,style,template,noscript{display:none!important}</style></head><body><h1>"+esc(title)+"</h1><div class='meta'>"+esc(meta)+"</div><div class='sheet'>"+table+"</div></body></html>";
-    var w=window.open('','_blank','width=1250,height=900'); if(!w){alert('Print popup blocked है। Browser में pop-up allow करें।');return;}
-    w.document.open();w.document.write(html);w.document.close();w.focus();setTimeout(function(){w.print();},450);
-  }
-
-  function install(){
-    installIcons(document);
-    ensurePortalIcons(document);
-    var orient=byId('printOrientation');if(orient){orient.disabled=false;orient.title='Portrait या Landscape चुनें';}
-    var btn=byId('printBtn');if(btn&&!btn.dataset.srdmReadablePrint){btn.dataset.srdmReadablePrint='1';btn.addEventListener('click',printCurrent,true);}
-    var obs=new MutationObserver(function(muts){
-      for(var i=0;i<muts.length;i++){
-        for(var j=0;j<muts[i].addedNodes.length;j++){
-          var n=muts[i].addedNodes[j];
-          if(n.nodeType===1){installIcons(n);ensurePortalIcons(n);}
-        }
-      }
-      ensurePortalIcons(document);
-    });
-    obs.observe(document.body,{childList:true,subtree:true});
-  }
+  function iconFor(el){var key=((el.getAttribute('data-view')||'')+' '+(el.textContent||'')).toLowerCase();var map=[[/official|daily|overview|summary|dashboard/,'▦'],[/district|zila/,'◆'],[/janpad|block/,'▥'],[/engineer|upyantri|sub engineer/,'⚙'],[/cluster/,'⌘'],[/gram panchayat|\bgp\b|panchayat/,'⌂'],[/category|shreni/,'▤'],[/ongoing|work details|works/,'☷'],[/ek bagi|बगिया/,'♣'],[/mandays|labour|persondays/,'♟'],[/expenditure|expense|booked/,'₹'],[/recovery|vasuli|वसूली/,'↺'],[/muster|mr\b/,'✓'],[/emuster|e-muster/,'☑'],[/priority|alert/,'!'],[/dysfunctional|nil|zero/,'⚠'],[/state/,'◉'],[/download|excel|csv/,'⇩'],[/print|pdf/,'⎙']];for(var i=0;i<map.length;i++)if(map[i][0].test(key))return map[i][1];return '•';}
+  function installIcons(root){root=root||document;var nodes=root.querySelectorAll('.tab,[data-view],.sidebar a,.sidebar button,.nav-item,.menu-item');for(var i=0;i<nodes.length;i++){var el=nodes[i];if(el.dataset.srdmIcon==='1')continue;if(el.querySelector('.srdm-nav-icon')){el.dataset.srdmIcon='1';continue;}var span=document.createElement('span');span.className='srdm-nav-icon';span.setAttribute('aria-hidden','true');span.textContent=iconFor(el);el.insertBefore(span,el.firstChild);el.dataset.srdmIcon='1';}}
+  function ensurePortalIcons(root){root=root||document;function setIcon(selector,symbol,label){var cards=root.querySelectorAll?root.querySelectorAll(selector):[];for(var i=0;i<cards.length;i++){var icon=cards[i].querySelector('.srdm-app-icon');if(icon){icon.textContent=symbol;icon.setAttribute('aria-label',label);}}}setIcon('.srdm-portal-sipri','🌐','SIPRI portal');setIcon('.srdm-portal-jgsa','💧','Jal Ganga Sanvardhan Abhiyan');var rims=root.querySelectorAll?root.querySelectorAll('.srdm-portal-rims'):[];for(var j=0;j<rims.length;j++){var ri=rims[j].querySelector('.srdm-app-icon');if(ri){ri.innerHTML='<img alt="Gravel road" src="'+ROAD_THUMB+'" style="width:100%;height:100%;object-fit:cover;border-radius:16px;display:block">';ri.style.padding='0';ri.style.overflow='hidden';ri.setAttribute('aria-label','Road Information & Management System');}}}
+  function cleanedTable(){var src=byId('reportTable');if(!src)return null;var t=src.cloneNode(true),bad=t.querySelectorAll('script,style,template,noscript,.srdm-nav-icon');for(var i=0;i<bad.length;i++)bad[i].remove();var all=t.querySelectorAll('*');for(var j=0;j<all.length;j++){all[j].removeAttribute('width');all[j].style.transform='none';all[j].style.rotate='none';all[j].style.writingMode='horizontal-tb';all[j].style.whiteSpace='normal';}return t.outerHTML;}
+  function printCurrent(ev){if(ev){ev.preventDefault();ev.stopPropagation();if(ev.stopImmediatePropagation)ev.stopImmediatePropagation();}var orientation='landscape',sel=byId('printOrientation');if(sel&&sel.value==='portrait')orientation='portrait';var table=cleanedTable();if(!table)return;var title=byId('viewTitle')?byId('viewTitle').textContent:'VBGRAMG Report';var meta=byId('viewMeta')?byId('viewMeta').textContent:'';var font=orientation==='portrait'?'8.6px':'10.6px';var page=orientation==='portrait'?'A4 portrait':'A4 landscape';var html="<!doctype html><html><head><meta charset='utf-8'><title>"+esc(title)+"</title><style>@page{size:"+page+";margin:5mm}*{box-sizing:border-box}html,body{margin:0!important;padding:0!important;background:#fff!important}body{font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#132238}h1{font-size:18px}.meta{font-size:10px;color:#607286}.sheet{width:100%}table{width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;font-size:"+font+"!important}th,td{border:1px solid #688cb2!important;padding:3.6px 2.4px!important;text-align:center!important;white-space:normal!important;line-height:1.22!important}th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}</style></head><body><h1>"+esc(title)+"</h1><div class='meta'>"+esc(meta)+"</div><div class='sheet'>"+table+"</div></body></html>";var w=window.open('','_blank','width=1250,height=900');if(!w){alert('Print popup blocked है। Browser में pop-up allow करें।');return;}w.document.open();w.document.write(html);w.document.close();w.focus();setTimeout(function(){w.print();},450);}
+  function install(){installIcons(document);ensurePortalIcons(document);var orient=byId('printOrientation');if(orient){orient.disabled=false;orient.title='Portrait या Landscape चुनें';}var btn=byId('printBtn');if(btn&&!btn.dataset.srdmReadablePrint){btn.dataset.srdmReadablePrint='1';btn.addEventListener('click',printCurrent,true);}var obs=new MutationObserver(function(muts){for(var i=0;i<muts.length;i++){for(var j=0;j<muts[i].addedNodes.length;j++){var n=muts[i].addedNodes[j];if(n.nodeType===1){installIcons(n);ensurePortalIcons(n);}}}ensurePortalIcons(document);});obs.observe(document.body,{childList:true,subtree:true});}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
