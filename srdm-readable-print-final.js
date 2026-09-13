@@ -48,8 +48,8 @@
     var title = byId("viewTitle") ? byId("viewTitle").textContent : "VBGRAMG Report";
     var meta = byId("viewMeta") ? byId("viewMeta").textContent : "";
 
-    /* One complete table only. Larger font + narrower wrapped columns. */
-    var font = orientation === "portrait" ? "7.4px" : "9.0px";
+    /* Larger, print-friendly text; wrapping is preferred over tiny font. */
+    var font = orientation === "portrait" ? "8.6px" : "10.6px";
     var page = orientation === "portrait" ? "A4 portrait" : "A4 landscape";
 
     var html =
@@ -59,12 +59,12 @@
       "*{box-sizing:border-box}"+
       "html,body{margin:0!important;padding:0!important;background:#fff!important;transform:none!important;rotate:none!important}"+
       "body{font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#132238}"+
-      "h1{font-size:17px;line-height:1.08;margin:0 0 2px;color:#0b3159}"+
-      ".meta{font-size:9px;line-height:1.1;color:#607286;margin:0 0 6px}"+
+      "h1{font-size:18px;line-height:1.1;margin:0 0 3px;color:#0b3159}"+
+      ".meta{font-size:10px;line-height:1.15;color:#607286;margin:0 0 7px}"+
       ".sheet{width:100%;max-width:100%;overflow:visible!important}"+
       "table{width:100%!important;min-width:0!important;max-width:100%!important;border-collapse:collapse!important;table-layout:fixed!important;font-size:"+font+"!important;transform:none!important;writing-mode:horizontal-tb!important}"+
-      "th,td{border:1px solid #688cb2!important;padding:2.6px 1.8px!important;text-align:center!important;vertical-align:middle!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;line-height:1.16!important;transform:none!important;rotate:none!important;writing-mode:horizontal-tb!important}"+
-      "th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important}"+
+      "th,td{border:1px solid #688cb2!important;padding:3.6px 2.4px!important;text-align:center!important;vertical-align:middle!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;line-height:1.22!important;transform:none!important;rotate:none!important;writing-mode:horizontal-tb!important}"+
+      "th{background:#cfe0f5!important;color:#0a3158!important;font-weight:800!important;font-size:calc("+font+" + 0.4px)!important}"+
       "th:nth-child(1),td:nth-child(1){width:4.8%!important}"+
       "th:nth-child(2),td:nth-child(2){width:5.8%!important}"+
       ".badge{font-size:inherit!important;padding:1px 2px!important}"+
