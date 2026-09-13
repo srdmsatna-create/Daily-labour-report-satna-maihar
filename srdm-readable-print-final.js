@@ -48,6 +48,18 @@
     }
   }
 
+  function ensureSipriIcon(root){
+    root=root||document;
+    var cards=root.querySelectorAll ? root.querySelectorAll('.srdm-portal-sipri') : [];
+    for(var i=0;i<cards.length;i++){
+      var icon=cards[i].querySelector('.srdm-app-icon');
+      if(icon){
+        icon.textContent='💧';
+        icon.setAttribute('aria-label','Water drop');
+      }
+    }
+  }
+
   function cleanedTable(){
     var src=byId('reportTable'); if(!src)return null;
     var t=src.cloneNode(true),bad=t.querySelectorAll('script,style,template,noscript,.srdm-nav-icon');
@@ -80,9 +92,18 @@
 
   function install(){
     installIcons(document);
+    ensureSipriIcon(document);
     var orient=byId('printOrientation');if(orient){orient.disabled=false;orient.title='Portrait या Landscape चुनें';}
     var btn=byId('printBtn');if(btn&&!btn.dataset.srdmReadablePrint){btn.dataset.srdmReadablePrint='1';btn.addEventListener('click',printCurrent,true);}
-    var obs=new MutationObserver(function(muts){for(var i=0;i<muts.length;i++){for(var j=0;j<muts[i].addedNodes.length;j++){var n=muts[i].addedNodes[j];if(n.nodeType===1)installIcons(n);}}});
+    var obs=new MutationObserver(function(muts){
+      for(var i=0;i<muts.length;i++){
+        for(var j=0;j<muts[i].addedNodes.length;j++){
+          var n=muts[i].addedNodes[j];
+          if(n.nodeType===1){installIcons(n);ensureSipriIcon(n);}
+        }
+      }
+      ensureSipriIcon(document);
+    });
     obs.observe(document.body,{childList:true,subtree:true});
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
