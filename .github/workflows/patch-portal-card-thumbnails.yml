@@ -6,6 +6,7 @@ on:
     paths:
       - 'index.html'
       - 'scripts/patch_portal_card_thumbnails.py'
+      - 'scripts/fix_srdm_launcher_cards.py'
       - '.github/workflows/patch-portal-card-thumbnails.yml'
   workflow_dispatch:
 
@@ -21,18 +22,18 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Apply portal thumbnail patch
-        run: python scripts/patch_portal_card_thumbnails.py
+      - name: Rewrite SRDM launcher portal cards
+        run: python scripts/fix_srdm_launcher_cards.py
 
       - name: Commit only when changed
         shell: bash
         run: |
           if git diff --quiet -- index.html; then
-            echo "No portal thumbnail changes needed."
+            echo "No launcher card changes needed."
             exit 0
           fi
           git config user.name "srdmsatna-create"
           git config user.email "srdmsatna@gmail.com"
           git add index.html
-          git commit -m "Restore SIPRI JGSA RIMS card visuals"
+          git commit -m "Fix Planner Jal Ganga RIMS SIPRI dashboard cards"
           git push
