@@ -1,0 +1,38 @@
+name: Refresh Planner Portal counts
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 1,7,13 * * *'
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/fetch_planner_portal_summary.py'
+      - '.github/workflows/refresh-planner-portal.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install parser dependencies
+        run: pip install requests beautifulsoup4
+      - name: Fetch official Planner data
+        run: python scripts/fetch_planner_portal_summary.py
+      - name: Commit refreshed counts
+        shell: bash
+        run: |
+          if git diff --quiet -- planner-portal-data.js; then
+            echo "Planner counts unchanged."
+            exit 0
+          fi
+          git config user.name "srdmsatna-create"
+          git config user.email "srdmsatna@gmail.com"
+          git add planner-portal-data.js
+          git commit -m "Refresh Planner Janpad Panchayat new-work counts"
+          git push
