@@ -1,0 +1,72 @@
+name: MIS 6.12 Historical Data Repair
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/mis612-repair-trigger.txt'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mis612-historical-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Rebuild MIS 6.12 from committed fresh work CSV plus NREGA cutoff master
+        run: |
+          python scripts/update_ongoing_csv.py
+          python scripts/patch_mis_612_cutoff_fields.py
+
+      - name: Validate repaired sample and fields
+        run: |
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          s=Path('ongoing-details.js').read_text(encoding='utf-8').strip()
+          s=re.sub(r'^window\.ONGOING_DETAILS\s*=\s*','',s).rstrip(';')
+          rows=json.loads(s)
+          assert rows, 'No work rows generated'
+          assert all('mandaysTillMar31' in r for r in rows), '31-Mar cutoff missing'
+          by={str(r.get('code','')):r for r in rows}
+          checks={
+            '1712006039/IF/IAY/3417939':9897,
+            '1712006039/IF/IAY/3560825':15180,
+          }
+          for code,min_book in checks.items():
+            if code in by:
+              assert float(by[code].get('booked',0)) >= min_book, (code,by[code].get('booked'))
+          app=Path('app.js').read_text(encoding='utf-8')
+          assert 'Mandays<br>till 31 Mar 2026' in app
+          assert 'NREGA Mandays<br>01 Apr–30 Jun' in app
+          assert 'Mandays<br>01 Jul–Today' in app
+          print('MIS 6.12 repair validation OK:',len(rows),'rows')
+          PY
+
+      - name: Commit repaired live data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ongoing-details.js app.js
+          if git diff --cached --quiet; then
+            echo "No generated changes required."
+            exit 0
+          fi
+          git commit -m "Repair MIS 6.12 booked and mandays cutoff data"
+          git pull --rebase origin main
+          git push origin HEAD:main
