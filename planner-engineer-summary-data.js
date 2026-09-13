@@ -87,4 +87,28 @@ window.PLANNER_OFFICIAL={total:32994,blocks:{Amarpatan:4061,Maihar:9466,Majhgawa
     document.head.appendChild(st);
     rebuildSummary();
   });
+
+  // Planner Portal top card + Janpad table use the verified SIPRI Planning Summary total (1,058),
+  // not the initial engineer-detail snapshot (480).
+  window.addEventListener('DOMContentLoaded',()=>{
+    const verifiedSipri={Amarpatan:25,Maihar:137,Majhgawan:182,Nagod:149,Ramnagar:243,'Rampur baghelan':117,Sohawal:168,Unchahara:37};
+    const applyVerifiedPlannerSipri=()=>{
+      const card=document.getElementById('kSipri');
+      if(card) card.textContent='1,058';
+      const body=document.getElementById('janpadBody');
+      if(!body) return;
+      const order=['Amarpatan','Maihar','Majhgawan','Nagod','Ramnagar','Rampur baghelan','Sohawal','Unchahara'];
+      const fmt=v=>new Intl.NumberFormat('en-IN').format(Number(v)||0);
+      let tp=0,ts=0;
+      const rows=order.map((b,i)=>{
+        const p=Number(window.PLANNER_OFFICIAL.blocks[b]||0),s=Number(verifiedSipri[b]||0),pend=Math.max(0,p-s),pct=p?100*s/p:0;
+        tp+=p;ts+=s;
+        const label=b==='Sohawal'?'SATNA':b.toUpperCase();
+        return `<tr><td>${i+1}</td><td><b>${label}</b></td><td class="good">${fmt(p)}</td><td>${fmt(s)}</td><td class="bad">${fmt(pend)}</td><td class="bad">${pct.toFixed(1)}%</td></tr>`;
+      }).join('');
+      body.innerHTML=rows+`<tr class="total"><td></td><td>कुल</td><td>${fmt(tp)}</td><td>${fmt(ts)}</td><td>${fmt(Math.max(0,tp-ts))}</td><td>${(100*ts/tp).toFixed(1)}%</td></tr>`;
+    };
+    applyVerifiedPlannerSipri();
+    setTimeout(applyVerifiedPlannerSipri,300);
+  });
 })();
