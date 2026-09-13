@@ -3,8 +3,11 @@
 
 The official CSV contains work-level data but not Engineer/Cluster. Those fields are
 joined from AUTO_REPORT rows by Janpad + Panchayat, with the previous ongoing JS as
-an additional fallback. This lets the work-level screen refresh automatically
-without requiring a manual Daily Report.xlsx upload.
+an additional fallback.
+
+MIS 6.12 after the VB-G RAM G migration can return zero/blank historic NREGA booked
+values and does not carry the Apr-Jun split.  Preserve the live row list/status but
+restore those historical NREGA values by Work Code from the reviewed 30-08 master.
 """
 import csv, json, re, sys
 from datetime import datetime, timezone
@@ -13,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / 'data'
 CSV_PATH = DATA / 'Ongoing_Works_dynamic_work_details_latest.csv'
+LEGACY_NREGA = DATA / 'Final_WorkCategory_30-08-2026.csv'
 AUTO = ROOT / 'auto-data.js'
 OUT = ROOT / 'ongoing-details.js'
 ALLOWED_STATUS = {'NEW', 'APPROVED', 'ONGOING', 'SUSPENDED', 'COMPLETED', 'PHYSICALLY COMPLETED', 'DELETED'}
@@ -84,7 +88,6 @@ def build_mapping():
                     mapping[(j, gp)] = (clean(r.get('engineer')), clean(r.get('cluster')))
         except Exception as e:
             print('WARN auto-data mapping:', e)
-    # Preserve old mapping where RepDay lacks a row.
     if OUT.exists():
         try:
             old = load_js_json(OUT, 'window.ONGOING_DETAILS')
@@ -102,6 +105,24 @@ def load_previous():
     except Exception as e:
         print('WARN previous work data:', e); return {}
 
+def load_legacy_nrega():
+    """Reviewed NREGA snapshot used only for pre-migration booked/mandays cutoffs."""
+    out = {}
+    if not LEGACY_NREGA.exists():
+        print('WARN legacy NREGA cutoff master missing:', LEGACY_NREGA)
+        return out
+    try:
+        with LEGACY_NREGA.open('r', encoding='utf-8-sig', newline='') as f:
+            rd = csv.DictReader(f)
+            for r in rd:
+                code = clean(r.get('Work Code'))
+                if code:
+                    out[code] = r
+        print(f'Loaded legacy NREGA cutoff master: {len(out)} work codes')
+    except Exception as e:
+        print('WARN legacy NREGA cutoff master:', e)
+    return out
+
 def pick(r, *names):
     for name in names:
         if name in r and clean(r.get(name)):
@@ -113,7 +134,9 @@ def main():
         raise SystemExit(f'Missing latest ongoing CSV: {CSV_PATH}')
     mp = build_mapping()
     previous = load_previous()
+    legacy = load_legacy_nrega()
     rows = []
+    matched_legacy = restored_booked = restored_aprjun = 0
     with CSV_PATH.open('r', encoding='utf-8-sig', newline='') as f:
         rd = csv.DictReader(f)
         required = {'Work Code','Work Name','Work Status'}
@@ -128,12 +151,42 @@ def main():
             eng, clu = mp.get((j, norm(gp)), ('', ''))
             code = clean(pick(r, 'Work Code', 'Workcode'))
             old = previous.get(code, {})
-            wage = num(pick(r, 'Booked Since Inception Wages (Rs)', 'NREGA Booked Wages', 'Booked Wages'))
-            material = num(pick(r, 'Booked Since Inception Material (Rs)', 'NREGA Booked Material', 'Booked Material'))
+            hist = legacy.get(code, {})
+            if hist:
+                matched_legacy += 1
+
+            live_wage = num(pick(r, 'Booked Since Inception Wages (Rs)', 'NREGA Booked Wages', 'Booked Wages'))
+            live_material = num(pick(r, 'Booked Since Inception Material (Rs)', 'NREGA Booked Material', 'Booked Material'))
+            hist_wage = num(hist.get('NREGA Booked Wages'))
+            hist_material = num(hist.get('NREGA Booked Material'))
+            # Never let the migration/reset make inception booked values lower than the reviewed NREGA history.
+            wage = max(live_wage, hist_wage)
+            material = max(live_material, hist_material)
+            if (wage > live_wage) or (material > live_material):
+                restored_booked += 1
+
             sanction = num(pick(r, 'Total Sanction (Rs)', 'NREGA Total Sanction', 'Total Sanction'))
             if not sanction:
                 sanction = num(pick(r, 'Sanction Wages (Rs)')) + num(pick(r, 'Sanction Material (Rs)'))
-            booked = wage + material or num(pick(r, 'NREGA Total Booked', 'Total Booked'))
+            booked = wage + material
+            if not booked:
+                booked = max(num(pick(r, 'NREGA Total Booked', 'Total Booked')), num(hist.get('NREGA Total Booked')))
+
+            total_mandays = num(pick(r, 'Total Mandays', 'FY Mandays Total (GP)'))
+            current_fy_mandays = num(pick(r, 'Mandays Generated Current FY'))
+            aprjun_live = num(pick(r, '01 Apr–30 Jun'))
+            aprjun_hist = num(hist.get('01 Apr–30 Jun'))
+            aprjun = aprjun_live if aprjun_live > 0 else aprjun_hist
+            if aprjun > aprjun_live:
+                restored_aprjun += 1
+            july = num(pick(r, '01 Jul–Today'))
+            if not july:
+                # In current MIS 6.12 the Current FY column is the fresh post-migration period.
+                july = current_fy_mandays
+            if not july:
+                july = num(hist.get('01 Jul–Today'))
+            mandays_till_mar31 = max(0.0, total_mandays - current_fy_mandays)
+
             rows.append({
                 'sno': len(rows)+1,
                 'district': clean(pick(r, 'District Name', 'District')),
@@ -152,10 +205,11 @@ def main():
                 'bookedMaterial': material,
                 'booked': booked,
                 'expPct': (booked * 100 / sanction) if sanction else 0.0,
-                'mandays': num(pick(r, 'Total Mandays', 'FY Mandays Total (GP)')),
-                'currentFYMandays': num(pick(r, 'Mandays Generated Current FY', '01 Jul–Today')),
-                'nregaAprJunMandays': num(pick(r, '01 Apr–30 Jun')),
-                'julyMandays': num(pick(r, '01 Jul–Today')),
+                'mandays': total_mandays,
+                'mandaysTillMar31': mandays_till_mar31,
+                'currentFYMandays': current_fy_mandays,
+                'nregaAprJunMandays': aprjun,
+                'julyMandays': july,
                 'recoveryDone': old.get('recoveryDone', old.get('recoveryDoneWork', '')),
                 'recoveryWork': num(old.get('recoveryWork', 1 if old.get('recoveryDone', old.get('recoveryDoneWork', False)) else 0)),
                 'recoveryAmount': num(old.get('recoveryAmount', old.get('recoveryAmountRs', 0))),
@@ -163,11 +217,10 @@ def main():
             })
     if not rows:
         raise SystemExit('Official ongoing CSV produced zero rows; refusing to overwrite previous data')
-    payload = rows
-    OUT.write_text('window.ONGOING_DETAILS=' + json.dumps(payload, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
+    OUT.write_text('window.ONGOING_DETAILS=' + json.dumps(rows, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
     mapped = sum(1 for r in rows if r['engineer'])
     status_counts = {s: sum(1 for r in rows if norm(r['status']) == s) for s in sorted(ALLOWED_STATUS)}
-    print(f'Updated MIS 6.12 work details: {len(rows)} works; engineer mapping {mapped}/{len(rows)}; status={status_counts}; {datetime.now(timezone.utc).isoformat()}')
+    print(f'Updated MIS 6.12 work details: {len(rows)} works; engineer mapping {mapped}/{len(rows)}; status={status_counts}; legacy matched={matched_legacy}; booked restored={restored_booked}; Apr-Jun restored={restored_aprjun}; {datetime.now(timezone.utc).isoformat()}')
 
 if __name__ == '__main__':
     main()
