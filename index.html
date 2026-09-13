@@ -1098,6 +1098,17 @@ body[data-report-view="official"] .official-grid th{
 /* V56 Ek Bagiya ongoing dashboard */
 .ekbagiya-tab{font-weight:900}.report-table.ekbagiya-grid{min-width:1540px}.report-table.ekbagiya-grid th:nth-child(-n+4),.report-table.ekbagiya-grid td:nth-child(-n+4){text-align:left}.report-table.ekbagiya-grid td:nth-child(5),.report-table.ekbagiya-grid td:nth-child(6){font-weight:850}.report-table.ekbagiya-grid td:nth-child(7){font-weight:850;color:#a13a29}.report-table.ekbagiya-grid td:nth-child(18){font-weight:900;color:#0d5e46}@media print{.report-table.ekbagiya-grid{min-width:0!important;table-layout:fixed}.report-table.ekbagiya-grid th,.report-table.ekbagiya-grid td{font-size:calc(6.2px * var(--table-font-scale));padding:1.8px;white-space:normal;word-break:break-word}}
 
+
+/* SRDM_PORTAL_THUMBNAILS_V1 */
+.srdm-portal-card .srdm-app-icon.srdm-thumb-icon{
+  width:68px!important;height:50px!important;min-width:68px!important;
+  padding:0!important;overflow:hidden!important;border-radius:12px!important;
+  background:#fff!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  box-shadow:0 7px 18px var(--app-shadow,rgba(0,0,0,.18))!important;
+}
+.srdm-portal-card .srdm-app-icon.srdm-thumb-icon svg{width:100%!important;height:100%!important;display:block!important}
+.srdm-portal-jgsa .srdm-app-icon{font-size:30px!important}
+
 </style>
 <style id="SRDM_PREMIUM_TABS_AND_ZERO_TABLE_V1">
 /* Premium dashboard navigation — bold, attractive, soft pulse without harsh flashing */
@@ -1385,16 +1396,14 @@ body.srdm-report-focus #yuktdharaMonitoring.srdm-standalone-report-open,body.srd
   </div>
   <div class="srdm-app-grid">
     <a class="srdm-app-card srdm-portal-card srdm-portal-planner" href="https://planner.nregsmp.org/reports/hierarchy.php?financialYearId=2" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-      <span class="srdm-app-icon">🌐</span><span class="srdm-app-copy"><strong>Planner Application</strong><span>Planner portal • Satna block report</span></span><span class="srdm-app-new">New</span>
-    </a>
-    <a class="srdm-app-card srdm-portal-card srdm-portal-sipri" href="https://sipri.mp.gov.in/sipri/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-      <span class="srdm-app-icon">💧</span><span class="srdm-app-copy"><strong>SIPRI Portal</strong><span>Official SIPRI portal</span></span>
+      <span class="srdm-app-icon srdm-thumb-icon" aria-label="SIPRI portal thumbnail">
+<svg viewBox="0 0 136 100" role="img" aria-label="SIPRI Portal"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#007c91"/><stop offset="1" stop-color="#20c5b5"/></linearGradient></defs><rect width="136" height="100" rx="14" fill="url(#sg)"/><path d="M10 72 C35 55 55 84 82 58 S118 50 130 34" fill="none" stroke="#bdf7ef" stroke-width="6" opacity=".9"/><circle cx="42" cy="42" r="13" fill="#fff" opacity=".96"/><path d="M42 24c-10 0-18 8-18 18 0 14 18 31 18 31s18-17 18-31c0-10-8-18-18-18zm0 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14z" fill="#087c91"/><text x="73" y="41" font-family="Arial,sans-serif" font-size="19" font-weight="800" fill="#fff">SIPRI</text><text x="73" y="60" font-family="Arial,sans-serif" font-size="9" font-weight="700" fill="#eafffb">MP PORTAL</text></svg>
+</span><span class="srdm-app-copy"><strong>SIPRI Portal</strong><span>Official SIPRI portal</span></span>
     </a>
     <a class="srdm-app-card srdm-portal-card srdm-portal-jgsa" href="https://jgsa.nregsmp.org/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-      <span class="srdm-app-icon">📈</span><span class="srdm-app-copy"><strong>Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong><span>Official JGSA portal</span></span><span class="srdm-app-new">New</span>
-    </a>
-    <a class="srdm-app-card srdm-portal-card srdm-portal-rims" href="https://geoportal.mp.gov.in/RIMS/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-      <span class="srdm-app-icon">👥</span><span class="srdm-app-copy"><strong>Road Information &amp; Management System (RIMS)</strong><span>Official RIMS geoportal</span></span>
+      <span class="srdm-app-icon srdm-thumb-icon" aria-label="RIMS gravel road thumbnail">
+<svg viewBox="0 0 136 100" role="img" aria-label="Gravel Road"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7cc8f5"/><stop offset="1" stop-color="#e7f5ff"/></linearGradient><linearGradient id="road" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a88d6b"/><stop offset="1" stop-color="#66513f"/></linearGradient></defs><rect width="136" height="100" rx="14" fill="url(#sky)"/><path d="M0 55 Q28 42 52 55 T103 52 T136 48V100H0Z" fill="#56a35f"/><path d="M49 100 L65 52 L78 52 L105 100Z" fill="url(#road)"/><path d="M67 100 L70 55" stroke="#e6d7ba" stroke-width="3" stroke-dasharray="7 7" opacity=".9"/><g fill="#d4c2a7" opacity=".95"><circle cx="58" cy="82" r="2.5"/><circle cx="82" cy="88" r="2.1"/><circle cx="71" cy="72" r="1.8"/><circle cx="91" cy="95" r="2.6"/><circle cx="62" cy="93" r="1.9"/></g><text x="9" y="18" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="#2c2c2c">RIMS</text></svg>
+</span><span class="srdm-app-copy"><strong>Road Information &amp; Management System (RIMS)</strong><span>Official RIMS geoportal</span></span>
     </a>
     <button type="button" class="srdm-app-card" data-srdm-view="mandaysgen">
       <span class="srdm-app-icon">◉</span><span class="srdm-app-copy"><strong>VB-G RAM G Daily Monitoring</strong><span>Mandays generation &amp; daily progress</span></span>
