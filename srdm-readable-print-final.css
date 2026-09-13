@@ -26,20 +26,38 @@
   font-size:15.5px!important;
 }
 
-/* Keep wide reports readable: allow wrapping rather than tiny text */
-#reportTable{
-  table-layout:fixed!important;
+#reportTable{ table-layout:fixed!important; }
+#reportTable th:nth-child(1),#reportTable td:nth-child(1){width:4.8%!important;}
+#reportTable th:nth-child(2),#reportTable td:nth-child(2){width:5.8%!important;}
+#reportTable th:nth-child(n+3),#reportTable td:nth-child(n+3){width:auto!important;}
+
+/* SRDM navigation icons */
+.srdm-nav-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:1.65em;
+  min-width:1.65em;
+  height:1.65em;
+  margin-right:7px;
+  border-radius:7px;
+  background:rgba(21,87,176,.10);
+  color:#1557b0;
+  font-size:1.05em;
+  line-height:1;
+  vertical-align:middle;
 }
-
-/* District / Janpad stay readable */
-#reportTable th:nth-child(1),
-#reportTable td:nth-child(1){width:4.8%!important;}
-#reportTable th:nth-child(2),
-#reportTable td:nth-child(2){width:5.8%!important;}
-
-/* Reduce numeric column width so headings wrap instead of shrinking font */
-#reportTable th:nth-child(n+3),
-#reportTable td:nth-child(n+3){width:auto!important;}
+.tab.active .srdm-nav-icon,
+.active>.srdm-nav-icon,
+[data-view].active .srdm-nav-icon{
+  background:rgba(255,255,255,.18);
+  color:inherit;
+}
+.tab,.sidebar a,.sidebar button,[data-view]{
+  display:inline-flex;
+  align-items:center;
+  gap:2px;
+}
 
 @media (max-width:1200px){
   :root{ --srdm-table-font: 13.5px; }
@@ -47,16 +65,13 @@
   #reportTable th{font-size:14px!important;}
 }
 
-/* Browser print fallback: keep text comfortably readable */
 @media print{
   :root{ --srdm-table-font: 11pt; }
-  #reportTable th,
-  #reportTable td,
-  .report-table th,
-  .report-table td{
+  #reportTable th,#reportTable td,.report-table th,.report-table td{
     font-size:11pt!important;
     line-height:1.22!important;
     padding:4px 3px!important;
   }
   #reportTable th,.report-table th{font-size:11.5pt!important;font-weight:800!important;}
+  .srdm-nav-icon{display:none!important;}
 }
