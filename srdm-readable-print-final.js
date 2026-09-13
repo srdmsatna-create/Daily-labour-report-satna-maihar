@@ -48,16 +48,17 @@
     }
   }
 
-  function ensureSipriIcon(root){
+  function ensurePortalIcons(root){
     root=root||document;
-    var cards=root.querySelectorAll ? root.querySelectorAll('.srdm-portal-sipri') : [];
-    for(var i=0;i<cards.length;i++){
-      var icon=cards[i].querySelector('.srdm-app-icon');
-      if(icon){
-        icon.textContent='💧';
-        icon.setAttribute('aria-label','Water drop');
+    function setIcon(selector,symbol,label){
+      var cards=root.querySelectorAll ? root.querySelectorAll(selector) : [];
+      for(var i=0;i<cards.length;i++){
+        var icon=cards[i].querySelector('.srdm-app-icon');
+        if(icon){icon.textContent=symbol;icon.setAttribute('aria-label',label);}
       }
     }
+    setIcon('.srdm-portal-sipri','🌐','SIPRI portal');
+    setIcon('.srdm-portal-jgsa','💧','Jal Ganga Sanvardhan Abhiyan');
   }
 
   function cleanedTable(){
@@ -92,17 +93,17 @@
 
   function install(){
     installIcons(document);
-    ensureSipriIcon(document);
+    ensurePortalIcons(document);
     var orient=byId('printOrientation');if(orient){orient.disabled=false;orient.title='Portrait या Landscape चुनें';}
     var btn=byId('printBtn');if(btn&&!btn.dataset.srdmReadablePrint){btn.dataset.srdmReadablePrint='1';btn.addEventListener('click',printCurrent,true);}
     var obs=new MutationObserver(function(muts){
       for(var i=0;i<muts.length;i++){
         for(var j=0;j<muts[i].addedNodes.length;j++){
           var n=muts[i].addedNodes[j];
-          if(n.nodeType===1){installIcons(n);ensureSipriIcon(n);}
+          if(n.nodeType===1){installIcons(n);ensurePortalIcons(n);}
         }
       }
-      ensureSipriIcon(document);
+      ensurePortalIcons(document);
     });
     obs.observe(document.body,{childList:true,subtree:true});
   }
