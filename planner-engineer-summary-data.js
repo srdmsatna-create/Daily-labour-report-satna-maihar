@@ -71,6 +71,20 @@ window.PLANNER_OFFICIAL={total:32994,blocks:{Amarpatan:4061,Maihar:9466,Majhgawa
       note.style.borderLeft='4px solid #146fd1';
       note.style.fontWeight='700';
     }
+    const st=document.createElement('style');
+    st.textContent=`
+      .engineer-summary{min-width:680px!important;max-width:980px;margin:0 auto;table-layout:fixed}
+      .engineer-summary th,.engineer-summary td{font-size:18px!important;padding:10px 6px!important;line-height:1.2!important}
+      .engineer-summary th{font-size:18.5px!important}
+      .engineer-summary th:nth-child(1),.engineer-summary td:nth-child(1){width:8%!important}
+      .engineer-summary th:nth-child(2),.engineer-summary td:nth-child(2){width:10%!important}
+      .engineer-summary th:nth-child(3),.engineer-summary td:nth-child(3){width:19%!important}
+      .engineer-summary th:nth-child(4),.engineer-summary td:nth-child(4){width:18%!important}
+      .engineer-summary th:nth-child(5),.engineer-summary td:nth-child(5){width:16%!important}
+      .engineer-summary th:nth-child(6),.engineer-summary td:nth-child(6){width:16%!important}
+      .engineer-summary th:nth-child(7),.engineer-summary td:nth-child(7){width:13%!important}
+    `;
+    document.head.appendChild(st);
     rebuildSummary();
   });
 })();
