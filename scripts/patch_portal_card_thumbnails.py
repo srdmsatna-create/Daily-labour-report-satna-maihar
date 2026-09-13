@@ -1,57 +1,51 @@
 from pathlib import Path
 import re
 
-p = Path('index.html')
-s = p.read_text(encoding='utf-8')
-orig = s
+p=Path('index.html')
+s=p.read_text(encoding='utf-8')
+orig=s
 
-CSS_MARK = '/* SRDM_PORTAL_THUMBNAILS_V1 */'
-css = r'''
-/* SRDM_PORTAL_THUMBNAILS_V1 */
-.srdm-portal-card .srdm-app-icon.srdm-thumb-icon{
-  width:68px!important;height:50px!important;min-width:68px!important;
-  padding:0!important;overflow:hidden!important;border-radius:12px!important;
-  background:#fff!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
-  box-shadow:0 7px 18px var(--app-shadow,rgba(0,0,0,.18))!important;
-}
-.srdm-portal-card .srdm-app-icon.srdm-thumb-icon svg{width:100%!important;height:100%!important;display:block!important}
-.srdm-portal-jgsa .srdm-app-icon{font-size:30px!important}
-'''
-if CSS_MARK not in s:
-    s = s.replace('</style>', css + '\n</style>', 1)
+SIPRI_IMG='data:image/jpeg;base64,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'
 
-planner_thumb = '''<span class="srdm-app-icon srdm-thumb-icon" aria-label="Planner portal thumbnail">
-<svg viewBox="0 0 136 100" role="img" aria-label="Planner Portal"><defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#007c91"/><stop offset="1" stop-color="#20c5b5"/></linearGradient></defs><rect width="136" height="100" rx="14" fill="url(#pg)"/><circle cx="41" cy="40" r="17" fill="#fff" opacity=".18"/><circle cx="41" cy="36" r="7" fill="#fff"/><path d="M25 67c3-13 29-13 32 0" fill="#fff"/><path d="M69 62c10-8 18-18 27-18 10 0 17 8 29 2" fill="none" stroke="#eafffb" stroke-width="5" stroke-linecap="round"/><text x="67" y="31" font-family="Arial,sans-serif" font-size="14" font-weight="900" fill="#fff">PLAN</text><text x="67" y="47" font-family="Arial,sans-serif" font-size="14" font-weight="900" fill="#fff">NER</text></svg>
-</span>'''
+thumb=f'<span class="srdm-app-icon srdm-thumb-icon" aria-label="SIPRI portal screenshot"><img src="{SIPRI_IMG}" alt="SIPRI Portal" style="width:100%;height:100%;object-fit:cover;border-radius:12px;display:block"></span>'
 
-rims = '''<span class="srdm-app-icon srdm-thumb-icon" aria-label="RIMS gravel road thumbnail">
-<svg viewBox="0 0 136 100" role="img" aria-label="Gravel Road"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7cc8f5"/><stop offset="1" stop-color="#e7f5ff"/></linearGradient><linearGradient id="road" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#a88d6b"/><stop offset="1" stop-color="#66513f"/></linearGradient></defs><rect width="136" height="100" rx="14" fill="url(#sky)"/><path d="M0 55 Q28 42 52 55 T103 52 T136 48V100H0Z" fill="#56a35f"/><path d="M49 100 L65 52 L78 52 L105 100Z" fill="url(#road)"/><path d="M67 100 L70 55" stroke="#e6d7ba" stroke-width="3" stroke-dasharray="7 7" opacity=".9"/><g fill="#d4c2a7" opacity=".95"><circle cx="58" cy="82" r="2.5"/><circle cx="82" cy="88" r="2.1"/><circle cx="71" cy="72" r="1.8"/><circle cx="91" cy="95" r="2.6"/><circle cx="62" cy="93" r="1.9"/></g><text x="9" y="18" font-family="Arial,sans-serif" font-size="11" font-weight="900" fill="#2c2c2c">RIMS</text></svg>
-</span>'''
+# Shared icon sizing.
+if 'SRDM_SIPRI_SCREENSHOT_ICON_V1' not in s:
+    css='''\n/* SRDM_SIPRI_SCREENSHOT_ICON_V1 */\n.srdm-app-icon.srdm-thumb-icon{width:68px!important;height:58px!important;min-width:68px!important;padding:0!important;overflow:hidden!important;background:#fff!important;border-radius:12px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}\n'''
+    s=s.replace('</style>',css+'\n</style>',1)
 
-planner_card = '<a class="srdm-app-card srdm-portal-card srdm-portal-sipri" href="planner-portal-dashboard.html" style="text-decoration:none">\n      '+planner_thumb+'<span class="srdm-app-copy"><strong>Planner Portal</strong><span>Janpad-wise • Panchayat-wise • New Work संख्या</span></span>\n    </a>'
+# 1) Planner -> SIPRI dashboard card: replace its first icon, regardless of current emoji/generic chart.
+patterns=[
+    r'(<a[^>]*href=["\'][^"\']*planner-sipri-dashboard-hi\.html[^"\']*["\'][^>]*>)(.*?)(</a>)',
+    r'(<a[^>]*>)(?P<body>.*?प्लानर\s*से\s*SIPRI\s*Portal.*?कार्य\s*योजना\s*डैशबोर्ड.*?)(</a>)'
+]
+for pat in patterns:
+    m=re.search(pat,s,flags=re.S|re.I)
+    if m:
+        whole=m.group(0)
+        patched=re.sub(r'<span class="srdm-app-icon[^"]*"[^>]*>.*?</span>',thumb,whole,count=1,flags=re.S|re.I)
+        if patched==whole:
+            patched=whole.replace('>', '>'+thumb, 1)
+        s=s[:m.start()]+patched+s[m.end():]
+        break
 
-jgsa_card = '''<a class="srdm-app-card srdm-portal-card srdm-portal-jgsa" href="https://jgsa.nregsmp.org/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-      <span class="srdm-app-icon">💧</span><span class="srdm-app-copy"><strong>Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong><span>Official JGSA portal</span></span><span class="srdm-app-new">New</span>
-    </a>'''
-
-# Keep Planner Portal as its own dashboard card.
-if 'Planner Portal</strong>' in s:
-    s = re.sub(r'<a class="srdm-app-card srdm-portal-card srdm-portal-sipri"[^>]*>.*?</a>', planner_card, s, count=1, flags=re.S)
-elif 'SIPRI Portal</strong>' in s:
-    s = re.sub(r'<a class="srdm-app-card srdm-portal-card srdm-portal-sipri"[^>]*>.*?</a>', planner_card, s, count=1, flags=re.S)
-
-# Jal Ganga must always remain a separate visible card with water-drop icon.
+# 2) Keep Jal Ganga separate and always show water-drop icon.
+jgsa_card='''<a class="srdm-app-card srdm-portal-card srdm-portal-jgsa" href="https://jgsa.nregsmp.org/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">\n      <span class="srdm-app-icon">💧</span><span class="srdm-app-copy"><strong>Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong><span>Official JGSA portal</span></span><span class="srdm-app-new">New</span>\n    </a>'''
 if 'Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong>' in s:
-    s = re.sub(r'<a class="srdm-app-card srdm-portal-card srdm-portal-jgsa"[^>]*>.*?</a>', jgsa_card, s, count=1, flags=re.S)
+    s=re.sub(r'<a class="srdm-app-card srdm-portal-card srdm-portal-jgsa"[^>]*>.*?</a>',jgsa_card,s,count=1,flags=re.S)
 else:
-    # insert immediately after Planner Portal card
-    s = s.replace(planner_card, planner_card + '\n    ' + jgsa_card, 1)
+    # Insert after Planner-to-SIPRI dashboard card when available, otherwise after Planner Portal card.
+    target=re.search(r'<a[^>]*href=["\'][^"\']*planner-sipri-dashboard-hi\.html[^"\']*["\'][^>]*>.*?</a>',s,flags=re.S|re.I)
+    if not target:
+        target=re.search(r'<a[^>]*>.*?Planner Portal.*?</a>',s,flags=re.S|re.I)
+    if target:
+        s=s[:target.end()]+'\n    '+jgsa_card+s[target.end():]
 
-# Keep RIMS thumbnail.
-s = re.sub(r'<span class="srdm-app-icon(?: [^"]*)?">.*?</span>(?=<span class="srdm-app-copy"><strong>Road Information &amp; Management System \(RIMS\)</strong>)', rims, s, flags=re.S)
+# 3) Keep RIMS card road-themed (do not alter title/link).
+# If an existing RIMS card has a generic icon, leave existing road thumbnail untouched; only mark for CSS compatibility.
 
-if s != orig:
-    p.write_text(s, encoding='utf-8')
-    print('Planner Portal + Jal Ganga + RIMS cards restored/patched.')
+if s!=orig:
+    p.write_text(s,encoding='utf-8')
+    print('SIPRI screenshot icon + Jal Ganga water-drop card patched.')
 else:
     print('No changes required.')
