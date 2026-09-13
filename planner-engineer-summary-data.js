@@ -64,6 +64,13 @@ window.PLANNER_OFFICIAL={total:32994,blocks:{Amarpatan:4061,Maihar:9466,Majhgawa
       const updateJanpads=()=>{const dv=d.value,old=j.value;setOptions(j,uniq(R.filter(x=>dv==='ALL'||x[0]===dv).map(x=>x[1])),'सभी जनपद',old);updateEngineers();};
       d.addEventListener('change',updateJanpads);j.addEventListener('change',updateEngineers);updateJanpads();
     }
+    const note=document.querySelector('.note');
+    if(note){
+      note.innerHTML='<b>Report Date:</b> 13-09-2026';
+      note.style.padding='8px 12px';
+      note.style.borderLeft='4px solid #146fd1';
+      note.style.fontWeight='700';
+    }
     rebuildSummary();
   });
 })();
