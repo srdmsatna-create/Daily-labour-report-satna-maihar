@@ -1,0 +1,38 @@
+name: Restore SRDM portal card thumbnails
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'index.html'
+      - 'scripts/patch_portal_card_thumbnails.py'
+      - '.github/workflows/patch-portal-card-thumbnails.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply portal thumbnail patch
+        run: python scripts/patch_portal_card_thumbnails.py
+
+      - name: Commit only when changed
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "No portal thumbnail changes needed."
+            exit 0
+          fi
+          git config user.name "srdmsatna-create"
+          git config user.email "srdmsatna@gmail.com"
+          git add index.html
+          git commit -m "Restore SIPRI JGSA RIMS card visuals"
+          git push
