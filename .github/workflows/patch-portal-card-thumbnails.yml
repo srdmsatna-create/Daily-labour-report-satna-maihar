@@ -7,6 +7,7 @@ on:
       - 'index.html'
       - 'scripts/patch_portal_card_thumbnails.py'
       - 'scripts/fix_srdm_launcher_cards.py'
+      - 'scripts/patch_planner_sipri_screen2_icon.py'
       - '.github/workflows/patch-portal-card-thumbnails.yml'
   workflow_dispatch:
 
@@ -25,6 +26,9 @@ jobs:
       - name: Rewrite SRDM launcher portal cards
         run: python scripts/fix_srdm_launcher_cards.py
 
+      - name: Apply user screen 2 icon to Planner-to-SIPRI dashboard
+        run: python scripts/patch_planner_sipri_screen2_icon.py
+
       - name: Commit only when changed
         shell: bash
         run: |
@@ -35,5 +39,5 @@ jobs:
           git config user.name "srdmsatna-create"
           git config user.email "srdmsatna@gmail.com"
           git add index.html
-          git commit -m "Fix Planner Jal Ganga RIMS SIPRI dashboard cards"
+          git commit -m "Use screen 2 image on Planner to SIPRI dashboard card"
           git push
