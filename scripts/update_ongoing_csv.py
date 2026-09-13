@@ -15,7 +15,7 @@ DATA = ROOT / 'data'
 CSV_PATH = DATA / 'Ongoing_Works_dynamic_work_details_latest.csv'
 AUTO = ROOT / 'auto-data.js'
 OUT = ROOT / 'ongoing-details.js'
-ALLOWED_STATUS = {'ONGOING', 'COMPLETED', 'PHYSICALLY COMPLETED'}
+ALLOWED_STATUS = {'NEW', 'APPROVED', 'ONGOING', 'SUSPENDED', 'COMPLETED', 'PHYSICALLY COMPLETED', 'DELETED'}
 
 
 def clean(v):
@@ -33,6 +33,39 @@ def norm(v):
 def norm_janpad(v):
     x = norm(v)
     return 'SATNA' if x == 'SOHAWAL' else x
+
+def classify_category(name, work_type, fy, previous=''):
+    """Keep reviewed categories stable and classify newly appearing R6.12 works."""
+    if clean(previous):
+        return clean(previous)
+    t = f'{clean(name)} {clean(work_type)}'.lower()
+    rules = [
+        (r'pmay|pradhan\s*mantri\s*awas', 'PMAY-G'),
+        (r'iay\s*house|indira\s*awas', 'IAY Houses'),
+        (r'amrit\s*sarovar', 'Amrit Sarovar'),
+        (r'\bek\s+(?:maa?\s+)?(?:ki\s+)?bagiya\b|\bbagiya\b', 'Ek Bagiya'),
+        (r'puliya|pulia|pulya|culvert|hume\s*pipe', 'Pulya'),
+        (r'boundary|boundry|baund', 'Boundary Wall'),
+        (r'\bpcc\b|\bcc\b|cement\s*concrete|\bnali\b|drain|grey\s*water|rural\s*connectivity', 'Cement Concrete'),
+        (r'gravel|greval|grewal|graval|mur+am|murram|sudur|sudoor|\bbt\s*road', 'Gravel Road'),
+        (r'farm\s*pond|khet\s*talab', 'Farm Pond'),
+        (r'stop\s*dam|check\s*dam|percolation|water\s*harvesting|recharge\s*(?:pit|shaft)|roof\s*top|community\s*pond|pushkar', 'Water conservation & recharge'),
+        (r'soak\s*pit|gabion|gully\s*plug|contour\s*(?:trench|bund)|loose\s*bould?er|medh\s*bandhan|new\s*talab', 'Watershed Related Works'),
+        (r'dug\s*well\s*recharge|community\s*well|samuday.*koop', 'Dug Well Recharge'),
+        (r'plantation|charagah|poshan\s*vatika|vasudha|vriksharopan|land\s*development', 'Gap Filling in Plantation'),
+        (r'shanti\s*dham|mukti\s*dham|crematorium', 'Crematorium'),
+        (r'panchayat\s*bhavan|community\s*(?:hall|bhawan)|samuday.*bhawan|mangal\s*bhawan', 'Panchayat and Community Hall'),
+        (r'shauchalay|sanitary\s*complex|segregation|kachara|\bnadep\b|compost|toilet', 'SBM Works'),
+        (r'play\s*ground|khel\s*maidan', 'Play Field'),
+        (r'anganwadi|anganbadi|aganwadi', 'Anganwadi'),
+        (r'kapil\s*dhara|kapildhara|open\s*dug\s*well', 'Kapildhara'),
+        (r'cattle\s*shed|goat\s*shelter|poultry|pashu\s*shed', 'Poultry Cattle and Goat Shelter'),
+        (r'micro\s*irrigation|irrigation\s*(?:open\s*)?well|irrigation\s*channel|field\s*channel', 'Irrigation infrastructure'),
+    ]
+    for pattern, category in rules:
+        if re.search(pattern, t, re.I):
+            return category
+    return 'Other Works'
 
 def load_js_json(path, prefix):
     s = path.read_text(encoding='utf-8').strip()
@@ -98,6 +131,8 @@ def main():
             wage = num(pick(r, 'Booked Since Inception Wages (Rs)', 'NREGA Booked Wages', 'Booked Wages'))
             material = num(pick(r, 'Booked Since Inception Material (Rs)', 'NREGA Booked Material', 'Booked Material'))
             sanction = num(pick(r, 'Total Sanction (Rs)', 'NREGA Total Sanction', 'Total Sanction'))
+            if not sanction:
+                sanction = num(pick(r, 'Sanction Wages (Rs)')) + num(pick(r, 'Sanction Material (Rs)'))
             booked = wage + material or num(pick(r, 'NREGA Total Booked', 'Total Booked'))
             rows.append({
                 'sno': len(rows)+1,
@@ -110,8 +145,8 @@ def main():
                 'status': clean(pick(r, 'Work Status', 'Status')),
                 'code': code,
                 'name': clean(pick(r, 'Work Name', 'Name of Work')),
-                'type': clean(pick(r, 'Work Type', 'Original Work Category')),
-                'finalCategory': clean(old.get('finalCategory')) or clean(pick(r, 'Final Work Category')),
+                'type': clean(pick(r, 'Work Type', 'WORK TYPE as per new work creation Module', 'Original Work Category')),
+                'finalCategory': classify_category(clean(pick(r, 'Work Name', 'Name of Work')), clean(pick(r, 'Work Type', 'WORK TYPE as per new work creation Module', 'Original Work Category')), clean(pick(r, 'Work Start Fin Year', 'Work FY', 'Financial Year')), old.get('finalCategory')),
                 'sanction': sanction,
                 'bookedWage': wage,
                 'bookedMaterial': material,

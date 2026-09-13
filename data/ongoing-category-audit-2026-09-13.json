@@ -1,0 +1,38 @@
+{
+  "rows": 27749,
+  "uniqueCodes": 27749,
+  "mappedEngineer": 27749,
+  "blankCategory": 0,
+  "statuses": {
+    "Approved": 8878,
+    "Ongoing": 15687,
+    "New": 1733,
+    "Deleted": 39,
+    "Physically Completed": 1284,
+    "Completed": 128
+  },
+  "categories": {
+    "PMAY-G": 15603,
+    "Water conservation & recharge": 1984,
+    "Farm Pond": 1833,
+    "Cement Concrete": 1737,
+    "IAY Houses": 1667,
+    "Gap Filling in Plantation": 1152,
+    "Crematorium": 688,
+    "Watershed Related Works": 640,
+    "Ek Bagiya": 338,
+    "Pulya": 321,
+    "Panchayat and Community Hall": 236,
+    "Gravel Road": 236,
+    "Other Works": 231,
+    "Kapildhara": 226,
+    "SBM Works": 176,
+    "Boundary Wall": 165,
+    "Dug Well Recharge": 130,
+    "Poultry Cattle and Goat Shelter": 94,
+    "Irrigation infrastructure": 93,
+    "Anganwadi": 82,
+    "Play Field": 70,
+    "Amrit Sarovar": 47
+  }
+}
