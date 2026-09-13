@@ -70,7 +70,7 @@
   }`;
   document.head.appendChild(css);
 
-  const card=document.createElement('button');card.type='button';card.id='shramikNiyojanLauncher';card.className='srdm-app-card report-module-card';card.innerHTML='<span class="srdm-app-icon">श</span><span class="srdm-app-copy"><strong>श्रमिक नियोजन</strong><span>अगस्त–सितम्बर मानव दिवस लक्ष्य एवं उपलब्धि</span></span><span class="module-indicator" aria-hidden="true"></span>';
+  const card=document.createElement('button');card.type='button';card.id='shramikNiyojanLauncher';card.className='srdm-app-card report-module-card';card.innerHTML='<span class="srdm-app-icon" style="padding:0!important;background:transparent!important;overflow:hidden"><img src="janpad-daily-report-icon.png?v=2" alt="श्रमिक नियोजन" style="display:block;width:100%;height:100%;object-fit:cover;border-radius:50%"></span><span class="srdm-app-copy"><strong>श्रमिक नियोजन</strong><span>अगस्त–सितम्बर मानव दिवस लक्ष्य एवं उपलब्धि</span></span><span class="module-indicator" aria-hidden="true"></span>';
   const mandays=apps.querySelector('[data-view="mandaysgen"]');
   if(mandays)mandays.insertAdjacentElement('afterend',card);else apps.appendChild(card);
 
