@@ -28,3 +28,9 @@ if st.get('ongoingCsv'):
     rc=run('update_ongoing_csv.py')
     if rc:
         raise SystemExit(rc)
+
+# Keep the requested MIS 6.12 31-Mar cutoff display present without renaming/removing
+# any existing fields. The patch is idempotent and refuses unsafe partial edits.
+rc=run('patch_mis_612_cutoff_fields.py')
+if rc:
+    raise SystemExit(rc)
