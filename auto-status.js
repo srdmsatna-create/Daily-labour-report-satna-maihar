@@ -17,3 +17,14 @@ window.AUTO_FETCH_STATUS={"startedAt":"2026-09-13T04:03:47.324043+00:00","ok":tr
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addPlannerSipriCard); else addPlannerSipriCard();
   setTimeout(addPlannerSipriCard,500);
 })();
+
+(function(){
+  function addR613ReadableFont(){
+    if(document.getElementById('srdm-r613-readable-font')) return;
+    var st=document.createElement('style');
+    st.id='srdm-r613-readable-font';
+    st.textContent='body[data-report-view="category"] .report-table th{font-size:13.5px!important;line-height:1.18!important;padding:7px 6px!important;font-weight:900!important}body[data-report-view="category"] .report-table td{font-size:14px!important;line-height:1.2!important;padding:7px 6px!important;font-weight:600!important}body[data-report-view="category"] .report-table td:nth-child(2){font-size:14.5px!important;font-weight:800!important;min-width:190px!important}body[data-report-view="category"] #viewTitle{font-size:26px!important;font-weight:900!important}body[data-report-view="category"] #viewMeta{font-size:13px!important}';
+    document.head.appendChild(st);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addR613ReadableFont); else addR613ReadableFont();
+})();
