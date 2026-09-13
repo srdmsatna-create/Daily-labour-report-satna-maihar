@@ -19,12 +19,41 @@ window.AUTO_FETCH_STATUS={"startedAt":"2026-09-13T04:03:47.324043+00:00","ok":tr
 })();
 
 (function(){
-  function addR613ReadableFont(){
-    if(document.getElementById('srdm-r613-readable-font')) return;
-    var st=document.createElement('style');
-    st.id='srdm-r613-readable-font';
-    st.textContent='body[data-report-view="category"] .report-table th{font-size:13.5px!important;line-height:1.18!important;padding:7px 6px!important;font-weight:900!important}body[data-report-view="category"] .report-table td{font-size:14px!important;line-height:1.2!important;padding:7px 6px!important;font-weight:600!important}body[data-report-view="category"] .report-table td:nth-child(2){font-size:14.5px!important;font-weight:800!important;min-width:190px!important}body[data-report-view="category"] #viewTitle{font-size:26px!important;font-weight:900!important}body[data-report-view="category"] #viewMeta{font-size:13px!important}';
-    document.head.appendChild(st);
+  function forceR613ReadableFont(){
+    var title=document.getElementById('viewTitle');
+    var table=document.getElementById('reportTable');
+    if(!title||!table) return;
+    if((title.textContent||'').indexOf('R6.13 Style Dashboard for Incomplete Works')<0) return;
+    title.style.setProperty('font-size','30px','important');
+    title.style.setProperty('font-weight','900','important');
+    var meta=document.getElementById('viewMeta');
+    if(meta){meta.style.setProperty('font-size','15px','important');meta.style.setProperty('font-weight','700','important');}
+    table.querySelectorAll('th').forEach(function(el){
+      el.style.setProperty('font-size','16px','important');
+      el.style.setProperty('line-height','1.2','important');
+      el.style.setProperty('padding','9px 7px','important');
+      el.style.setProperty('font-weight','900','important');
+    });
+    table.querySelectorAll('td').forEach(function(el){
+      el.style.setProperty('font-size','16px','important');
+      el.style.setProperty('line-height','1.25','important');
+      el.style.setProperty('padding','9px 7px','important');
+      el.style.setProperty('font-weight','700','important');
+    });
+    table.querySelectorAll('td:nth-child(2)').forEach(function(el){
+      el.style.setProperty('font-size','16.5px','important');
+      el.style.setProperty('font-weight','800','important');
+      el.style.setProperty('min-width','220px','important');
+    });
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',addR613ReadableFont); else addR613ReadableFont();
+  function start(){
+    forceR613ReadableFont();
+    var table=document.getElementById('reportTable');
+    var title=document.getElementById('viewTitle');
+    if(table){new MutationObserver(function(){setTimeout(forceR613ReadableFont,0);}).observe(table,{childList:true,subtree:true});}
+    if(title){new MutationObserver(function(){setTimeout(forceR613ReadableFont,0);}).observe(title,{childList:true,subtree:true,characterData:true});}
+    setTimeout(forceR613ReadableFont,300);
+    setTimeout(forceR613ReadableFont,1000);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
 })();
