@@ -1,0 +1,24 @@
+name: Probe Planner GP table
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'scripts/probe_planner_gp.py'
+      - '.github/workflows/probe-planner-gp.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install requests beautifulsoup4
+      - run: python scripts/probe_planner_gp.py
+      - shell: bash
+        run: |
+          git config user.name "srdmsatna-create"
+          git config user.email "srdmsatna@gmail.com"
+          git add planner-gp-probe.json
+          git commit -m "Capture Planner GP table structure" || exit 0
+          git push
