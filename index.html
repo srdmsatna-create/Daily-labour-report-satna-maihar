@@ -1891,7 +1891,7 @@ function finalWorkCategory(name,wt,fy){
  if(/other/.test(rw))return 'Other Works';
  return w||'Other Works';
 }
-function canonicalCategoryName(v){const s=clean(v);if(/^(?:pmay\s*-?\s*g|pmayg)(?:\s+houses?)?$/i.test(s))return 'PMAY-G';if(/^(?:gravel|greval|grewal)\s*road$/i.test(s))return 'Gravel Road';return s}
+function canonicalCategoryName(v){const s=clean(v);if(/^(?:pmay\s*-?\s*g|pmayg)(?:\s+houses?)?$/i.test(s)||/^iay(?:\s+houses?)?$/i.test(s))return 'PMAY-G';if(/^(?:gravel|greval|grewal)\s*road$/i.test(s))return 'Gravel Road';return s}
 function resolvedFinalCategory(r){
  const corrected=canonicalCategoryName(r.finalCategory);
  return corrected||canonicalCategoryName(finalWorkCategory(r.name,r.type,r.fy))||'Other Works';
