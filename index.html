@@ -3167,67 +3167,7 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 <!-- ===== END SRDM DISTRICT AVERAGE HIGHLIGHT V1 ===== -->
 
 
-<!-- ===== OFFICIAL JANPAD BOX V1 ===== -->
-<style>
-body[data-report-view="official"] #reportTable{border-collapse:collapse!important;table-layout:auto!important;min-width:980px!important;width:100%!important}
-body[data-report-view="official"] #reportTable th,
-body[data-report-view="official"] #reportTable td{border:1.5px solid #4f7f76!important;font-size:14px!important;line-height:1.2!important;padding:7px 7px!important;white-space:normal!important;vertical-align:middle!important}
-body[data-report-view="official"] #reportTable thead th{font-size:14px!important;font-weight:900!important;text-align:center!important}
-body[data-report-view="official"] #reportTable tbody td{font-weight:650!important}
-body[data-report-view="official"] #reportTable .official-pmay-only,
-body[data-report-view="official"] #reportTable .official-ek-only{background:#e9f6ef!important;font-weight:900!important;text-align:center!important;min-width:82px!important}
-body[data-report-view="official"] .table-wrap{border:2px solid #356a60!important;border-radius:8px!important;overflow:auto!important}
-</style>
-<script>
-(function(){
-  function compactOfficial(){
-    if(document.body.dataset.reportView!=='official') return;
-    const t=document.getElementById('reportTable');
-    if(!t||!t.tHead||!t.tBodies.length) return;
-    const top=t.tHead.rows[0], sub=t.tHead.rows[1];
-    if(!top||!sub) return;
-    const topTexts=[...top.cells].map(c=>c.textContent.trim().toUpperCase());
-    if(!topTexts.includes('PMAY-G')||!topTexts.some(x=>x.includes('EK BAGIYA'))) return;
-    if(t.dataset.officialCompact==='1') return;
 
-    // Original leaf columns are 0..21. Keep PMAY Ongoing (15) and Ek Bagiya Ongoing (19), remove other PMAY/Ek columns.
-    const remove=[21,20,18,17,16];
-    for(const row of [...t.tBodies[0].rows]){
-      for(const i of remove){ if(row.cells[i]) row.deleteCell(i); }
-    }
-
-    // Rebuild second header row after removing PMAY MR/MR% and Ek Labour/MR/MR%.
-    for(const i of [19,18,17,16,15]){ if(sub.cells[i]) sub.deleteCell(i); }
-    const pm=document.createElement('th'); pm.textContent='Ongoing'; pm.className='official-pmay-only';
-    const ek=document.createElement('th'); ek.textContent='Ongoing'; ek.className='official-ek-only';
-    sub.appendChild(pm); sub.appendChild(ek);
-
-    // Top header groups: PMAY-G and Ek Bagiya become single boxed columns.
-    const topCells=[...top.cells];
-    const pmTop=topCells.find(c=>c.textContent.trim().toUpperCase()==='PMAY-G');
-    const ekTop=topCells.find(c=>c.textContent.trim().toUpperCase().includes('EK BAGIYA'));
-    if(pmTop){pmTop.colSpan=1;pmTop.classList.add('official-pmay-only')}
-    if(ekTop){ekTop.colSpan=1;ekTop.classList.add('official-ek-only')}
-
-    // Move the two kept body columns to the end and mark boxed cells.
-    for(const row of [...t.tBodies[0].rows]){
-      const n=row.cells.length;
-      if(n>=17){
-        row.cells[n-2]?.classList.add('official-pmay-only');
-        row.cells[n-1]?.classList.add('official-ek-only');
-      }
-    }
-    t.dataset.officialCompact='1';
-  }
-  let busy=false;
-  const run=()=>{if(busy)return;busy=true;requestAnimationFrame(()=>{busy=false;compactOfficial()})};
-  new MutationObserver(run).observe(document.body,{childList:true,subtree:true});
-  document.addEventListener('click',()=>setTimeout(run,30),true);
-  document.addEventListener('change',()=>setTimeout(run,0),true);
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();
-})();
-</script>
-<!-- ===== END OFFICIAL JANPAD BOX V1 ===== -->
 
 
 <!-- ===== SRDM VASULI COUNT FIX V1 ===== -->
@@ -3346,5 +3286,58 @@ body[data-report-view="official"] .table-wrap{border:2px solid #356a60!important
 })();
 </script>
 <!-- ===== END SRDM R6.12 VERIFIED COUNTS V1 ===== -->
+
+
+<!-- ===== RESTORE LIVE MR COLUMNS V1 ===== -->
+<script>
+(function(){
+  function pct1(a,b){return Number(b||0)>0?((Number(a||0)*100/Number(b||0)).toFixed(1)+'%'):'0.0%'}
+
+  // Keep verified R6.12 Ongoing counts, but live MR Issued values from today's official source.
+  const verified={
+    'AMARPATAN':{all:1383,pmay:865,ek:109},
+    'MAIHAR':{all:2482,pmay:1512,ek:86},
+    'MAJHGAWAN':{all:2204,pmay:1255,ek:85},
+    'NAGOD':{all:2311,pmay:1637,ek:99},
+    'RAMNAGAR':{all:1166,pmay:910,ek:105},
+    'RAMPUR BAGHELAN':{all:3264,pmay:2713,ek:75},
+    'SATNA':{all:1048,pmay:422,ek:94},
+    'UNCHAHARA':{all:1829,pmay:1185,ek:102}
+  };
+  function applyVerified(){
+    if(!Array.isArray(official))return;
+    for(const r of official){
+      const j=String(r.janpad||'').trim().toUpperCase(),v=verified[j];
+      if(!v)continue;
+      r.ongoingAll=v.all; r.pmayOngoing=v.pmay; r.ekOngoing=v.ek;
+      // r.pmayMR and r.ekMR intentionally NOT changed: they stay today's live official MR issued values.
+    }
+  }
+
+  renderOfficial=function(){
+    applyVerified();
+    const data=sortRows(officialFiltered().map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP)})),'ongoing',['janpad']);
+    lastExport=data;
+    $('viewTitle').textContent='Official Janpad Daily Report';
+    $('viewMeta').textContent=`${data.length} Janpad • R6.12 verified ongoing + Live MR • ${todayDate()}`;
+    let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th colspan="3">Gram Panchayat</th><th colspan="5">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;
+    for(const r of data){
+      h+=`<tr>${cell(districtOf(r.janpad))}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${pct1(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${pct1(r.ekMR,r.ekOngoing)}</td></tr>`;
+    }
+    const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};
+    keys.forEach(k=>t[k]=sum(data,k));
+    h+=`<tr class="total-row"><td>TOTAL</td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}<td>${pct1(t.mrAll,t.ongoingAll)}</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct1(t.mrCommunity,t.mrAll)}</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct1(t.pmayMR,t.pmayOngoing)}</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct1(t.ekMR,t.ekOngoing)}</td></tr></tbody>`;
+    $('reportTable').innerHTML=h;
+  };
+
+  // Engineer report keeps same three PMAY and four Ek Bagiya columns. Its ongoing counts are apportioned
+  // from the verified Janpad totals while MR Issued remains apportioned from today's official values.
+  const oldEngineerOfficialData=engineerOfficialData;
+  engineerOfficialData=function(list){applyVerified();return oldEngineerOfficialData(list)};
+
+  applyVerified();
+})();
+</script>
+<!-- ===== END RESTORE LIVE MR COLUMNS V1 ===== -->
 
 </body></html>
