@@ -32,16 +32,7 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
 <script>
 (function(){
   const txt=e=>String(e?.textContent||'').replace(/\s+/g,' ').trim();
-  const VASULI={
-    'RAMPUR BAGHELAN':44,
-    'NAGOD':155,
-    'MAIHAR':59,
-    'UNCHAHARA':51,
-    'MAJHGAWAN':41,
-    'AMARPATAN':71,
-    'RAMNAGAR':61,
-    'SATNA':67
-  };
+  const VASULI={'RAMPUR BAGHELAN':44,'NAGOD':155,'MAIHAR':59,'UNCHAHARA':51,'MAJHGAWAN':41,'AMARPATAN':71,'RAMNAGAR':61,'SATNA':67};
   function isOfficial(){return document.body?.dataset?.reportView==='official'||/Official Janpad Daily Report/i.test(txt(document.getElementById('viewTitle')))}
   function compactHeader(t){
     if(!t?.tHead||t.tHead.rows.length<2||!t.tBodies.length)return;
@@ -70,9 +61,7 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
     [...body.rows].forEach(tr=>{
       if(tr.querySelector('.print-select-col'))return;
       const td=document.createElement('td');td.className='print-select-col';
-      if(!tr.classList.contains('total-row')&&!/^TOTAL$/i.test(txt(tr.cells[0]))){
-        const c=document.createElement('input');c.type='checkbox';c.className='official-print-check';c.onchange=updateCount;td.appendChild(c);
-      }
+      if(!tr.classList.contains('total-row')&&!/^TOTAL$/i.test(txt(tr.cells[0]))){const c=document.createElement('input');c.type='checkbox';c.className='official-print-check';c.onchange=updateCount;td.appendChild(c)}
       tr.insertBefore(td,tr.firstChild);
     });
   }
@@ -83,9 +72,9 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
       const all=[...tr.cells].map(c=>txt(c).toUpperCase());
       const isTotal=tr.classList.contains('total-row')||all.includes('TOTAL')||all.includes('योग');
       const cell=tr.cells[tr.cells.length-1];
-      if(isTotal){cell.textContent='549';cell.style.setProperty('background','#0f766e','important');cell.style.setProperty('color','#fff','important');cell.style.setProperty('font-weight','900','important');return;}
-      const jp=all.find(v=>Object.prototype.hasOwnProperty.call(VASULI,v));
-      if(!jp)return;
+      if(isTotal){cell.textContent='549';cell.style.setProperty('background','#0f766e','important');cell.style.setProperty('color','#fff','important');cell.style.setProperty('font-weight','900','important');return}
+      const jp=txt(tr.cells[2]).toUpperCase();
+      if(!Object.prototype.hasOwnProperty.call(VASULI,jp))return;
       const v=VASULI[jp];
       cell.textContent=String(v);
       cell.style.setProperty('background','#dcfce7','important');
@@ -111,12 +100,7 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
       w.document.write('<html><head><title>Official Janpad Daily Report</title><style>@page{size:landscape;margin:7mm}body{font-family:Arial;padding:6px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #56758d;padding:5px;font-size:13px;text-align:center;vertical-align:middle;word-break:normal}th{background:#dfeaf4;font-weight:900;font-size:14px}</style></head><body><h2>Official Janpad Daily Report</h2>'+c.outerHTML+'<script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();
     };
   }
-  function run(){
-    const old=document.getElementById('officialPrintBar');if(old)old.style.display=isOfficial()?'flex':'none';
-    if(!isOfficial())return;
-    const t=document.getElementById('reportTable');if(!t)return;
-    compactHeader(t);addChecks(t);patchVasuli(t);addBar(t);updateCount();
-  }
+  function run(){const old=document.getElementById('officialPrintBar');if(old)old.style.display=isOfficial()?'flex':'none';if(!isOfficial())return;const t=document.getElementById('reportTable');if(!t)return;compactHeader(t);addChecks(t);patchVasuli(t);addBar(t);updateCount()}
   let lock=false;const sched=()=>{if(lock)return;lock=true;requestAnimationFrame(()=>{lock=false;run()})};
   const boot=()=>{run();new MutationObserver(sched).observe(document.body,{childList:true,subtree:true});document.addEventListener('click',()=>setTimeout(run,30),true)};
   document.readyState==='loading'?document.addEventListener('DOMContentLoaded',boot):boot();
@@ -127,4 +111,4 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
 if '</body>' not in s: raise SystemExit('index.html has no </body>')
 s=s.replace('</body>',block+'\n</body>',1)
 p.write_text(s,encoding='utf-8')
-print('DONE: Official Janpad layout plus correct Janpad-wise Vasuli values applied')
+print('DONE: Vasuli mapping now reads Janpad column only')
