@@ -3270,6 +3270,9 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 
 
 
+
+
+
 <!-- ===== OFFICIAL LAYOUT PRINT V2 ===== -->
 <style>
 body[data-report-view="official"] .table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;border-radius:8px!important}
@@ -3288,16 +3291,22 @@ body[data-report-view="official"] #reportTable th:last-child,body[data-report-vi
 body[data-report-view="official"] #officialPrintBar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px}
 body[data-report-view="official"] #officialPrintBar button{border:1px solid #4d7898;background:#eef8ff;color:#173f60;padding:9px 13px;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer}
 body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-weight:800;color:#31536d}
-@media(max-width:900px){
- body[data-report-view="official"] #reportTable{min-width:1240px!important}
- body[data-report-view="official"] #reportTable th{font-size:17px!important}
- body[data-report-view="official"] #reportTable td{font-size:16px!important}
-}
+@media(max-width:900px){body[data-report-view="official"] #reportTable{min-width:1240px!important}body[data-report-view="official"] #reportTable th{font-size:17px!important}body[data-report-view="official"] #reportTable td{font-size:16px!important}}
 @media print{#officialPrintBar,.print-select-col{display:none!important}}
 </style>
 <script>
 (function(){
   const txt=e=>String(e?.textContent||'').replace(/\s+/g,' ').trim();
+  const VASULI={
+    'RAMPUR BAGHELAN':44,
+    'NAGOD':155,
+    'MAIHAR':59,
+    'UNCHAHARA':51,
+    'MAJHGAWAN':41,
+    'AMARPATAN':71,
+    'RAMNAGAR':61,
+    'SATNA':67
+  };
   function isOfficial(){return document.body?.dataset?.reportView==='official'||/Official Janpad Daily Report/i.test(txt(document.getElementById('viewTitle')))}
   function compactHeader(t){
     if(!t?.tHead||t.tHead.rows.length<2||!t.tBodies.length)return;
@@ -3332,6 +3341,23 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
       tr.insertBefore(td,tr.firstChild);
     });
   }
+  function patchVasuli(t){
+    if(!t?.tBodies?.length)return;
+    [...t.tBodies[0].rows].forEach(tr=>{
+      if(!tr.cells.length)return;
+      const all=[...tr.cells].map(c=>txt(c).toUpperCase());
+      const isTotal=tr.classList.contains('total-row')||all.includes('TOTAL')||all.includes('योग');
+      const cell=tr.cells[tr.cells.length-1];
+      if(isTotal){cell.textContent='549';cell.style.setProperty('background','#0f766e','important');cell.style.setProperty('color','#fff','important');cell.style.setProperty('font-weight','900','important');return;}
+      const jp=all.find(v=>Object.prototype.hasOwnProperty.call(VASULI,v));
+      if(!jp)return;
+      const v=VASULI[jp];
+      cell.textContent=String(v);
+      cell.style.setProperty('background','#dcfce7','important');
+      cell.style.setProperty('color','#166534','important');
+      cell.style.setProperty('font-weight','900','important');
+    });
+  }
   function updateCount(){const e=document.getElementById('officialPrintCount');if(e)e.textContent=document.querySelectorAll('.official-print-check:checked').length}
   function addBar(t){
     if(document.getElementById('officialPrintBar'))return;
@@ -3354,7 +3380,7 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
     const old=document.getElementById('officialPrintBar');if(old)old.style.display=isOfficial()?'flex':'none';
     if(!isOfficial())return;
     const t=document.getElementById('reportTable');if(!t)return;
-    compactHeader(t);addChecks(t);addBar(t);updateCount();
+    compactHeader(t);addChecks(t);patchVasuli(t);addBar(t);updateCount();
   }
   let lock=false;const sched=()=>{if(lock)return;lock=true;requestAnimationFrame(()=>{lock=false;run()})};
   const boot=()=>{run();new MutationObserver(sched).observe(document.body,{childList:true,subtree:true});document.addEventListener('click',()=>setTimeout(run,30),true)};
