@@ -13,7 +13,7 @@ block=r'''
 body[data-report-view="official"] .table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;border-radius:8px!important}
 body[data-report-view="official"] #reportTable{border-collapse:collapse!important;min-width:1280px!important;width:100%!important;table-layout:auto!important}
 body[data-report-view="official"] #reportTable th{font-size:18px!important;font-weight:900!important;padding:6px 4px!important;line-height:1.1!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;text-align:center!important}
-body[data-report-view="official"] #reportTable td{font-size:17px!important;font-weight:750!important;padding:6px 4px!important;line-height:1.1!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
+body[data-report-view="official"] #reportTable td{font-size:20px!important;font-weight:800!important;padding:6px 4px!important;line-height:1.08!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
 body[data-report-view="official"] #reportTable th,body[data-report-view="official"] #reportTable td{border:1.5px solid #6489a3!important;vertical-align:middle!important;min-width:46px!important}
 body[data-report-view="official"] #reportTable .print-select-col{width:40px!important;min-width:40px!important;max-width:40px!important;text-align:center!important;white-space:nowrap!important}
 body[data-report-view="official"] #reportTable th:nth-child(2),body[data-report-view="official"] #reportTable td:nth-child(2){min-width:68px!important;width:68px!important;white-space:nowrap!important}
@@ -23,10 +23,11 @@ body[data-report-view="official"] #reportTable th:nth-child(5),body[data-report-
 body[data-report-view="official"] #reportTable th:nth-child(6),body[data-report-view="official"] #reportTable td:nth-child(6){min-width:58px!important;width:58px!important}
 body[data-report-view="official"] #reportTable th:nth-child(n+7),body[data-report-view="official"] #reportTable td:nth-child(n+7){min-width:52px!important}
 body[data-report-view="official"] #reportTable th:last-child,body[data-report-view="official"] #reportTable td:last-child{min-width:58px!important;width:58px!important;max-width:58px!important}
+body[data-report-view="official"] #reportTable tbody tr.total-row td{font-size:20px!important;font-weight:900!important}
 body[data-report-view="official"] #officialPrintBar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px}
 body[data-report-view="official"] #officialPrintBar button{border:1px solid #4d7898;background:#eef8ff;color:#173f60;padding:9px 13px;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer}
-body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-weight:800;color:#31536d}
-@media(max-width:900px){body[data-report-view="official"] #reportTable{min-width:1240px!important}body[data-report-view="official"] #reportTable th{font-size:17px!important}body[data-report-view="official"] #reportTable td{font-size:16px!important}}
+body[data-report-view="official"] #officialPrintBar .count{font-size:16px;font-weight:800;color:#31536d}
+@media(max-width:900px){body[data-report-view="official"] #reportTable{min-width:1240px!important}body[data-report-view="official"] #reportTable th{font-size:17px!important}body[data-report-view="official"] #reportTable td{font-size:19px!important}}
 @media print{#officialPrintBar,.print-select-col{display:none!important}}
 </style>
 <script>
@@ -97,7 +98,7 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
       const c=t.cloneNode(true);[...c.tHead.rows].forEach(r=>{if(r.cells[0]?.classList.contains('print-select-col'))r.deleteCell(0)});
       c.tBodies[0].innerHTML='';rows.forEach(r=>{const x=r.cloneNode(true);if(x.cells[0]?.classList.contains('print-select-col'))x.deleteCell(0);c.tBodies[0].appendChild(x)});
       const w=window.open('','_blank','width=1500,height=950');if(!w)return;
-      w.document.write('<html><head><title>Official Janpad Daily Report</title><style>@page{size:landscape;margin:7mm}body{font-family:Arial;padding:6px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #56758d;padding:5px;font-size:13px;text-align:center;vertical-align:middle;word-break:normal}th{background:#dfeaf4;font-weight:900;font-size:14px}</style></head><body><h2>Official Janpad Daily Report</h2>'+c.outerHTML+'<script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();
+      w.document.write('<html><head><title>Official Janpad Daily Report</title><style>@page{size:landscape;margin:7mm}body{font-family:Arial;padding:6px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #56758d;padding:5px;font-size:15px;text-align:center;vertical-align:middle;word-break:normal}th{background:#dfeaf4;font-weight:900;font-size:14px}</style></head><body><h2>Official Janpad Daily Report</h2>'+c.outerHTML+'<script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();
     };
   }
   function run(){const old=document.getElementById('officialPrintBar');if(old)old.style.display=isOfficial()?'flex':'none';if(!isOfficial())return;const t=document.getElementById('reportTable');if(!t)return;compactHeader(t);addChecks(t);patchVasuli(t);addBar(t);updateCount()}
@@ -111,4 +112,4 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
 if '</body>' not in s: raise SystemExit('index.html has no </body>')
 s=s.replace('</body>',block+'\n</body>',1)
 p.write_text(s,encoding='utf-8')
-print('DONE: Vasuli mapping now reads Janpad column only')
+print('DONE: Official Janpad data font enlarged; heading size unchanged')
