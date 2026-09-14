@@ -1411,6 +1411,60 @@ body[data-report-view="category"] .bucket-good{font-size:15px!important;font-wei
 }
 </style>
 <!-- /SRDM_CATEGORY_LAYOUT_BIGDATA_V1 -->
+<!-- SRDM_CATEGORY_NUMERIC_BIG_COMPACT_V1 -->
+<style id="SRDM_CATEGORY_NUMERIC_BIG_COMPACT_V1">
+/* Category report: larger numeric values, compact Overall Exp % column. Data logic unchanged. */
+body[data-report-view="category"] .report-table td:not(:first-child){
+  font-size:17px!important;
+  font-weight:800!important;
+  line-height:1.12!important;
+}
+body[data-report-view="category"] .report-table td:first-child{
+  font-size:15px!important;
+  font-weight:800!important;
+}
+body[data-report-view="category"] .report-table td:nth-child(9),
+body[data-report-view="category"] .report-table td:nth-child(10),
+body[data-report-view="category"] .report-table td:nth-child(12),
+body[data-report-view="category"] .report-table td:nth-child(14){
+  font-size:16px!important;
+}
+/* Overall Exp % is column 15 after financial split */
+body[data-report-view="category"] .report-table th:nth-child(15),
+body[data-report-view="category"] .report-table td:nth-child(15){
+  width:64px!important;
+  min-width:64px!important;
+  max-width:64px!important;
+  padding-left:2px!important;
+  padding-right:2px!important;
+}
+body[data-report-view="category"] .report-table th:nth-child(15){
+  font-size:11px!important;
+  line-height:1.05!important;
+}
+body[data-report-view="category"] .report-table td:nth-child(15) .exp-pct-chip{
+  font-size:15px!important;
+  font-weight:900!important;
+  padding:2px 5px!important;
+  min-width:0!important;
+}
+/* Other percentage numeric values also larger */
+body[data-report-view="category"] .report-table td:nth-child(11),
+body[data-report-view="category"] .report-table td:nth-child(13){
+  font-size:16px!important;
+  font-weight:850!important;
+}
+/* Recovery/Vasuli numeric column stays strong */
+body[data-report-view="category"] .report-table td:last-child{
+  font-size:19px!important;
+  font-weight:950!important;
+}
+@media(max-width:1500px){
+  body[data-report-view="category"] .report-table td:not(:first-child){font-size:16px!important;}
+  body[data-report-view="category"] .report-table td:nth-child(15) .exp-pct-chip{font-size:14px!important;}
+}
+</style>
+<!-- /SRDM_CATEGORY_NUMERIC_BIG_COMPACT_V1 -->
 </head>
 <body>
 <div class="login-screen" id="loginScreen">
