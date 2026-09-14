@@ -11,21 +11,23 @@ block=r'''
 <!-- ===== OFFICIAL LAYOUT PRINT V2 ===== -->
 <style>
 body[data-report-view="official"] .table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;border-radius:8px!important}
-body[data-report-view="official"] #reportTable{border-collapse:collapse!important;min-width:1420px!important;width:100%!important;table-layout:auto!important}
-body[data-report-view="official"] #reportTable th{font-size:18px!important;font-weight:900!important;padding:7px 5px!important;line-height:1.12!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;text-align:center!important}
-body[data-report-view="official"] #reportTable td{font-size:17px!important;font-weight:750!important;padding:7px 5px!important;line-height:1.12!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
-body[data-report-view="official"] #reportTable th,body[data-report-view="official"] #reportTable td{border:1.5px solid #6489a3!important;vertical-align:middle!important;min-width:58px!important}
-body[data-report-view="official"] #reportTable .print-select-col{width:46px!important;min-width:46px!important;max-width:46px!important;text-align:center!important;white-space:nowrap!important}
-body[data-report-view="official"] #reportTable th:nth-child(2),body[data-report-view="official"] #reportTable td:nth-child(2){min-width:78px!important;width:78px!important;white-space:nowrap!important}
-body[data-report-view="official"] #reportTable th:nth-child(3),body[data-report-view="official"] #reportTable td:nth-child(3){min-width:112px!important;width:112px!important;white-space:normal!important}
-body[data-report-view="official"] #reportTable th:nth-child(4),body[data-report-view="official"] #reportTable td:nth-child(4){min-width:104px!important;width:104px!important}
-body[data-report-view="official"] #reportTable th:nth-child(n+5),body[data-report-view="official"] #reportTable td:nth-child(n+5){min-width:64px!important}
-body[data-report-view="official"] #reportTable th:last-child,body[data-report-view="official"] #reportTable td:last-child{min-width:64px!important;width:64px!important;max-width:64px!important}
+body[data-report-view="official"] #reportTable{border-collapse:collapse!important;min-width:1280px!important;width:100%!important;table-layout:auto!important}
+body[data-report-view="official"] #reportTable th{font-size:18px!important;font-weight:900!important;padding:6px 4px!important;line-height:1.1!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;text-align:center!important}
+body[data-report-view="official"] #reportTable td{font-size:17px!important;font-weight:750!important;padding:6px 4px!important;line-height:1.1!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
+body[data-report-view="official"] #reportTable th,body[data-report-view="official"] #reportTable td{border:1.5px solid #6489a3!important;vertical-align:middle!important;min-width:46px!important}
+body[data-report-view="official"] #reportTable .print-select-col{width:40px!important;min-width:40px!important;max-width:40px!important;text-align:center!important;white-space:nowrap!important}
+body[data-report-view="official"] #reportTable th:nth-child(2),body[data-report-view="official"] #reportTable td:nth-child(2){min-width:68px!important;width:68px!important;white-space:nowrap!important}
+body[data-report-view="official"] #reportTable th:nth-child(3),body[data-report-view="official"] #reportTable td:nth-child(3){min-width:96px!important;width:96px!important;white-space:normal!important}
+body[data-report-view="official"] #reportTable th:nth-child(4),body[data-report-view="official"] #reportTable td:nth-child(4){min-width:90px!important;width:90px!important}
+body[data-report-view="official"] #reportTable th:nth-child(5),body[data-report-view="official"] #reportTable td:nth-child(5){min-width:78px!important;width:78px!important}
+body[data-report-view="official"] #reportTable th:nth-child(6),body[data-report-view="official"] #reportTable td:nth-child(6){min-width:58px!important;width:58px!important}
+body[data-report-view="official"] #reportTable th:nth-child(n+7),body[data-report-view="official"] #reportTable td:nth-child(n+7){min-width:52px!important}
+body[data-report-view="official"] #reportTable th:last-child,body[data-report-view="official"] #reportTable td:last-child{min-width:58px!important;width:58px!important;max-width:58px!important}
 body[data-report-view="official"] #officialPrintBar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px}
 body[data-report-view="official"] #officialPrintBar button{border:1px solid #4d7898;background:#eef8ff;color:#173f60;padding:9px 13px;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer}
 body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-weight:800;color:#31536d}
 @media(max-width:900px){
- body[data-report-view="official"] #reportTable{min-width:1380px!important}
+ body[data-report-view="official"] #reportTable{min-width:1240px!important}
  body[data-report-view="official"] #reportTable th{font-size:17px!important}
  body[data-report-view="official"] #reportTable td{font-size:16px!important}
 }
@@ -102,4 +104,4 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:14px;font-w
 if '</body>' not in s: raise SystemExit('index.html has no </body>')
 s=s.replace('</body>',block+'\n</body>',1)
 p.write_text(s,encoding='utf-8')
-print('DONE: Official Janpad columns compacted; large font retained')
+print('DONE: Official Janpad column widths reduced further')
