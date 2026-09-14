@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import csv, json, re
 from pathlib import Path
-from datetime import datetime, timezone, date
+from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 CSV = ROOT / "data" / "official-summary.csv"
@@ -13,11 +13,18 @@ NUMFIELDS = ["totalGP","musterGP","dysfunctionalGP","labourAll","mrAll","noEkyc"
              "labourIndividual","mrIndividual","labourCommunity","mrCommunity",
              "pmayLabour","pmayOngoing","pmayMR","ekLabour","ekOngoing","ekMR"]
 
-ONGOING_LOCK_END = date(2026, 9, 6)
-ONGOING_LOCK = {
-    "AMARPATAN": (1044,109), "MAIHAR": (1814,86), "MAJHGAWAN": (1536,85),
-    "NAGOD": (1896,100), "RAMNAGAR": (986,106), "RAMPUR BAGHELAN": (2943,75),
-    "SATNA": (473,94), "UNCHAHARA": (1303,101)
+# Verified R6.12 work-level master counts dated 13-09-2026.
+# These three ongoing denominators must remain stable in the Official Janpad Daily Report.
+# Today's live labour/MR values still come from the official daily source.
+R612_VERIFIED = {
+    "AMARPATAN":       {"ongoingAll":1383, "pmayOngoing":865,  "ekOngoing":109},
+    "MAIHAR":          {"ongoingAll":2482, "pmayOngoing":1512, "ekOngoing":86},
+    "MAJHGAWAN":       {"ongoingAll":2204, "pmayOngoing":1255, "ekOngoing":85},
+    "NAGOD":           {"ongoingAll":2311, "pmayOngoing":1637, "ekOngoing":99},
+    "RAMNAGAR":        {"ongoingAll":1166, "pmayOngoing":910,  "ekOngoing":105},
+    "RAMPUR BAGHELAN": {"ongoingAll":3264, "pmayOngoing":2713, "ekOngoing":75},
+    "SATNA":           {"ongoingAll":1048, "pmayOngoing":422,  "ekOngoing":94},
+    "UNCHAHARA":       {"ongoingAll":1829, "pmayOngoing":1185, "ekOngoing":102},
 }
 
 def num(v):
@@ -37,21 +44,22 @@ def main():
         raise SystemExit(f"Official summary validation failed: {sorted(got)}")
 
     clean=[]
-    lock_active=datetime.now().date() <= ONGOING_LOCK_END
     for r in rows:
         z={"janpad":str(r["janpad"]).strip().upper()}
         for k in NUMFIELDS: z[k]=num(r.get(k,0))
         if z["totalGP"]<=0 or z["musterGP"]<=0:
             raise SystemExit(f"Invalid Screen-2 row: {z['janpad']}")
-        if lock_active and z["janpad"] in ONGOING_LOCK:
-            z["pmayOngoing"], z["ekOngoing"] = ONGOING_LOCK[z["janpad"]]
+        fixed=R612_VERIFIED[z["janpad"]]
+        z["ongoingAll"]=fixed["ongoingAll"]
+        z["pmayOngoing"]=fixed["pmayOngoing"]
+        z["ekOngoing"]=fixed["ekOngoing"]
         clean.append(z)
 
-    if lock_active:
-        p=int(sum(x["pmayOngoing"] for x in clean))
-        e=int(sum(x["ekOngoing"] for x in clean))
-        if p!=11995 or e!=756:
-            raise SystemExit(f"LOCK VERIFY FAILED PMAY={p} EK={e}")
+    a=int(sum(x["ongoingAll"] for x in clean))
+    p=int(sum(x["pmayOngoing"] for x in clean))
+    e=int(sum(x["ekOngoing"] for x in clean))
+    if (a,p,e)!=(15687,10499,755):
+        raise SystemExit(f"R6.12 VERIFY FAILED Ongoing={a} PMAY={p} EK={e}")
 
     data=load_auto()
     new_daily=[{
@@ -69,8 +77,9 @@ def main():
     data["official"]=clean
     data["daily"]=new_daily
     meta=data.setdefault("meta",{})
-    meta.update({"mode":"auto","status":"ok","source":"Official VB-G RAM G R6.9 + rich summary","officialSummaryRows":8,
-                 "screen2Matched":True,"ongoingLockThrough":"06-09-2026" if lock_active else None})
+    meta.update({"mode":"auto","status":"ok","source":"Official VB-G RAM G live + verified R6.12 ongoing master",
+                 "officialSummaryRows":8,"screen2Matched":True,"r612VerifiedOngoing":True,
+                 "r612Totals":{"ongoingAll":15687,"pmayOngoing":10499,"ekOngoing":755}})
     if changed or not meta.get("updatedAt"): meta["updatedAt"]=datetime.now(timezone.utc).isoformat()
     meta["dataChangedOnLastFetch"]=changed
     try:
@@ -78,8 +87,7 @@ def main():
         if st.get("officialDate"): meta.setdefault("sourceDates",{})["OfficialSummary"]=st["officialDate"]
     except Exception: pass
     AUTO.write_text("window.AUTO_REPORT="+json.dumps(data,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
-    print("AUTO MERGE OK | PMAY Ongoing=%d | Ek Bagiya Ongoing=%d | lock_active=%s" %
-          (int(sum(x["pmayOngoing"] for x in new_daily)), int(sum(x["ekOngoing"] for x in new_daily)), lock_active))
+    print("AUTO MERGE OK | Ongoing=%d | PMAY Ongoing=%d | Ek Bagiya Ongoing=%d | R6.12 verified" % (a,p,e))
 
 if __name__=="__main__":
     main()
