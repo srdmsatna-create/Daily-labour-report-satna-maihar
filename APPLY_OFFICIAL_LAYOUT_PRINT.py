@@ -11,29 +11,29 @@ block=r'''
 <!-- ===== OFFICIAL LAYOUT PRINT V2 ===== -->
 <style>
 body[data-report-view="official"] .table-wrap{width:100%!important;max-width:100%!important;overflow-x:auto!important;border-radius:8px!important}
-body[data-report-view="official"] #reportTable{border-collapse:collapse!important;min-width:1280px!important;width:100%!important;table-layout:auto!important}
-body[data-report-view="official"] #reportTable th{font-size:18px!important;font-weight:900!important;padding:6px 4px!important;line-height:1.1!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;text-align:center!important}
-body[data-report-view="official"] #reportTable td{font-size:20px!important;font-weight:800!important;padding:6px 4px!important;line-height:1.08!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
-body[data-report-view="official"] #reportTable th,body[data-report-view="official"] #reportTable td{border:1.5px solid #6489a3!important;vertical-align:middle!important;min-width:46px!important}
-body[data-report-view="official"] #reportTable .print-select-col{width:40px!important;min-width:40px!important;max-width:40px!important;text-align:center!important;white-space:nowrap!important}
-body[data-report-view="official"] #reportTable th:nth-child(2),body[data-report-view="official"] #reportTable td:nth-child(2){min-width:68px!important;width:68px!important;white-space:nowrap!important}
-body[data-report-view="official"] #reportTable th:nth-child(3),body[data-report-view="official"] #reportTable td:nth-child(3){min-width:96px!important;width:96px!important;white-space:normal!important}
-body[data-report-view="official"] #reportTable th:nth-child(4),body[data-report-view="official"] #reportTable td:nth-child(4){min-width:90px!important;width:90px!important}
-body[data-report-view="official"] #reportTable th:nth-child(5),body[data-report-view="official"] #reportTable td:nth-child(5){min-width:78px!important;width:78px!important}
-body[data-report-view="official"] #reportTable th:nth-child(6),body[data-report-view="official"] #reportTable td:nth-child(6){min-width:58px!important;width:58px!important}
-body[data-report-view="official"] #reportTable th:nth-child(n+7),body[data-report-view="official"] #reportTable td:nth-child(n+7){min-width:52px!important}
-body[data-report-view="official"] #reportTable th:last-child,body[data-report-view="official"] #reportTable td:last-child{min-width:58px!important;width:58px!important;max-width:58px!important}
-body[data-report-view="official"] #reportTable tbody tr.total-row td{font-size:20px!important;font-weight:900!important}
+body[data-report-view="official"] #reportTable{border-collapse:collapse!important;min-width:1180px!important;width:100%!important;table-layout:auto!important}
+/* Header stays compact/readable; data rows are intentionally larger. */
+body[data-report-view="official"] #reportTable th{font-size:14px!important;font-weight:900!important;padding:5px 3px!important;line-height:1.08!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;text-align:center!important}
+body[data-report-view="official"] #reportTable td{font-size:19px!important;font-weight:800!important;padding:5px 3px!important;line-height:1.06!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important}
+body[data-report-view="official"] #reportTable th,body[data-report-view="official"] #reportTable td{border:1.3px solid #6489a3!important;vertical-align:middle!important;min-width:40px!important}
+body[data-report-view="official"] #reportTable .print-select-col{width:32px!important;min-width:32px!important;max-width:32px!important;text-align:center!important;white-space:nowrap!important;padding:2px!important}
+body[data-report-view="official"] #reportTable th:nth-child(2),body[data-report-view="official"] #reportTable td:nth-child(2){min-width:58px!important;width:58px!important;white-space:nowrap!important}
+body[data-report-view="official"] #reportTable th:nth-child(3),body[data-report-view="official"] #reportTable td:nth-child(3){min-width:102px!important;width:102px!important;white-space:normal!important}
+body[data-report-view="official"] #reportTable th:nth-child(4),body[data-report-view="official"] #reportTable td:nth-child(4){min-width:82px!important;width:82px!important}
+body[data-report-view="official"] #reportTable th:nth-child(5),body[data-report-view="official"] #reportTable td:nth-child(5){min-width:62px!important;width:62px!important}
+body[data-report-view="official"] #reportTable th:nth-child(n+6),body[data-report-view="official"] #reportTable td:nth-child(n+6){min-width:46px!important}
+body[data-report-view="official"] #reportTable th:last-child,body[data-report-view="official"] #reportTable td:last-child{min-width:54px!important;width:54px!important;max-width:54px!important}
+body[data-report-view="official"] #reportTable tbody tr.total-row td{font-size:19px!important;font-weight:900!important}
 body[data-report-view="official"] #officialPrintBar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px}
-body[data-report-view="official"] #officialPrintBar button{border:1px solid #4d7898;background:#eef8ff;color:#173f60;padding:9px 13px;border-radius:8px;font-size:15px;font-weight:800;cursor:pointer}
-body[data-report-view="official"] #officialPrintBar .count{font-size:16px;font-weight:800;color:#31536d}
-@media(max-width:900px){body[data-report-view="official"] #reportTable{min-width:1240px!important}body[data-report-view="official"] #reportTable th{font-size:17px!important}body[data-report-view="official"] #reportTable td{font-size:19px!important}}
+body[data-report-view="official"] #officialPrintBar button{border:1px solid #4d7898;background:#eef8ff;color:#173f60;padding:7px 10px;border-radius:8px;font-size:13px;font-weight:800;cursor:pointer}
+body[data-report-view="official"] #officialPrintBar .count{font-size:13px;font-weight:800;color:#31536d}
+@media(max-width:900px){body[data-report-view="official"] #reportTable{min-width:1160px!important}body[data-report-view="official"] #reportTable th{font-size:13px!important}body[data-report-view="official"] #reportTable td{font-size:18px!important}}
 @media print{#officialPrintBar,.print-select-col{display:none!important}}
 </style>
 <script>
 (function(){
   const txt=e=>String(e?.textContent||'').replace(/\s+/g,' ').trim();
-  const VASULI={'RAMPUR BAGHELAN':44,'NAGOD':155,'MAIHAR':59,'UNCHAHARA':51,'MAJHGAWAN':41,'AMARPATAN':71,'RAMNAGAR':61,'SATNA':67};
+  const VASULI={'RAMPUR BAGHELAN':44,'MAIHAR':59,'NAGOD':155,'MAJHGAWAN':41,'UNCHAHARA':51,'AMARPATAN':71,'RAMNAGAR':61,'SATNA':67};
   function isOfficial(){return document.body?.dataset?.reportView==='official'||/Official Janpad Daily Report/i.test(txt(document.getElementById('viewTitle')))}
   function compactHeader(t){
     if(!t?.tHead||t.tHead.rows.length<2||!t.tBodies.length)return;
@@ -52,6 +52,8 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:16px;font-w
         tr.cells[3].textContent=prog+' / '+total;
         tr.deleteCell(2);
       });
+    } else if(b>=0){
+      h2.cells[b].textContent='GP Progress / Total GPs';
     }
   }
   function addChecks(t){
@@ -70,8 +72,8 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:16px;font-w
     if(!t?.tBodies?.length)return;
     [...t.tBodies[0].rows].forEach(tr=>{
       if(!tr.cells.length)return;
-      const all=[...tr.cells].map(c=>txt(c).toUpperCase());
-      const isTotal=tr.classList.contains('total-row')||all.includes('TOTAL')||all.includes('योग');
+      const vals=[...tr.cells].map(c=>txt(c).toUpperCase());
+      const isTotal=tr.classList.contains('total-row')||vals.includes('TOTAL')||vals.includes('योग');
       const cell=tr.cells[tr.cells.length-1];
       if(isTotal){cell.textContent='549';cell.style.setProperty('background','#0f766e','important');cell.style.setProperty('color','#fff','important');cell.style.setProperty('font-weight','900','important');return}
       const jp=txt(tr.cells[2]).toUpperCase();
@@ -98,7 +100,7 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:16px;font-w
       const c=t.cloneNode(true);[...c.tHead.rows].forEach(r=>{if(r.cells[0]?.classList.contains('print-select-col'))r.deleteCell(0)});
       c.tBodies[0].innerHTML='';rows.forEach(r=>{const x=r.cloneNode(true);if(x.cells[0]?.classList.contains('print-select-col'))x.deleteCell(0);c.tBodies[0].appendChild(x)});
       const w=window.open('','_blank','width=1500,height=950');if(!w)return;
-      w.document.write('<html><head><title>Official Janpad Daily Report</title><style>@page{size:landscape;margin:7mm}body{font-family:Arial;padding:6px}table{border-collapse:collapse;width:100%}th,td{border:1px solid #56758d;padding:5px;font-size:15px;text-align:center;vertical-align:middle;word-break:normal}th{background:#dfeaf4;font-weight:900;font-size:14px}</style></head><body><h2>Official Janpad Daily Report</h2>'+c.outerHTML+'<script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();
+      w.document.write('<html><head><title>Official Janpad Daily Report</title><style>@page{size:A4 landscape;margin:6mm}body{font-family:Arial;padding:4px}table{border-collapse:collapse;width:100%;table-layout:auto}th,td{border:1px solid #56758d;padding:4px 3px;text-align:center;vertical-align:middle}th{background:#dfeaf4;font-weight:900;font-size:11px}td{font-size:14px;font-weight:700}</style></head><body><h2>Official Janpad Daily Report</h2>'+c.outerHTML+'<script>window.onload=()=>window.print()<\/script></body></html>');w.document.close();
     };
   }
   function run(){const old=document.getElementById('officialPrintBar');if(old)old.style.display=isOfficial()?'flex':'none';if(!isOfficial())return;const t=document.getElementById('reportTable');if(!t)return;compactHeader(t);addChecks(t);patchVasuli(t);addBar(t);updateCount()}
@@ -112,4 +114,4 @@ body[data-report-view="official"] #officialPrintBar .count{font-size:16px;font-w
 if '</body>' not in s: raise SystemExit('index.html has no </body>')
 s=s.replace('</body>',block+'\n</body>',1)
 p.write_text(s,encoding='utf-8')
-print('DONE: Official Janpad data font enlarged; heading size unchanged')
+print('DONE: Permanent Official Janpad layout applied')
