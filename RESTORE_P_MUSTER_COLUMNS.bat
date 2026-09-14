@@ -3,7 +3,7 @@ setlocal
 cd /d "%~dp0"
 echo ===============================================
 echo SRDM SATNA - RESTORE PMAY / EK BAGIYA MR COLUMNS
- echo ===============================================
+echo ===============================================
 
 git stash push -u -m "auto-before-restore-mr-columns"
 git pull --rebase origin main
@@ -44,7 +44,7 @@ if errorlevel 1 (
 
 echo.
 echo SUCCESS: PMAY-G and Ek Bagiya MR columns restored and published.
-echo Verified Ongoing stays: PMAY-G 10499 | Ek Bagiya 755
- echo Live MR Issued and MR %% stay from today's official report.
+echo Verified Ongoing stays: PMAY-G 10499 ^| Ek Bagiya 755
+echo Live MR Issued and MR %% stay from today's official report.
 echo Wait 1-3 minutes, then open srdmsatna.online and press Ctrl+F5.
 pause
