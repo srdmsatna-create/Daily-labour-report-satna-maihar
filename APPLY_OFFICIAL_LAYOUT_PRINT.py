@@ -1,7 +1,13 @@
 from pathlib import Path
+import re
 
 p=Path('index.html')
 s=p.read_text(encoding='utf-8')
+
+# Screen-2 / Official Janpad launcher icon: replace only this one card icon.
+pat=re.compile(r'(<button[^>]*data-srdm-view=["\']official["\'][^>]*>\s*)<span class=["\']srdm-app-icon["\']>.*?</span>',re.I|re.S)
+s=pat.sub(r'''\1<span class="srdm-app-icon srdm-screen2-photo-icon"><img src="screen2-workers-icon.svg" alt="Screen-2"></span>''',s,count=1)
+
 start='<!-- ===== OFFICIAL LAYOUT PRINT V2 ===== -->'
 end='<!-- ===== END OFFICIAL LAYOUT PRINT V2 ===== -->'
 if start in s and end in s:
@@ -10,6 +16,14 @@ if start in s and end in s:
 block=r'''
 <!-- ===== OFFICIAL LAYOUT PRINT V2 ===== -->
 <style>
+.srdm-app-icon.srdm-screen2-photo-icon{
+  padding:0!important;overflow:hidden!important;background:#fff!important;
+  border:1px solid #d9e5f4!important;box-shadow:0 8px 20px rgba(25,74,123,.12)!important;
+}
+.srdm-app-icon.srdm-screen2-photo-icon img{
+  width:100%!important;height:100%!important;display:block!important;
+  object-fit:cover!important;object-position:center!important;border-radius:inherit!important;
+}
 body[data-report-view="official"] .report-card,
 body[data-report-view="official"] .report-head,
 body[data-report-view="official"] #reportTable,
@@ -35,77 +49,12 @@ body[data-report-view="official"] #reportTable tbody tr.total-row td{font-size:1
 (function(){
   const txt=e=>String(e?.textContent||'').replace(/\s+/g,' ').trim();
   const VASULI={'RAMPUR BAGHELAN':44,'MAIHAR':59,'NAGOD':155,'MAJHGAWAN':41,'UNCHAHARA':51,'AMARPATAN':71,'RAMNAGAR':61,'SATNA':67};
-
-  function isOfficial(){
-    try{ if(typeof view!=='undefined') return view==='official'; }catch(e){}
-    return /Official Janpad Daily Report/i.test(txt(document.getElementById('viewTitle')));
-  }
-
-  function compactHeader(t){
-    if(!t || !t.tHead || t.tHead.rows.length<2 || !t.tBodies.length) return;
-    const h1=t.tHead.rows[0], h2=t.tHead.rows[1], body=t.tBodies[0];
-    [...h1.cells].forEach(th=>{ if(/ALL TYPES OF WORKS/i.test(txt(th)) && txt(th)!=='All Types of Works') th.textContent='All Types of Works'; });
-    const hs=[...h2.cells].map(x=>txt(x).toUpperCase());
-    const totalIdx=hs.indexOf('TOTAL GP'), progIdx=hs.indexOf('GP PROGRESS');
-    if(totalIdx>=0 && progIdx>=0){
-      const grp=[...h1.cells].find(x=>txt(x).toUpperCase()==='GRAM PANCHAYAT');
-      if(grp) grp.colSpan=Math.max(1,(parseInt(grp.colSpan||'3',10)-1));
-      h2.cells[progIdx].textContent='GP Progress / Total GPs';
-      h2.deleteCell(totalIdx);
-      [...body.rows].forEach(tr=>{
-        if(tr.cells.length<4) return;
-        const total=txt(tr.cells[2]), prog=txt(tr.cells[3]);
-        tr.cells[3].textContent=prog+' / '+total;
-        tr.deleteCell(2);
-      });
-    }
-  }
-
-  function patchVasuli(t){
-    if(!t || !t.tBodies || !t.tBodies.length) return;
-    [...t.tBodies[0].rows].forEach(tr=>{
-      if(!tr.cells.length) return;
-      const vals=[...tr.cells].map(c=>txt(c).toUpperCase());
-      const cell=tr.cells[tr.cells.length-1];
-      const isTotal=tr.classList.contains('total-row')||vals.includes('TOTAL')||vals.includes('योग');
-      if(isTotal){
-        if(txt(cell)!=='549') cell.textContent='549';
-        cell.style.cssText += ';background:#0f766e!important;color:#fff!important;font-weight:700!important';
-        return;
-      }
-      const jp=txt(tr.cells[1]).toUpperCase();
-      if(!Object.prototype.hasOwnProperty.call(VASULI,jp)) return;
-      const v=String(VASULI[jp]);
-      if(txt(cell)!==v) cell.textContent=v;
-      cell.style.cssText += ';background:#dcfce7!important;color:#166534!important;font-weight:700!important';
-    });
-  }
-
-  function run(){
-    const official=isOfficial();
-    if(document.body) document.body.dataset.reportView=official?'official':'';
-    if(!official) return;
-    const t=document.getElementById('reportTable');
-    if(!t) return;
-    compactHeader(t);
-    patchVasuli(t);
-  }
-
-  function boot(){
-    run();
-    document.addEventListener('click',()=>setTimeout(run,80),true);
-    document.addEventListener('change',()=>setTimeout(run,80),true);
-    try{
-      if(typeof render==='function' && !render.__srdmOfficialSafe){
-        const baseRender=render;
-        const wrapped=function(){const out=baseRender.apply(this,arguments);setTimeout(run,0);return out;};
-        wrapped.__srdmOfficialSafe=true;
-        render=wrapped;
-      }
-    }catch(e){}
-  }
-
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',boot); else boot();
+  function isOfficial(){try{if(typeof view!=='undefined')return view==='official';}catch(e){}return /Official Janpad Daily Report/i.test(txt(document.getElementById('viewTitle')))}
+  function compactHeader(t){if(!t||!t.tHead||t.tHead.rows.length<2||!t.tBodies.length)return;const h1=t.tHead.rows[0],h2=t.tHead.rows[1],body=t.tBodies[0];[...h1.cells].forEach(th=>{if(/ALL TYPES OF WORKS/i.test(txt(th))&&txt(th)!=='All Types of Works')th.textContent='All Types of Works'});const hs=[...h2.cells].map(x=>txt(x).toUpperCase());const totalIdx=hs.indexOf('TOTAL GP'),progIdx=hs.indexOf('GP PROGRESS');if(totalIdx>=0&&progIdx>=0){const grp=[...h1.cells].find(x=>txt(x).toUpperCase()==='GRAM PANCHAYAT');if(grp)grp.colSpan=Math.max(1,(parseInt(grp.colSpan||'3',10)-1));h2.cells[progIdx].textContent='GP Progress / Total GPs';h2.deleteCell(totalIdx);[...body.rows].forEach(tr=>{if(tr.cells.length<4)return;const total=txt(tr.cells[2]),prog=txt(tr.cells[3]);tr.cells[3].textContent=prog+' / '+total;tr.deleteCell(2)})}}
+  function patchVasuli(t){if(!t||!t.tBodies||!t.tBodies.length)return;[...t.tBodies[0].rows].forEach(tr=>{if(!tr.cells.length)return;const vals=[...tr.cells].map(c=>txt(c).toUpperCase()),cell=tr.cells[tr.cells.length-1],isTotal=tr.classList.contains('total-row')||vals.includes('TOTAL')||vals.includes('योग');if(isTotal){if(txt(cell)!=='549')cell.textContent='549';cell.style.cssText+=';background:#0f766e!important;color:#fff!important;font-weight:700!important';return}const jp=txt(tr.cells[1]).toUpperCase();if(!Object.prototype.hasOwnProperty.call(VASULI,jp))return;const v=String(VASULI[jp]);if(txt(cell)!==v)cell.textContent=v;cell.style.cssText+=';background:#dcfce7!important;color:#166534!important;font-weight:700!important'})}
+  function run(){const official=isOfficial();if(document.body)document.body.dataset.reportView=official?'official':'';if(!official)return;const t=document.getElementById('reportTable');if(!t)return;compactHeader(t);patchVasuli(t)}
+  function boot(){run();document.addEventListener('click',()=>setTimeout(run,80),true);document.addEventListener('change',()=>setTimeout(run,80),true);try{if(typeof render==='function'&&!render.__srdmOfficialSafe){const baseRender=render;const wrapped=function(){const out=baseRender.apply(this,arguments);setTimeout(run,0);return out};wrapped.__srdmOfficialSafe=true;render=wrapped}}catch(e){}}
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
 <!-- ===== END OFFICIAL LAYOUT PRINT V2 ===== -->
@@ -113,4 +62,4 @@ body[data-report-view="official"] #reportTable tbody tr.total-row td{font-size:1
 if '</body>' not in s: raise SystemExit('index.html has no </body>')
 s=s.replace('</body>',block+'\n</body>',1)
 p.write_text(s,encoding='utf-8')
-print('DONE: Stable Official Janpad patch applied; no MutationObserver loop')
+print('DONE: Stable Official Janpad patch + Screen-2 icon applied')
