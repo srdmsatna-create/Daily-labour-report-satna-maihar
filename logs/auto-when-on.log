@@ -2158,3 +2158,146 @@ AUTO MERGE OK | PMAY Ongoing=968 | Ek Bagiya Ongoing=126 | lock_active=False
 To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
    9acaa1b..67606f5  main -> main
 END Mon 09/14/2026  9:33:56.55 SUCCESS-PUSHED
+
+============================================================
+START Mon 09/14/2026 21:24:55.53
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1415/1134; PMAY Labour/MR=1124/985; Ek Bagiya Labour/MR=251/127.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | Ongoing=15687 | PMAY Ongoing=10499 | Ek Bagiya Ongoing=755 | R6.12 verified
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main dd401cb] Automatic VBGRAMG update when laptop online
+ 4 files changed, 11 insertions(+), 11 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   0540af8..dd401cb  main -> main
+END Mon 09/14/2026 21:25:41.71 SUCCESS-PUSHED
+
+============================================================
+START Mon 09/14/2026 21:33:10.47
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1415/1134; PMAY Labour/MR=1124/985; Ek Bagiya Labour/MR=251/127.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | Ongoing=15687 | PMAY Ongoing=10499 | Ek Bagiya Ongoing=755 | R6.12 verified
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main f5d7efa] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   0a18663..f5d7efa  main -> main
+END Mon 09/14/2026 21:33:58.10 SUCCESS-PUSHED
+
+============================================================
+START Mon 09/14/2026 22:33:12.40
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1419/1137; PMAY Labour/MR=1126/986; Ek Bagiya Labour/MR=252/128.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | Ongoing=15687 | PMAY Ongoing=10499 | Ek Bagiya Ongoing=755 | R6.12 verified
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main d9058f2] Automatic VBGRAMG update when laptop online
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   688b294..d9058f2  main -> main
+END Mon 09/14/2026 22:33:51.81 SUCCESS-PUSHED
+
+============================================================
+START Mon 09/14/2026 23:33:10.46
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1419/1137; PMAY Labour/MR=1126/986; Ek Bagiya Labour/MR=252/128.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | Ongoing=15687 | PMAY Ongoing=10499 | Ek Bagiya Ongoing=755 | R6.12 verified
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main b011a8a] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   d9058f2..b011a8a  main -> main
+END Mon 09/14/2026 23:33:52.54 SUCCESS-PUSHED
+
+============================================================
+START Tue 09/15/2026  0:33:10.47
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+FAILED: R6.9 filters not found: expected 3 dropdowns.
+ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.
+
+============================================================
+START Tue 09/15/2026  1:33:10.51
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+FAILED: R6.9 filters not found: expected 3 dropdowns.
+ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.
+
+============================================================
+START Tue 09/15/2026  2:33:10.63
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+FAILED: R6.9 filters not found: expected 3 dropdowns.
+ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.
+
+============================================================
+START Tue 09/15/2026  3:33:10.89
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+FAILED: R6.9 filters not found: expected 3 dropdowns.
+ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.
+
+============================================================
+START Tue 09/15/2026  7:47:01.88
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+FAILED: R6.9 filters not found: expected 3 dropdowns.
+ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.
