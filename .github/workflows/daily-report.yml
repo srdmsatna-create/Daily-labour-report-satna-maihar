@@ -18,7 +18,7 @@ concurrency:
 jobs:
   update-report:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
 
     steps:
       - name: Checkout repository
@@ -42,7 +42,9 @@ jobs:
           pip install -r requirements.txt
           python -m playwright install --with-deps chromium
 
-      - name: Fetch official VB-G RAM G data
+      - name: Primary official fetch
+        id: primary
+        continue-on-error: true
         env:
           VBGRAM_DAILY_REPORT_URL: ${{ secrets.VBGRAM_DAILY_REPORT_URL }}
           VBGRAM_DAILY_REPORT_XLSX_URL: ${{ secrets.VBGRAM_DAILY_REPORT_XLSX_URL }}
@@ -53,9 +55,28 @@ jobs:
         run: |
           python scripts/fetch_official_vbgram.py
 
-      - name: Apply official update
+      - name: Apply primary official update
+        if: steps.primary.outcome == 'success'
         run: |
           python scripts/apply_auto_update.py
+
+      - name: Fallback R6.9 cloud fetch
+        id: fallback
+        if: steps.primary.outcome != 'success'
+        continue-on-error: true
+        run: |
+          python scripts_local/local_auto_update_cloud_v2.py
+
+      - name: Merge fallback dashboard data
+        if: steps.primary.outcome != 'success' && steps.fallback.outcome == 'success'
+        run: |
+          python scripts/merge_official_summary.py
+
+      - name: Stop if both fetch methods failed
+        if: steps.primary.outcome != 'success' && steps.fallback.outcome != 'success'
+        run: |
+          echo "Both official fetch methods failed. Existing verified dashboard data is preserved."
+          exit 1
 
       - name: Validate published data
         run: |
