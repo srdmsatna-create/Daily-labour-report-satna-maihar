@@ -1,1 +1,1 @@
-MIS 6.12 corrected historical booked + mandays refresh — 2026-09-13
+VBGRAMG daily auto refresh retry — 2026-09-17
