@@ -1468,10 +1468,13 @@ body[data-report-view="category"] .report-table td:last-child{
 <style id="GP_NO_EMP_SAFE_STYLE_V1">
 body[data-report-view="dysjanpad"] #reportTable:empty{display:none!important}
 .gp-noemp-summary th{background:#123f72!important;color:#fff!important;font-weight:950!important;font-size:13px!important;padding:8px 6px!important;text-align:center!important}
-.gp-noemp-summary th:first-child,.gp-noemp-summary td:first-child{width:110px!important;min-width:110px!important;max-width:110px!important;white-space:nowrap!important}
+.gp-noemp-summary th:first-child,.gp-noemp-summary td:first-child{width:135px!important;min-width:135px!important;max-width:135px!important;white-space:nowrap!important}
+.gp-noemp-summary th:nth-child(3),.gp-noemp-summary td:nth-child(3){width:210px!important;min-width:210px!important;white-space:normal!important;overflow-wrap:anywhere!important}
+.gp-noemp-summary th:nth-child(4),.gp-noemp-summary td:nth-child(4),.gp-noemp-summary th:nth-child(5),.gp-noemp-summary td:nth-child(5){width:92px!important;min-width:92px!important;max-width:92px!important;text-align:center!important}
 .gp-noemp-summary th:nth-child(4){background:#0f5f99!important}
 .gp-noemp-summary th:nth-child(5){background:#9b1c1c!important}
 .gp-noemp-summary td{padding:7px 8px!important;border:1px solid #c7d7e8!important;font-size:13px!important}
+.gp-noemp-summary tbody td:nth-child(4),.gp-noemp-summary tbody td:nth-child(5){font-size:18px!important;font-weight:950!important}
 .gp-noemp-summary tbody tr:nth-child(even):not(.total-row){background:#f8fbff}
 .gp-noemp-summary .total-row td{background:#dcecff!important;font-weight:950!important}
 </style></head>
@@ -2152,7 +2155,15 @@ function renderEmuster(){
 }
 
 function renderJanpadDysfunctional(){
-  const source=Array.isArray(window.SRDM_ZERO_FORCE_DATA)?window.SRDM_ZERO_FORCE_DATA:[];
+  const embedded=Array.isArray(window.SRDM_ZERO_FORCE_DATA)?window.SRDM_ZERO_FORCE_DATA:[];
+  const liveRows=Array.isArray(window.SHRAMIK_NIYOJAN?.gpMandaysRows)
+    ? window.SHRAMIK_NIYOJAN.gpMandaysRows.filter(r=>clean(r.panchayat)!=='2') : [];
+  const liveMap=new Map(liveRows.map(r=>[[clean(r.janpad),clean(r.panchayat)].join('¦'),r]));
+  const source=embedded.map(r=>{
+    const live=liveMap.get([clean(r.janpad),clean(r.gp)].join('¦'));
+    return live?{...r,engineer:live.engineer||r.engineer,cluster:live.cluster||r.cluster,
+      July:num(live.july),August:num(live.august),September:num(live.september)}:r;
+  });
   const months=['April','May','June','July','August','September'];
   const month=months.includes(window.GP_NO_EMP_MONTH)?window.GP_NO_EMP_MONTH:'September';
   window.GP_NO_EMP_MONTH=month;
@@ -2193,11 +2204,14 @@ function renderJanpadDysfunctional(){
   if(sel)sel.onchange=()=>{window.GP_NO_EMP_MONTH=sel.value;renderJanpadDysfunctional();};
 
   const totalGP=base.length,totalNo=noEmp.length,active=Math.max(0,totalGP-totalNo);
+  const satnaGP=base.filter(r=>clean(r.district)==='SATNA').length;
+  const maiharGP=base.filter(r=>clean(r.district)==='MAIHAR').length;
   $('kpis').innerHTML=[
     ['कुल ग्राम पंचायत',totalGP,'Selected filter'],
+    ['SATNA GP',satnaGP,month],
+    ['MAIHAR GP',maiharGP,month],
     ['बिना रोजगार वाली GP',totalNo,month],
-    ['रोजगार वाली GP',active,month],
-    ['No Employment %',totalGP?(totalNo*100/totalGP).toFixed(1)+'%':'0.0%',month]
+    ['रोजगार वाली GP',active,month]
   ].map(x=>`<div class="kpi"><small>${x[0]}</small><strong>${typeof x[1]==='number'?fmt(x[1]):x[1]}</strong><em>${x[2]}</em></div>`).join('');
 
   const allottedMap=new Map();
