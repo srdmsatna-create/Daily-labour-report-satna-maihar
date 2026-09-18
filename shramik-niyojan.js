@@ -92,6 +92,7 @@
   const engineerRows=buildEngineerRows();
   const officialMap=new Map((auto.official||[]).map(r=>[nrm(r.janpad),r]));
   const janpadRows=(data.rows||[]).map(r=>{const o=officialMap.get(nrm(r.janpad))||{},fallback=[...metrics.values()].filter(x=>x.janpad===nrm(r.janpad)),ongoing=Number(o.ongoingAll??fallback.reduce((a,x)=>a+x.ongoing,0)),recoveryWorks=[...recoveries.values()].filter(x=>x.janpad===nrm(r.janpad)).reduce((a,x)=>a+x.recoveryWorks,0);return {...r,todayLabour:Number(o.labourAll??fallback.reduce((a,x)=>a+x.labour,0)),ongoing,mrIssued:Number(o.mrAll??fallback.reduce((a,x)=>a+x.mrIssued,0)),recoveryWorks,postRecoveryOngoing:Math.max(0,ongoing-recoveryWorks)}});
+  const stateDistrictRows=(data.stateDistrictRows||[]).map(r=>({...r,todayLabour:Number(r.todayLabour||0),ongoing:Number(r.ongoing||0),mrIssued:Number(r.mrIssued||0),recoveryWorks:0,postRecoveryOngoing:Number(r.ongoing||0)}));
   function aggregate(rows,label,district){const t={district:district||'',janpad:label,engineer:'',cluster:'',target:0,augustAchievement:0,septemberAchievement:0,achievement:0,difference:0,remainingDays:Number(data.remainingSeptemberDays||0),dailyRequired:0,dailyTarget125:0,todayLabour:0,achievementPct:0,ongoing:0,mrIssued:0,recoveryWorks:0,postRecoveryOngoing:0};rows.forEach(r=>['target','augustAchievement','septemberAchievement','achievement','todayLabour','ongoing','mrIssued','recoveryWorks'].forEach(k=>t[k]+=Number(r[k]||0)));t.postRecoveryOngoing=Math.max(0,t.ongoing-t.recoveryWorks);t.difference=Math.max(0,t.target-t.achievement);t.dailyRequired=t.remainingDays?Math.ceil(t.difference/t.remainingDays):0;t.dailyTarget125=t.remainingDays?Math.ceil(t.difference/t.remainingDays*1.25):0;t.achievementPct=t.target?t.achievement*100/t.target:0;return t}
   function options(){const old=jan.value;const local=dist.value==='ALL'||dist.value==='SATNA'||dist.value==='MAIHAR';const rows=level.value==='engineer'?engineerRows:janpadRows;const vals=local?[...new Set(rows.filter(r=>dist.value==='ALL'||r.district===dist.value).map(r=>r.janpad))].sort():[];jan.innerHTML='<option value="ALL">सभी जनपद</option>'+vals.map(x=>`<option value="${esc(x)}">${esc(janpadName(x))}</option>`).join('');if(vals.includes(old))jan.value=old;else jan.value='ALL';jan.disabled=!local;eng.disabled=!local;clu.disabled=!local;if(!local){eng.value='ALL';clu.value='ALL';jan.title='Janpad drill-down केवल Satna/Maihar के लिए';eng.title='उपयंत्री drill-down केवल Satna/Maihar के लिए';clu.title='Cluster drill-down केवल Satna/Maihar के लिए'}else{jan.removeAttribute('title');eng.removeAttribute('title');clu.removeAttribute('title')}}
   function pctClass(v){return v>=100?'good':v<75?'bad':''}
@@ -102,18 +103,21 @@
   function row(r,rank,cls=''){const mrPct=Number(r.ongoing||0)?Number(r.mrIssued||0)*100/Number(r.ongoing):0,shortage=Math.max(0,Number(r.dailyTarget125||0)-Number(r.todayLabour||0));return `<tr class="${cls}"><td>${rank||''}</td><td>${esc(districtHindi(r.district))}</td><td>${esc(janpadName(r.janpad))}</td><td>${esc(r.engineer||'—')}</td><td>${esc(r.cluster||'—')}</td><td>${fmt(r.target)}</td><td>${fmt(r.augustAchievement)}</td><td>${fmt(r.septemberAchievement)}</td><td>${fmt(r.achievement)}</td><td>${fmt(r.difference)}</td><td>${fmt(r.remainingDays)}</td><td>${fmt(r.dailyTarget125)}</td><td>${fmt(r.todayLabour)}</td><td><span class="sn-pct ${pctClass(r.achievementPct)}">${Number(r.achievementPct||0).toFixed(1)}%</span></td><td class="sn-shortage">${fmt(shortage)}</td><td>${fmt(r.ongoing)}</td><td>${fmt(r.mrIssued)}</td><td>${mrPct.toFixed(1)}%</td></tr>`}
   function draw(){
     section.querySelector('.sn-table').classList.toggle('sn-hide-engineer-cols',level.value==='janpad');
-    let rows=level.value==='engineer'?engineerRows:janpadRows;
-    rows=rows.filter(r=>(dist.value==='ALL'||r.district===dist.value)&&(jan.value==='ALL'||r.janpad===jan.value)&&(eng.value==='ALL'||r.engineer===eng.value)&&(clu.value==='ALL'||r.cluster===clu.value));
+    const districtMode=level.value==='janpad'&&(dist.value==='ALL'||(dist.value!=='SATNA'&&dist.value!=='MAIHAR'));
+    let rows=level.value==='engineer'?engineerRows:(districtMode?stateDistrictRows:janpadRows);
+    rows=rows.filter(r=>(dist.value==='ALL'||r.district===dist.value)&&(districtMode||(jan.value==='ALL'||r.janpad===jan.value))&&(eng.value==='ALL'||r.engineer===eng.value)&&(clu.value==='ALL'||r.cluster===clu.value));
     const order=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
     rows=rows.slice().sort((a,b)=>sort.value==='ASC'?Number(a.achievementPct||0)-Number(b.achievementPct||0):sort.value==='DESC'?Number(b.achievementPct||0)-Number(a.achievementPct||0):order.indexOf(nrm(a.janpad))-order.indexOf(nrm(b.janpad))||String(a.engineer).localeCompare(String(b.engineer),'hi'));
     exportRows=rows;let h='',serial=1;
-    if(level.value==='janpad'&&jan.value==='ALL'){
+    if(districtMode){
+      rows.forEach(r=>h+=row({...r,janpad:'जिला कुल'},serial++));
+      if(dist.value==='ALL'&&rows.length)h+=row(aggregate(rows,'मध्यप्रदेश — 52 जिला कुल',''),'','sn-grand');
+    }else if(level.value==='janpad'&&jan.value==='ALL'){
       ['MAIHAR','SATNA'].filter(d=>dist.value==='ALL'||dist.value===d).forEach(d=>{
         const q=rows.filter(r=>r.district===d);
         q.forEach(r=>h+=row(r,serial++));
         if(q.length)h+=row(aggregate(q,d==='SATNA'?'सतना जिला कुल':'मैहर जिला कुल',d),'',`sn-district sn-district-${d.toLowerCase()}`);
       });
-      if(dist.value==='ALL'&&rows.length)h+=row(aggregate(rows,'सतना + मैहर महायोग',''),'','sn-grand');
     }else if(level.value==='engineer'&&jan.value==='ALL'){
       order.forEach(j=>{
         const q=rows.filter(r=>nrm(r.janpad)===j);
@@ -125,7 +129,7 @@
       rows.forEach(r=>h+=row(r,serial++));
       if(rows.length)h+=row(aggregate(rows,'कुल',dist.value==='ALL'?'':dist.value),'','sn-total');
     }
-    if(!rows.length)h='<tr><td colspan="18" style="text-align:center;padding:24px">'+((dist.value!=='ALL'&&dist.value!=='SATNA'&&dist.value!=='MAIHAR')?'चयनित जिले का जिला-स्तरीय मानव दिवस डेटा राज्य स्रोत से सिंक होना शेष है। Janpad/उपयंत्री drill-down केवल Satna/Maihar के लिए रखा गया है।':'लाइव आँकड़े उपलब्ध नहीं हैं। वन क्लिक अपडेटर चलाएँ।')+'</td></tr>';
+    if(!rows.length)h='<tr><td colspan="18" style="text-align:center;padding:24px">'+(districtMode?'राज्य स्तरीय 52-जिला मानव दिवस डेटा अभी आधिकारिक स्रोत से प्राप्त नहीं हुआ है।':'लाइव आँकड़े उपलब्ध नहीं हैं। वन क्लिक अपडेटर चलाएँ।')+'</td></tr>';
     body.innerHTML=h;const total=aggregate(rows,'','');
     const totalShortage=Math.max(0,Number(total.dailyTarget125||0)-Number(total.todayLabour||0));
     document.getElementById('snKpis').innerHTML=[['लक्ष्य',total.target,''],['उपलब्धि',total.achievement,''],['अंतर',total.difference,''],['दैनिक लक्ष्य',total.dailyTarget125,''],['उपलब्धि %',total.achievementPct.toFixed(1)+'%',''],['लक्ष्य अनुसार श्रमिक नियोजन में कमी',totalShortage,'sn-kpi-shortage']].map(x=>`<div class="sn-kpi ${x[2]}"><small>${x[0]}</small><strong>${typeof x[1]==='number'?fmt(x[1]):x[1]}</strong></div>`).join('');
