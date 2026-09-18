@@ -2322,3 +2322,201 @@ Internet OK.
 From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
    14033e9..b5898f7  main       -> origin/main
 Updating 14033e9..b5898f7
+
+============================================================
+START Wed 09/16/2026 11:44:44.10
+============================================================
+Waiting for network...
+
+============================================================
+START Wed 09/16/2026 11:47:35.77
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+Updated C:\Users\welcome\Daily-labour-report-satna-maihar\data\official-summary.csv for 8 janpads
+SUCCESS: 8/8 Janpads. Individual Labour/MR=1199/955; PMAY Labour/MR=959/836; Ek Bagiya Labour/MR=205/99.
+Next: python scripts\merge_official_summary.py
+[3/6] Merge dashboard data
+AUTO MERGE OK | Ongoing=15687 | PMAY Ongoing=10499 | Ek Bagiya Ongoing=755 | R6.12 verified
+[4/6] Verify generated files
+[5/6] Commit verified data/status only
+[main a2387a2] Automatic VBGRAMG update when laptop online
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+[6/6] Push
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   fbfb710..a2387a2  main -> main
+END Wed 09/16/2026 11:48:34.87 SUCCESS-PUSHED
+
+============================================================
+START Wed 09/16/2026 12:33:10.67
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   a2387a2..801e4f5  main       -> origin/main
+Updating a2387a2..801e4f5
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: 465028e
+
+============================================================
+START Wed 09/16/2026 13:33:12.74
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..801e4f5
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Wed 09/16/2026 14:33:12.68
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: expected flush after ref listing
+
+============================================================
+START Wed 09/16/2026 15:33:11.37
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..801e4f5
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Wed 09/16/2026 16:45:13.07
+============================================================
+Waiting for network...
+^C
+============================================================
+START Wed 09/16/2026 16:48:02.86
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..801e4f5
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Wed 09/16/2026 17:33:10.68
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..801e4f5
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Wed 09/16/2026 18:33:10.68
+============================================================
+Waiting for network...
+ERROR: Internet not available.
+
+============================================================
+START Wed 09/16/2026 22:42:27.90
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   801e4f5..ac00824  main       -> origin/main
+Updating a2387a2..ac00824
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Wed 09/16/2026 22:45:10.73
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..ac00824
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Wed 09/16/2026 23:33:10.69
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   ac00824..2800683  main       -> origin/main
+Updating a2387a2..2800683
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Thu 09/17/2026  0:33:10.67
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..2800683
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Thu 09/17/2026  7:37:21.89
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..2800683
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Thu 09/17/2026  7:39:56.80
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..2800683
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Thu 09/17/2026  8:33:12.67
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating a2387a2..2800683
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Fri 09/18/2026  7:41:43.20
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   1216d81..81820c8  main       -> origin/main
+Updating 1216d81..81820c8
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: a326037
+
+============================================================
+START Fri 09/18/2026  7:44:23.50
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating 1216d81..81820c8
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
