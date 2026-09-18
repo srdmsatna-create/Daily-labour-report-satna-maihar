@@ -1465,7 +1465,14 @@ body[data-report-view="category"] .report-table td:last-child{
 }
 </style>
 <!-- /SRDM_CATEGORY_NUMERIC_BIG_COMPACT_V1 -->
-</head>
+<style id="GP_NO_EMP_ALLOTTED_STYLE_V1">
+.gp-noemp-summary th{background:#123f72!important;color:#fff!important;font-weight:950!important;font-size:13px!important;padding:8px 6px!important;text-align:center!important}
+.gp-noemp-summary td{padding:7px 8px!important;border:1px solid #c7d7e8!important;font-size:13px!important}
+.gp-noemp-summary tbody tr:nth-child(even):not(.total-row){background:#f8fbff}
+.gp-noemp-summary .total-row td{background:#dcecff!important;font-weight:950!important}
+.gp-noemp-summary th:nth-child(4){background:#0f5f99!important}
+.gp-noemp-summary th:nth-child(5){background:#9b1c1c!important}
+</style></head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
@@ -2135,14 +2142,7 @@ function renderEmuster(){
   <tr class="emuster-note-row"><th colspan="${cols}"><i>Official R6.9 Screen-2 format</i></th></tr>
   <tr class="emuster-group-row"><th>SNo.</th><th>Blocks</th><th>Total No. of Gram Panchayats (GPs)</th><th>No. of Gram Panchayats (GPs) with Works in Progress</th><th>Maximum Expected Unskilled Labour Engagement as per e-Muster Roll*</th><th>No. of Ongoing Works for which Muster Rolls (MRs) have been Issued</th><th>Total Ongoing Work</th><th>No. of Muster Rolls (MRs)</th></tr></thead><tbody>`;
   const t={totalGP:sum(data,'totalGP'),gpProgress:sum(data,'gpProgress'),labour:sum(data,'labour'),worksMR:sum(data,'worksMR'),ongoing:sum(data,'ongoing'),mrs:sum(data,'mrs')};
-  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.ongoing,true)}${cell(t.mrs,true)}</tr>`;
-  for(const r of data){h+=`<tr>${cell(r.sno,true)}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.gpProgress,true)}${cell(r.labour,true)}${cell(r.worksMR,true)}${cell(r.ongoing,true)}${cell(r.mrs,true)}</tr>`;}
-  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.ongoing,true)}${cell(t.mrs,true)}</tr>`;
-  if(!data.length)h+=`<tr><td colspan="${cols}" class="empty-table">Current filter में R6.9 data नहीं मिला।</td></tr>`;
-  h+='</tbody>';$('reportTable').innerHTML=h;
-}
-
-function renderJanpadDysfunctional(){
+  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,trufunction renderJanpadDysfunctional(){
   const source=Array.isArray(window.SRDM_ZERO_FORCE_DATA)?window.SRDM_ZERO_FORCE_DATA:[];
   const months=['April','May','June','July','August','September'];
   const month=months.includes(window.GP_NO_EMP_MONTH)?window.GP_NO_EMP_MONTH:'September';
@@ -2192,11 +2192,20 @@ function renderJanpadDysfunctional(){
   ].map(x=>`<div class="kpi"><small>${x[0]}</small><strong>${typeof x[1]==='number'?fmt(x[1]):x[1]}</strong><em>${x[2]}</em></div>`).join('');
 
   // Janpad-wise + Engineer-wise summary
+  // Total allotted GP is calculated from ALL GPs assigned to each Sub Engineer,
+  // while No Employment GP count uses the selected month's zero-persondays rows.
+  const allottedMap=new Map();
+  for(const r of base){
+    const district=clean(r.district), janpad=clean(r.janpad), engineer=clean(r.engineer)||'—';
+    const key=[district,janpad,engineer].join('¦');
+    if(!allottedMap.has(key))allottedMap.set(key,new Set());
+    if(clean(r.gp))allottedMap.get(key).add(clean(r.gp));
+  }
   const groups=new Map();
   for(const r of noEmp){
     const district=clean(r.district), janpad=clean(r.janpad), engineer=clean(r.engineer)||'—';
     const key=[district,janpad,engineer].join('¦');
-    if(!groups.has(key))groups.set(key,{district,janpad,engineer,count:0,gps:[]});
+    if(!groups.has(key))groups.set(key,{district,janpad,engineer,allotted:(allottedMap.get(key)||new Set()).size,count:0,gps:[]});
     const g=groups.get(key); g.count++; g.gps.push(clean(r.gp));
   }
   const summaryRows=[...groups.values()].sort((a,b)=>
@@ -2210,44 +2219,54 @@ function renderJanpadDysfunctional(){
     <div style="padding:10px 12px;background:#eef5fb;color:#123f72;font-weight:900">
       ${month} — Janpad-wise / Sub Engineer-wise Summary
     </div>
-    <table class="report-table" style="min-width:760px;width:100%">
-      <thead><tr><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>No Employment GP</th><th>GP Names</th></tr></thead><tbody>`;
+    <table class="report-table gp-noemp-summary" style="min-width:920px;width:100%;border-collapse:collapse">
+      <thead><tr>
+        <th>District</th><th>Janpad</th><th>Sub Engineer</th>
+        <th>Total GP Allotted</th><th>Zero Mandays GP</th><th>GPs</th>
+      </tr></thead><tbody>`;
 
-  let grand=0;
+  let grand=0, grandAllotted=0;
   for(const district of wantedDistricts){
     const dRows=summaryRows.filter(r=>r.district===district);
     const janpads=[...new Set(dRows.map(r=>r.janpad))].sort((a,b)=>a.localeCompare(b,'hi'));
     let districtTotal=0;
+    const districtAllottedSet=new Set(base.filter(x=>clean(x.district)===district).map(x=>clean(x.gp)).filter(Boolean));
 
     for(const jp of janpads){
       const jRows=dRows.filter(r=>r.janpad===jp);
       let janpadTotal=0;
+      const janpadAllottedSet=new Set(base.filter(x=>clean(x.district)===district&&clean(x.janpad)===jp).map(x=>clean(x.gp)).filter(Boolean));
       for(const r of jRows){
         janpadTotal+=r.count;
         sh+=`<tr>
           <td><b>${esc(r.district)}</b></td>
           <td>${esc(r.janpad)}</td>
-          <td>${esc(r.engineer)}</td>
-          <td style="text-align:center;font-weight:900">${fmt(r.count)}</td>
-          <td style="text-align:left;white-space:normal">${r.gps.map(esc).join(', ')}</td>
+          <td style="font-weight:800;color:#173b63">${esc(r.engineer)}</td>
+          <td style="text-align:center;font-weight:950;color:#0f4c81;font-size:17px;background:#eef7ff">${fmt(r.allotted)}</td>
+          <td style="text-align:center;font-weight:950;color:#a61b1b;font-size:17px;background:#fff4f4">${fmt(r.count)}</td>
+          <td style="text-align:left;white-space:normal;line-height:1.45;color:#172334;font-weight:650">${r.gps.map(esc).join(', ')}</td>
         </tr>`;
       }
       districtTotal+=janpadTotal;
       sh+=`<tr class="total-row">
         <td></td><td><b>${esc(jp)} TOTAL</b></td><td></td>
-        <td style="text-align:center"><b>${fmt(janpadTotal)}</b></td><td></td>
+        <td style="text-align:center;color:#0f4c81"><b>${fmt(janpadAllottedSet.size)}</b></td>
+        <td style="text-align:center;color:#a61b1b"><b>${fmt(janpadTotal)}</b></td><td></td>
       </tr>`;
     }
 
     grand+=districtTotal;
-    sh+=`<tr style="background:${district==='MAIHAR'?'#eef8ff':'#fff4e8'};font-weight:950">
+    grandAllotted+=districtAllottedSet.size;
+    sh+=`<tr style="background:${district==='MAIHAR'?'#e4f4ff':'#fff0df'};font-weight:950">
       <td colspan="3"><b>DISTRICT ${esc(district)} TOTAL</b></td>
-      <td style="text-align:center"><b>${fmt(districtTotal)}</b></td><td></td>
+      <td style="text-align:center;color:#0f4c81"><b>${fmt(districtAllottedSet.size)}</b></td>
+      <td style="text-align:center;color:#a61b1b"><b>${fmt(districtTotal)}</b></td><td></td>
     </tr>`;
   }
 
   sh+=`<tr style="background:#0f766e;color:#fff;font-weight:950">
       <td colspan="3"><b>TOTAL MAIHAR + SATNA</b></td>
+      <td style="text-align:center"><b>${fmt(grandAllotted)}</b></td>
       <td style="text-align:center"><b>${fmt(grand)}</b></td><td></td>
     </tr></tbody></table></div>`;
 
@@ -2255,6 +2274,18 @@ function renderJanpadDysfunctional(){
   if(deficiencyAlert){
     deficiencyAlert.hidden=false;
     deficiencyAlert.innerHTML=sh;
+  }
+
+  // GP detail
+  let h=`<thead><tr><th>क्रमांक</th><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>Cluster</th><th>Gram Panchayat</th><th>${month} Persondays</th><th>Status</th></tr></thead><tbody>`;
+  noEmp.forEach((r,i)=>{h+=`<tr>
+    <td>${i+1}</td>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.gp)}
+    ${cell(num(r[month]),true)}<td><b style="color:#b91c1c">No Employment</b></td>
+  </tr>`});
+  if(!noEmp.length)h+=`<tr><td colspan="8" class="empty-table">चयनित माह में बिना रोजगार वाली ग्राम पंचायत नहीं मिली।</td></tr>`;
+  h+='</tbody>';
+  $('reportTable').innerHTML=h;
+}
   }
 
   // GP detail
