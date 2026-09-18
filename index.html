@@ -1472,6 +1472,9 @@ body[data-report-view="category"] .report-table td:last-child{
 .gp-noemp-summary .total-row td{background:#dcecff!important;font-weight:950!important}
 .gp-noemp-summary th:nth-child(4){background:#0f5f99!important}
 .gp-noemp-summary th:nth-child(5){background:#9b1c1c!important}
+</style><style id="GP_NO_EMP_HIDE_DETAIL_V1">
+body[data-report-view="dysjanpad"] #reportTable{display:none!important}
+body[data-report-view="dysjanpad"] #reportTable:empty{margin:0!important;padding:0!important;border:0!important}
 </style></head>
 <body>
 <div class="login-screen" id="loginScreen">
@@ -2276,15 +2279,9 @@ function renderEmuster(){
     deficiencyAlert.innerHTML=sh;
   }
 
-  // GP detail
-  let h=`<thead><tr><th>क्रमांक</th><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>Cluster</th><th>Gram Panchayat</th><th>${month} Persondays</th><th>Status</th></tr></thead><tbody>`;
-  noEmp.forEach((r,i)=>{h+=`<tr>
-    <td>${i+1}</td>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.gp)}
-    ${cell(num(r[month]),true)}<td><b style="color:#b91c1c">No Employment</b></td>
-  </tr>`});
-  if(!noEmp.length)h+=`<tr><td colspan="8" class="empty-table">चयनित माह में बिना रोजगार वाली ग्राम पंचायत नहीं मिली।</td></tr>`;
-  h+='</tbody>';
-  $('reportTable').innerHTML=h;
+  // GP-wise detailed table intentionally hidden in this view.
+  // Summary above contains Engineer-wise counts and GP names.
+  $('reportTable').innerHTML='';
 }
   }
 
