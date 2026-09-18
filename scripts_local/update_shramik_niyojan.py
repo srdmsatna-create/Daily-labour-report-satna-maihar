@@ -33,20 +33,6 @@ TARGETS = {
 ORDER = list(TARGETS)
 MAIHAR_BLOCKS = {"AMARPATAN", "MAIHAR", "RAMNAGAR"}
 
-# Official state comparison list used by the dashboard. The state-level portal
-# currently exposes the legacy 52-district comparison; Satna/Maihar local
-# drill-down remains a separate dashboard capability.
-MP_DISTRICTS = [
-    "AGAR MALWA","ALIRAJPUR","ANUPPUR","ASHOKNAGAR","BALAGHAT","BARWANI",
-    "BETUL","BHIND","BHOPAL","BURHANPUR","CHHATARPUR","CHHINDWARA","DAMOH",
-    "DATIA","DEWAS","DHAR","DINDORI","GUNA","GWALIOR","HARDA","NARMADAPURAM",
-    "INDORE","JABALPUR","JHABUA","KATNI","KHANDWA","KHARGONE","MANDLA",
-    "MANDSAUR","MORENA","NARSINGHPUR","NEEMUCH","NIWARI","PANNA","RAISEN",
-    "RAJGARH","RATLAM","REWA","SAGAR","SATNA","SEHORE","SEONI","SHAHDOL",
-    "SHAJAPUR","SHEOPUR","SHIVPURI","SIDHI","SINGRAULI","TIKAMGARH","UJJAIN",
-    "UMARIA","VIDISHA"
-]
-
 
 def clean(value):
     value = html.unescape(re.sub(r"<[^>]+>", "", value or ""))
@@ -104,62 +90,6 @@ def parse_block_rows(source):
                 links[block] = html.unescape(href.group(1))
             break
     return result, links
-
-
-def parse_named_rows(source, names):
-    wanted = set(names)
-    result = {}
-    links = {}
-    for tr in re.findall(r"<tr[^>]*>(.*?)</tr>", source, re.I | re.S):
-        raw_cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", tr, re.I | re.S)
-        cells = [clean(x) for x in raw_cells]
-        for i, cell in enumerate(cells):
-            entity = norm(cell)
-            if entity not in wanted:
-                continue
-            values = month_values_after(cells, i)
-            if values:
-                result[entity] = values
-            href = re.search(r'href=["\\\']([^"\\\']+)["\\\']', raw_cells[i], re.I)
-            if not href:
-                href = re.search(r'href=["\\\']([^"\\\']+)["\\\']', tr, re.I)
-            if href:
-                links[entity] = html.unescape(href.group(1))
-            break
-    return result, links
-
-
-def state_url_candidates(url):
-    p = urllib.parse.urlsplit(url)
-    q = urllib.parse.parse_qs(p.query, keep_blank_values=True)
-    q.pop("district_name", None)
-    q.pop("district_code", None)
-    out = []
-    for page1 in ("s", "d"):
-        qq = {k: list(v) for k, v in q.items()}
-        qq["page1"] = [page1]
-        out.append(urllib.parse.urlunsplit((p.scheme, p.netloc, p.path, urllib.parse.urlencode(qq, doseq=True), p.fragment)))
-    return out
-
-
-def fetch_state_district_rows(page, url, require_all=True):
-    last = None
-    for candidate in state_url_candidates(url):
-        try:
-            page.goto(candidate, wait_until="domcontentloaded", timeout=90000)
-            page.wait_for_timeout(1800)
-            source = page.content()
-            rows, _ = parse_named_rows(source, MP_DISTRICTS)
-            last = (rows, candidate, report_date(source))
-            if (not require_all and rows) or len(rows) >= 50:
-                return last
-        except Exception:
-            continue
-    if last and last[0]:
-        if require_all and len(last[0]) < 50:
-            raise RuntimeError(f"State Persondays report parsed only {len(last[0])}/52 districts")
-        return last
-    raise RuntimeError("State Persondays district report could not be parsed")
 
 
 def parse_gp_rows(source):
@@ -275,17 +205,10 @@ def main():
         current_blocks, current_gp, official_date = fetch_report(page, CURRENT_URL)
         previous_gp = {}
         previous_warning = ""
-        state_current, state_current_url, state_date = {}, "", official_date
-        state_previous, state_previous_url = {}, ""
-        try:
-            state_current, state_current_url, state_date = fetch_state_district_rows(page, CURRENT_URL, require_all=True)
-            state_previous, state_previous_url, _ = fetch_state_district_rows(page, previous_url(), require_all=True)
-        except Exception as exc:
-            previous_warning = f"State 52-district Persondays comparison unavailable: {exc}"
         try:
             _, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=False)
         except Exception as exc:
-            previous_warning = (previous_warning + " | " if previous_warning else "") + f"FY 2025-26 Sub Engineer baseline unavailable: {exc}"
+            previous_warning = f"FY 2025-26 Sub Engineer baseline unavailable: {exc}"
         browser.close()
 
     days = remaining_september_days(official_date)
@@ -340,17 +263,6 @@ def main():
                 "march": values["march"], "julToday": values["julToday"],
             })
 
-    state_district_rows = []
-    if state_current and state_previous:
-        for name in MP_DISTRICTS:
-            cur = state_current.get(name, {})
-            prev = state_previous.get(name, {})
-            target = int(prev.get("august", 0)) + int(prev.get("september", 0))
-            state_district_rows.append({
-                "level": "district", "district": name, "janpad": "", "engineer": "", "cluster": "",
-                **calc(target, int(cur.get("august", 0)), int(cur.get("september", 0)), days),
-            })
-
     payload = {
         "title": "श्रमिक नियोजन",
         "financialYear": "2026-2027",
@@ -360,10 +272,6 @@ def main():
         "remainingSeptemberDays": days,
         "targetTotal": sum(x["target"] for x in janpad_rows),
         "rows": janpad_rows,
-        "stateDistrictRows": state_district_rows,
-        "stateDistrictSource": state_current_url,
-        "stateDistrictPreviousSource": state_previous_url,
-        "stateDistrictOfficialDate": state_date,
         "engineerRows": engineer_rows,
         "gpMandaysRows": gp_mandays_rows,
         "gpMandaysSource": CURRENT_URL,
