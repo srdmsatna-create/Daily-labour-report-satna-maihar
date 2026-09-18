@@ -2147,19 +2147,39 @@ function renderJanpadDysfunctional(){
   const months=['April','May','June','July','August','September'];
   const month=months.includes(window.GP_NO_EMP_MONTH)?window.GP_NO_EMP_MONTH:'September';
   window.GP_NO_EMP_MONTH=month;
-  const d=$('districtFilter')?.value||'ALL',j=$('janpadFilter')?.value||'ALL',e=$('engineerFilter')?.value||'ALL',cl=$('clusterFilter')?.value||'ALL';
-  let base=source.filter(r=>(d==='ALL'||clean(r.district)===d)&&(j==='ALL'||clean(r.janpad)===j)&&(e==='ALL'||clean(r.engineer)===e)&&(cl==='ALL'||clean(r.cluster)===cl));
-  const noEmp=base.filter(r=>num(r[month])===0).sort((a,b)=>clean(a.district).localeCompare(clean(b.district))||clean(a.janpad).localeCompare(clean(b.janpad))||clean(a.gp).localeCompare(clean(b.gp)));
-  const byJanpad=new Map();
-  for(const r of noEmp){const k=clean(r.janpad);if(!byJanpad.has(k))byJanpad.set(k,{district:clean(r.district),janpad:k,count:0});byJanpad.get(k).count++}
-  const summary=[...byJanpad.values()].sort((a,b)=>b.count-a.count||a.janpad.localeCompare(b.janpad));
-  lastExport=noEmp.map((r,i)=>({SNo:i+1,District:r.district,Janpad:r.janpad,'Sub Engineer':r.engineer,Cluster:r.cluster,'Gram Panchayat':r.gp,Month:month,Persondays:num(r[month]),Status:'No Employment'}));
+
+  const d=$('districtFilter')?.value||'ALL',
+        j=$('janpadFilter')?.value||'ALL',
+        e=$('engineerFilter')?.value||'ALL',
+        cl=$('clusterFilter')?.value||'ALL';
+
+  let base=source.filter(r=>
+    (d==='ALL'||clean(r.district)===d) &&
+    (j==='ALL'||clean(r.janpad)===j) &&
+    (e==='ALL'||clean(r.engineer)===e) &&
+    (cl==='ALL'||clean(r.cluster)===cl)
+  );
+
+  const noEmp=base.filter(r=>num(r[month])===0).sort((a,b)=>
+    clean(a.district).localeCompare(clean(b.district)) ||
+    clean(a.janpad).localeCompare(clean(b.janpad)) ||
+    clean(a.engineer).localeCompare(clean(b.engineer),'hi') ||
+    clean(a.gp).localeCompare(clean(b.gp))
+  );
+
+  lastExport=noEmp.map((r,i)=>({
+    SNo:i+1,District:r.district,Janpad:r.janpad,'Sub Engineer':r.engineer,
+    Cluster:r.cluster,'Gram Panchayat':r.gp,Month:month,
+    Persondays:num(r[month]),Status:'No Employment'
+  }));
+
   $('viewTitle').textContent='GP with No Employment — बिना रोजगार वाली ग्राम पंचायतें';
-  $('viewMeta').innerHTML=`FY 2026-27 • माहवार Nil Persondays / No Employment GP • 
+  $('viewMeta').innerHTML=`FY 2026-27 • माहवार Nil Persondays / No Employment GP •
     <select id="gpNoEmpMonth" style="margin-left:8px;padding:6px 9px;border:1px solid #b9cce0;border-radius:8px;font-weight:800">
       ${months.map(m=>`<option value="${m}" ${m===month?'selected':''}>${m}</option>`).join('')}
     </select>
     • चयनित माह में Persondays = 0`;
+
   const sel=document.getElementById('gpNoEmpMonth');
   if(sel)sel.onchange=()=>{window.GP_NO_EMP_MONTH=sel.value;renderJanpadDysfunctional()};
 
@@ -2171,17 +2191,81 @@ function renderJanpadDysfunctional(){
     ['No Employment %',totalGP?(totalNo*100/totalGP).toFixed(1)+'%':'0.0%',month]
   ].map(x=>`<div class="kpi"><small>${x[0]}</small><strong>${typeof x[1]==='number'?fmt(x[1]):x[1]}</strong><em>${x[2]}</em></div>`).join('');
 
-  let h=`<thead><tr><th>क्रमांक</th><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>Cluster</th><th>Gram Panchayat</th><th>${month} Persondays</th><th>Status</th></tr></thead><tbody>`;
-  noEmp.forEach((r,i)=>{h+=`<tr><td>${i+1}</td>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.gp)}${cell(num(r[month]),true)}<td><b style="color:#b91c1c">No Employment</b></td></tr>`});
-  if(!noEmp.length)h+=`<tr><td colspan="8" class="empty-table">चयनित माह में बिना रोजगार वाली ग्राम पंचायत नहीं मिली।</td></tr>`;
-  h+='</tbody>';
-  $('reportTable').innerHTML=h;
+  // Janpad-wise + Engineer-wise summary
+  const groups=new Map();
+  for(const r of noEmp){
+    const district=clean(r.district), janpad=clean(r.janpad), engineer=clean(r.engineer)||'—';
+    const key=[district,janpad,engineer].join('¦');
+    if(!groups.has(key))groups.set(key,{district,janpad,engineer,count:0,gps:[]});
+    const g=groups.get(key); g.count++; g.gps.push(clean(r.gp));
+  }
+  const summaryRows=[...groups.values()].sort((a,b)=>
+    a.district.localeCompare(b.district) ||
+    a.janpad.localeCompare(b.janpad) ||
+    a.engineer.localeCompare(b.engineer,'hi')
+  );
+
+  const wantedDistricts=['MAIHAR','SATNA'].filter(x=>d==='ALL'||d===x);
+  let sh=`<div style="margin:10px 0 14px;border:1px solid #c8d8e8;border-radius:12px;overflow:auto;background:#fff">
+    <div style="padding:10px 12px;background:#eef5fb;color:#123f72;font-weight:900">
+      ${month} — Janpad-wise / Sub Engineer-wise Summary
+    </div>
+    <table class="report-table" style="min-width:760px;width:100%">
+      <thead><tr><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>No Employment GP</th><th>GP Names</th></tr></thead><tbody>`;
+
+  let grand=0;
+  for(const district of wantedDistricts){
+    const dRows=summaryRows.filter(r=>r.district===district);
+    const janpads=[...new Set(dRows.map(r=>r.janpad))].sort((a,b)=>a.localeCompare(b,'hi'));
+    let districtTotal=0;
+
+    for(const jp of janpads){
+      const jRows=dRows.filter(r=>r.janpad===jp);
+      let janpadTotal=0;
+      for(const r of jRows){
+        janpadTotal+=r.count;
+        sh+=`<tr>
+          <td><b>${esc(r.district)}</b></td>
+          <td>${esc(r.janpad)}</td>
+          <td>${esc(r.engineer)}</td>
+          <td style="text-align:center;font-weight:900">${fmt(r.count)}</td>
+          <td style="text-align:left;white-space:normal">${r.gps.map(esc).join(', ')}</td>
+        </tr>`;
+      }
+      districtTotal+=janpadTotal;
+      sh+=`<tr class="total-row">
+        <td></td><td><b>${esc(jp)} TOTAL</b></td><td></td>
+        <td style="text-align:center"><b>${fmt(janpadTotal)}</b></td><td></td>
+      </tr>`;
+    }
+
+    grand+=districtTotal;
+    sh+=`<tr style="background:${district==='MAIHAR'?'#eef8ff':'#fff4e8'};font-weight:950">
+      <td colspan="3"><b>DISTRICT ${esc(district)} TOTAL</b></td>
+      <td style="text-align:center"><b>${fmt(districtTotal)}</b></td><td></td>
+    </tr>`;
+  }
+
+  sh+=`<tr style="background:#0f766e;color:#fff;font-weight:950">
+      <td colspan="3"><b>TOTAL MAIHAR + SATNA</b></td>
+      <td style="text-align:center"><b>${fmt(grand)}</b></td><td></td>
+    </tr></tbody></table></div>`;
 
   const deficiencyAlert=$('reportDeficiencyAlert');
   if(deficiencyAlert){
     deficiencyAlert.hidden=false;
-    deficiencyAlert.innerHTML=summary.length?`<b>${month} Janpad Summary:</b> ${summary.map(x=>`${esc(x.janpad)}: <b>${fmt(x.count)}</b>`).join(' &nbsp;•&nbsp; ')}`:'चयनित माह में Nil Persondays GP नहीं मिली।';
+    deficiencyAlert.innerHTML=sh;
   }
+
+  // GP detail
+  let h=`<thead><tr><th>क्रमांक</th><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>Cluster</th><th>Gram Panchayat</th><th>${month} Persondays</th><th>Status</th></tr></thead><tbody>`;
+  noEmp.forEach((r,i)=>{h+=`<tr>
+    <td>${i+1}</td>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.gp)}
+    ${cell(num(r[month]),true)}<td><b style="color:#b91c1c">No Employment</b></td>
+  </tr>`});
+  if(!noEmp.length)h+=`<tr><td colspan="8" class="empty-table">चयनित माह में बिना रोजगार वाली ग्राम पंचायत नहीं मिली।</td></tr>`;
+  h+='</tbody>';
+  $('reportTable').innerHTML=h;
 }
 function renderOfficial(){const data=sortRows(officialFiltered().map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP)})),'ongoing',['janpad']);lastExport=data;$('viewTitle').textContent='Official Janpad Daily Report';$('viewMeta').textContent=`${data.length} Janpad • ${todayDate()}`;let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th colspan="3">Gram Panchayat</th><th colspan="5">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(districtOf(r.janpad))}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${badge(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${badge(r.ekMR,r.ekOngoing)}</td></tr>`}const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td>TOTAL</td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}<td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
 function renderEngineerOfficial(){const data=sortRows(engineerOfficialData(filteredRows()).map(r=>({...r,ongoing:num(r.ongoingAll),worksMR:num(r.mrAll),labour:num(r.labourAll),gpsProgress:num(r.musterGP),ekOngoing:num(r.ekOngoing)})),'ongoing',['engineer','janpad']);lastExport=data;$('viewTitle').textContent='Sub Engineer Daily Report — Janpad Report Same Format';$('viewMeta').textContent=`${data.length} Sub Engineer rows • Official Janpad totals reconciled • ${todayDate()}`;let h=`<thead><tr><th rowspan="2">District</th><th rowspan="2">Janpad</th><th rowspan="2">Sub Engineer</th><th rowspan="2">Cluster(s)</th><th colspan="3">Gram Panchayat</th><th colspan="5">All Types of Works / Screen-2</th><th colspan="2">Individual Land (Cat-IV)</th><th colspan="3">Community Works</th><th colspan="3">PMAY-G</th><th colspan="4">Ek Bagiya</th></tr><tr><th>Total GP</th><th>GP Progress</th><th>Dysfunctional</th><th>Labour</th><th>Works with MR</th><th>Total Ongoing Work</th><th>Muster Rolls</th><th>MR %</th><th>Labour</th><th>Works MR</th><th>Labour</th><th>Works MR</th><th>Share %</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th><th>Labour</th><th>Ongoing</th><th>MR Issued</th><th>MR %</th></tr></thead><tbody>`;for(const r of data){h+=`<tr>${cell(r.district)}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.totalGP,true)}${cell(r.musterGP,true)}${cell(r.dysfunctionalGP,true)}${cell(r.labourAll,true)}${cell(r.mrAll,true)}${cell(r.ongoingAll,true)}${cell(r.mrs||0,true)}<td>${badge(r.mrAll,r.ongoingAll)}</td>${cell(r.labourIndividual,true)}${cell(r.mrIndividual,true)}${cell(r.labourCommunity,true)}${cell(r.mrCommunity,true)}<td>${badge(r.mrCommunity,r.mrAll)}</td>${cell(r.pmayOngoing,true)}${cell(r.pmayMR,true)}<td>${badge(r.pmayMR,r.pmayOngoing)}</td>${cell(r.ekLabour,true)}${cell(r.ekOngoing,true)}${cell(r.ekMR,true)}<td>${badge(r.ekMR,r.ekOngoing)}</td></tr>`}const keys=['totalGP','musterGP','dysfunctionalGP','labourAll','mrAll','mrs','ongoingAll','labourIndividual','mrIndividual','labourCommunity','mrCommunity','pmayOngoing','pmayMR','ekLabour','ekOngoing','ekMR'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td>TOTAL</td><td></td><td></td><td></td>${cell(t.totalGP,true)}${cell(t.musterGP,true)}${cell(t.dysfunctionalGP,true)}${cell(t.labourAll,true)}${cell(t.mrAll,true)}${cell(t.ongoingAll,true)}${cell(t.mrs,true)}<td>${pct(t.mrAll,t.ongoingAll).toFixed(1)}%</td>${cell(t.labourIndividual,true)}${cell(t.mrIndividual,true)}${cell(t.labourCommunity,true)}${cell(t.mrCommunity,true)}<td>${pct(t.mrCommunity,t.mrAll).toFixed(1)}%</td>${cell(t.pmayOngoing,true)}${cell(t.pmayMR,true)}<td>${pct(t.pmayMR,t.pmayOngoing).toFixed(1)}%</td>${cell(t.ekLabour,true)}${cell(t.ekOngoing,true)}${cell(t.ekMR,true)}<td>${pct(t.ekMR,t.ekOngoing).toFixed(1)}%</td></tr></tbody>`;$('reportTable').innerHTML=h}
