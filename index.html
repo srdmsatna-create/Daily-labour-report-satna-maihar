@@ -2259,7 +2259,7 @@ function renderJanpadDysfunctional(){
     const dRows=summaryRows.filter(r=>r.district===district);
     const janpads=[...new Set(dRows.map(r=>r.janpad))].sort((a,b)=>a.localeCompare(b,'hi'));
     let districtTotal=0;
-    const districtAllottedSet=new Set(base.filter(x=>clean(x.district)===district).map(x=>clean(x.gp)).filter(Boolean));
+    const districtAllottedSet=new Set(base.filter(x=>clean(x.district)===district&&clean(x.gp)).map(x=>[clean(x.janpad),clean(x.gp)].join('¦')));
 
     for(const jp of janpads){
       const jRows=dRows.filter(r=>r.janpad===jp);
