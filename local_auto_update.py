@@ -1,33 +1,28 @@
 """
-SRDM Satna — Local Daily Auto-Update Script (corrected)
+SRDM SATNA — VB-G RAM G Cloud Diagnostic Fetcher V2
 
-R6.9 portal mapping:
-  - ALL: main Screen-2 values
-  - Individual: Work Category = Works on Individuals Land (Category IV), Proposed Status = ALL
-  - PMAY-G: Work Category = Works on Individuals Land (Category IV),
-            Proposed Status = Constr of PMAY-G House for Individuals
-  - Ek Bagiya: Work Category = Works on Individuals Land (Category IV),
-               Proposed Status = Block Plantation-Hort-Trees in fields-Individuals
-
-For the three category reports, the script reads:
-  - Labour = "Maximum Expected Unskilled Labour Engagement as per e-Muster Roll"
-  - Muster Rolls = "No. of Muster Rolls (MRs)"
+Purpose:
+- Retry official R6.9 page access on GitHub Actions.
+- Save diagnostics when the cloud runner gets a blocked/different page.
+- NEVER update dashboard data unless all 8 Janpads and required dropdowns parse.
 """
 
 import csv
 import json
 import re
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-# Works correctly whether this file is kept in repo root or in scripts_local.
 ROOT = HERE.parent if HERE.name.lower() == "scripts_local" else HERE
 
 CSV_PATH = ROOT / "data" / "official-summary.csv"
 STATUS_JSON = ROOT / "data" / "fetch-status.json"
 STATUS_JS = ROOT / "auto-status.js"
+DIAG_DIR = ROOT / "diagnostics"
+DIAG_DIR.mkdir(parents=True, exist_ok=True)
 
 REPORT_URL = "https://vbgramgrep.dord.gov.in/VBGRAMG/dpc_sms_new.aspx?payload=c_dCXx6L-IMkcEdlRICw87o-OWrumZUuTOVJCtXMwo49VCcKVJKknrfE_4qO0AT_WQTG3yWM7D1kNUU7DSpTx1H8j3SYUjwu3q4dQX_CfBdu4ni8Iou1EYozxNZb5rwNvD2JMp78Hx-qNCdsq3ux6X1MITBA5uUF3gtds07lUIHnl4ONcwgjtjtzvWYQ0UDGVInRFjvVbtwWWXI7s8-I3jU8QwBBMeYwU7dbbckRQbgR_S8b6XGjuQ6EwEUi4ba3pW06r3n-L-iVwCLbYfyloXs1UzJGGw9YBlOFBm-hlzE"
 
@@ -41,28 +36,26 @@ PMAY_STATUS = "Constr of PMAY-G House for Individuals"
 EK_BAGIYA_STATUS = "Block Plantation-Hort-Trees in fields-Individuals"
 
 
-def _clean_text(value):
+def clean_text(value):
     value = re.sub(r"<[^>]+>", "", value or "")
     value = value.replace("&nbsp;", " ")
     return re.sub(r"\s+", " ", value).strip()
 
 
-def _number(value):
-    s = re.sub(r"[^\d.]", "", _clean_text(value))
+def number(value):
+    s = re.sub(r"[^\d.]", "", clean_text(value))
     try:
         return float(s) if s else 0.0
     except ValueError:
         return 0.0
 
 
-def _row_data(html):
-    """Return {JANPAD: [numeric cells after the Janpad cell]}."""
+def row_data(html):
     out = {}
     for row_html in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.I | re.S):
         cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row_html, re.I | re.S)
-        clean = [_clean_text(c) for c in cells]
+        clean = [clean_text(c) for c in cells]
         clean = [c for c in clean if c]
-
         janpad = None
         janpad_index = None
         for i, cell in enumerate(clean):
@@ -74,24 +67,16 @@ def _row_data(html):
                     break
             if janpad:
                 break
-
         if not janpad:
             continue
-
-        nums = [_number(c) for c in clean[janpad_index + 1:]]
+        nums = [number(c) for c in clean[janpad_index + 1:]]
         if nums:
             out[janpad] = nums
-
     return out
 
 
 def parse_all_report(html):
-    """
-    R6.9 ALL report columns after Blocks:
-      Total GP, GP with Works in Progress, Labour,
-      Ongoing Works for which MR issued, Workers without e-KYC, No. of MRs.
-    """
-    rows = _row_data(html)
+    rows = row_data(html)
     data = {}
     for j, nums in rows.items():
         if len(nums) < 6:
@@ -103,20 +88,15 @@ def parse_all_report(html):
             "musterGP": gp_progress,
             "dysfunctionalGP": max(0, total_gp - gp_progress),
             "labourAll": nums[2],
-            "mrAll": nums[3],       # works for which MR has been issued
+            "mrAll": nums[3],
             "noEkyc": nums[4],
-            "mrs": nums[5],         # actual number of Muster Rolls
+            "mrs": nums[5],
         }
     return data
 
 
 def parse_category_report(html):
-    """
-    Category report columns after Blocks:
-      Total GP, GP with Works in Progress, Labour,
-      Ongoing Works for which MR issued, Workers without e-KYC, No. of MRs.
-    """
-    rows = _row_data(html)
+    rows = row_data(html)
     data = {}
     for j, nums in rows.items():
         if len(nums) < 6:
@@ -132,8 +112,7 @@ def parse_category_report(html):
     return data
 
 
-def _select_label(select, label):
-    """Select a dropdown item by visible label, with a text-match fallback."""
+def select_label(select, label):
     try:
         select.select_option(label=label)
         return
@@ -148,74 +127,171 @@ def _select_label(select, label):
         raise RuntimeError(f"Dropdown option not found: {label}")
 
 
-def _submit_and_wait(page):
+def submit_and_wait(page):
     try:
         page.get_by_role("button", name=re.compile(r"submit", re.I)).click()
     except Exception:
         page.locator("input[type=submit],button[type=submit]").first.click()
     page.wait_for_load_state("networkidle", timeout=60000)
-    page.wait_for_timeout(1200)
+    page.wait_for_timeout(1500)
+
+
+def save_diag(page, attempt, reason):
+    stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    prefix = DIAG_DIR / f"attempt_{attempt}_{stamp}"
+    try:
+        (prefix.with_suffix(".html")).write_text(page.content(), encoding="utf-8")
+    except Exception:
+        pass
+    try:
+        page.screenshot(path=str(prefix.with_suffix(".png")), full_page=True)
+    except Exception:
+        pass
+
+    info = {
+        "attempt": attempt,
+        "reason": reason,
+        "url": page.url,
+        "title": "",
+        "select_count": 0,
+        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        info["title"] = page.title()
+    except Exception:
+        pass
+    try:
+        info["select_count"] = page.locator("select").count()
+    except Exception:
+        pass
+
+    try:
+        body = page.locator("body").inner_text(timeout=5000)
+        info["body_preview"] = body[:4000]
+    except Exception:
+        info["body_preview"] = ""
+
+    (prefix.with_suffix(".json")).write_text(
+        json.dumps(info, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    return info
 
 
 def fetch_reports():
     from playwright.sync_api import sync_playwright
 
+    last_error = None
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page(
-            user_agent=(
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) "
-                "Chrome/128.0.0.0 Safari/537.36"
-            )
-        )
-        page.goto(REPORT_URL, wait_until="networkidle", timeout=60000)
-        page.wait_for_timeout(1500)
+        for attempt in range(1, 4):
+            browser = None
+            try:
+                browser = p.chromium.launch(
+                    headless=True,
+                    args=[
+                        "--disable-blink-features=AutomationControlled",
+                        "--no-sandbox",
+                        "--disable-dev-shm-usage",
+                    ],
+                )
+                context = browser.new_context(
+                    user_agent=(
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                        "AppleWebKit/537.36 (KHTML, like Gecko) "
+                        "Chrome/128.0.0.0 Safari/537.36"
+                    ),
+                    locale="en-IN",
+                    timezone_id="Asia/Kolkata",
+                    viewport={"width": 1440, "height": 1000},
+                    extra_http_headers={
+                        "Accept-Language": "en-IN,en;q=0.9,hi;q=0.8",
+                        "Cache-Control": "no-cache",
+                        "Pragma": "no-cache",
+                    },
+                )
+                page = context.new_page()
+                response = page.goto(REPORT_URL, wait_until="domcontentloaded", timeout=60000)
+                # The report form can render after DOMContentLoaded. Wait for
+                # its final filter before deciding that the portal changed.
+                try:
+                    page.locator("select").nth(2).wait_for(state="attached", timeout=20000)
+                except Exception:
+                    pass  # Save the actual response below for diagnosis.
 
-        selects = page.locator("select")
-        if selects.count() < 3:
-            browser.close()
-            raise RuntimeError("R6.9 filters not found: expected 3 dropdowns.")
+                status = response.status if response else None
+                selects = page.locator("select")
+                select_count = selects.count()
 
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
+                if status and status >= 400:
+                    reason = f"HTTP status {status}"
+                    info = save_diag(page, attempt, reason)
+                    raise RuntimeError(f"{reason}; diagnostics saved; final_url={info.get('url')}")
 
-        # 1) ALL report
-        _select_label(work_category, "ALL")
-        _select_label(proposed_status, "ALL")
-        _submit_and_wait(page)
-        all_html = page.content()
+                if select_count < 3:
+                    reason = f"R6.9 filters not found: expected 3 dropdowns, got {select_count}; HTTP {status}"
+                    info = save_diag(page, attempt, reason)
 
-        # 2) Individual
-        selects = page.locator("select")
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
-        _select_label(work_category, INDIVIDUAL_CATEGORY)
-        _select_label(proposed_status, "ALL")
-        _submit_and_wait(page)
-        individual_html = page.content()
+                    preview = (info.get("body_preview") or "").lower()
+                    hints = []
+                    for token in ["access denied", "unauthorized", "forbidden", "captcha", "cloudflare", "error"]:
+                        if token in preview:
+                            hints.append(token)
+                    hint_text = f"; page hints={','.join(hints)}" if hints else ""
 
-        # 3) PMAY-G
-        selects = page.locator("select")
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
-        _select_label(work_category, INDIVIDUAL_CATEGORY)
-        _select_label(proposed_status, PMAY_STATUS)
-        _submit_and_wait(page)
-        pmay_html = page.content()
+                    raise RuntimeError(
+                        f"{reason}; diagnostics saved; title={info.get('title')}; "
+                        f"final_url={info.get('url')}{hint_text}"
+                    )
 
-        # 4) Ek Bagiya
-        selects = page.locator("select")
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
-        _select_label(work_category, INDIVIDUAL_CATEGORY)
-        _select_label(proposed_status, EK_BAGIYA_STATUS)
-        _submit_and_wait(page)
-        ek_html = page.content()
+                # 1) ALL
+                work_category = selects.nth(1)
+                proposed_status = selects.nth(2)
+                select_label(work_category, "ALL")
+                select_label(proposed_status, "ALL")
+                submit_and_wait(page)
+                all_html = page.content()
 
-        browser.close()
+                # 2) Individual
+                selects = page.locator("select")
+                work_category = selects.nth(1)
+                proposed_status = selects.nth(2)
+                select_label(work_category, INDIVIDUAL_CATEGORY)
+                select_label(proposed_status, "ALL")
+                submit_and_wait(page)
+                individual_html = page.content()
 
-    return all_html, individual_html, pmay_html, ek_html
+                # 3) PMAY-G
+                selects = page.locator("select")
+                work_category = selects.nth(1)
+                proposed_status = selects.nth(2)
+                select_label(work_category, INDIVIDUAL_CATEGORY)
+                select_label(proposed_status, PMAY_STATUS)
+                submit_and_wait(page)
+                pmay_html = page.content()
+
+                # 4) Ek Bagiya
+                selects = page.locator("select")
+                work_category = selects.nth(1)
+                proposed_status = selects.nth(2)
+                select_label(work_category, INDIVIDUAL_CATEGORY)
+                select_label(proposed_status, EK_BAGIYA_STATUS)
+                submit_and_wait(page)
+                ek_html = page.content()
+
+                browser.close()
+                return all_html, individual_html, pmay_html, ek_html
+
+            except Exception as exc:
+                last_error = exc
+                try:
+                    if browser:
+                        browser.close()
+                except Exception:
+                    pass
+                if attempt < 3:
+                    time.sleep(8 * attempt)
+
+    raise RuntimeError(f"Cloud fetch failed after 3 attempts: {last_error}")
 
 
 def combine_reports(all_html, individual_html, pmay_html, ek_html):
@@ -245,18 +321,15 @@ def combine_reports(all_html, individual_html, pmay_html, ek_html):
             d["ekMR"] = ek[j]["mrs"]
 
         data[j] = d
-
     return data
 
 
 def update_csv(new_data):
-    rows = []
     with open(CSV_PATH, encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         fieldnames = list(reader.fieldnames or [])
         rows = list(reader)
 
-    # pmayLabour is needed by the corrected dashboard mapping.
     required = [
         "totalGP", "musterGP", "dysfunctionalGP",
         "labourAll", "mrAll", "noEkyc", "mrs",
@@ -264,6 +337,7 @@ def update_csv(new_data):
         "pmayLabour", "pmayOngoing", "pmayMR",
         "ekLabour", "ekOngoing", "ekMR",
     ]
+
     for name in required:
         if name not in fieldnames:
             fieldnames.append(name)
@@ -282,28 +356,25 @@ def update_csv(new_data):
         w.writeheader()
         w.writerows(rows)
 
-    print(f"Updated {CSV_PATH} for {len(new_data)} janpads")
-
 
 def update_status(ok, note):
     today = datetime.now().strftime("%d-%m-%Y")
     status = {
         "startedAt": datetime.now(timezone.utc).isoformat(),
         "ok": ok,
-        "source": "Official VB-G RAM G R6.9 (local PC fetch)",
+        "source": "Official VB-G RAM G R6.9 (GitHub cloud diagnostic V2)",
         "steps": [{"step": "R6.9 category fetch", "ok": ok, "detail": note}],
-        "officialDate": today,
+        "officialDate": today if ok else None,
         "note": note,
         "finishedAt": datetime.now(timezone.utc).isoformat(),
     }
+
+    # On failure we only write diagnostics/status in workspace; workflow will NOT commit it.
     STATUS_JSON.parent.mkdir(parents=True, exist_ok=True)
-    STATUS_JSON.write_text(
-        json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    STATUS_JSON.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8")
     STATUS_JS.write_text(
         "window.AUTO_FETCH_STATUS=" +
-        json.dumps(status, ensure_ascii=False, separators=(",", ":")) +
-        ";\n",
+        json.dumps(status, ensure_ascii=False, separators=(",", ":")) + ";\n",
         encoding="utf-8",
     )
 
@@ -313,14 +384,14 @@ def main():
         all_html, individual_html, pmay_html, ek_html = fetch_reports()
         data = combine_reports(all_html, individual_html, pmay_html, ek_html)
 
-        if len(data) < 8:
+        if len(data) != 8:
             raise RuntimeError(
-                f"Only {len(data)}/8 Janpads parsed. Existing CSV was not changed."
+                f"Safety stop: parsed {len(data)}/8 Janpads. Existing dashboard data not updated."
             )
 
+        # Strong safety: only now overwrite the CSV.
         update_csv(data)
 
-        # Print totals as a quick validation against the portal screenshots.
         ind_lab = sum(d.get("labourIndividual", 0) for d in data.values())
         ind_mr = sum(d.get("mrIndividual", 0) for d in data.values())
         pmay_lab = sum(d.get("pmayLabour", 0) for d in data.values())
@@ -336,11 +407,11 @@ def main():
         )
         update_status(True, note)
         print("SUCCESS:", note)
-        print("Next: python scripts\\merge_official_summary.py")
 
     except Exception as e:
-        print(f"FAILED: {e}")
-        update_status(False, str(e))
+        msg = str(e)
+        print("FAILED:", msg)
+        update_status(False, msg)
         sys.exit(1)
 
 
