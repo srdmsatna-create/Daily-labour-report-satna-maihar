@@ -2476,7 +2476,7 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   }
   updatePortalHeading();
   render();
-}));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}render()}));
+}));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='dysjanpad'){for(const id of ['districtFilter','janpadFilter','engineerFilter','clusterFilter']){const filter=$(id);if(filter)filter.value='ALL';}}const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}render()}));
 $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
 $('allWorksExcelBtn')?.addEventListener('click',()=>{if(typeof XLSX==='undefined'){alert('Excel library load नहीं हुई। Page refresh करके पुनः प्रयास करें।');return}if(!ongoingDetails.length){alert('All Works data उपलब्ध नहीं है।');return}const data=ongoingDetails.map((r,i)=>({'S.No.':i+1,'District':clean(r.district)||districtOf(r.janpad),'Janpad':r.janpad,'Gram Panchayat':r.panchayat,'Sub Engineer / Upyantri':r.engineer,'Cluster':r.cluster,'Work FY':r.fy,'Work Status':r.status,'Work Code':r.code,'Work Name':r.name,'Final Work Category':resolvedFinalCategory(r),'Original Work Type':r.type,'Total Sanction (Rs)':num(r.sanction),'Booked Wages (Rs)':num(r.bookedWage),'Booked Material (Rs)':num(r.bookedMaterial),'Total Booked (Rs)':num(r.booked),'Expenditure %':num(r.expPct),'Total Mandays':num(r.mandays),'Current FY Mandays':num(r.currentFYMandays)}));const totals=new Map();data.forEach(r=>{const k=r['Final Work Category'];totals.set(k,(totals.get(k)||0)+1)});const summary=[['SRDM SATNA — MIS R6.12 Category Summary'],['Data date',todayDate()],['Total unique works',data.length],[],['Final Work Category','Work Count'],...[...totals].sort((a,b)=>b[1]-a[1])];const sws=XLSX.utils.aoa_to_sheet(summary),ws=XLSX.utils.json_to_sheet(data);sws['!cols']=[{wch:40},{wch:16}];ws['!autofilter']={ref:ws['!ref']};ws['!cols']=[{wch:7},{wch:10},{wch:13},{wch:16},{wch:20},{wch:16},{wch:11},{wch:18},{wch:23},{wch:38},{wch:24},{wch:30},{wch:16},{wch:16},{wch:17},{wch:16},{wch:13},{wch:14},{wch:16}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,sws,'Category Summary');XLSX.utils.book_append_sheet(wb,ws,'All Works');XLSX.writeFile(wb,`SRDM_SATNA_MIS_6.12_All_Works_${todayDate()}.xlsx`)});
 // V6: Font size and Portrait/Landscape print controls
@@ -2924,19 +2924,45 @@ function initPptExportUI(){
     const th=document.createElement('th');th.className='recovery-work-col';th.textContent='वसूली वाले कार्य';['width','min-width','max-width'].forEach(p=>th.style.setProperty(p,'68px','important'));th.style.setProperty('font-size','20px','important');th.style.setProperty('background','#0f766e','important');th.style.setProperty('color','#fff','important');lastHead.appendChild(th);
     // In multi-row headers, add a standalone top-row group cell too so spans remain understandable.
     if(headRows.length>1){const top=headRows[0];const g=document.createElement('th');g.className='recovery-work-col';g.textContent='वसूली वाले कार्य';g.rowSpan=headRows.length;['width','min-width','max-width'].forEach(p=>g.style.setProperty(p,'68px','important'));g.style.setProperty('font-size','20px','important');g.style.setProperty('background','#0f766e','important');g.style.setProperty('color','#fff','important');top.appendChild(g);th.remove();}
-    // Read every header row. District/Janpad/Engineer are often rowspan cells
-    // in the first row; reading only the last row made every detail row use
-    // the full recovery source total (for example 549).
+    // Expand merged headings to the real body-column indexes.
+    const headerGrid=[];
+    for(let ri=0;ri<headRows.length;ri++){
+      const slots=headerGrid[ri]||(headerGrid[ri]=[]);
+      let col=0;
+      for(const h of headRows[ri].cells){
+        while(slots[col])col++;
+        const width=h.colSpan||1,height=h.rowSpan||1;
+        for(let dr=0;dr<height;dr++){
+          const target=headerGrid[ri+dr]||(headerGrid[ri+dr]=[]);
+          for(let dc=0;dc<width;dc++)target[col+dc]=h;
+        }
+        col+=width;
+      }
+    }
     function idx(rx){
-      for(const row of headRows){
-        for(const h of row.cells){if(rx.test(clean(h.textContent)))return h.cellIndex;}
+      for(const row of headerGrid){
+        for(let col=0;col<row.length;col++){
+          if(row[col]&&rx.test(clean(row[col].textContent)))return col;
+        }
       }
       return -1;
     }
     const iJan=idx(/^Janpad$/i),iEng=idx(/^(Sub Engineer|Engineer|Sub Engineer \/ Upyantri|Engineer \/ Upyantri)$/i),iCl=idx(/^Cluster(?:\(s\))?/i),iGp=idx(/^(GP|Gram Panchayat)$/i),iCode=idx(/^Work Code$/i),iCat=idx(/^(Final )?Work Category$/i),iDist=idx(/^District$/i);
     const body=[...table.querySelectorAll('tbody tr')];
+    const recoveryRows=recoverySource(),scopedIndexes=new Map();
+    function scopedCount(scope){
+      const keys=Object.keys(scope).sort(),mask=keys.join('|');
+      let counts=scopedIndexes.get(mask);
+      if(!counts){
+        counts=new Map();
+        const value=(r,key)=>key==='district'?districtOf(r.janpad):key==='janpad'?clean(r.janpad):key==='engineer'?clean(r.engineer):key==='cluster'?clean(r.cluster):key==='gp'?clean(r.panchayat):key==='code'?clean(r.code):resolvedFinalCategory(r);
+        for(const r of recoveryRows){const k=JSON.stringify(keys.map(key=>value(r,key)));counts.set(k,(counts.get(k)||0)+1);}
+        scopedIndexes.set(mask,counts);
+      }
+      return counts.get(JSON.stringify(keys.map(key=>scope[key])))||0;
+    }
     for(const tr of body){const td=[...tr.cells]; const total=td.slice(0,5).some(c=>/^TOTAL$|^योग$/i.test(clean(c.textContent)));let n;
-      if(total)n=recoverySource().length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp])scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=recoveryCountForScope(scope)}
+      if(total)n=recoveryRows.length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp]&&!/^[\d,]+$/.test(clean(td[iGp].textContent)))scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=scopedCount(scope)}
       const c=document.createElement('td');c.textContent=fmt(n);c.className=`recovery-work-col ${total?'recovery-total':n>0?'recovery-positive':'recovery-zero'}`;['width','min-width','max-width'].forEach(p=>c.style.setProperty(p,'68px','important'));c.style.setProperty('font-size','20px','important');c.style.setProperty('background',total?'#0f766e':n>0?'#dcfce7':'#f8fafc','important');c.style.setProperty('color',total?'#fff':n>0?'#166534':'#64748b','important');tr.appendChild(c);
     }
   }
