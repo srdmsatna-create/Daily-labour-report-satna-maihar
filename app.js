@@ -1055,8 +1055,24 @@ function initPptExportUI(){
     }
     const iJan=idx(/^Janpad$/i),iEng=idx(/^(Sub Engineer|Engineer|Sub Engineer \/ Upyantri|Engineer \/ Upyantri)$/i),iCl=idx(/^Cluster(?:\(s\))?/i),iGp=idx(/^(GP|Gram Panchayat)$/i),iCode=idx(/^Work Code$/i),iCat=idx(/^(Final )?Work Category$/i),iDist=idx(/^District$/i);
     const body=[...table.querySelectorAll('tbody tr')];
+    // Build each filtered recovery index once per render, not once per work row.
+    const recoveryRows=recoverySource(),scopedIndexes=new Map();
+    function scopedCount(scope){
+      const keys=Object.keys(scope).sort(),mask=keys.join('|');
+      let counts=scopedIndexes.get(mask);
+      if(!counts){
+        counts=new Map();
+        const value=(r,key)=>key==='district'?districtOf(r.janpad):key==='janpad'?clean(r.janpad):key==='engineer'?clean(r.engineer):key==='cluster'?clean(r.cluster):key==='gp'?clean(r.panchayat):key==='code'?clean(r.code):resolvedFinalCategory(r);
+        for(const r of recoveryRows){
+          const k=JSON.stringify(keys.map(key=>value(r,key)));
+          counts.set(k,(counts.get(k)||0)+1);
+        }
+        scopedIndexes.set(mask,counts);
+      }
+      return counts.get(JSON.stringify(keys.map(key=>scope[key])))||0;
+    }
     for(const tr of body){const td=[...tr.cells]; const total=td.slice(0,5).some(c=>/^TOTAL$|^योग$/i.test(clean(c.textContent)));let n;
-      if(total)n=recoverySource().length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp]&&!/^[\d,]+$/.test(clean(td[iGp].textContent)))scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=recoveryCountForScope(scope)}
+      if(total)n=recoveryRows.length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp]&&!/^[\d,]+$/.test(clean(td[iGp].textContent)))scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=scopedCount(scope)}
       const c=document.createElement('td');c.textContent=fmt(n);c.className=`recovery-work-col ${total?'recovery-total':n>0?'recovery-positive':'recovery-zero'}`;['width','min-width','max-width'].forEach(p=>c.style.setProperty(p,'68px','important'));c.style.setProperty('font-size','20px','important');c.style.setProperty('background',total?'#0f766e':n>0?'#dcfce7':'#f8fafc','important');c.style.setProperty('color',total?'#fff':n>0?'#166534':'#64748b','important');tr.appendChild(c);
     }
   }
