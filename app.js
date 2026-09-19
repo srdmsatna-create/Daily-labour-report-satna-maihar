@@ -991,7 +991,8 @@ function initPptExportUI(){
     return (ongoingDetails||[]).filter(r=>num(r.recoveryWork)>0 &&
       (d==='ALL'||districtOf(r.janpad)===d) && (j==='ALL'||clean(r.janpad)===j) &&
       (e==='ALL'||clean(r.engineer)===e) && (c==='ALL'||clean(r.cluster)===c) &&
-      (k==='ALL'||(resolvedFinalCategory(r))===k));
+      (k==='ALL'||(resolvedFinalCategory(r))===k) &&
+      (view!=='ekbagiya'||['Ek Bagiya','Ek Bagiya Maa Ke Naam'].includes(resolvedFinalCategory(r))));
   }
   function recoveryCountForScope(scope){
     let a=recoverySource();
@@ -1002,7 +1003,6 @@ function initPptExportUI(){
     if(scope.gp)a=a.filter(r=>clean(r.panchayat)===scope.gp);
     if(scope.code)a=a.filter(r=>clean(r.code)===scope.code);
     if(scope.category)a=a.filter(r=>(resolvedFinalCategory(r))===scope.category);
-    if(view==='ekbagiya')a=a.filter(r=>['Ek Bagiya','Ek Bagiya Maa Ke Naam'].includes(resolvedFinalCategory(r)));
     return a.length;
   }
   function renderRecoveryDone(){
@@ -1030,19 +1030,33 @@ function initPptExportUI(){
     const th=document.createElement('th');th.className='recovery-work-col';th.textContent='वसूली वाले कार्य';['width','min-width','max-width'].forEach(p=>th.style.setProperty(p,'68px','important'));th.style.setProperty('font-size','20px','important');th.style.setProperty('background','#0f766e','important');th.style.setProperty('color','#fff','important');lastHead.appendChild(th);
     // In multi-row headers, add a standalone top-row group cell too so spans remain understandable.
     if(headRows.length>1){const top=headRows[0];const g=document.createElement('th');g.className='recovery-work-col';g.textContent='वसूली वाले कार्य';g.rowSpan=headRows.length;['width','min-width','max-width'].forEach(p=>g.style.setProperty(p,'68px','important'));g.style.setProperty('font-size','20px','important');g.style.setProperty('background','#0f766e','important');g.style.setProperty('color','#fff','important');top.appendChild(g);th.remove();}
-    // Read every header row. District/Janpad/Engineer are often rowspan cells
-    // in the first row; reading only the last row made every detail row use
-    // the full recovery source total (for example 549).
+    // Use actual body-column indexes after applying rowspan and colspan.
+    const headerGrid=[];
+    for(let ri=0;ri<headRows.length;ri++){
+      const slots=headerGrid[ri]||(headerGrid[ri]=[]);
+      let col=0;
+      for(const h of headRows[ri].cells){
+        while(slots[col])col++;
+        const width=h.colSpan||1,height=h.rowSpan||1;
+        for(let dr=0;dr<height;dr++){
+          const target=headerGrid[ri+dr]||(headerGrid[ri+dr]=[]);
+          for(let dc=0;dc<width;dc++)target[col+dc]=h;
+        }
+        col+=width;
+      }
+    }
     function idx(rx){
-      for(const row of headRows){
-        for(const h of row.cells){if(rx.test(clean(h.textContent)))return h.cellIndex;}
+      for(const row of headerGrid){
+        for(let col=0;col<row.length;col++){
+          if(row[col]&&rx.test(clean(row[col].textContent)))return col;
+        }
       }
       return -1;
     }
     const iJan=idx(/^Janpad$/i),iEng=idx(/^(Sub Engineer|Engineer|Sub Engineer \/ Upyantri|Engineer \/ Upyantri)$/i),iCl=idx(/^Cluster(?:\(s\))?/i),iGp=idx(/^(GP|Gram Panchayat)$/i),iCode=idx(/^Work Code$/i),iCat=idx(/^(Final )?Work Category$/i),iDist=idx(/^District$/i);
     const body=[...table.querySelectorAll('tbody tr')];
     for(const tr of body){const td=[...tr.cells]; const total=td.slice(0,5).some(c=>/^TOTAL$|^योग$/i.test(clean(c.textContent)));let n;
-      if(total)n=recoverySource().length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp])scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=recoveryCountForScope(scope)}
+      if(total)n=recoverySource().length;else{const scope={};if(iJan>=0&&td[iJan])scope.janpad=clean(td[iJan].textContent);if(iEng>=0&&td[iEng])scope.engineer=clean(td[iEng].textContent);if(iCl>=0&&td[iCl])scope.cluster=clean(td[iCl].textContent);if(iGp>=0&&td[iGp]&&!/^[\d,]+$/.test(clean(td[iGp].textContent)))scope.gp=clean(td[iGp].textContent);if(iCode>=0&&td[iCode])scope.code=clean(td[iCode].textContent);if(iCat>=0&&td[iCat])scope.category=clean(td[iCat].textContent);if(iDist>=0&&td[iDist])scope.district=clean(td[iDist].textContent);n=recoveryCountForScope(scope)}
       const c=document.createElement('td');c.textContent=fmt(n);c.className=`recovery-work-col ${total?'recovery-total':n>0?'recovery-positive':'recovery-zero'}`;['width','min-width','max-width'].forEach(p=>c.style.setProperty(p,'68px','important'));c.style.setProperty('font-size','20px','important');c.style.setProperty('background',total?'#0f766e':n>0?'#dcfce7':'#f8fafc','important');c.style.setProperty('color',total?'#fff':n>0?'#166534':'#64748b','important');tr.appendChild(c);
     }
   }
