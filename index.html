@@ -2245,10 +2245,9 @@ function renderJanpadDysfunctional(){
   const wantedDistricts=['MAIHAR','SATNA'].filter(x=>d==='ALL'||d===x);
   // District and Janpad overview uses all selected GPs, including those with employment.
   const janpadOrder={MAIHAR:['AMARPATAN','MAIHAR','RAMNAGAR'],SATNA:['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']};
-  let summary=`<div style="margin:10px 0 14px;border:1px solid #c8d8e8;border-radius:12px;overflow:auto;background:#fff">
-    <div style="padding:11px 13px;background:#eef5fb;color:#123f72;font-weight:950;font-size:17px">${month} — District / Janpad Summary</div>
-    <table class="report-table gp-noemp-summary" style="width:100%;min-width:620px;border-collapse:collapse">
-      <thead><tr><th>District</th><th>Janpad</th><th>Total GPs</th><th>Zero Mandays GPs</th></tr></thead><tbody>`;
+  let summary=`<div style="margin:10px 0 14px;border:1px solid #c8d8e8;border-radius:12px;padding:12px;background:#f6faff">
+    <div style="color:#123f72;font-weight:950;font-size:17px;margin-bottom:10px">${month} — District / Janpad Summary</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px">`;
   let summaryGP=0,summaryZero=0;
   for(const district of wantedDistricts){
     const janpads=[...new Set(base.filter(r=>clean(r.district)===district).map(r=>clean(r.janpad)))].sort((a,b)=>{
@@ -2256,22 +2255,26 @@ function renderJanpadDysfunctional(){
       return (ai<0?999:ai)-(bi<0?999:bi)||a.localeCompare(b);
     });
     let dGP=0,dZero=0;
+    summary+=`<div style="border:1px solid #b9d2e7;border-radius:10px;background:#fff;overflow:hidden">
+      <div style="padding:10px 12px;background:#163f71;color:white;font-size:17px;font-weight:950">${esc(district)}</div>
+      <div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:8px 10px;background:#eaf3fc;font-weight:900;font-size:12px">
+        <span>Janpad</span><span style="text-align:right">Total GPs</span><span style="text-align:right">Zero Mandays GPs</span></div>`;
     for(const jp of janpads){
       const gpCount=new Set(base.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       const zeroCount=new Set(noEmp.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       dGP+=gpCount;dZero+=zeroCount;
-      summary+=`<tr><td><b>${esc(district)}</b></td><td>${esc(jp)}</td>
-        <td style="text-align:center"><b>${fmt(gpCount)}</b></td>
-        <td style="text-align:center;color:#a61b1b"><b>${fmt(zeroCount)}</b></td></tr>`;
+      summary+=`<div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:9px 10px;border-top:1px solid #dce8f5;font-size:14px">
+        <span style="overflow-wrap:anywhere">${esc(jp)}</span><b style="text-align:right">${fmt(gpCount)}</b>
+        <b style="text-align:right;color:#a61b1b">${fmt(zeroCount)}</b></div>`;
     }
     summaryGP+=dGP;summaryZero+=dZero;
-    summary+=`<tr class="total-row"><td colspan="2"><b>DISTRICT ${esc(district)} TOTAL</b></td>
-      <td style="text-align:center"><b>${fmt(dGP)}</b></td>
-      <td style="text-align:center;color:#a61b1b"><b>${fmt(dZero)}</b></td></tr>`;
+    summary+=`<div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:11px 10px;background:#e4f4ff;font-weight:950;border-top:2px solid #91b5d7">
+      <span>${esc(district)} TOTAL</span><span style="text-align:right">${fmt(dGP)}</span>
+      <span style="text-align:right;color:#a61b1b">${fmt(dZero)}</span></div></div>`;
   }
-  summary+=`<tr style="background:#0f766e;color:#fff;font-weight:950"><td colspan="2">TOTAL MAIHAR + SATNA</td>
-    <td style="text-align:center"><b>${fmt(summaryGP)}</b></td>
-    <td style="text-align:center"><b>${fmt(summaryZero)}</b></td></tr></tbody></table></div>`;
+  summary+=`</div><div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:11px 12px;margin-top:11px;border-radius:9px;background:#0f766e;color:#fff;font-weight:950">
+    <span>MAIHAR + SATNA TOTAL</span><span style="text-align:right">${fmt(summaryGP)}</span>
+    <span style="text-align:right">${fmt(summaryZero)}</span></div></div>`;
 
 
   let sh=`<div style="margin:10px 0 14px;border:1px solid #c8d8e8;border-radius:12px;overflow:auto;background:#fff">
