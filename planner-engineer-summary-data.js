@@ -93,10 +93,10 @@ window.PLANNER_OFFICIAL={total:32994,blocks:{Amarpatan:4061,Maihar:9466,Majhgawa
   window.addEventListener('DOMContentLoaded',()=>{
     const verifiedSipri={Amarpatan:25,Maihar:137,Majhgawan:182,Nagod:149,Ramnagar:243,'Rampur baghelan':117,Sohawal:168,Unchahara:37};
     const applyVerifiedPlannerSipri=()=>{
-      const card=document.getElementById('kSipri');
-      if(card) card.textContent='1,058';
       const body=document.getElementById('janpadBody');
       if(!body) return;
+      const card=document.getElementById('kSipri');
+      if(card) card.textContent='1,058';
       const order=['Amarpatan','Maihar','Majhgawan','Nagod','Ramnagar','Rampur baghelan','Sohawal','Unchahara'];
       const fmt=v=>new Intl.NumberFormat('en-IN').format(Number(v)||0);
       let tp=0,ts=0;
