@@ -2205,7 +2205,7 @@ function renderJanpadDysfunctional(){
     Persondays:num(r[month]),Status:'No Employment'
   }));
 
-  $('viewTitle').textContent='GP with No Employment — बिना रोजगार वाली ग्राम पंचायतें';
+  $('viewTitle').innerHTML=`GP with No Employment — बिना रोजगार वाली ग्राम पंचायतें <span style="display:inline-block;margin-left:10px;color:#0758c7;font-size:1.22em;font-weight:950;white-space:nowrap">${esc(month)}</span>`;
   $('viewMeta').innerHTML=`FY 2026-27 • माहवार Nil Persondays / No Employment GP •
     <select id="gpNoEmpMonth" style="margin-left:8px;padding:6px 9px;border:1px solid #b9cce0;border-radius:8px;font-weight:800">
       ${months.map(m=>`<option value="${m}" ${m===month?'selected':''}>${m}</option>`).join('')}
