@@ -1466,6 +1466,10 @@ body[data-report-view="category"] .report-table td:last-child{
 .gp-summary-box .gp-summary-line{padding:0!important;gap:0!important;border-top:1px solid #95b5d2!important}
 .gp-summary-box .gp-summary-line>*{box-sizing:border-box;padding:9px 8px!important;border-right:1px solid #95b5d2!important}
 .gp-summary-box .gp-summary-line>*:last-child{border-right:0!important}
+.gp-summary-box .gp-summary-line:not(.gp-summary-head)>:nth-child(n+2){font-size:18px!important;font-weight:950!important;line-height:1.3}
+.gp-summary-box .gp-summary-total>:nth-child(n+2),.gp-summary-grand>:nth-child(n+2){font-size:21px!important;font-weight:950!important}
+.gp-summary-box .gp-summary-head>*{font-size:12px!important;line-height:1.2}
+
 </style>
 <!-- /SRDM_CATEGORY_NUMERIC_BIG_COMPACT_V1 -->
 <style id="GP_NO_EMP_SAFE_STYLE_V1">
@@ -2260,22 +2264,22 @@ function renderJanpadDysfunctional(){
     let dGP=0,dZero=0;
     summary+=`<div class="gp-summary-box" style="border:2px solid #164477;border-radius:10px;background:#fff;overflow:hidden">
       <div style="padding:10px 12px;background:#163f71;color:white;font-size:17px;font-weight:950">${esc(district)}</div>
-      <div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:8px 10px;background:#eaf3fc;font-weight:900;font-size:12px">
+      <div class="gp-summary-line gp-summary-head" style="display:grid;grid-template-columns:minmax(110px,1fr) 88px 100px;gap:0;padding:8px 10px;background:#eaf3fc;font-weight:900;font-size:12px">
         <span>Janpad</span><span style="text-align:right">Total GPs</span><span style="text-align:right">Zero Mandays GPs</span></div>`;
     for(const jp of janpads){
       const gpCount=new Set(base.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       const zeroCount=new Set(noEmp.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       dGP+=gpCount;dZero+=zeroCount;
-      summary+=`<div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:9px 10px;border-top:1px solid #dce8f5;font-size:14px">
+      summary+=`<div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 88px 100px;gap:0;padding:9px 10px;border-top:1px solid #dce8f5;font-size:14px">
         <span style="overflow-wrap:anywhere">${esc(jp)}</span><b style="text-align:right">${fmt(gpCount)}</b>
         <b style="text-align:right;color:#a61b1b">${fmt(zeroCount)}</b></div>`;
     }
     summaryGP+=dGP;summaryZero+=dZero;
-    summary+=`<div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:11px 10px;background:#e4f4ff;font-weight:950;border-top:2px solid #91b5d7">
+    summary+=`<div class="gp-summary-line gp-summary-total" style="display:grid;grid-template-columns:minmax(110px,1fr) 88px 100px;gap:0;padding:11px 10px;background:#e4f4ff;font-weight:950;border-top:2px solid #91b5d7">
       <span>${esc(district)} TOTAL</span><span style="text-align:right">${fmt(dGP)}</span>
       <span style="text-align:right;color:#a61b1b">${fmt(dZero)}</span></div></div>`;
   }
-  summary+=`</div><div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:11px 12px;margin-top:11px;border-radius:9px;background:#0f766e;color:#fff;font-weight:950">
+  summary+=`</div><div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 88px 100px;gap:0;padding:11px 12px;margin-top:11px;border-radius:9px;background:#0f766e;color:#fff;font-weight:950">
     <span>MAIHAR + SATNA TOTAL</span><span style="text-align:right">${fmt(summaryGP)}</span>
     <span style="text-align:right">${fmt(summaryZero)}</span></div></div>`;
 
