@@ -1463,6 +1463,9 @@ body[data-report-view="category"] .report-table td:last-child{
   body[data-report-view="category"] .report-table td:not(:first-child){font-size:16px!important;}
   body[data-report-view="category"] .report-table td:nth-child(15) .exp-pct-chip{font-size:14px!important;}
 }
+.gp-summary-box .gp-summary-line{padding:0!important;gap:0!important;border-top:1px solid #95b5d2!important}
+.gp-summary-box .gp-summary-line>*{box-sizing:border-box;padding:9px 8px!important;border-right:1px solid #95b5d2!important}
+.gp-summary-box .gp-summary-line>*:last-child{border-right:0!important}
 </style>
 <!-- /SRDM_CATEGORY_NUMERIC_BIG_COMPACT_V1 -->
 <style id="GP_NO_EMP_SAFE_STYLE_V1">
@@ -2245,7 +2248,7 @@ function renderJanpadDysfunctional(){
   const wantedDistricts=['MAIHAR','SATNA'].filter(x=>d==='ALL'||d===x);
   // District and Janpad overview uses all selected GPs, including those with employment.
   const janpadOrder={MAIHAR:['AMARPATAN','MAIHAR','RAMNAGAR'],SATNA:['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']};
-  let summary=`<div style="margin:10px 0 14px;border:1px solid #c8d8e8;border-radius:12px;padding:12px;background:#f6faff">
+  let summary=`<div style="margin:10px 0 14px;border:2px solid #164477;border-radius:12px;padding:12px;background:#f6faff">
     <div style="color:#123f72;font-weight:950;font-size:17px;margin-bottom:10px">${month} — District / Janpad Summary</div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px">`;
   let summaryGP=0,summaryZero=0;
@@ -2255,24 +2258,24 @@ function renderJanpadDysfunctional(){
       return (ai<0?999:ai)-(bi<0?999:bi)||a.localeCompare(b);
     });
     let dGP=0,dZero=0;
-    summary+=`<div style="border:1px solid #b9d2e7;border-radius:10px;background:#fff;overflow:hidden">
+    summary+=`<div class="gp-summary-box" style="border:2px solid #164477;border-radius:10px;background:#fff;overflow:hidden">
       <div style="padding:10px 12px;background:#163f71;color:white;font-size:17px;font-weight:950">${esc(district)}</div>
-      <div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:8px 10px;background:#eaf3fc;font-weight:900;font-size:12px">
+      <div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:8px 10px;background:#eaf3fc;font-weight:900;font-size:12px">
         <span>Janpad</span><span style="text-align:right">Total GPs</span><span style="text-align:right">Zero Mandays GPs</span></div>`;
     for(const jp of janpads){
       const gpCount=new Set(base.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       const zeroCount=new Set(noEmp.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       dGP+=gpCount;dZero+=zeroCount;
-      summary+=`<div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:9px 10px;border-top:1px solid #dce8f5;font-size:14px">
+      summary+=`<div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:9px 10px;border-top:1px solid #dce8f5;font-size:14px">
         <span style="overflow-wrap:anywhere">${esc(jp)}</span><b style="text-align:right">${fmt(gpCount)}</b>
         <b style="text-align:right;color:#a61b1b">${fmt(zeroCount)}</b></div>`;
     }
     summaryGP+=dGP;summaryZero+=dZero;
-    summary+=`<div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:11px 10px;background:#e4f4ff;font-weight:950;border-top:2px solid #91b5d7">
+    summary+=`<div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:11px 10px;background:#e4f4ff;font-weight:950;border-top:2px solid #91b5d7">
       <span>${esc(district)} TOTAL</span><span style="text-align:right">${fmt(dGP)}</span>
       <span style="text-align:right;color:#a61b1b">${fmt(dZero)}</span></div></div>`;
   }
-  summary+=`</div><div style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:4px;padding:11px 12px;margin-top:11px;border-radius:9px;background:#0f766e;color:#fff;font-weight:950">
+  summary+=`</div><div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(110px,1fr) 90px 120px;gap:0;padding:11px 12px;margin-top:11px;border-radius:9px;background:#0f766e;color:#fff;font-weight:950">
     <span>MAIHAR + SATNA TOTAL</span><span style="text-align:right">${fmt(summaryGP)}</span>
     <span style="text-align:right">${fmt(summaryZero)}</span></div></div>`;
 
