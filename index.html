@@ -2263,20 +2263,23 @@ function renderJanpadDysfunctional(){
       return (ai<0?999:ai)-(bi<0?999:bi)||a.localeCompare(b);
     });
     let dGP=0,dZero=0;
-    summary+=`<div class="gp-summary-box" style="border:2px solid #164477;border-radius:10px;background:#fff;overflow:hidden">
-      <div style="padding:10px 12px;background:#163f71;color:white;font-size:17px;font-weight:950">${esc(district)}</div>
-      <div class="gp-summary-line gp-summary-head" style="display:grid;grid-template-columns:minmax(145px,1fr) 105px 145px;gap:0;padding:8px 10px;background:#eaf3fc;font-weight:900;font-size:12px">
+    const isMaihar=district==='MAIHAR';
+    const headerColor=isMaihar?'#075b70':'#43308a';
+    const lightColor=isMaihar?'#e8f7fa':'#f1efff';
+    summary+=`<div class="gp-summary-box" style="border:2px solid ${headerColor};border-radius:10px;background:#fff;overflow:hidden">
+      <div style="padding:10px 12px;background:${headerColor};color:white;font-size:17px;font-weight:950">${esc(district)}</div>
+      <div class="gp-summary-line gp-summary-head" style="display:grid;grid-template-columns:minmax(145px,1fr) 105px 145px;gap:0;padding:8px 10px;background:${lightColor};color:${headerColor};font-weight:900;font-size:12px">
         <span>Janpad</span><span style="text-align:right">Total GPs</span><span style="text-align:right">Zero Mandays GPs</span></div>`;
-    for(const jp of janpads){
+    for(const [idx,jp] of janpads.entries()){
       const gpCount=new Set(base.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       const zeroCount=new Set(noEmp.filter(r=>clean(r.district)===district&&clean(r.janpad)===jp).map(r=>clean(r.gp)).filter(Boolean)).size;
       dGP+=gpCount;dZero+=zeroCount;
-      summary+=`<div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(145px,1fr) 105px 145px;gap:0;padding:9px 10px;border-top:1px solid #dce8f5;font-size:14px">
-        <span style="overflow-wrap:anywhere">${esc(jp)}</span><b style="text-align:right">${fmt(gpCount)}</b>
+      summary+=`<div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(145px,1fr) 105px 145px;gap:0;padding:9px 10px;border-top:1px solid #b8cce0;background:${idx%2?lightColor:"#fff"};font-size:14px">
+        <span style="overflow-wrap:anywhere;color:${headerColor};font-weight:850">${esc(jp)}</span><b style="text-align:right">${fmt(gpCount)}</b>
         <b style="text-align:right;color:#a61b1b">${fmt(zeroCount)}</b></div>`;
     }
     summaryGP+=dGP;summaryZero+=dZero;
-    summary+=`<div class="gp-summary-line gp-summary-total" style="display:grid;grid-template-columns:minmax(145px,1fr) 105px 145px;gap:0;padding:11px 10px;background:#e4f4ff;font-weight:950;border-top:2px solid #91b5d7">
+    summary+=`<div class="gp-summary-line gp-summary-total" style="display:grid;grid-template-columns:minmax(145px,1fr) 105px 145px;gap:0;padding:11px 10px;background:${lightColor};color:${headerColor};font-weight:950;border-top:2px solid ${headerColor}">
       <span>${esc(district)} TOTAL</span><span style="text-align:right">${fmt(dGP)}</span>
       <span style="text-align:right;color:#a61b1b">${fmt(dZero)}</span></div></div>`;
   }
