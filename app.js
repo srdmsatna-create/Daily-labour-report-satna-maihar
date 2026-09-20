@@ -480,7 +480,7 @@ function renderCategorySubEngineer(){
 }
 function renderCategoryWorks(){
  const data=correctedWorkFiltered().slice().sort((a,b)=>resolvedFinalCategory(a).localeCompare(resolvedFinalCategory(b),'hi')||clean(a.janpad).localeCompare(clean(b.janpad),'hi')||clean(a.engineer).localeCompare(clean(b.engineer),'hi')||clean(a.code).localeCompare(clean(b.code)));lastExport=data;
- const cats=new Set(data.map(r=>resolvedFinalCategory(r))),sts=new Set(data.map(r=>clean(r.status)));$('viewTitle').textContent='MIS 6.12 — Engineer & Final Category-wise Work Details';$('viewMeta').textContent=`${fmt(data.length)} works • ${fmt(cats.size)} Final Work Categories • ${[...sts].filter(Boolean).join(', ')||'Selected status'} • Live work-level list • ${todayDate()}`;
+ const cats=new Set(data.map(r=>resolvedFinalCategory(r))),sts=new Set(data.map(r=>clean(r.status)));$('viewTitle').textContent='MIS 6.12 — Engineer & Final Category-wise Work Details';$('viewMeta').textContent=`${fmt(data.length)} works • ${fmt(cats.size)} Final Work Categories • ${[...sts].filter(Boolean).join(', ')||'Selected status'} • R6.12 work list • source date ${clean((window.AUTO_FETCH_STATUS||{}).ongoingOfficialDate||(window.AUTO_FETCH_STATUS||{}).ongoingSourceDate)||'unverified'}`;
  let h=`<thead><tr><th>S.No.</th><th>Work Status</th><th>Final Work Category</th><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>Cluster</th><th>GP</th><th>FY</th><th>Work Code</th><th>Work Name</th><th>Sanction ₹</th><th>Booked Wage ₹</th><th>Booked Material ₹</th><th>Total Booked ₹</th><th>Exp %</th><th>Mandays<br>till 31 Mar 2026</th><th>NREGA Mandays<br>01 Apr–30 Jun</th><th>Mandays<br>01 Jul–Today</th></tr></thead><tbody>`;
  data.forEach((r,i)=>{const cat=resolvedFinalCategory(r);h+=`<tr>${cell(i+1,true)}${cell(r.status)}${cell(cat)}${cell(districtOf(r.janpad))}${cell(r.janpad)}${cell(r.engineer)}${cell(r.cluster)}${cell(r.panchayat)}${cell(r.fy)}${cell(r.code)}${cell(r.name)}<td>${num(r.sanction).toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>${num(r.bookedWage).toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>${num(r.bookedMaterial).toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>${num(r.booked).toLocaleString('en-IN',{maximumFractionDigits:2})}</td><td>${num(r.expPct).toFixed(1)}%</td>${cell(r.mandaysTillMar31 ?? Math.max(0,num(r.mandays)-num(r.currentFYMandays)),true)}${cell(r.nregaAprJunMandays,true)}${cell(r.julyMandays,true)}</tr>`});if(!data.length)h+=`<tr><td colspan="19" class="empty-table">Current filter/category/status में work नहीं मिला।</td></tr>`;h+='</tbody>';$('reportTable').innerHTML=h;
 }
@@ -584,7 +584,51 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   render();
 }));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}render()}));
 $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
-$('allWorksExcelBtn')?.addEventListener('click',()=>{if(typeof XLSX==='undefined'){alert('Excel library load नहीं हुई। Page refresh करके पुनः प्रयास करें।');return}if(!ongoingDetails.length){alert('All Works data उपलब्ध नहीं है।');return}const data=ongoingDetails.map((r,i)=>({'S.No.':i+1,'District':clean(r.district)||districtOf(r.janpad),'Janpad':r.janpad,'Gram Panchayat':r.panchayat,'Sub Engineer / Upyantri':r.engineer,'Cluster':r.cluster,'Work FY':r.fy,'Work Status':r.status,'Work Code':r.code,'Work Name':r.name,'Final Work Category':resolvedFinalCategory(r),'Original Work Type':r.type,'Total Sanction (Rs)':num(r.sanction),'Booked Wages (Rs)':num(r.bookedWage),'Booked Material (Rs)':num(r.bookedMaterial),'Total Booked (Rs)':num(r.booked),'Expenditure %':num(r.expPct),'Total Mandays':num(r.mandays),'Current FY Mandays':num(r.currentFYMandays)}));const ws=XLSX.utils.json_to_sheet(data);ws['!autofilter']={ref:ws['!ref']};ws['!cols']=[{wch:7},{wch:10},{wch:13},{wch:16},{wch:20},{wch:16},{wch:11},{wch:18},{wch:23},{wch:38},{wch:24},{wch:30},{wch:16},{wch:16},{wch:17},{wch:16},{wch:13},{wch:14},{wch:16}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,'All Works');XLSX.writeFile(wb,`SRDM_SATNA_MIS_6.12_All_Works_${todayDate()}.xlsx`)});
+$('allWorksExcelBtn')?.addEventListener('click',()=>{
+  if(typeof XLSX==='undefined'){alert('Excel library load नहीं हुई। Page refresh करके पुनः प्रयास करें।');return}
+  if(!ongoingDetails.length){alert('MIS 6.12 work data उपलब्ध नहीं है।');return}
+  const status=window.AUTO_FETCH_STATUS||{}, meta=(window.AUTO_REPORT||{}).meta||{};
+  const sourceDate=clean(status.ongoingOfficialDate||status.ongoingSourceDate||meta.ongoingSourceDate)||'Unverified';
+  const rows=ongoingDetails.filter(r=>clean(r.code));
+  const unique=new Map(rows.map(r=>[clean(r.code),r]));
+  if(unique.size!==rows.length){alert('Work Code duplicate मिला है; Excel export रोक दिया गया है।');return}
+  const toRow=(r,i)=>({
+    'S.No.':i+1,'District':clean(r.district)||districtOf(r.janpad),'Janpad':r.janpad,
+    'Sub Engineer / Upyantri':r.engineer,'Cluster':r.cluster,'Gram Panchayat':r.panchayat,
+    'Work Code':r.code,'Work Name':r.name,'Work Status':r.status,'Work FY':r.fy,
+    'Final Work Category':resolvedFinalCategory(r),'Original Work Type':r.type,
+    'Sanction Wages (Rs)':num(r.sanctionWage),'Sanction Material (Rs)':num(r.sanctionMaterial),
+    'Total Sanction (Rs)':num(r.sanction),'NREGA Booked Wages (Rs)':num(r.nregaBookedWage??r.bookedWage),
+    'NREGA Booked Material (Rs)':num(r.nregaBookedMaterial??r.bookedMaterial),
+    'VBGRAMG Booked Wages (Rs)':num(r.vbgBookedWage),'VBGRAMG Booked Material (Rs)':num(r.vbgBookedMaterial),
+    'Total Booked Wages (Rs)':num(r.bookedWage),'Total Booked Material (Rs)':num(r.bookedMaterial),
+    'Total Booked (Rs)':num(r.booked),'Expenditure %':num(r.expPct),
+    'Mandays till 31 Mar 2026':num(r.mandaysTillMar31),
+    'NREGA Mandays 01 Apr–30 Jun':num(r.nregaAprJunMandays),
+    'VBGRAMG Mandays 01 Jul–Today':num(r.julyMandays),'Total Mandays':num(r.mandays),
+    'Paid Since Inception (Rs)':num(r.paidSince),'Dues Wages (Rs)':num(r.duesWage),
+    'Dues Material (Rs)':num(r.duesMaterial),'Recovery Work':num(r.recoveryWork),
+    'Recovery Amount (Rs)':num(r.recoveryAmount),'R6.12 Source Date':sourceDate
+  });
+  const wb=XLSX.utils.book_new();
+  const add=(name,list)=>{const ws=XLSX.utils.json_to_sheet(list.map(toRow));if(ws['!ref'])ws['!autofilter']={ref:ws['!ref']};XLSX.utils.book_append_sheet(wb,ws,name)};
+  const current=view==='ekbagiya'?ekBagiyaFiltered():
+    view==='categoryworks'?correctedWorkFiltered():filterRows(ongoingDetails);
+  add('Current Screen',current);
+  add('All Works',[...unique.values()]);
+  add('Ek Bagiya',[...unique.values()].filter(r=>['Ek Bagiya','Ek Bagiya Maa Ke Naam'].includes(resolvedFinalCategory(r))));
+  const groups=new Map();for(const r of unique.values()){const cat=resolvedFinalCategory(r)||'Other Works';if(!groups.has(cat))groups.set(cat,[]);groups.get(cat).push(r)}
+  const used=new Set(['Current Screen','All Works','Ek Bagiya']);
+  for(const [category,list] of [...groups].sort((a,b)=>a[0].localeCompare(b[0]))){
+    if(category==='Ek Bagiya'||category==='Ek Bagiya Maa Ke Naam')continue;
+    const base=category.replace(/[\\/?*\[\]:]/g,' ').slice(0,27)||'Other';let name=base,k=2;
+    while(used.has(name)){name=(base.slice(0,27-String(k).length)+' '+k++).slice(0,31)}used.add(name);
+    add(name,list);
+  }
+  const info=XLSX.utils.aoa_to_sheet([['R6.12 Source Date',sourceDate],['Excel Export Date',todayDate()],['Unique Work Codes',unique.size],['Ek Bagiya Works',groups.get('Ek Bagiya')?.length||groups.get('Ek Bagiya Maa Ke Naam')?.length||0],['Note','Export date is not the portal data date. Verify the R6.12 source date before calling this live.']]);
+  XLSX.utils.book_append_sheet(wb,info,'Source Check');
+  XLSX.writeFile(wb,'SRDM_MIS_6.12_All_Categories_Exported_'+todayDate()+'.xlsx');
+});
 // V6: Font size and Portrait/Landscape print controls
 (function(){
   let fontScale=1;
