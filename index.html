@@ -1489,7 +1489,28 @@ body[data-report-view="dysjanpad"] #reportTable:empty{display:none!important}
 .gp-noemp-summary tbody tr:nth-child(even):not(.total-row){background:#f8fbff}
 .gp-noemp-summary .total-row td{background:#dcecff!important;font-weight:950!important;border-top:2px solid #315d87!important}
  .gp-noemp-summary th{border:1.5px solid #7398bf!important}
-</style></head>
+</style>
+<style id="GP_NO_EMP_PRINT_FIX_20260920">
+@media print {
+  /* A standalone report may print only while that report is open. */
+  body #shramikNiyojanReport:not(.srdm-standalone-report-open) { display:none!important; }
+  body[data-report-view="dysjanpad"] .report-head h2 { font-size:15pt!important; }
+  body[data-report-view="dysjanpad"] .report-head p { font-size:9pt!important; }
+  body[data-report-view="dysjanpad"] .gp-summary-box { break-inside:avoid!important;page-break-inside:avoid!important; }
+  body[data-report-view="dysjanpad"] .gp-summary-box > div:first-child { font-size:16pt!important;padding:3mm!important; }
+  body[data-report-view="dysjanpad"] .gp-summary-box .gp-summary-line { grid-template-columns:minmax(0,1fr) 24% 31%!important;padding:0!important; }
+  body[data-report-view="dysjanpad"] .gp-summary-box .gp-summary-line > * { padding:2mm 2.5mm!important; }
+  body[data-report-view="dysjanpad"] .gp-summary-box .gp-summary-head > * { font-size:10pt!important; }
+  body[data-report-view="dysjanpad"] .gp-summary-box .gp-summary-line:not(.gp-summary-head) > span { font-size:11pt!important; }
+  body[data-report-view="dysjanpad"] .gp-summary-box .gp-summary-line:not(.gp-summary-head) > b { font-size:15pt!important; }
+  body[data-report-view="dysjanpad"] .gp-noemp-summary { width:100%!important;min-width:0!important; }
+  body[data-report-view="dysjanpad"] .gp-noemp-summary th,
+  body[data-report-view="dysjanpad"] .gp-noemp-summary td { font-size:10pt!important;line-height:1.2!important;padding:2mm!important; }
+  body[data-report-view="dysjanpad"] .gp-noemp-summary tbody td:nth-child(4),
+  body[data-report-view="dysjanpad"] .gp-noemp-summary tbody td:nth-child(5) { font-size:14pt!important; }
+}
+</style>
+</head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
