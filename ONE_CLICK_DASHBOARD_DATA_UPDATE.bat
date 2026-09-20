@@ -187,7 +187,7 @@ if errorlevel 1 (
 )
 
 echo Syncing latest remote changes before commit...
-git pull --rebase --autostash
+git pull --rebase --autostash origin main
 if errorlevel 1 (
     echo.
     echo ERROR: Git sync failed. Local dashboard files are safe.
