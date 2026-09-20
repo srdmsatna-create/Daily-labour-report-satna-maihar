@@ -186,40 +186,53 @@ if errorlevel 1 (
     goto :DONE
 )
 
-echo Syncing latest remote changes before commit...
-git pull --rebase --autostash origin main
+echo Fetching latest origin/main for isolated publish...
+git fetch origin main
 if errorlevel 1 (
-    echo.
-    echo ERROR: Git sync failed. Local dashboard files are safe.
-    echo Run git status and resolve the reported conflict.
+    echo ERROR: Git fetch failed. Local dashboard files are safe.
     pause
     exit /b 1
 )
-
-git add -A
-
-git diff --cached --quiet
-if not errorlevel 1 (
-    echo No new file changes found. Nothing to commit.
-) else (
-    git commit -m "Auto update dashboard data"
-    if errorlevel 1 (
-        echo ERROR: Git commit failed.
-        pause
-        exit /b 1
+set "SRDM_PUBLISH_WT=%TEMP%\SRDM_PUBLISH_%RANDOM%_%RANDOM%"
+git worktree add --detach "%SRDM_PUBLISH_WT%" origin/main
+if errorlevel 1 (
+    echo ERROR: Temporary Git worktree could not be created.
+    pause
+    exit /b 1
+)
+set /a SRDM_PUBLISH_COUNT=0
+for %%F in (auto-data.js auto-status.js data\fetch-status.json data\official-summary.csv muster-emb-data.js shramik-niyojan-data.js vbg-block-stats.js yuktdhara-data.js yuktdhara-official-data.js) do (
+    if exist "%REPO%\%%F" (
+        for %%D in ("%SRDM_PUBLISH_WT%\%%F") do if not exist "%%~dpD" mkdir "%%~dpD"
+        copy /y "%REPO%\%%F" "%SRDM_PUBLISH_WT%\%%F" >nul
+        if errorlevel 1 goto :PUBLISH_FAILED
+        git -C "%SRDM_PUBLISH_WT%" add -- "%%F"
+        if errorlevel 1 goto :PUBLISH_FAILED
+        set /a SRDM_PUBLISH_COUNT+=1
     )
 )
-
-echo Pushing to GitHub...
-git push origin main
+if !SRDM_PUBLISH_COUNT! EQU 0 goto :PUBLISH_FAILED
+git -C "%SRDM_PUBLISH_WT%" diff --cached --quiet
 if errorlevel 1 (
-    echo.
-    echo ERROR: Git push failed.
-    pause
-    exit /b 1
+    git -C "%SRDM_PUBLISH_WT%" commit -m "Auto update verified dashboard data"
+    if errorlevel 1 goto :PUBLISH_FAILED
+    git -C "%SRDM_PUBLISH_WT%" push origin HEAD:main
+    if errorlevel 1 goto :PUBLISH_FAILED
+) else (
+    echo No dashboard data changed since the last publish.
 )
-
+git worktree remove --force "%SRDM_PUBLISH_WT%"
+if errorlevel 1 echo NOTICE: Temporary worktree cleanup may be needed: %SRDM_PUBLISH_WT%
 echo GitHub publish: OK
+goto :DONE
+
+:PUBLISH_FAILED
+echo ERROR: Publish stopped. Local files and temporary worktree are preserved.
+echo Temporary worktree: %SRDM_PUBLISH_WT%
+pause
+exit /b 1
+
+
 
 :DONE
 echo.
