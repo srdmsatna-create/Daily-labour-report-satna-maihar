@@ -1534,9 +1534,25 @@ body[data-report-view="official"] #reportTable .gp-muster-ratio,
 body[data-report-view="engineer"] #reportTable .gp-muster-ratio { font-size:15px!important;font-weight:900!important;white-space:nowrap!important; }
 body[data-report-view="official"] #reportTable .badge,
 body[data-report-view="engineer"] #reportTable .badge { font-size:12px!important;white-space:nowrap!important; }
+/* Compact the three count columns while keeping their figures prominent. */
+body[data-report-view="official"] #reportTable { width:1500px!important;min-width:1500px!important; }
+body[data-report-view="engineer"] #reportTable { width:1750px!important;min-width:1750px!important; }
+body[data-report-view="official"] #reportTable tbody td:nth-child(4),
+body[data-report-view="official"] #reportTable tbody td:nth-child(5),
+body[data-report-view="official"] #reportTable tbody td:nth-child(6),
+body[data-report-view="engineer"] #reportTable tbody td:nth-child(6),
+body[data-report-view="engineer"] #reportTable tbody td:nth-child(7),
+body[data-report-view="engineer"] #reportTable tbody td:nth-child(8) { width:68px!important;min-width:58px!important;max-width:76px!important;font-size:17px!important;font-weight:850!important;text-align:right!important; }
+body[data-report-view="official"] #reportTable thead tr:last-child th:nth-child(2),
+body[data-report-view="official"] #reportTable thead tr:last-child th:nth-child(3),
+body[data-report-view="official"] #reportTable thead tr:last-child th:nth-child(4),
+body[data-report-view="engineer"] #reportTable thead tr:last-child th:nth-child(2),
+body[data-report-view="engineer"] #reportTable thead tr:last-child th:nth-child(3),
+body[data-report-view="engineer"] #reportTable thead tr:last-child th:nth-child(4) { width:68px!important;min-width:58px!important;max-width:76px!important; }
 @media print {
  body[data-report-view="official"] #reportTable,body[data-report-view="engineer"] #reportTable { width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important; }
  body[data-report-view="official"] #reportTable :is(th,td),body[data-report-view="engineer"] #reportTable :is(th,td) { min-width:0!important;max-width:none!important;font-size:6.5pt!important;padding:.8mm .5mm!important;overflow-wrap:anywhere!important; }
+ body[data-report-view="official"] #reportTable tbody td:nth-child(4),body[data-report-view="official"] #reportTable tbody td:nth-child(5),body[data-report-view="official"] #reportTable tbody td:nth-child(6),body[data-report-view="engineer"] #reportTable tbody td:nth-child(6),body[data-report-view="engineer"] #reportTable tbody td:nth-child(7),body[data-report-view="engineer"] #reportTable tbody td:nth-child(8) { width:auto!important;min-width:0!important;max-width:none!important;font-size:7pt!important; }
  body[data-report-view="official"] #reportTable .gp-muster-ratio,body[data-report-view="engineer"] #reportTable .gp-muster-ratio { font-size:6.5pt!important;white-space:normal!important; }
  body[data-report-view="official"] #reportTable .badge,body[data-report-view="engineer"] #reportTable .badge { font-size:6pt!important;white-space:normal!important; }
 }
