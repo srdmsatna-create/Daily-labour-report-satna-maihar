@@ -1566,6 +1566,33 @@ body[data-report-view="category"] .report-table th:nth-child(n+3):nth-child(-n+8
 body[data-report-view="category"] .report-table :is(th,td):nth-child(2){width:68px!important;min-width:68px!important;max-width:68px!important}
 </style>
 <!-- /SRDM_CATEGORY_BUCKET_COLUMNS_COMPACT_V2 -->
+
+<style id="srdmCategoryNumericFontBig">
+/* SRDM_CATEGORY_NUMERIC_FONT_BIG_V1 */
+body[data-report-view="category"] #reportTable tbody td:not(:first-child){
+  font-size:18px!important;
+  font-weight:900!important;
+  line-height:1.12!important;
+  font-variant-numeric:tabular-nums;
+}
+body[data-report-view="category"] #reportTable tbody tr.total-row td{
+  font-size:19px!important;
+  font-weight:950!important;
+}
+body[data-report-view="category"] #reportTable .exp-pct-chip{
+  font-size:17px!important;
+  font-weight:950!important;
+  line-height:1!important;
+}
+body[data-report-view="category"] #reportTable tbody td:first-child{
+  font-size:14px!important;
+  font-weight:850!important;
+}
+@media(max-width:900px){
+  body[data-report-view="category"] #reportTable tbody td:not(:first-child){font-size:16px!important}
+  body[data-report-view="category"] #reportTable .exp-pct-chip{font-size:15px!important}
+}
+</style>
 </head>
 <body>
 <div class="login-screen" id="loginScreen">
