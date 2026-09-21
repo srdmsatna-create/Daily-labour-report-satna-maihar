@@ -2544,3 +2544,531 @@ See https://aka.ms/gcm/credstores for more information.
 bash: line 1: /dev/tty: No such device or address
 error: failed to execute prompt script (exit code 1)
 fatal: could not read Username for 'https://github.com': No such file or directory
+
+============================================================
+START Fri 09/18/2026 12:06:37.91
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   2b5d14f..e03d643  main       -> origin/main
+Updating 2b5d14f..e03d643
+Fast-forward
+ planner-portal-data.js | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+[2/6] Fetch official VB-G RAM G data
+
+============================================================
+START Fri 09/18/2026 12:09:16.93
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+
+============================================================
+START Fri 09/18/2026 13:49:35.89
+============================================================
+Waiting for network...
+^C
+============================================================
+START Fri 09/18/2026 13:55:48.56
+============================================================
+Waiting for network...
+^C
+============================================================
+START Fri 09/18/2026 14:03:04.80
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+
+============================================================
+START Fri 09/18/2026 14:33:10.38
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Already up to date.
+[2/6] Fetch official VB-G RAM G data
+FAILED: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://vbgramgrep.dord.gov.in/VBGRAMG/dpc_sms_new.aspx?payload=c_dCXx6L-IMkcEdlRICw87o-OWrumZUuTOVJCtXMwo49VCcKVJKknrfE_4qO0AT_WQTG3yWM7D1kNUU7DSpTx1H8j3SYUjwu3q4dQX_CfBdu4ni8Iou1EYozxNZb5rwNvD2JMp78Hx-qNCdsq3ux6X1MITBA5uUF3gtds07lUIHnl4ONcwgjtjtzvWYQ0UDGVInRFjvVbtwWWXI7s8-I3jU8QwBBMeYwU7dbbckRQbgR_S8b6XGjuQ6EwEUi4ba3pW06r3n-L-iVwCLbYfyloXs1UzJGGw9YBlOFBm-hlzE", waiting until "networkidle"
+
+ERROR: Official fetch failed. Existing verified dashboard data remains unchanged.
+
+============================================================
+START Fri 09/18/2026 15:33:10.32
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   e03d643..587e25e  main       -> origin/main
+Updating e03d643..587e25e
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: 6d7f29b
+
+============================================================
+START Fri 09/18/2026 16:33:10.40
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   587e25e..b4c5168  main       -> origin/main
+Updating e03d643..b4c5168
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Fri 09/18/2026 17:33:11.02
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   b4c5168..0fba780  main       -> origin/main
+Updating e03d643..0fba780
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Fri 09/18/2026 18:33:10.33
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   0fba780..97f864f  main       -> origin/main
+Updating e03d643..97f864f
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Sat 09/19/2026 11:57:07.07
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   97f864f..3139c2e  main       -> origin/main
+Updating e03d643..3139c2e
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Sat 09/19/2026 11:59:58.30
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   3139c2e..a6dc2e5  main       -> origin/main
+Updating e03d643..a6dc2e5
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Sat 09/19/2026 12:33:10.64
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   a6dc2e5..4c614d9  main       -> origin/main
+Updating e03d643..4c614d9
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Sat 09/19/2026 13:33:12.66
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+Updating e03d643..4c614d9
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+fatal: update_ref failed for ref 'MERGE_AUTOSTASH': cannot lock ref 'MERGE_AUTOSTASH': reference already exists
+
+============================================================
+START Sat 09/19/2026 14:33:10.74
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   4c614d9..4501043  main       -> origin/main
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: 8f6c2f2
+
+============================================================
+START Sat 09/19/2026 15:33:13.08
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   84fd895..276401f  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sat 09/19/2026 19:02:19.78
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   276401f..78d4320  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sat 09/19/2026 19:33:10.41
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   78d4320..4881eac  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sat 09/19/2026 20:33:10.40
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   4881eac..b31dad9  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026  7:52:08.20
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   b31dad9..c628a84  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026  8:33:10.18
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026  9:33:10.26
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026 17:31:31.96
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   fa8f6eb..20ec808  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026 17:34:23.56
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026 18:33:10.76
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   20ec808..d8fc8c8  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026 19:33:10.72
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   d8fc8c8..bd18840  main       -> origin/main
+ * [new branch]      archive/ek-bagiya-before-2026-09-20-refresh -> origin/archive/ek-bagiya-before-2026-09-20-refresh
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026 20:33:10.86
+============================================================
+
+============================================================
+START Sun 09/20/2026 22:21:58.46
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   bd18840..7936d1e  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026 22:33:10.96
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   7936d1e..4bf0a29  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Sun 09/20/2026 23:33:10.78
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/21/2026  7:50:10.52
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   4bf0a29..64151a7  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/21/2026  8:33:10.46
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+warning: in the working copy of 'ONE_CLICK_DASHBOARD_DATA_UPDATE.bat', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'logs/auto-when-on.log', LF will be replaced by CRLF the next time Git touches it
+error: unable to unlink old 'logs/auto-when-on.log': Invalid argument
+fatal: could not reset --hard
+Created autostash: 9e3d63a
+
+============================================================
+START Mon 09/21/2026 11:28:22.77
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   718cd54..205eb1d  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/21/2026 11:31:11.72
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/21/2026 11:33:11.43
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/21/2026 12:33:10.96
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+   205eb1d..ffe2a73  main       -> origin/main
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+
+
+============================================================
+START Mon 09/21/2026 13:33:10.77
+============================================================
+Waiting for network...
+Internet OK.
+[1/6] Pull latest
+fatal: It seems that there is already a rebase-merge directory, and
+I wonder if you are in the middle of another rebase.  If that is the
+case, please try
+	git rebase (--continue | --abort | --skip)
+If that is not the case, please
+	rm -fr ".git/rebase-merge"
+and run me again.  I am stopping in case you still have something
+valuable there.
+

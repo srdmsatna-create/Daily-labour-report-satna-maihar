@@ -15,6 +15,7 @@ from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "ongoing-details.js"
+NREGA_BASELINE = ROOT / "nrega-r612-baseline.json"
 
 
 def clean(value):
@@ -39,6 +40,13 @@ def load_previous():
     return {clean(row.get("code")): row for row in rows if clean(row.get("code"))}
 
 
+def load_nrega_baseline():
+    if not NREGA_BASELINE.is_file():
+        raise SystemExit(f"MGNREGA baseline not found: {NREGA_BASELINE}")
+    raw = json.loads(NREGA_BASELINE.read_text(encoding="utf-8-sig"))
+    return {clean(code): values for code, values in raw.items() if clean(code)}
+
+
 def normalized_category(raw, old):
     category = clean(raw)
     if category == "IAY Houses":
@@ -58,6 +66,7 @@ def main():
         parser.error("Workbook not found")
 
     previous = load_previous()
+    nrega_baseline = load_nrega_baseline()
     book = load_workbook(args.workbook, read_only=True, data_only=True)
     if "All Works" not in book:
         raise SystemExit("Required 'All Works' sheet is missing")
@@ -93,12 +102,21 @@ def main():
         codes.add(code)
         old = previous.get(code, {})
         sanction = num(source[ix["Sanction Total Rs"]])
-        nrega_wage = num(source[ix["MGNREGA Booked Wages to 30 Jun Rs (fixed)"]])
-        nrega_material = num(source[ix["MGNREGA Booked Material to 30 Jun Rs (fixed)"]])
+        # The workbook is generated with lookup formulae.  In a non-Excel run their
+        # cached values can be zero, so use the reviewed fixed baseline by Work Code.
+        # Only genuinely new/unmatched works fall back to the workbook's fixed fields.
+        fixed = nrega_baseline.get(code)
+        if fixed is not None:
+            nrega_wage = num(fixed[0] if len(fixed) > 0 else 0)
+            nrega_material = num(fixed[1] if len(fixed) > 1 else 0)
+        else:
+            nrega_wage = num(source[ix["MGNREGA Booked Wages to 30 Jun Rs (fixed)"]])
+            nrega_material = num(source[ix["MGNREGA Booked Material to 30 Jun Rs (fixed)"]])
         vbg_wage = num(source[ix["Current FY Booked Wages Rs"]])
         vbg_material = num(source[ix["Current FY Booked Material Rs"]])
-        overall_wage = num(source[ix["Since Inception Booked Wages Rs"]])
-        overall_material = num(source[ix["Since Inception Booked Material Rs"]])
+        # Dashboard definition: Overall = fixed MGNREGA + current VB-G RAM G.
+        overall_wage = nrega_wage + vbg_wage
+        overall_material = nrega_material + vbg_material
         overall = overall_wage + overall_material
         current_mandays = num(source[ix["Current FY Mandays (portal)"]])
         previous_mandays = num(source[ix["Previous Mandays in 13 Sep file (fixed)"]])
