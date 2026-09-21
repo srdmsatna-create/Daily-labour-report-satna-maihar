@@ -13,18 +13,18 @@ NUMFIELDS = ["totalGP","musterGP","dysfunctionalGP","labourAll","mrAll","noEkyc"
              "labourIndividual","mrIndividual","labourCommunity","mrCommunity",
              "pmayLabour","pmayOngoing","pmayMR","ekLabour","ekOngoing","ekMR"]
 
-# Verified R6.12 work-level master counts dated 13-09-2026.
+# Verified R6.12 work-level master counts dated 20-09-2026.
 # These three ongoing denominators must remain stable in the Official Janpad Daily Report.
 # Today's live labour/MR values still come from the official daily source.
 R612_VERIFIED = {
-    "AMARPATAN":       {"ongoingAll":1383, "pmayOngoing":865,  "ekOngoing":109},
-    "MAIHAR":          {"ongoingAll":2482, "pmayOngoing":1512, "ekOngoing":86},
-    "MAJHGAWAN":       {"ongoingAll":2204, "pmayOngoing":1255, "ekOngoing":85},
-    "NAGOD":           {"ongoingAll":2311, "pmayOngoing":1637, "ekOngoing":99},
-    "RAMNAGAR":        {"ongoingAll":1166, "pmayOngoing":910,  "ekOngoing":105},
-    "RAMPUR BAGHELAN": {"ongoingAll":3264, "pmayOngoing":2713, "ekOngoing":75},
-    "SATNA":           {"ongoingAll":1048, "pmayOngoing":422,  "ekOngoing":94},
-    "UNCHAHARA":       {"ongoingAll":1829, "pmayOngoing":1185, "ekOngoing":102},
+    "AMARPATAN":       {"ongoingAll":1381, "pmayOngoing":888,  "ekOngoing":109},
+    "MAIHAR":          {"ongoingAll":2448, "pmayOngoing":1528, "ekOngoing":86},
+    "MAJHGAWAN":       {"ongoingAll":2184, "pmayOngoing":1362, "ekOngoing":85},
+    "NAGOD":           {"ongoingAll":2316, "pmayOngoing":1662, "ekOngoing":99},
+    "RAMNAGAR":        {"ongoingAll":1168, "pmayOngoing":916,  "ekOngoing":105},
+    "RAMPUR BAGHELAN": {"ongoingAll":3264, "pmayOngoing":2752, "ekOngoing":75},
+    "SATNA":           {"ongoingAll":1036, "pmayOngoing":444,  "ekOngoing":94},
+    "UNCHAHARA":       {"ongoingAll":1821, "pmayOngoing":1190, "ekOngoing":102},
 }
 
 def num(v):
@@ -58,7 +58,7 @@ def main():
     a=int(sum(x["ongoingAll"] for x in clean))
     p=int(sum(x["pmayOngoing"] for x in clean))
     e=int(sum(x["ekOngoing"] for x in clean))
-    if (a,p,e)!=(15687,10499,755):
+    if (a,p,e)!=(15618,10742,755):
         raise SystemExit(f"R6.12 VERIFY FAILED Ongoing={a} PMAY={p} EK={e}")
 
     data=load_auto()
@@ -79,7 +79,7 @@ def main():
     meta=data.setdefault("meta",{})
     meta.update({"mode":"auto","status":"ok","source":"Official VB-G RAM G live + verified R6.12 ongoing master",
                  "officialSummaryRows":8,"screen2Matched":True,"r612VerifiedOngoing":True,
-                 "r612Totals":{"ongoingAll":15687,"pmayOngoing":10499,"ekOngoing":755}})
+                 "r612Totals":{"ongoingAll":15618,"pmayOngoing":10742,"ekOngoing":755}})
     if changed or not meta.get("updatedAt"): meta["updatedAt"]=datetime.now(timezone.utc).isoformat()
     meta["dataChangedOnLastFetch"]=changed
     try:
