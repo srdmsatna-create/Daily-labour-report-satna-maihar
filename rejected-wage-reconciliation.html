@@ -10,10 +10,12 @@
 <select id="fy"><option value="ALL">सभी Financial Year</option><option>2024-25</option><option>2025-26</option><option selected>2026-27</option></select>
 <button onclick="window.print()">Print / PDF</button><button class="download" id="csv">Excel / CSV डाउनलोड</button>
 <a class="source" href="https://vbgramgrep.dord.gov.in/VBGRAMG/rej_trans_track.aspx?lflag=eng&amp;page=d&amp;state_name=MADHYA+PRADESH&amp;state_code=17&amp;district_name=SATNA&amp;district_code=1712&amp;fin_year=2026-2027&amp;source=national&amp;rdbutton=0&amp;Digest=bxHEcyU8JyvdJ3rs8H7x9g" target="_blank" rel="noopener">Official Source खोलें</a></div>
-<section class="kpis" id="kpis"></section><section class="card"><div class="cardhead"><h2>Janpad-wise Rejected Wage Transaction Status</h2><span id="meta"></span></div>
+<section class="kpis" id="kpis"></section>
+<section class="card"><div class="cardhead"><h2>Rejection Reason Summary</h2><span>चयनित Janpad/FY के detail transactions</span></div><div class="reason-grid" id="reasons"></div></section>
+<section class="card"><div class="cardhead"><h2>Janpad-wise Rejected Wage Transaction Status</h2><span id="meta"></span></div>
 <div class="tablewrap"><table><thead><tr><th>क्र.</th><th>District</th><th>Janpad</th><th>Financial Year</th><th>Total Rejected Transactions</th><th>Total Rejected Transaction Amount</th><th>Pending Regeneration</th><th>Pending Regeneration Amount</th><th>Number of Muster Roll</th><th>Number of FTO</th><th>Rejected Successful</th><th>Bank Response Pending</th></tr></thead><tbody id="rows"></tbody></table></div>
 <div class="note"><b>Source:</b> FY 2024-25 और 2025-26 — MGNREGA Portal; FY 2026-27 — VB-G RAM G Portal। Muster Roll, FTO और Rejection Reason FY 2026-27 की official detail rows से हैं।</div></section>
-<section class="card"><div class="cardhead"><h2>Rejection Reason Summary</h2><span>चयनित Janpad/FY के detail transactions</span></div><div class="reason-grid" id="reasons"></div></section></main>
+</main>
 <footer class="foot">SRDM SATNA • पंचायत एवं ग्रामीण विकास विभाग • Data checked 22-09-2026</footer>
 <script>
 const DIST={AMARPATAN:'MAIHAR',MAIHAR:'MAIHAR',RAMNAGAR:'MAIHAR',MAJHGAWAN:'SATNA',NAGOD:'SATNA','RAMPUR BAGHELAN':'SATNA',SATNA:'SATNA',UNCHAHARA:'SATNA'};
