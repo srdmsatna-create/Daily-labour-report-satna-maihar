@@ -9,21 +9,22 @@
 .top h1,.cardhead h2{font-weight:900}
 .tablewrap th{font-size:11.5px;line-height:1.2;overflow-wrap:anywhere;font-weight:900}
 .tablewrap td{font-size:15px;line-height:1.15}
-.tablewrap td:nth-child(n+5){font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.tablewrap td:nth-child(n+4){font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.tablewrap td:nth-child(4){text-align:right}
 .tablewrap th:nth-child(1),.tablewrap td:nth-child(1){width:42px}
 .tablewrap th:nth-child(2),.tablewrap td:nth-child(2){width:72px}
 .tablewrap th:nth-child(3),.tablewrap td:nth-child(3){width:118px}
-.tablewrap th:nth-child(4),.tablewrap td:nth-child(4){width:76px}
-.tablewrap th:nth-child(5),.tablewrap td:nth-child(5){width:92px}
-.tablewrap th:nth-child(6),.tablewrap td:nth-child(6){width:112px}
-.tablewrap th:nth-child(7),.tablewrap td:nth-child(7){width:88px}
-.tablewrap th:nth-child(8),.tablewrap td:nth-child(8){width:108px}
-.tablewrap th:nth-child(9),.tablewrap td:nth-child(9){width:82px}
-.tablewrap th:nth-child(10),.tablewrap td:nth-child(10){width:76px}
-.tablewrap th:nth-child(11),.tablewrap td:nth-child(11){width:92px}
-.tablewrap th:nth-child(12),.tablewrap td:nth-child(12){width:96px}
+.tablewrap th:nth-child(4),.tablewrap td:nth-child(4){width:92px}
+.tablewrap th:nth-child(5),.tablewrap td:nth-child(5){width:112px}
+.tablewrap th:nth-child(6),.tablewrap td:nth-child(6){width:88px}
+.tablewrap th:nth-child(7),.tablewrap td:nth-child(7){width:108px}
+.tablewrap th:nth-child(8),.tablewrap td:nth-child(8){width:82px}
+.tablewrap th:nth-child(9),.tablewrap td:nth-child(9){width:76px}
+.tablewrap th:nth-child(10),.tablewrap td:nth-child(10){width:92px}
+.tablewrap th:nth-child(11),.tablewrap td:nth-child(11){width:96px}
 .district-total{font-weight:900;background:#e8f3ff!important;color:#123f73;border-top:3px solid #2870ad}
 .grand-total{font-weight:900;background:#cfe2f7!important;color:#071f3b;border-top:4px double #123f73}
+#tableTitle{font-size:24px;font-weight:900;color:#fff;background:linear-gradient(90deg,#123f73,#1769aa);padding:9px 16px;border-radius:9px;box-shadow:0 3px 8px #123f7330;letter-spacing:.1px}
 </style></head><body>
 <header class="top"><div class="topin"><div><h1>Rejected Wage Reconciliation — Janpad-wise</h1><p>R8.1.5 • Wage • FY 2024-25 से 2026-27 • SATNA &amp; MAIHAR</p></div><a class="back" href="./">← एसआरडीएम अनुप्रयोग पर वापस जाएँ</a></div></header>
 <main class="wrap"><div class="toolbar">
@@ -35,8 +36,8 @@
 <section class="kpis" id="kpis"></section>
 <section class="action-alert" id="actionAlert"></section>
 <section class="card"><div class="cardhead"><h2>Rejection Reason Summary</h2><span>चयनित Janpad/FY के detail transactions</span></div><div class="reason-grid" id="reasons"></div></section>
-<section class="card"><div class="cardhead"><h2>Janpad-wise Rejected Wage Transaction Status</h2><span id="meta"></span></div>
-<div class="tablewrap"><table><thead><tr><th>क्र.</th><th>District</th><th>Janpad</th><th>Financial Year</th><th>Total Rejected Transactions</th><th>Total Rejected Transaction Amount</th><th>Pending Regeneration</th><th>Pending Regeneration Amount</th><th>Number of Muster Roll</th><th>Number of FTO</th><th>Rejected Successful</th><th>Bank Response Pending</th></tr></thead><tbody id="rows"></tbody></table></div>
+<section class="card"><div class="cardhead"><h2 id="tableTitle">Janpad-wise Rejected Wage Transaction Status — FY 2026-27</h2><span id="meta"></span></div>
+<div class="tablewrap"><table><thead><tr><th>क्र.</th><th>District</th><th>Janpad</th><th>Total Rejected Transactions</th><th>Total Rejected Transaction Amount</th><th>Pending Regeneration</th><th>Pending Regeneration Amount</th><th>Number of Muster Roll</th><th>Number of FTO</th><th>Rejected Successful</th><th>Bank Response Pending</th></tr></thead><tbody id="rows"></tbody></table></div>
 <div class="note"><b>Source:</b> FY 2024-25 और 2025-26 — MGNREGA Portal; FY 2026-27 — VB-G RAM G Portal। Muster Roll, FTO और Rejection Reason FY 2026-27 की official detail rows से हैं।</div></section>
 </main>
 <footer class="foot">SRDM SATNA • पंचायत एवं ग्रामीण विकास विभाग • Data checked 22-09-2026</footer>
@@ -59,9 +60,9 @@ const nf=new Intl.NumberFormat('en-IN'),sum=(a,k)=>a.reduce((s,r)=>s+Number(r[k]
 function fillJ(){const old=j.value;j.innerHTML='<option value="ALL">सभी Janpad</option>';[...new Set(DATA.filter(r=>d.value==='ALL'||r.district===d.value).map(r=>r.janpad))].sort().forEach(x=>j.add(new Option(x,x)));if([...j.options].some(o=>o.value===old))j.value=old}
 function selected(){return DATA.filter(r=>(d.value==='ALL'||r.district===d.value)&&(j.value==='ALL'||r.janpad===j.value)&&(f.value==='ALL'||r.fy===f.value))}
 function render(){const a=selected(),money=n=>'₹'+nf.format(n||0),show=v=>v==null?'—':nf.format(v);kpis.innerHTML=[['Total Rejected Transactions',nf.format(sum(a,'total'))],['Total Rejected Amount',money(sum(a,'totalAmount'))],['Pending Regeneration',nf.format(sum(a,'pending'))],['Pending Regeneration Amount',money(sum(a,'pendingAmount'))]].map(x=>'<div class="kpi"><small>'+x[0]+'</small><strong>'+x[1]+'</strong></div>').join('');
-const dataRow=(r,i)=>`<tr><td>${i}</td><td><b>${r.district}</b></td><td><b>${r.janpad}</b></td><td><b>${r.fy}</b></td><td>${nf.format(r.total)}</td><td class="money">${nf.format(r.totalAmount)}</td><td class="pending">${nf.format(r.pending)}</td><td class="money pending">${nf.format(r.pendingAmount)}</td><td>${show(r.muster)}</td><td>${show(r.fto)}</td><td>${nf.format(r.success)}</td><td>${nf.format(r.bankPending)}</td></tr>`;
-const totalRow=(x,label,cls)=>`<tr class="${cls}"><td></td><td colspan="3">${label}</td><td>${nf.format(sum(x,'total'))}</td><td class="money">${nf.format(sum(x,'totalAmount'))}</td><td>${nf.format(sum(x,'pending'))}</td><td class="money">${nf.format(sum(x,'pendingAmount'))}</td><td>${x.every(r=>r.muster!=null)?nf.format(sum(x,'muster')):'—'}</td><td>${x.every(r=>r.fto!=null)?nf.format(sum(x,'fto')):'—'}</td><td>${nf.format(sum(x,'success'))}</td><td>${nf.format(sum(x,'bankPending'))}</td></tr>`;
-let h='',serial=1;if(d.value==='ALL'&&j.value==='ALL'&&a.length>1){['MAIHAR','SATNA'].forEach(name=>{const group=a.filter(r=>r.district===name);if(group.length){group.forEach(r=>h+=dataRow(r,serial++));h+=totalRow(group,name+' TOTAL','district-total')}});h+=totalRow(a,'MAIHAR + SATNA GRAND TOTAL','grand-total')}else{h=a.map(r=>dataRow(r,serial++)).join('');if(a.length>1)h+=totalRow(a,(d.value==='ALL'?'GRAND TOTAL':d.value+' TOTAL'),'total')}rows.innerHTML=h;meta.textContent=(j.value==='ALL'?a.length+' Janpad rows':j.value)+' • '+(f.value==='ALL'?'सभी FY':'FY '+f.value);
+const dataRow=(r,i)=>`<tr><td>${i}</td><td><b>${r.district}</b></td><td><b>${r.janpad}</b></td><td>${nf.format(r.total)}</td><td class="money">${nf.format(r.totalAmount)}</td><td class="pending">${nf.format(r.pending)}</td><td class="money pending">${nf.format(r.pendingAmount)}</td><td>${show(r.muster)}</td><td>${show(r.fto)}</td><td>${nf.format(r.success)}</td><td>${nf.format(r.bankPending)}</td></tr>`;
+const totalRow=(x,label,cls)=>`<tr class="${cls}"><td></td><td colspan="2">${label}</td><td>${nf.format(sum(x,'total'))}</td><td class="money">${nf.format(sum(x,'totalAmount'))}</td><td>${nf.format(sum(x,'pending'))}</td><td class="money">${nf.format(sum(x,'pendingAmount'))}</td><td>${x.every(r=>r.muster!=null)?nf.format(sum(x,'muster')):'—'}</td><td>${x.every(r=>r.fto!=null)?nf.format(sum(x,'fto')):'—'}</td><td>${nf.format(sum(x,'success'))}</td><td>${nf.format(sum(x,'bankPending'))}</td></tr>`;
+let h='',serial=1;if(d.value==='ALL'&&j.value==='ALL'&&a.length>1){['MAIHAR','SATNA'].forEach(name=>{const group=a.filter(r=>r.district===name);if(group.length){group.forEach(r=>h+=dataRow(r,serial++));h+=totalRow(group,name+' TOTAL','district-total')}});h+=totalRow(a,'MAIHAR + SATNA GRAND TOTAL','grand-total')}else{h=a.map(r=>dataRow(r,serial++)).join('');if(a.length>1)h+=totalRow(a,(d.value==='ALL'?'GRAND TOTAL':d.value+' TOTAL'),'total')}rows.innerHTML=h;const fyLabel=f.value==='ALL'?'सभी Financial Year':'FY '+f.value;document.getElementById('tableTitle').textContent='Janpad-wise Rejected Wage Transaction Status — '+fyLabel;meta.textContent=(j.value==='ALL'?a.length+' Janpad rows':j.value);
 const rc={};a.forEach(r=>Object.entries(r.reasons).forEach(([k,v])=>rc[k]=(rc[k]||0)+v));const rr=Object.entries(rc).sort((x,y)=>y[1]-x[1]);reasons.innerHTML=rr.length?rr.map(([k,v])=>'<div class="reason"><b>'+nf.format(v)+' Transactions</b><span>'+k+'</span></div>').join(''):(a.some(r=>r.fy!=='2026-27')?'<div class="empty">पुराने FY का Muster Roll/FTO/Rejection Reason detail MGNREGA Portal से जोड़ा जाना शेष है।</div>':'<div class="empty">Pending Regeneration transaction नहीं है।</div>')}
 d.onchange=()=>{fillJ();render()};j.onchange=render;f.onchange=render;fillJ();render();
 csv.onclick=()=>{const a=selected(),head=['District','Janpad','Financial Year','Total Rejected Transactions','Total Rejected Transaction Amount','Pending Regeneration','Pending Regeneration Amount','Number of Muster Roll','Number of FTO','Rejected Successful','Bank Response Pending'],out=[head,...a.map(r=>[r.district,r.janpad,r.fy,r.total,r.totalAmount,r.pending,r.pendingAmount,r.muster??'',r.fto??'',r.success,r.bankPending])].map(x=>x.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\r\n'),link=document.createElement('a');link.href=URL.createObjectURL(new Blob(['\ufeff'+out],{type:'text/csv'}));link.download='Rejected_Wage_Reconciliation.csv';link.click()};
