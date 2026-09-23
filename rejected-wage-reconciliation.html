@@ -80,6 +80,10 @@
  #progressCard .tablewrap td,#progressCard .tablewrap td:nth-child(n+4){font-size:18px!important;line-height:1.2}
  #progressCard .tablewrap th,#progressCard .tablewrap td{padding:5px 3px!important}
 }
+
+#progressCard .progress-group th{background:#123f73;color:#fff;text-align:left;font-size:22px!important;padding:9px 12px!important}
+#progressCard .district-total td,#progressCard .grand-total td{font-weight:900}
+@media print{#progressCard .progress-group th{font-size:17px!important;padding:5px 7px!important}}
 </style></head><body>
 <header class="top"><div class="topin"><div><h1>Rejected Wage Reconciliation — Janpad-wise</h1><p>R8.1.5 • Wage • FY 2024-25 से 2026-27 • SATNA &amp; MAIHAR</p></div><a class="back" href="./">← एसआरडीएम अनुप्रयोग पर वापस जाएँ</a></div></header>
 <main class="wrap"><div class="toolbar">
@@ -145,7 +149,9 @@ function renderProgress(a){
  document.getElementById('baselineStatus').textContent='22.09.2026 (स्थिर): '+nf.format(bp)+' लंबित • ₹'+nf.format(ba)+'  |  '+(refreshDate?refreshDate+' (वर्तमान): '+nf.format(cp)+' लंबित • ₹'+nf.format(ca)+'  |  आधार से शुद्ध कमी: '+nf.format(bp-cp)+' प्रकरण • ₹'+nf.format(ba-ca):'नया स्रोत उपलब्ध होने पर तुलना दिखाई जाएगी');
  const item=r=>{const b=base.get(r.janpad),p=prev.get(r.janpad),diff=(b?.pending||0)-r.pending,amount=(b?.pendingAmount||0)-r.pendingAmount;
  return `<tr><td>${r.district}</td><td>${r.janpad}</td><td>${nf.format(b.pending)}</td><td>${nf.format(r.pending)}</td><td>${nf.format(diff)}</td><td>₹${nf.format(b.pendingAmount)}</td><td>₹${nf.format(r.pendingAmount)}</td><td>₹${nf.format(amount)}</td><td>${p?nf.format(p.pending-r.pending):'—'}</td></tr>`};
- progressRows.innerHTML=target.map(item).join('')+(target.length>1?`<tr class="grand-total"><td colspan="2">योग</td><td>${nf.format(sum(target.map(r=>base.get(r.janpad)),'pending'))}</td><td>${nf.format(sum(target,'pending'))}</td><td>${nf.format(sum(target.map(r=>base.get(r.janpad)),'pending')-sum(target,'pending'))}</td><td>₹${nf.format(sum(target.map(r=>base.get(r.janpad)),'pendingAmount'))}</td><td>₹${nf.format(sum(target,'pendingAmount'))}</td><td>₹${nf.format(sum(target.map(r=>base.get(r.janpad)),'pendingAmount')-sum(target,'pendingAmount'))}</td><td>${previousSnapshot?nf.format(sum(target.map(r=>prev.get(r.janpad)||r),'pending')-sum(target,'pending')):'—'}</td></tr>`:'');
+ const subtotal=(x,label,cls)=>`<tr class="${cls}"><td colspan="2">${label}</td><td>${nf.format(sum(x.map(r=>base.get(r.janpad)),'pending'))}</td><td>${nf.format(sum(x,'pending'))}</td><td>${nf.format(sum(x.map(r=>base.get(r.janpad)),'pending')-sum(x,'pending'))}</td><td>₹${nf.format(sum(x.map(r=>base.get(r.janpad)),'pendingAmount'))}</td><td>₹${nf.format(sum(x,'pendingAmount'))}</td><td>₹${nf.format(sum(x.map(r=>base.get(r.janpad)),'pendingAmount')-sum(x,'pendingAmount'))}</td><td>${previousSnapshot?nf.format(sum(x.map(r=>prev.get(r.janpad)||r),'pending')-sum(x,'pending')):'—'}</td></tr>`;
+ let progressHTML='';for(const name of ['MAIHAR','SATNA']){const group=target.filter(r=>r.district===name);if(!group.length)continue;progressHTML+=`<tr class="progress-group"><th colspan="9">${name==='MAIHAR'?'मैहर जिला':'सतना जिला'}</th></tr>`+group.map(item).join('');if(group.length>1)progressHTML+=subtotal(group,name==='MAIHAR'?'मैहर योग':'सतना योग','district-total')}
+ if(target.length>1)progressHTML+=subtotal(target,'मैहर + सतना कुल योग','grand-total');progressRows.innerHTML=progressHTML;
 }
 async function loadCurrent(){try{const response=await fetch('./data/rejected-wage-latest.json?ts='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('missing');const snap=await response.json();if(snap.date==='2026-09-22'||!Array.isArray(snap.rows)||snap.rows.length!==8)throw Error('invalid');
  previousSnapshot=snap.previous?.rows||null;refreshDate=snap.date;for(const r of snap.rows){const current=DATA.find(x=>x.fy==='2026-27'&&x.janpad===r.janpad);if(current)Object.assign(current,r,{district:DIST[r.janpad]})}
