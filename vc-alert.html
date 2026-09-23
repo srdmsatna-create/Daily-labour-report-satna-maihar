@@ -16,16 +16,26 @@
  <section class="panel no-print"><div class="controls"><label>जिला चुनें<select id="district" aria-label="जिला चुनें"></select></label><label id="subdistrictLabel" hidden>रिपोर्ट क्षेत्र<select id="subdistrict"><option value="combined">सतना + मैहर (संयुक्त)</option><option value="SATNA">सतना · 5 जनपद</option><option value="MAIHAR">मैहर · 3 जनपद</option></select></label><button id="print">प्रिंट</button><button id="pdf" title="ब्राउज़र में Save as PDF चुनें">PDF बनाएँ</button></div><p class="muted small">PDF बटन से प्रिंट संवाद खुलेगा। Destination में “Save as PDF” चुनें।</p></section>
  <section class="panel"><h2 id="reportTitle">रिपोर्ट लोड हो रही है…</h2><div id="scope" class="notice"></div><div id="summary" class="cards"></div></section>
  <section class="panel" id="detail"><h2>VC समीक्षा के प्रमुख बिंदु</h2><div class="scroll"><table><thead><tr><th>विषय / स्रोत</th><th class="num">आँकड़े</th><th>स्थिति / अर्थ</th></tr></thead><tbody id="indicators"></tbody></table></div><p class="small muted">सभी आँकड़े स्रोत की इकाई में दिखाए गए हैं। प्रतिशत उपलब्ध मूल संख्याओं से निकाले गए हैं; गोलाई के कारण मूल PDF के प्रतिशत से अंतर हो सकता है।</p></section>
- <section class="panel" id="janpadSection" hidden><h2 id="janpadTitle">जनपदवार रिपोर्ट</h2><p class="notice">युक्तधारा जनपदवार आँकड़े साइट की R33.1 फ़ाइल (23.09.2026) से हैं। उसमें “SATNA” ब्लॉक को यहाँ सोहावल नाम से दिखाया गया है। अन्य विषयों के जनपदवार मान उपलब्ध स्रोतों में नहीं हैं; जिला कुल को बाँटा नहीं गया है।</p><div class="scroll"><table><thead><tr><th>जनपद</th><th class="num">कुल GP</th><th class="num">युक्तधारा प्राप्त GP</th><th class="num">प्राप्त कार्य</th><th class="num">बनाए कार्य</th><th>PD / NMMS / FTO / GeoTag / गौशाला</th></tr></thead><tbody id="janpads"></tbody></table></div></section>
+ <section class="panel" id="janpadSection" hidden><h2 id="janpadTitle">जनपदवार रिपोर्ट</h2><p class="notice">युक्तधारा जनपदवार आँकड़े साइट की R33.1 फ़ाइल (23.09.2026) से हैं। उसमें “SATNA” ब्लॉक को यहाँ सोहावल नाम से दिखाया गया है। रोजगार दिए गए परिवारों की अलग तालिका नीचे है। PD / NMMS / FTO / GeoTag / गौशाला के जनपदवार मान उपलब्ध स्रोतों में नहीं हैं; जिला कुल को बाँटा नहीं गया है।</p><div class="scroll"><table><thead><tr><th>जनपद</th><th class="num">कुल GP</th><th class="num">युक्तधारा प्राप्त GP</th><th class="num">प्राप्त कार्य</th><th class="num">बनाए कार्य</th><th>PD / NMMS / FTO / GeoTag / गौशाला</th></tr></thead><tbody id="janpads"></tbody></table></div></section>
+ <section class="panel" id="employmentSection" hidden><h2>रोजगार दिए गए परिवार · माहवार R5.1.4</h2><p class="notice">FY 2025–26 MGNREGA और FY 2026–27 VB-G RAM G के लिंक से 23.09.2026 को लिया गया स्नैपशॉट। 2026–27 के अप्रैल–जून में इस VB-G RAM G रिपोर्ट के शून्य को “रोजगार नहीं मिला” न मानें। सितंबर 2026 अभी चल रहा है, इसलिए पिछले पूरे सितंबर से प्रतिशत तुलना नहीं की गई है। ये माहवार परिवार हैं; महीनों को जोड़कर अलग परिवारों की संख्या नहीं निकाली जा सकती।</p><div class="scroll"><table><thead><tr><th>जनपद</th><th class="num">जुलाई 25–26</th><th class="num">जुलाई 26–27</th><th class="num">अगस्त 25–26</th><th class="num">अगस्त 26–27</th><th class="num">सितंबर 25–26 (पूरा)</th><th class="num">सितंबर 26–27 (23 तारीख तक)</th></tr></thead><tbody id="employmentRows"></tbody></table></div><p class="small muted">स्रोत: <a id="empOld" target="_blank" rel="noopener noreferrer">FY 2025–26 R5.1.4</a> · <a id="empNew" target="_blank" rel="noopener noreferrer">FY 2026–27 R5.1.4</a></p></section>
  <section class="panel no-print" id="districtGrid"><h2>सभी 52 जिलों का तुलनात्मक दृश्य</h2><div class="scroll"><table><thead><tr><th>जिला</th><th class="num">युक्तधारा GP प्राप्त</th><th class="num">युक्तधारा कार्य निर्मित</th><th class="num">PD बनाम पिछला वर्ष %</th><th class="num">FTO भेजना शेष ₹ लाख</th><th class="num">GeoTag Pending</th></tr></thead><tbody id="allDistricts"></tbody></table></div></section>
  <section class="panel small" id="sources"></section>
 </main><footer>SRDM Satna · VC Alert</footer>
 <script>
 const $=id=>document.getElementById(id),fmt=n=>Number(n).toLocaleString('en-IN',{maximumFractionDigits:2}),pct=(a,b)=>b?Math.round(a/b*100)+'%':'—';
 const janpads={SATNA:['Majhgawan','Nagod','Rampur Baghelan','Sohawal','Unchahara'],MAIHAR:['Amarpatan','Maihar','Ramnagar']};
-let dataset;
+let dataset,employment;
 function cell(v){return '<td class="num">'+v+'</td>'}
 function row(label,values,note){return '<tr><td>'+label+'</td><td class="num">'+values+'</td><td>'+note+'</td></tr>'}
+function drawEmployment(){
+ if(!employment||!dataset)return;
+ const d=$('district').value,area=$('subdistrict').value;
+ $('employmentSection').hidden=d!=='SATNA';if(d!=='SATNA')return;
+ const names=area==='combined'?[...janpads.SATNA,...janpads.MAIHAR]:janpads[area];
+ let totals=[0,0,0,0,0,0];
+ $('employmentRows').innerHTML=names.map(n=>{const key=n==='Sohawal'?'SATNA':n.toUpperCase(),a=employment['2025-2026'][key],b=employment['2026-2027'][key];const values=[a[3],b[3],a[4],b[4],a[5],b[5]];values.forEach((v,i)=>totals[i]+=v);return '<tr><td>'+n+'</td>'+values.map(v=>cell(fmt(v))).join('')+'</tr>'}).join('')+'<tr><th>योग</th>'+totals.map(v=>'<th class="num">'+fmt(v)+'</th>').join('')+'</tr>';
+ $('empOld').href=employment.urls['2025-2026'];$('empNew').href=employment.urls['2026-2027'];
+}
 function draw(){
  const d=$('district').value,area=$('subdistrict').value,r=dataset.districts[d];
  $('subdistrictLabel').hidden=d!=='SATNA';
@@ -42,6 +52,7 @@ function draw(){
   $('janpads').innerHTML=list.map(n=>{const v=dataset.janpads[n.toUpperCase()];return '<tr><td>'+n+'</td>'+cell(fmt(v.gp))+cell(fmt(v.gpReceived))+cell(fmt(v.worksReceived))+cell(fmt(v.worksCreated))+'<td class="empty">जनपद स्रोत में नहीं</td></tr>'}).join('');
  }
  for(const tr of $('allDistricts').rows)tr.classList.toggle('selected',tr.dataset.district===d);
+ drawEmployment();
 }
 fetch('vc-alert-data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(x=>{
  dataset=x;const names=Object.keys(x.districts);if(names.length!==52)throw Error('52 जिले अपेक्षित, मिले '+names.length);
@@ -50,5 +61,6 @@ fetch('vc-alert-data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HT
  $('sources').textContent='स्रोत (23.09.2026): '+Object.values(x.sources).filter(s=>s!=='GeoTag.pptx').join(' · ')+'। GeoTag.pptx की स्थिति 22.09.2026 की है। गौशाला PPT में कुछ जिलों के कुल/उपयोग वर्गों में असंगति है; मूल दर्ज मान जस के तस दिखाए गए हैं।';
  $('district').addEventListener('change',()=>{$('subdistrict').value='combined';draw()});$('subdistrict').addEventListener('change',draw);draw();
 }).catch(e=>{$('reportTitle').textContent='VC Alert डेटा लोड नहीं हुआ';$('scope').textContent=e.message+'। प्रकाशन में vc-alert-data.json भी साथ रखें।'});
+fetch('vc-employment-snapshot.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Employment HTTP '+r.status);return r.json()}).then(x=>{employment=x;if(dataset)drawEmployment()}).catch(e=>{console.warn('Employment snapshot unavailable:',e)});
 $('print').addEventListener('click',()=>window.print());$('pdf').addEventListener('click',()=>window.print());
 </script></body></html>
