@@ -52,8 +52,14 @@ async def main():
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
         page = await browser.new_page()
-        response = await page.goto(SOURCE, wait_until='domcontentloaded', timeout=90000)
-        if not response or response.status >= 400: raise RuntimeError('Official portal unavailable')
+        urls = [SOURCE]
+        if '&Digest=' in SOURCE: urls.append(SOURCE.split('&Digest=')[0])
+        response = None
+        for url in urls:
+            response = await page.goto(url, wait_until='domcontentloaded', timeout=90000)
+            print('Official portal response:', response.status if response else 'none')
+            if response and response.status < 400: break
+        if not response or response.status >= 400: raise RuntimeError(f'Official portal unavailable (HTTP {response.status if response else "no response"})')
         await page.wait_for_timeout(2500)
         tables = await page.locator('table').evaluate_all('(tables) => tables.map(t => [...t.rows].map(r => [...r.cells].map(c => c.innerText)))')
         await browser.close()
