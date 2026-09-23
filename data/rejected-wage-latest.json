@@ -1,6 +1,6 @@
 {
   "date": "2026-09-23",
-  "source": "Official R8.1.5 portal screenshot supplied by user on 2026-09-23; Wage, FY 2026-2027, State Madhya Pradesh, District Satna",
+  "source": "Official VB-G RAM G R8.1.5 district Satna Wage summary read on 2026-09-23; detail verified only when rows equal pending",
   "rows": [
     {
       "fy": "2026-27",
@@ -10,11 +10,19 @@
       "totalAmount": 1193076,
       "pending": 505,
       "pendingAmount": 1082224,
-      "muster": null,
-      "fto": null,
+      "muster": 372,
+      "fto": 44,
       "success": 0,
       "bankPending": 31,
-      "reasons": {}
+      "reasons": {
+        "Inactive Aadhaar": 1,
+        "Duplicate Beneficiary": 78,
+        "Sanction Order Number Missing/Invalid": 144,
+        "Objected by Treasury": 17,
+        "Payee Data Validation Failed": 150,
+        "Special/Numeric Characters in Address": 37,
+        "Address Field Invalid": 78
+      }
     },
     {
       "fy": "2026-27",
@@ -66,8 +74,8 @@
       "totalAmount": 744210,
       "pending": 0,
       "pendingAmount": 0,
-      "muster": null,
-      "fto": null,
+      "muster": 0,
+      "fto": 0,
       "success": 0,
       "bankPending": 401,
       "reasons": {}
@@ -94,11 +102,17 @@
       "totalAmount": 1010755,
       "pending": 59,
       "pendingAmount": 99583,
-      "muster": null,
-      "fto": null,
+      "muster": 42,
+      "fto": 21,
       "success": 0,
       "bankPending": 465,
-      "reasons": {}
+      "reasons": {
+        "Duplicate Beneficiary": 25,
+        "Sanction Order Number Missing/Invalid": 7,
+        "Payee Data Validation Failed": 8,
+        "Special/Numeric Characters in Address": 12,
+        "Address Field Invalid": 7
+      }
     },
     {
       "fy": "2026-27",
@@ -115,5 +129,6 @@
       "reasons": {}
     }
   ],
-  "previous": null
+  "previous": null,
+  "detailCoverage": "Full detail validated for AMARPATAN and SATNA; RAMNAGAR has zero pending. Other Janpads' detail is incomplete at source; muster/FTO/reasons unavailable."
 }
