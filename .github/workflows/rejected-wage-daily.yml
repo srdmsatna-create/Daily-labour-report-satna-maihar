@@ -1,6 +1,9 @@
 name: R8.1.5 Rejected Wage Daily Refresh
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/rejected-wage-daily.yml'
   schedule:
     - cron: "40 2 * * *" # 08:10 IST
 permissions:
