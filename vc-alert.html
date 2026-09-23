@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VC Alert | SRDM Satna</title>
+<style>
+:root{font-family:Arial,'Noto Sans Devanagari',sans-serif;color:#172337;background:#f4f7fb;font-size:18px}
+*{box-sizing:border-box}body{margin:0}header{background:#173f78;color:white;padding:20px 4vw}header a{color:white;font-weight:700}h1{margin:12px 0 3px;font-size:30px}h2{font-size:23px;margin:28px 0 12px}main{max-width:1350px;margin:24px auto;padding:0 22px}.panel{background:white;border:1px solid #d5dfeb;border-radius:14px;padding:20px;margin-bottom:20px;box-shadow:0 2px 8px #1232}
+.controls{display:flex;align-items:end;gap:14px;flex-wrap:wrap}.controls label{display:grid;gap:6px;font-weight:700}select,button{font:inherit;padding:11px 15px;border-radius:8px;border:1px solid #b4c5da;background:white}button{cursor:pointer;background:#184d94;color:white;border-color:#184d94;font-weight:700}button:hover{background:#10386d}.muted{color:#50627b}.notice{border-left:5px solid #c37413;background:#fff5e5;padding:12px 16px;line-height:1.6}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}.card{border:1px solid #d8e2ee;border-radius:10px;padding:14px;min-height:110px}.card small{display:block;color:#49637f}.card strong{display:block;font-size:27px;margin:8px 0 2px}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;font-size:17px}th,td{padding:10px 12px;border:1px solid #cad5e2;text-align:left;white-space:normal}thead{background:#eaf1fb}tbody tr:nth-child(even){background:#f7f9fc}.selected{background:#e2f1ff!important}td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.empty{color:#835700}#janpadSection[hidden],#districtGrid[hidden]{display:none}.small{font-size:15px}footer{margin:25px 0 40px;text-align:center;color:#50627b}
+@media print{@page{size:A4 landscape;margin:12mm}body{background:white}header{background:white;color:black;padding:0 0 8px}header a,.no-print,footer{display:none!important}main{margin:0;padding:0;max-width:none}.panel{box-shadow:none;border:0;border-radius:0;padding:0;margin:0 0 12px}.cards{grid-template-columns:repeat(4,1fr);gap:5px}.card{padding:6px;min-height:0}.card strong{font-size:20px;margin:3px 0}.card small{font-size:11px}h1{font-size:22px}h2{font-size:17px;margin:10px 0 5px}p,.notice{font-size:12px;margin:5px 0}table{font-size:11px}td,th{padding:4px 6px}thead{display:table-header-group}tr{break-inside:avoid}#districtGrid{display:none!important}}
+</style>
+</head>
+<body>
+<header><a href="index.html" class="no-print">← SRDM Applications</a><h1>VC Alert · जिला निगरानी रिपोर्ट</h1><div>मध्य प्रदेश के 52 स्रोत जिले · 23.09.2026 तक के संलग्न रिपोर्ट आँकड़े</div></header>
+<main>
+ <section class="panel no-print"><div class="controls"><label>जिला चुनें<select id="district" aria-label="जिला चुनें"></select></label><label id="subdistrictLabel" hidden>रिपोर्ट क्षेत्र<select id="subdistrict"><option value="combined">सतना + मैहर (संयुक्त)</option><option value="SATNA">सतना · 5 जनपद</option><option value="MAIHAR">मैहर · 3 जनपद</option></select></label><button id="print">प्रिंट</button><button id="pdf" title="ब्राउज़र में Save as PDF चुनें">PDF बनाएँ</button></div><p class="muted small">PDF बटन से प्रिंट संवाद खुलेगा। Destination में “Save as PDF” चुनें।</p></section>
+ <section class="panel"><h2 id="reportTitle">रिपोर्ट लोड हो रही है…</h2><div id="scope" class="notice"></div><div id="summary" class="cards"></div></section>
+ <section class="panel" id="detail"><h2>VC समीक्षा के प्रमुख बिंदु</h2><div class="scroll"><table><thead><tr><th>विषय / स्रोत</th><th class="num">आँकड़े</th><th>स्थिति / अर्थ</th></tr></thead><tbody id="indicators"></tbody></table></div><p class="small muted">सभी आँकड़े स्रोत की इकाई में दिखाए गए हैं। प्रतिशत उपलब्ध मूल संख्याओं से निकाले गए हैं; गोलाई के कारण मूल PDF के प्रतिशत से अंतर हो सकता है।</p></section>
+ <section class="panel" id="janpadSection" hidden><h2 id="janpadTitle">जनपदवार रिपोर्ट</h2><p class="notice">युक्तधारा जनपदवार आँकड़े साइट की R33.1 फ़ाइल (23.09.2026) से हैं। उसमें “SATNA” ब्लॉक को यहाँ सोहावल नाम से दिखाया गया है। अन्य विषयों के जनपदवार मान उपलब्ध स्रोतों में नहीं हैं; जिला कुल को बाँटा नहीं गया है।</p><div class="scroll"><table><thead><tr><th>जनपद</th><th class="num">कुल GP</th><th class="num">युक्तधारा प्राप्त GP</th><th class="num">प्राप्त कार्य</th><th class="num">बनाए कार्य</th><th>PD / NMMS / FTO / GeoTag / गौशाला</th></tr></thead><tbody id="janpads"></tbody></table></div></section>
+ <section class="panel no-print" id="districtGrid"><h2>सभी 52 जिलों का तुलनात्मक दृश्य</h2><div class="scroll"><table><thead><tr><th>जिला</th><th class="num">युक्तधारा GP प्राप्त</th><th class="num">युक्तधारा कार्य निर्मित</th><th class="num">PD बनाम पिछला वर्ष %</th><th class="num">FTO भेजना शेष ₹ लाख</th><th class="num">GeoTag Pending</th></tr></thead><tbody id="allDistricts"></tbody></table></div></section>
+ <section class="panel small" id="sources"></section>
+</main><footer>SRDM Satna · VC Alert</footer>
+<script>
+const $=id=>document.getElementById(id),fmt=n=>Number(n).toLocaleString('en-IN',{maximumFractionDigits:2}),pct=(a,b)=>b?Math.round(a/b*100)+'%':'—';
+const janpads={SATNA:['Majhgawan','Nagod','Rampur Baghelan','Sohawal','Unchahara'],MAIHAR:['Amarpatan','Maihar','Ramnagar']};
+let dataset;
+function cell(v){return '<td class="num">'+v+'</td>'}
+function row(label,values,note){return '<tr><td>'+label+'</td><td class="num">'+values+'</td><td>'+note+'</td></tr>'}
+function draw(){
+ const d=$('district').value,area=$('subdistrict').value,r=dataset.districts[d];
+ $('subdistrictLabel').hidden=d!=='SATNA';
+ const split=d==='SATNA'&&area!=='combined';
+ $('reportTitle').textContent=split?(area==='SATNA'?'सतना · 5 जनपद':'मैहर · 3 जनपद')+' | VC Alert':d+' | VC Alert';
+ $('scope').textContent=split?'इन स्रोत रिपोर्टों में सतना और मैहर का अलग जिला कुल नहीं है। SATNA की राज्य रिपोर्ट दोनों जिलों का संयुक्त कुल देती है। नीचे संयुक्त आँकड़े केवल संदर्भ के लिए हैं; इन्हें चयनित जिले का आँकड़ा न मानें।':d==='SATNA'?'SATNA नाम से प्रकाशित 52-जिला राज्य रिपोर्ट का संयुक्त क्षेत्र: सतना + मैहर। दोनों जिलों के अलग कुल इन फ़ाइलों में उपलब्ध नहीं हैं।':'चुने हुए जिले के राज्य स्तरीय स्रोत आँकड़े। जनपदवार आँकड़े संलग्न फ़ाइलों में नहीं हैं।';
+ const cards=[['युक्तधारा GP प्राप्त',fmt(r.yuktGp[1])+' / '+fmt(r.yuktGp[0]),pct(r.yuktGp[1],r.yuktGp[0])],['युक्तधारा कार्य बनाए',fmt(r.yuktWorks[1])+' / '+fmt(r.yuktWorks[0]),'शुरू: '+fmt(r.yuktWorks[2])],['मानव दिवस FY 26-27',fmt(r.persondays[1])+' लाख','पिछले समान काल का '+pct(r.persondays[1],r.persondays[0])],['FTO भेजना शेष','₹'+fmt(r.fto[0])+' लाख','अस्वीकृति बाद: ₹'+fmt(r.fto[1])+' लाख'],['NMMS मानव दिवस',fmt(r.nmms[1])+' लाख','कुल '+fmt(r.nmms[0])+' लाख'],['जियोटैग लंबित',fmt(r.geotag[2]),'22.09.2026'],['गौशाला अपूर्ण',fmt(r.gaushala[2]),'स्रोत में जैसा दर्ज है']];
+ $('summary').innerHTML=cards.map(([name,value,note])=>'<div class="card"><small>'+name+'</small><strong>'+value+'</strong><small>'+note+'</small></div>').join('');
+ $('indicators').innerHTML=[row('युक्तधारा/SIPRI ग्राम पंचायत',fmt(r.yuktGp[1])+' / '+fmt(r.yuktGp[0]),'प्राप्त '+pct(r.yuktGp[1],r.yuktGp[0])),row('युक्तधारा/SIPRI कार्य',fmt(r.yuktWorks[1])+' / '+fmt(r.yuktWorks[0]),'VB-G RAM G में निर्मित; शुरू '+fmt(r.yuktWorks[2])),row('मानव दिवस (लाख)',fmt(r.persondays[1])+' / '+fmt(r.persondays[0]),'FY 2026-27 अब तक / FY 2025-26 समान अवधि'),row('NMMS मानव दिवस (लाख)',fmt(r.nmms[1])+' / '+fmt(r.nmms[0]),'बिना NMMS '+fmt(r.nmms[2])+' लाख'),row('FTO लंबित (₹ लाख)',fmt(r.fto[0])+' / '+fmt(r.fto[1]),'भेजना शेष / अस्वीकृति के बाद लंबित'),row('GeoTag Phase-2',fmt(r.geotag[1])+' / '+fmt(r.geotag[0]),'स्वीकृत '+pct(r.geotag[1],r.geotag[0])+'; लंबित '+fmt(r.geotag[2])+'; माह प्रगति '+fmt(r.geotag[3])),row('गौशाला',fmt(r.gaushala[1])+' / '+fmt(r.gaushala[0]),'पूर्ण / स्वीकृत; अपूर्ण '+fmt(r.gaushala[2])+'; संचालित '+fmt(r.gaushala[3])+'; असंचालित '+fmt(r.gaushala[4]))].join('');
+ $('janpadSection').hidden=d!=='SATNA';
+ if(d==='SATNA'){
+  $('janpadTitle').textContent=area==='combined'?'सतना और मैहर · सभी 8 जनपद':area==='SATNA'?'सतना · 5 जनपद':'मैहर · 3 जनपद';
+  const list=area==='combined'?[...janpads.SATNA,...janpads.MAIHAR]:janpads[area];
+  $('janpads').innerHTML=list.map(n=>{const v=dataset.janpads[n.toUpperCase()];return '<tr><td>'+n+'</td>'+cell(fmt(v.gp))+cell(fmt(v.gpReceived))+cell(fmt(v.worksReceived))+cell(fmt(v.worksCreated))+'<td class="empty">जनपद स्रोत में नहीं</td></tr>'}).join('');
+ }
+ for(const tr of $('allDistricts').rows)tr.classList.toggle('selected',tr.dataset.district===d);
+}
+fetch('vc-alert-data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HTTP '+r.status);return r.json()}).then(x=>{
+ dataset=x;const names=Object.keys(x.districts);if(names.length!==52)throw Error('52 जिले अपेक्षित, मिले '+names.length);
+ $('district').innerHTML=names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');$('district').value='SATNA';
+ $('allDistricts').innerHTML=names.map(n=>{const r=x.districts[n];return '<tr data-district="'+n+'"><td>'+n+'</td>'+cell(fmt(r.yuktGp[1]))+cell(fmt(r.yuktWorks[1]))+cell(pct(r.persondays[1],r.persondays[0]))+cell(fmt(r.fto[0]))+cell(fmt(r.geotag[2]))+'</tr>'}).join('');
+ $('sources').textContent='स्रोत (23.09.2026): '+Object.values(x.sources).filter(s=>s!=='GeoTag.pptx').join(' · ')+'। GeoTag.pptx की स्थिति 22.09.2026 की है। गौशाला PPT में कुछ जिलों के कुल/उपयोग वर्गों में असंगति है; मूल दर्ज मान जस के तस दिखाए गए हैं।';
+ $('district').addEventListener('change',()=>{$('subdistrict').value='combined';draw()});$('subdistrict').addEventListener('change',draw);draw();
+}).catch(e=>{$('reportTitle').textContent='VC Alert डेटा लोड नहीं हुआ';$('scope').textContent=e.message+'। प्रकाशन में vc-alert-data.json भी साथ रखें।'});
+$('print').addEventListener('click',()=>window.print());$('pdf').addEventListener('click',()=>window.print());
+</script></body></html>
