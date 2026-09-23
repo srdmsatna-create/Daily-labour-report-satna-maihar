@@ -82,12 +82,23 @@ jobs:
         run: |
           python scripts/validate_auto_data.py
 
+      - name: Refresh R8.1.5 rejected wage report
+        id: rejected_wage
+        continue-on-error: true
+        env:
+          REJECTED_WAGE_SOURCE_URL: ${{ secrets.REJECTED_WAGE_SOURCE_URL }}
+        run: python scripts/update_rejected_wage.py
+
+      - name: Report rejected wage fetch failure
+        if: steps.rejected_wage.outcome == 'failure'
+        run: echo "R8.1.5 source unavailable or layout changed; previous verified snapshot preserved."
+
       - name: Commit updated report
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add auto-data.js auto-status.js data/ official-summary.csv fetch-status.json ongoing-details.js index.html app.js || true
+          git add data/rejected-wage-latest.json auto-data.js auto-status.js data/ official-summary.csv fetch-status.json ongoing-details.js index.html app.js || true
 
           if git diff --cached --quiet; then
             echo "No report changes to commit."
