@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/rejected-wage-daily.yml'
+      - 'scripts/update_rejected_wage.py'
   schedule:
     - cron: "40 2 * * *" # 08:10 IST
 permissions:
