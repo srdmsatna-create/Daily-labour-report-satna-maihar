@@ -23,6 +23,7 @@
  <section class="panel small" id="sources"></section>
 </main><footer>SRDM Satna · VC Alert</footer>
 <script>
+window.VC_EMPLOYMENT_SNAPSHOT={"2025-2026":{"AMARPATAN":[682,1620,1612,1152,1015,984,667,498,611,472,498,236],"MAIHAR":[1865,5009,5097,2332,1042,953,795,814,1042,1116,1510,779],"MAJHGAWAN":[3677,8966,9839,922,691,649,479,1255,1542,1194,1412,907],"NAGOD":[3114,6321,6214,1635,1064,1256,1428,1559,2147,1655,1049,712],"RAMNAGAR":[1267,2833,2772,1349,923,1297,1032,809,577,470,366,162],"RAMPUR BAGHELAN":[1488,4079,4545,1256,1398,1504,1923,1807,1100,713,790,360],"SATNA":[1096,2334,2976,1005,764,860,1211,1446,1676,948,1248,342],"UNCHAHARA":[1732,3484,3562,1283,750,584,599,517,1128,765,760,369]},"2026-2027":{"AMARPATAN":[0,0,0,367,359,62,0,0,0,0,0,0],"MAIHAR":[0,0,0,715,534,143,0,0,0,0,0,0],"MAJHGAWAN":[0,0,0,291,252,63,0,0,0,0,0,0],"NAGOD":[0,0,0,539,648,226,0,0,0,0,0,0],"RAMNAGAR":[0,0,0,337,387,191,0,0,0,0,0,0],"RAMPUR BAGHELAN":[0,0,0,382,417,94,0,0,0,0,0,0],"SATNA":[0,0,0,315,389,95,0,0,0,0,0,0],"UNCHAHARA":[0,0,0,312,302,84,0,0,0,0,0,0]},"sourceDate":"23/09/2026","description":"R5.1.4 Employment Provided Pattern; monthly household counts, not unique households across months.","urls":{"2025-2026":"https://mnregaweb4.dord.gov.in/netnregarep/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2025-2026&source=national&rbl=0&rblhpb=Household&Digest=rEPvvYtPB3bJR49aRpy05w","2026-2027":"https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Household&Digest=kG%2fjf+M7b1AUbpMqWwepqQ"}};
 const $=id=>document.getElementById(id),fmt=n=>Number(n).toLocaleString('en-IN',{maximumFractionDigits:2}),pct=(a,b)=>b?Math.round(a/b*100)+'%':'—';
 const janpads={SATNA:['Majhgawan','Nagod','Rampur Baghelan','Sohawal','Unchahara'],MAIHAR:['Amarpatan','Maihar','Ramnagar']};
 let dataset,employment;
@@ -62,6 +63,6 @@ fetch('vc-alert-data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('HT
  $('sources').textContent='स्रोत (23.09.2026): '+Object.values(x.sources).filter(s=>s!=='GeoTag.pptx').join(' · ')+'। GeoTag.pptx की स्थिति 22.09.2026 की है। गौशाला PPT में कुछ जिलों के कुल/उपयोग वर्गों में असंगति है; मूल दर्ज मान जस के तस दिखाए गए हैं।';
  $('district').addEventListener('change',()=>{$('subdistrict').value='combined';draw()});$('subdistrict').addEventListener('change',draw);draw();
 }).catch(e=>{$('reportTitle').textContent='VC Alert डेटा लोड नहीं हुआ';$('scope').textContent=e.message+'। प्रकाशन में vc-alert-data.json भी साथ रखें।'});
-fetch('vc-employment-snapshot.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Employment HTTP '+r.status);return r.json()}).then(x=>{employment=x;if(dataset)drawEmployment()}).catch(e=>{console.warn('Employment snapshot unavailable:',e)});
+employment=window.VC_EMPLOYMENT_SNAPSHOT;
 $('print').addEventListener('click',()=>window.print());$('pdf').addEventListener('click',()=>window.print());
 </script></body></html>
