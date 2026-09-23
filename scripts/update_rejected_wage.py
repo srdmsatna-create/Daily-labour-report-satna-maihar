@@ -36,13 +36,13 @@ def parse(tables):
         result = []
         for i,row in matches:
             # Official R8.1.5 district table: Janpad, rejected count/amount,
-            # pending regeneration count/amount, muster, FTO, success, bank pending.
+            # pending regeneration count/amount, success count/amount, bank pending count/amount.
             vals = [number(x) for x in row[i+1:i+9]]
             if len(vals) < 8: raise ValueError('Incomplete summary columns')
-            janpad = key(row[i]);total,total_amount,pending,pending_amount,muster,fto,success,bank_pending=vals
-            if min(vals)<0 or pending>total or pending_amount>total_amount:
+            janpad = key(row[i]);total,total_amount,pending,pending_amount,success,success_amount,bank_pending,bank_amount=vals
+            if min(vals)<0 or pending>total or pending_amount>total_amount or total != pending+success+bank_pending or total_amount != pending_amount+success_amount+bank_amount:
                 raise ValueError('Invalid official summary amounts')
-            result.append(dict(fy='2026-27',janpad=janpad,district=DIST.get(janpad,'SATNA'),total=total,totalAmount=total_amount,pending=pending,pendingAmount=pending_amount,muster=muster,fto=fto,success=success,bankPending=bank_pending,reasons={}))
+            result.append(dict(fy='2026-27',janpad=janpad,district=DIST.get(janpad,'SATNA'),total=total,totalAmount=total_amount,pending=pending,pendingAmount=pending_amount,muster=None,fto=None,success=success,successAmount=success_amount,bankPending=bank_pending,bankPendingAmount=bank_amount,reasons={}))
         if len(result)==8 and len({r['janpad'] for r in result})==8:
             return sorted(result,key=lambda r:r['janpad'])
     raise ValueError('Official R8.1.5 table with eight Janpads was not found; existing data preserved')
