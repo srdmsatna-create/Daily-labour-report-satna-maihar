@@ -18,16 +18,16 @@
   const firstNum=(r,keys)=>{for(const k of keys){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')return num(r[k])}return 0};
   function mandaysOf(r){
     const before=firstNum(r,['Mandays Before 31 March 2026','Mandays From Work Start Date To 31 March 2026','Mandays 2025-2026','Previous Mandays']);
-    const july=firstNum(r,['Mandays 01 Jul-Till Date','Mandays 01 Jul–Till Date','01 Jul-Till Date Mandays','July Mandays','Mandays 2026-2027','Mandays Generated Current FY']);
+    const july=firstNum(r,['Mandays 01 Jul-Till Date','Mandays 01 Jul–Till Date','01 Jul-Till Date Mandays','July Mandays','Mandays 2026-2027']);
     const totalSource=firstNum(r,['Total Mandays Generated','Total Mandays']);
-    const aprExplicit=firstNum(r,['Mandays 01 Apr-30 Jun','Mandays 01 Apr–30 Jun','01 Apr-30 Jun Mandays','01 Apr–30 Jun Mandays','Apr-Jun Mandays','NREGA Apr-Jun Mandays']);
+    const aprExplicit=firstNum(r,['NREGA Till 30 June Mandays','Mandays 01 Apr-30 Jun 2026','Mandays 01 Apr–30 Jun 2026','Mandays 01 Apr-30 Jun','Mandays 01 Apr–30 Jun','01 Apr-30 Jun Mandays','01 Apr–30 Jun Mandays','Apr-Jun Mandays','NREGA Apr-Jun Mandays']);
     const aprJun=aprExplicit||Math.max(0,totalSource-before-july);
     return {before,aprJun,july,total:before+aprJun+july};
   }
   const gpKey=(j,p)=>[clean(j).toUpperCase(),clean(p).toUpperCase()].join('¦');
   function filteredWorks(){
     const [df,jf,ef,cf]=filters.map(x=>x.value),seen=new Set();
-    const source=typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS)?WORK_DETAILS:[];
+    const source=(typeof ekBagiyaFiltered==='function'?ekBagiyaFiltered():(typeof effectiveWorkDetails==='function'?effectiveWorkDetails():(typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS)?WORK_DETAILS:[])));
     return source.filter(r=>{
       if(!['2025-2026','2026-2027'].includes(clean(r['Fin Year'])))return false;
       const district=clean(r.Zila)||(['AMARPATAN','MAIHAR','RAMNAGAR'].includes(clean(r.Janpad).toUpperCase())?'MAIHAR':'SATNA');
