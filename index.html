@@ -2267,7 +2267,7 @@ function ekBagiyaFiltered(){
     const nw=num(r.nregaBookedWage),nm=num(r.nregaBookedMaterial),vw=num(r.vbgBookedWage),vm=num(r.vbgBookedMaterial);
     const nb=Number.isFinite(+r.nregaBooked)?num(r.nregaBooked):(nw+nm), vb=Number.isFinite(+r.vbgBooked)?num(r.vbgBooked):(vw+vm);
     const ow=Number.isFinite(+r.overallBookedWage)?num(r.overallBookedWage):(nw+vw), om=Number.isFinite(+r.overallBookedMaterial)?num(r.overallBookedMaterial):(nm+vm), ob=Number.isFinite(+r.overallBooked)?num(r.overallBooked):(nb+vb);
-    const pre=num(r.mandaysTillMar31)||num(o['Mandays 2025-2026']), apr=num(r.nregaAprJunMandays), jul=num(r.julyMandays), total=pre+apr+jul;
+    const apr=num(r.nregaAprJunMandays), pre=Number.isFinite(+r.mandaysTillMar31)?num(r.mandaysTillMar31):Math.max(0,num(r.nregaTotalMandays)-apr), jul=num(r.julyMandays), total=pre+apr+jul;
     const ws=num(o['Wage Sanctioned']), ms=num(o['Material Sanctioned'])||Math.max(0,san-ws), ep=san?ob*100/san:0;
     return {...o,index:i,'S.No':i+1,Zila:r.district||o.Zila||'',Janpad:r.janpad||o.Janpad||'',Upyantri:r.engineer||o.Upyantri||'',Cluster:r.cluster||o.Cluster||'',
       'Panchayat Name':r.panchayat||o['Panchayat Name']||'','Work Code':code,'Work Name':r.name||o['Work Name']||'','Work Status':r.status||o['Work Status']||'Ongoing','Fin Year':r.fy||o['Fin Year']||'',
