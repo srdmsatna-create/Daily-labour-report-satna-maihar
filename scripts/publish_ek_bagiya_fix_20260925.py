@@ -3,7 +3,7 @@ import json, re, zipfile, xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 
-# ---- MGNREGA authoritative current-FY mandays: incoming/Daily Report.xlsx -> Nrega!G/V ----
+# ---- MGNREGA authoritative mandays: incoming/Daily Report.xlsx -> Nrega!G/U/V ----
 def clean(v): return str(v or '').strip()
 def num(v):
     try: return float(v or 0)
@@ -35,7 +35,7 @@ def load_nrega_current_fy(xlsx):
         for row in list(data)[4:]:
             cells={re.match(r'([A-Z]+)',c.attrib['r']).group(1):cv(c) for c in row.findall(f'{{{NS}}}c')}
             code=clean(cells.get('G',''))
-            if code: out[code]=num(cells.get('V',''))
+            if code: out[code]={'total':num(cells.get('U','')),'current':num(cells.get('V',''))}
         return out
 
 nmap=load_nrega_current_fy(ROOT/'incoming'/'Daily Report.xlsx')
@@ -46,16 +46,24 @@ s=op.read_text(encoding='utf-8-sig').strip()
 prefix='window.ONGOING_DETAILS='
 if not s.startswith(prefix): raise RuntimeError('Unexpected ongoing-details.js format')
 arr=json.loads(s[len(prefix):].rstrip(';'))
-matched=0; ek_count=0; ek_sum=0; ek_pos=0
+matched=0; ek_count=0; ek_sum=0; ek_pre=0; ek_nrega_total=0; ek_pos=0; ek_matched=0
 for r in arr:
     code=clean(r.get('code'))
     if code in nmap:
-        r['nregaAprJunMandays']=nmap[code]; matched+=1
+        nm=nmap[code]; nt=num(nm.get('total')); cur=num(nm.get('current')); pre=max(0,nt-cur)
+        r['nregaTotalMandays']=nt
+        r['nregaAprJunMandays']=cur
+        r['mandaysTillMar31']=pre
+        matched+=1
     if clean(r.get('finalCategory')) in ('Ek Bagiya','Ek Bagiya Maa Ke Naam'):
-        v=num(nmap.get(code,0)); r['nregaAprJunMandays']=v
-        ek_count+=1; ek_sum+=v; ek_pos += 1 if v>0 else 0
+        nm=nmap.get(code,{'total':0,'current':0}); nt=num(nm.get('total')); cur=num(nm.get('current')); pre=max(0,nt-cur)
+        r['nregaTotalMandays']=nt; r['nregaAprJunMandays']=cur; r['mandaysTillMar31']=pre
+        ek_count+=1; ek_sum+=cur; ek_pre+=pre; ek_nrega_total+=nt; ek_pos += 1 if cur>0 else 0; ek_matched += 1 if code in nmap else 0
 if ek_count != 755: raise RuntimeError(f'Ek Bagiya count expected 755, got {ek_count}')
+if ek_matched != 755: raise RuntimeError(f'Ek Bagiya NREGA match expected 755, got {ek_matched}')
 if int(ek_sum) != 1916: raise RuntimeError(f'Ek Bagiya Apr-Jun mandays expected 1916, got {ek_sum}')
+if int(ek_pre) != 17764: raise RuntimeError(f'Ek Bagiya Before-31-Mar expected 17764, got {ek_pre}')
+if int(ek_nrega_total) != 19680: raise RuntimeError(f'Ek Bagiya NREGA total expected 19680, got {ek_nrega_total}')
 op.write_text(prefix+json.dumps(arr,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
 
 # ---- main dashboard Ek Bagiya table ----
@@ -74,7 +82,7 @@ newfun=r'''function ekBagiyaFiltered(){
     const nw=num(r.nregaBookedWage),nm=num(r.nregaBookedMaterial),vw=num(r.vbgBookedWage),vm=num(r.vbgBookedMaterial);
     const nb=Number.isFinite(+r.nregaBooked)?num(r.nregaBooked):(nw+nm), vb=Number.isFinite(+r.vbgBooked)?num(r.vbgBooked):(vw+vm);
     const ow=Number.isFinite(+r.overallBookedWage)?num(r.overallBookedWage):(nw+vw), om=Number.isFinite(+r.overallBookedMaterial)?num(r.overallBookedMaterial):(nm+vm), ob=Number.isFinite(+r.overallBooked)?num(r.overallBooked):(nb+vb);
-    const pre=num(r.mandaysTillMar31)||num(o['Mandays 2025-2026']), apr=num(r.nregaAprJunMandays), jul=num(r.julyMandays), total=pre+apr+jul;
+    const apr=num(r.nregaAprJunMandays), pre=Number.isFinite(+r.mandaysTillMar31)?num(r.mandaysTillMar31):Math.max(0,num(r.nregaTotalMandays)-apr), jul=num(r.julyMandays), total=pre+apr+jul;
     const ws=num(o['Wage Sanctioned']), ms=num(o['Material Sanctioned'])||Math.max(0,san-ws), ep=san?ob*100/san:0;
     return {...o,index:i,'S.No':i+1,Zila:r.district||o.Zila||'',Janpad:r.janpad||o.Janpad||'',Upyantri:r.engineer||o.Upyantri||'',Cluster:r.cluster||o.Cluster||'',
       'Panchayat Name':r.panchayat||o['Panchayat Name']||'','Work Code':code,'Work Name':r.name||o['Work Name']||'','Work Status':r.status||o['Work Status']||'Ongoing','Fin Year':r.fy||o['Fin Year']||'',
@@ -101,8 +109,8 @@ m2=re.search(r'const WORK_DETAILS=(\[.*\]);\s*$',dtxt,re.S)
 if m1 and m2:
     up=json.loads(m1.group(1)); works=json.loads(m2.group(1))
     for w in works:
-        code=clean(w.get('Work Code')); apr=num(nmap.get(code,0)); pre=num(w.get('Mandays 2025-2026')); jul=num(w.get('Mandays 2026-2027'))
-        w['NREGA Till 30 June Mandays']=apr; w['Mandays 01 Apr-30 Jun 2026']=apr; w['Previous Mandays']=pre
+        code=clean(w.get('Work Code')); nm=nmap.get(code,{'total':0,'current':0}); nt=num(nm.get('total')); apr=num(nm.get('current')); pre=max(0,nt-apr); jul=num(w.get('Mandays 2026-2027'))
+        w['Mandays 2025-2026']=pre; w['Previous Mandays']=pre; w['NREGA Total Mandays Till 30 June']=nt; w['NREGA Till 30 June Mandays']=apr; w['Mandays 01 Apr-30 Jun 2026']=apr
         w['Mandays Generated Current FY']=apr+jul; w['Total Mandays']=pre+apr+jul
     groups={}
     for w in works:
@@ -150,4 +158,7 @@ if marker not in es:
     es=es.replace('</body>',override+'\n</body>')
 ep.write_text(es,encoding='utf-8')
 
-print(f'PUBLISH OK | Nrega codes={len(nmap)} | matched={matched} | Ek Bagiya={ek_count} | Apr-Jun={int(ek_sum)} | positive={ek_pos}')
+es=re.sub(r'\.\./ongoing-details\.js\?live=[^\"\']+', '../ongoing-details.js?live=20260926a', es)
+ep.write_text(es,encoding='utf-8')
+
+print(f'PUBLISH OK | Nrega codes={len(nmap)} | matched={matched} | Ek Bagiya={ek_count} | NREGA matched={ek_matched} | Before31Mar={int(ek_pre)} | Apr-Jun={int(ek_sum)} | NREGA total={int(ek_nrega_total)} | positive={ek_pos}')
