@@ -1,0 +1,31 @@
+name: Publish Ek Bagiya data fix
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-ek-bagiya-fix.yml'
+      - 'scripts/publish_ek_bagiya_fix_20260925.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply Ek Bagiya live data fix
+        run: python scripts/publish_ek_bagiya_fix_20260925.py
+      - name: Commit published dashboard data
+        run: |
+          git config user.name "srdmsatna-create"
+          git config user.email "srdmsatna@gmail.com"
+          git add ongoing-details.js index.html ek-bagiya/data.js ek-bagiya/dashboard.html
+          if git diff --cached --quiet; then
+            echo "No changes to publish"
+          else
+            git commit -m "Publish Ek Bagiya expenditure and MGNREGA mandays fix"
+            git push
+          fi
