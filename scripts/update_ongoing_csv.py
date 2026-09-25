@@ -216,10 +216,32 @@ def main():
                 'recoveryAmount': num(old.get('recoveryAmount', old.get('recoveryAmountRs', 0))),
                 'recoveryWorkCount': num(old.get('recoveryWorkCount', 0)),
             })
+            # Keep the reviewed pre-migration MGNREGA expenditure unchanged for each work code.
+            fixed_wage = num(old.get('nregaBookedWage', hist.get('NREGA Booked Wages')))
+            fixed_material = num(old.get('nregaBookedMaterial', hist.get('NREGA Booked Material')))
+            fixed_total = num(old.get('nregaBooked', fixed_wage + fixed_material))
+            vb_wage = num(pick(r, 'Booked Current FY Wages (Rs)'))
+            vb_material = num(pick(r, 'Booked Current FY Material (Rs)'))
+            vb_total = vb_wage + vb_material
+            overall = fixed_total + vb_total
+            entry = rows[-1]
+            entry.update({
+                'nregaBookedWage': fixed_wage, 'nregaBookedMaterial': fixed_material,
+                'nregaBooked': fixed_total, 'vbgBookedWage': vb_wage,
+                'vbgBookedMaterial': vb_material, 'vbgBooked': vb_total,
+                'overallBookedWage': fixed_wage + vb_wage,
+                'overallBookedMaterial': fixed_material + vb_material,
+                'overallBooked': overall, 'nregaExpPct': fixed_total * 100 / sanction if sanction else 0,
+                'vbgExpPct': vb_total * 100 / sanction if sanction else 0,
+                'overallExpPct': overall * 100 / sanction if sanction else 0,
+                'bookedWage': vb_wage, 'bookedMaterial': vb_material,
+                'booked': vb_total, 'expPct': overall * 100 / sanction if sanction else 0,
+            })
     if not rows:
         raise SystemExit('Official ongoing CSV produced zero rows; refusing to overwrite previous data')
     for row in rows:
         apply_sector_correction(row)
+    rows[0]['sourceDate'] = datetime.now(timezone.utc).date().isoformat()
     OUT.write_text('window.ONGOING_DETAILS=' + json.dumps(rows, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
     mapped = sum(1 for r in rows if r['engineer'])
     status_counts = {s: sum(1 for r in rows if norm(r['status']) == s) for s in sorted(ALLOWED_STATUS)}
