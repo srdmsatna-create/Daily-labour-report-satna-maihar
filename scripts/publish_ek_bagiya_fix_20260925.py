@@ -64,6 +64,12 @@ if ek_matched != 755: raise RuntimeError(f'Ek Bagiya NREGA match expected 755, g
 if int(ek_sum) != 1916: raise RuntimeError(f'Ek Bagiya Apr-Jun mandays expected 1916, got {ek_sum}')
 if int(ek_pre) != 17764: raise RuntimeError(f'Ek Bagiya Before-31-Mar expected 17764, got {ek_pre}')
 if int(ek_nrega_total) != 19680: raise RuntimeError(f'Ek Bagiya NREGA total expected 19680, got {ek_nrega_total}')
+# Sanjay/BHAINSWAR regression check from authoritative sources
+_sj=[r for r in arr if clean(r.get('finalCategory')) in ('Ek Bagiya','Ek Bagiya Maa Ke Naam') and clean(r.get('janpad')).upper()=='SOHAWAL' and clean(r.get('engineer'))=='संजय पाण्डेय' and clean(r.get('cluster')).upper()=='BHAINSWAR']
+_sj_pre=sum(num(r.get('mandaysTillMar31')) for r in _sj); _sj_apr=sum(num(r.get('nregaAprJunMandays')) for r in _sj); _sj_jul=sum(num(r.get('julyMandays')) for r in _sj)
+if not (len(_sj)==14 and int(_sj_pre)==159 and int(_sj_apr)==1 and int(_sj_jul)==64):
+    raise RuntimeError(f'Sanjay/BHAINSWAR regression failed: n={len(_sj)} pre={_sj_pre} apr={_sj_apr} jul={_sj_jul}')
+
 op.write_text(prefix+json.dumps(arr,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
 
 # ---- main dashboard Ek Bagiya table ----
