@@ -10,6 +10,7 @@ values and does not carry the Apr-Jun split.  Preserve the live row list/status 
 restore those historical NREGA values by Work Code from the reviewed 30-08 master.
 """
 import csv, json, re, sys
+from gp_sector_mapping import apply_sector_correction
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -217,6 +218,8 @@ def main():
             })
     if not rows:
         raise SystemExit('Official ongoing CSV produced zero rows; refusing to overwrite previous data')
+    for row in rows:
+        apply_sector_correction(row)
     OUT.write_text('window.ONGOING_DETAILS=' + json.dumps(rows, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
     mapped = sum(1 for r in rows if r['engineer'])
     status_counts = {s: sum(1 for r in rows if norm(r['status']) == s) for s in sorted(ALLOWED_STATUS)}
