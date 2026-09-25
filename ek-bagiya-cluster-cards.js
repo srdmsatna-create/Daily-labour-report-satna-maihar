@@ -17,11 +17,13 @@
   const clean=v=>String(v??'').trim(),num=v=>Number(v)||0,fmt=v=>new Intl.NumberFormat('en-IN').format(Math.round(num(v))),lakh=v=>(num(v)/100000).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const firstNum=(r,keys)=>{for(const k of keys){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')return num(r[k])}return 0};
   function mandaysOf(r){
-    const before=firstNum(r,['Mandays Before 31 March 2026','Mandays From Work Start Date To 31 March 2026','Mandays 2025-2026','Previous Mandays']);
+    // Keep the three periods strictly separate.
+    // Before 31 Mar = historical mandays only.
+    // 01 Apr-30 Jun = MGNREGA Nrega sheet "current year mandays" only.
+    // 01 Jul-Till Date = VB-G RAM G July mandays only.
+    const before=firstNum(r,['Mandays Before 31 March 2026','Mandays 2025-2026','Mandays From Work Start Date To 31 March 2026','Previous Mandays']);
+    const aprJun=firstNum(r,['NREGA Till 30 June Mandays','Mandays 01 Apr-30 Jun 2026','Mandays 01 Apr–30 Jun 2026']);
     const july=firstNum(r,['Mandays 01 Jul-Till Date','Mandays 01 Jul–Till Date','01 Jul-Till Date Mandays','July Mandays','Mandays 2026-2027']);
-    const totalSource=firstNum(r,['Total Mandays Generated','Total Mandays']);
-    const aprExplicit=firstNum(r,['NREGA Till 30 June Mandays','Mandays 01 Apr-30 Jun 2026','Mandays 01 Apr–30 Jun 2026','Mandays 01 Apr-30 Jun','Mandays 01 Apr–30 Jun','01 Apr-30 Jun Mandays','01 Apr–30 Jun Mandays','Apr-Jun Mandays','NREGA Apr-Jun Mandays']);
-    const aprJun=aprExplicit||Math.max(0,totalSource-before-july);
     return {before,aprJun,july,total:before+aprJun+july};
   }
   const gpKey=(j,p)=>[clean(j).toUpperCase(),clean(p).toUpperCase()].join('¦');
