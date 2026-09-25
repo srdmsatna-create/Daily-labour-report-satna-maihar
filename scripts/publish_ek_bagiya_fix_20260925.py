@@ -115,3 +115,39 @@ if m1 and m2:
         if g:
             u['NREGA Till 30 June Mandays']=g['apr']; u['VBGRAMG Current FY Mandays']=g['jul']; u['Total Mandays Generated']=g['total']; u['Total Mandays']=g['total']
             u['more than zero mandays work of current year']=g['active']; u['0 zero mandays work of current year']=max(0,int(num(u.get('Sanction Works')))-g['active'])
+    dp.write_text('const UPYANTRI_ROWS='+json.dumps(up,ensure_ascii=False,separators=(',',':'))+';\\nconst WORK_DETAILS='+json.dumps(works,ensure_ascii=False,separators=(',',':'))+';\\n',encoding='utf-8')
+
+# ---- separate Ek Bagiya dashboard: make expenditure + mandays use main live data ----
+ep=ROOT/'ek-bagiya'/'dashboard.html'
+es=ep.read_text(encoding='utf-8')
+es=es.replace('डेटा स्थिति<strong>09 सितंबर 2026</strong>756 सत्यापित कार्य · Official MIS 6.12','डेटा स्थिति<strong>मुख्य डैशबोर्ड से Live Sync</strong>755 सत्यापित कार्य · MGNREGA + VB-G RAM G')
+es=es.replace('आज की प्रगति 09.09','नवीनतम प्रगति')
+es=es.replace("<td>\${fmt(w['Mandays 2025-2026'])}</td><td>\${fmt(w['Mandays 2026-2027'])}</td><td>\${fmt(w['Total Mandays'])}</td>","<td>\${fmt(w['NREGA Till 30 June Mandays'])}</td><td>\${fmt(w['Mandays 2026-2027'])}</td><td>\${fmt(w['Total Mandays'])}</td>")
+marker='SRDM_LIVE_EK_SYNC_20260925'
+if marker not in es:
+    override=r'''<script src="../ongoing-details.js?live=20260925c"></script><script>
+/* SRDM_LIVE_EK_SYNC_20260925 */
+(()=>{
+ const live=Array.isArray(window.ONGOING_DETAILS)?window.ONGOING_DETAILS:[];
+ if(!live.length||typeof WORK_DETAILS==='undefined'||typeof UPYANTRI_ROWS==='undefined')return;
+ const old=new Map(WORK_DETAILS.map(w=>[String(w['Work Code']||'').trim(),w]));
+ const rows=live.filter(r=>['Ek Bagiya','Ek Bagiya Maa Ke Naam'].includes(String(r.finalCategory||'').trim())).map((r,i)=>{
+   const code=String(r.code||'').trim(),o=old.get(code)||{},san=+r.sanction||+o['Sanction Amount Total']||0;
+   const nw=+r.nregaBookedWage||0,nm=+r.nregaBookedMaterial||0,vw=+r.vbgBookedWage||0,vm=+r.vbgBookedMaterial||0;
+   const nb=Number.isFinite(+r.nregaBooked)?+r.nregaBooked:nw+nm,vb=Number.isFinite(+r.vbgBooked)?+r.vbgBooked:vw+vm;
+   const ow=Number.isFinite(+r.overallBookedWage)?+r.overallBookedWage:nw+vw,om=Number.isFinite(+r.overallBookedMaterial)?+r.overallBookedMaterial:nm+vm,ob=Number.isFinite(+r.overallBooked)?+r.overallBooked:nb+vb;
+   const pre=Number.isFinite(+r.mandaysTillMar31)?+r.mandaysTillMar31:(+o['Mandays 2025-2026']||0),apr=+r.nregaAprJunMandays||0,jul=+r.julyMandays||0;
+   const ws=+o['Wage Sanctioned']||0,ms=+o['Material Sanctioned']||Math.max(0,san-ws),ep=san?ob*100/san:0;
+   return {...o,index:i,'S.No':i+1,Zila:r.district||o.Zila||'',Janpad:r.janpad||o.Janpad||'',Upyantri:r.engineer||o.Upyantri||'',Cluster:r.cluster||o.Cluster||'','Panchayat Name':r.panchayat||o['Panchayat Name']||'','Work Code':code,'Work Name':r.name||o['Work Name']||'','Work Status':r.status||o['Work Status']||'Ongoing','Sanction Amount Total':san,'Wage Sanctioned':ws,'Material Sanctioned':ms,'MGNREGA Booked Wages Till 30 June':nw,'MGNREGA Booked Material Till 30 June':nm,'MGNREGA Total Booked Till 30 June':nb,'VBGRAMG Booked Wages':vw,'VBGRAMG Booked Material':vm,'VBGRAMG Total Booked':vb,'Overall Booked Wages':ow,'Overall Booked Material':om,'Overall Total Booked':ob,'Amount Booked Since Inception Wages':ow,'Amount Booked Since Inception Material':om,'Overall Expenditure %':ep,'Remaining Wages':Math.max(0,ws-ow),'Remaining Material':Math.max(0,ms-om),'Mandays 2025-2026':pre,'NREGA Till 30 June Mandays':apr,'Mandays 01 Apr-30 Jun 2026':apr,'Mandays 2026-2027':jul,'Mandays Generated Current FY':apr+jul,'Total Mandays':pre+apr+jul};
+ });
+ WORK_DETAILS.splice(0,WORK_DETAILS.length,...rows);
+ const groups=new Map();
+ for(const w of rows){const k=[w.Zila,w.Janpad,w.Upyantri,w.Cluster].join('¦');let g=groups.get(k);if(!g){g={n:0,san:0,nw:0,nm:0,vw:0,vm:0,ow:0,om:0,pre:0,apr:0,jul:0,active:0};groups.set(k,g)}g.n++;g.san+=+w['Sanction Amount Total']||0;g.nw+=+w['MGNREGA Booked Wages Till 30 June']||0;g.nm+=+w['MGNREGA Booked Material Till 30 June']||0;g.vw+=+w['VBGRAMG Booked Wages']||0;g.vm+=+w['VBGRAMG Booked Material']||0;g.ow+=+w['Overall Booked Wages']||0;g.om+=+w['Overall Booked Material']||0;g.pre+=+w['Mandays 2025-2026']||0;g.apr+=+w['NREGA Till 30 June Mandays']||0;g.jul+=+w['Mandays 2026-2027']||0;if((+w['Mandays Generated Current FY']||0)>0)g.active++}
+ for(const u of UPYANTRI_ROWS){const g=groups.get([u.Zila,u.Janpad,u.Upyantri,u.Cluster].join('¦'));if(!g)continue;u['Sanction Works']=g.n;u['Sanctioned cost(lakhs)']=g.san/100000;u['MGNREGA Booked Wages Till 30 June (lakh)']=g.nw/100000;u['MGNREGA Booked Material Till 30 June (lakh)']=g.nm/100000;u['MGNREGA Total Booked Till 30 June (lakh)']=(g.nw+g.nm)/100000;u['VBGRAMG Booked Wages (lakh)']=g.vw/100000;u['VBGRAMG Booked Material (lakh)']=g.vm/100000;u['VBGRAMG Total Booked (lakh)']=(g.vw+g.vm)/100000;u['Overall Booked Wages (lakh)']=g.ow/100000;u['Overall Booked Material (lakh)']=g.om/100000;u['Overall Total Booked (lakh)']=(g.ow+g.om)/100000;u['Overall Exp %']=g.san?(g.ow+g.om)*100/g.san:0;u['Mandays 2025-2026']=g.pre;u['NREGA Till 30 June Mandays']=g.apr;u['Mandays 2026-2027']=g.jul;u['VBGRAMG Current FY Mandays']=g.jul;u['Total Mandays']=g.pre+g.apr+g.jul;u['Total Mandays Generated']=g.pre+g.apr+g.jul;u['more than zero mandays work of current year']=g.active;u['0 zero mandays work of current year']=g.n-g.active}
+ if(typeof refreshFilters==='function')refreshFilters();if(typeof renderAll==='function')renderAll();
+})();
+</script>'''
+    es=es.replace('</body>',override+'\n</body>')
+ep.write_text(es,encoding='utf-8')
+
+print(f'PUBLISH OK | Nrega codes={len(nmap)} | matched={matched} | Ek Bagiya={ek_count} | Apr-Jun={int(ek_sum)} | positive={ek_pos}')
