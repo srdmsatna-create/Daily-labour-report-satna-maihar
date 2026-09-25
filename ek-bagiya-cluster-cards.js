@@ -29,7 +29,7 @@
     const [df,jf,ef,cf]=filters.map(x=>x.value),seen=new Set();
     const source=(typeof ekBagiyaFiltered==='function'?ekBagiyaFiltered():(typeof effectiveWorkDetails==='function'?effectiveWorkDetails():(typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS)?WORK_DETAILS:[])));
     return source.filter(r=>{
-      if(!['2025-2026','2026-2027'].includes(clean(r['Fin Year'])))return false;
+      // Ek Bagiya source is already the verified 755-work set; do not drop cards when FY label is blank/variant.
       const district=clean(r.Zila)||(['AMARPATAN','MAIHAR','RAMNAGAR'].includes(clean(r.Janpad).toUpperCase())?'MAIHAR':'SATNA');
       if(df!=='ALL'&&district!==df||jf!=='ALL'&&r.Janpad!==jf||ef!=='ALL'&&r.Upyantri!==ef||cf!=='ALL'&&r.Cluster!==cf)return false;
       const code=clean(r['Work Code']);if(code&&seen.has(code))return false;if(code)seen.add(code);return true;
