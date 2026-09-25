@@ -1,6 +1,7 @@
 /* 25-09-2026: authoritative sector corrections from gp-sector-engineer-master-25-09-2026.csv. */
 (function(){
   const edits=[
+    {janpad:'AMARPATAN',cluster:'TALA',old:'सत्यनारायण मिश्रा',name:'अनिल पटेल अति0 02'},
     {janpad:'MAJHGAWAN',cluster:'KARIGOHI',old:'रमाकांत त्रिपाठी अति0',name:'सत्यनारायण मिश्रा'},
     {janpad:'RAMPUR BAGHELAN',cluster:'BELA',old:'प्रमोद शुक्ला अति0',name:'श्रीमती अन्नपूर्णा सिंह'}
   ];
