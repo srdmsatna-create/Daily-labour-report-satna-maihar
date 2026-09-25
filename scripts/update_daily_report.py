@@ -3,6 +3,7 @@ import os, json, re, urllib.request, tempfile
 from pathlib import Path
 from datetime import datetime, timezone
 from openpyxl import load_workbook
+from gp_sector_mapping import apply_sector_correction
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'auto-data.js'
@@ -88,6 +89,7 @@ def parse(path):
     for r in repvals[3:]:
         if len(r)<12 or not c(r[0]) or not c(r[1]) or not c(r[5]): continue
         z={'janpad':janpad(r[0]),'engineer':c(r[1]),'cluster':c(r[2]),'ongoing':n(r[3]),'panchayat':up(r[5]),'gps':n(r[6]),'gpsProgress':n(r[7]),'labour':n(r[8]),'worksMR':n(r[9]),'noEkyc':n(r[10]),'mrs':n(r[11])}
+        apply_sector_correction(z)
         rows.append(z); gpmap[(z['janpad'],z['panchayat'])]=(z['engineer'],z['cluster'])
     if not rows: raise SystemExit('RepDay has no usable GP rows')
 
