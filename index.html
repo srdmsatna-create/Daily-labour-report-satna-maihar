@@ -1099,6 +1099,27 @@ body[data-report-view="official"] .official-grid th{
 .ekbagiya-tab{font-weight:900}.report-table.ekbagiya-grid{min-width:1540px}.report-table.ekbagiya-grid th:nth-child(-n+4),.report-table.ekbagiya-grid td:nth-child(-n+4){text-align:left}.report-table.ekbagiya-grid td:nth-child(5),.report-table.ekbagiya-grid td:nth-child(6){font-weight:850}.report-table.ekbagiya-grid td:nth-child(7){font-weight:850;color:#a13a29}.report-table.ekbagiya-grid td:nth-child(18){font-weight:900;color:#0d5e46}@media print{.report-table.ekbagiya-grid{min-width:0!important;table-layout:fixed}.report-table.ekbagiya-grid th,.report-table.ekbagiya-grid td{font-size:calc(6.2px * var(--table-font-scale));padding:1.8px;white-space:normal;word-break:break-word}}
 
 
+/* SRDM_EK_BAGIYA_PRINT_SCOPE_V1 */
+@media print{
+  body.ek-print-summary #reportTable{display:none!important}
+  body.ek-print-summary .clean-report-card>.table-wrap:last-of-type{display:none!important}
+  body.ek-print-detail #ekBlockSummary{display:none!important}
+  body.ek-print-summary #ekBlockSummary{display:block!important;margin:0!important;border:0!important;border-radius:0!important}
+  body.ek-print-summary .ek-block-wrap{overflow:visible!important}
+  body.ek-print-summary .ek-block-table{min-width:0!important;width:100%!important;table-layout:fixed!important}
+  body.ek-print-summary .ek-block-table th,
+  body.ek-print-summary .ek-block-table td{font-size:8.5px!important;padding:3px 2px!important;white-space:normal!important;word-break:break-word!important}
+  body.ek-print-detail .report-table.ekbagiya-grid{min-width:0!important;width:100%!important;table-layout:fixed!important}
+  body.ek-print-detail .report-table.ekbagiya-grid th,
+  body.ek-print-detail .report-table.ekbagiya-grid td{font-size:6.4px!important;padding:2px!important;white-space:normal!important;word-break:break-word!important}
+  body.ek-print-all #ekBlockSummary{display:block!important}
+  body.ek-print-all .ek-block-wrap{overflow:visible!important}
+  body.ek-print-all .ek-block-table{min-width:0!important;width:100%!important;table-layout:fixed!important}
+  body.ek-print-all .ek-block-table th,
+  body.ek-print-all .ek-block-table td{font-size:7.2px!important;padding:2.5px 2px!important;white-space:normal!important;word-break:break-word!important}
+  body.ek-print-all .report-table.ekbagiya-grid{min-width:0!important;width:100%!important;table-layout:fixed!important}
+}
+
 /* SRDM_PORTAL_THUMBNAILS_V1 */
 .srdm-portal-card .srdm-app-icon.srdm-thumb-icon{
   width:68px!important;height:50px!important;min-width:68px!important;
@@ -1939,6 +1960,11 @@ body[data-report-view="category"] #reportTable tbody tr.total-row td{font-size:2
     <button id="fontMinusBtn" title="Font छोटा करें">A−</button>
     <button id="fontPlusBtn" title="Font बड़ा करें">A+</button>
     <select id="printOrientation" class="print-select" title="Print page orientation"><option value="portrait">Portrait</option><option value="landscape" selected>Landscape</option></select>
+    <select id="ekPrintScope" class="print-select" title="Ek Bagiya Print / PDF" style="display:none">
+      <option value="all">Ek Bagiya PDF — पूरी रिपोर्ट</option>
+      <option value="summary">Ek Bagiya PDF — Block / District Summary</option>
+      <option value="detail">Ek Bagiya PDF — Engineer / Cluster Detail</option>
+    </select>
     <button id="printBtn">Print / PDF</button>
     <button id="csvBtn">CSV Export</button>
     <button id="allWorksExcelBtn" type="button" style="background:#0b7a3b;color:#fff;border-color:#0b7a3b;font-weight:800">Download Excel Sheet — Screen & All Categories</button>
@@ -2888,8 +2914,25 @@ $('allWorksExcelBtn')?.addEventListener('click',()=>{
   if(printBtn){
     const cloned=printBtn.cloneNode(true);
     printBtn.parentNode.replaceChild(cloned,printBtn);
-    cloned.addEventListener('click',()=>{setPrintOrientation();setTimeout(()=>window.print(),30);});
+    cloned.addEventListener('click',()=>{
+      setPrintOrientation();
+      document.body.classList.remove('ek-print-all','ek-print-summary','ek-print-detail');
+      if(typeof view!=='undefined' && view==='ekbagiya'){
+        const scope=document.getElementById('ekPrintScope')?.value||'all';
+        document.body.classList.add(scope==='summary'?'ek-print-summary':scope==='detail'?'ek-print-detail':'ek-print-all');
+      }
+      const cleanup=()=>document.body.classList.remove('ek-print-all','ek-print-summary','ek-print-detail');
+      window.addEventListener('afterprint',cleanup,{once:true});
+      requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
+      setTimeout(cleanup,4000);
+    });
   }
+  function syncEkPrintScope(){
+    const s=document.getElementById('ekPrintScope');
+    if(s)s.style.display=(typeof view!=='undefined'&&view==='ekbagiya')?'inline-flex':'none';
+  }
+  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTimeout(syncEkPrintScope,0)));
+  syncEkPrintScope();
   setPrintOrientation();applyScale();
 })();
 
