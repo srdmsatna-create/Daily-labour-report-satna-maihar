@@ -2361,16 +2361,16 @@ function renderEkBagiyaBlockSummary(src){
   const row=(a,cls='')=>{
     const wp=a.wageTarget>0?100*a.wageBooked/a.wageTarget:null,mp=a.matTarget>0?100*a.matBooked/a.matTarget:null;
     const totalCost=a.wageTarget+a.matTarget,totalExp=a.wageBooked+a.matBooked,tp=totalCost>0?100*totalExp/totalCost:null;
-    return `<tr class="${cls}"><td>${esc(a.j)}</td><td>${fmt(a.sanctionTarget)}</td><td>${fmt(a.works)}</td><td>${fmt(a.ongoing)}</td><td>${f(a.wageTarget)}</td><td>${f(a.wageBooked)}</td><td class="pct-cell">${wp===null?'—':wp.toFixed(2)+'%'}</td><td>${f(a.matTarget)}</td><td>${f(a.matBooked)}</td><td>${mp===null?'—':mp.toFixed(2)+'%'}</td><td>${f(a.san)}</td><td>${f(totalExp)}</td><td class="pct-cell">${a.san>0?(100*totalExp/a.san).toFixed(2)+'%':'—'}</td></tr>`;
+    return `<tr class="${cls}"><td>${esc(a.j)}</td><td>${fmt(a.sanctionTarget)}</td><td>${fmt(a.sanctionedWorks??a.works)}</td><td>${fmt(a.ongoing)}</td><td>${f(a.wageTarget)}</td><td>${f(a.wageBooked)}</td><td class="pct-cell">${wp===null?'—':wp.toFixed(2)+'%'}</td><td>${f(a.matTarget)}</td><td>${f(a.matBooked)}</td><td>${mp===null?'—':mp.toFixed(2)+'%'}</td><td>${f(a.san)}</td><td>${f(totalExp)}</td><td class="pct-cell">${a.san>0?(100*totalExp/a.san).toFixed(2)+'%':'—'}</td></tr>`;
   };
   let h=`<thead><tr><th rowspan="2">Block</th><th>Block</th><th>Sanctioned</th><th>Ongoing</th><th>Sanction Wage</th><th>Wage</th><th rowspan="2" class="pct-head">%</th><th>Sanction Material</th><th>Material</th><th rowspan="2">%</th><th rowspan="2">Sanctioned<br>Cost</th><th rowspan="2">Total<br>Exp</th><th rowspan="2" class="pct-head">%</th></tr><tr><th>Target</th><th>Works</th><th>Works</th><th>Cost</th><th>Booked</th><th>Cost</th><th>Booked</th></tr></thead><tbody>`;
-  const grand={j:'कुल (MAIHAR + SATNA)',sanctionTarget:0,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
+  const grand={j:'कुल (MAIHAR + SATNA)',sanctionTarget:0,works:0,sanctionedWorks:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
   for(const g of groups){
-    const dt={j:g.district+' DISTRICT TOTAL',sanctionTarget:0,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
+    const dt={j:g.district+' DISTRICT TOTAL',sanctionTarget:0,works:0,sanctionedWorks:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
     for(const j of g.blocks){
-      const a=map.get(g.district+'|'+j)||{j,sanctionTarget:sanctionTarget[j]||100,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
+      const a=map.get(g.district+'|'+j)||{j,sanctionTarget:sanctionTarget[j]||100,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};a.sanctionedWorks=sanctionedWorksByBlock[j]||0;
       h+=row(a);
-      for(const k of ['sanctionTarget','works','san','ongoing','wageTarget','wageBooked','matTarget','matBooked']){dt[k]+=a[k];grand[k]+=a[k]}
+      for(const k of ['sanctionTarget','san','ongoing','wageTarget','wageBooked','matTarget','matBooked']){dt[k]+=a[k];grand[k]+=a[k]}dt.works+=a.works;grand.works+=a.works;dt.sanctionedWorks+=a.sanctionedWorks||0;grand.sanctionedWorks+=a.sanctionedWorks||0;
     }
     h+=row(dt,'district-total');
   }
@@ -3310,7 +3310,8 @@ function initPptExportUI(){
         while(slots[col])col++;
         const width=h.colSpan||1,height=h.rowSpan||1;
         for(let dr=0;dr<height;dr++){
-          const target=headerGrid[ri+dr]||(headerGrid[ri+dr]=[]);
+          const sanctionedWorksByBlock={AMARPATAN:4061,MAIHAR:9466,RAMNAGAR:5898,MAJHGAWAN:2790,NAGOD:2774,'RAMPUR BAGHELAN':3365,SATNA:3498,UNCHAHARA:1142};
+  const target=headerGrid[ri+dr]||(headerGrid[ri+dr]=[]);
           for(let dc=0;dc<width;dc++)target[col+dc]=h;
         }
         col+=width;
