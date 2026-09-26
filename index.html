@@ -1142,6 +1142,26 @@ body:not([data-report-view="ekbagiya"]) #ekBlockSummary{display:none!important}
   .ek-block-table th,.ek-block-table td{font-size:6.3pt!important;padding:.8mm .4mm!important}
   .ek-block-title{font-size:12pt!important;padding:2mm!important}
 }
+
+/* SRDM_EK_BLOCK_COLWIDTH_V2 */
+.ek-block-table th:nth-child(1),.ek-block-table td:nth-child(1){
+  width:180px!important;min-width:180px!important;max-width:180px!important;
+}
+.ek-block-table th:nth-child(8),.ek-block-table td:nth-child(8),
+.ek-block-table th:nth-child(11),.ek-block-table td:nth-child(11),
+.ek-block-table th:nth-child(14),.ek-block-table td:nth-child(14){
+  width:62px!important;min-width:62px!important;max-width:62px!important;
+}
+@media print{
+  .ek-block-table th:nth-child(1),.ek-block-table td:nth-child(1){
+    width:17%!important;min-width:17%!important;max-width:17%!important;
+  }
+  .ek-block-table th:nth-child(8),.ek-block-table td:nth-child(8),
+  .ek-block-table th:nth-child(11),.ek-block-table td:nth-child(11),
+  .ek-block-table th:nth-child(14),.ek-block-table td:nth-child(14){
+    width:5%!important;min-width:5%!important;max-width:5%!important;
+  }
+}
 </style>
 <style id="SRDM_PREMIUM_TABS_AND_ZERO_TABLE_V1">
 /* Premium dashboard navigation — bold, attractive, soft pulse without harsh flashing */
