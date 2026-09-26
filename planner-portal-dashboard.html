@@ -18,7 +18,27 @@ body.print-janpad #janpadSection{break-before:auto!important;page-break-before:a
   </select>
   <button type="button" class="pdf-btn" onclick="printSelected()">चुना हुआ Print / PDF</button>
 </div>
-<div class="kpis"><div class="kpi"><small>District MAIHAR</small><strong>3 जनपद<span>245 ग्राम पंचायत</span></strong></div><div class="kpi"><small>District SATNA</small><strong>5 जनपद<span>452 ग्राम पंचायत</span></strong></div><div class="kpi"><small>Planner Portal में लिए गए नवीन कार्य</small><strong id="kNew">32,994</strong></div><div class="kpi"><small>SIPRI में योजनाबद्ध</small><strong id="kSipri">0</strong></div></div><section class="box" id="janpadSection"><h2>जनपदवार — Planner Portal से SIPRI प्रगति</h2><div class="wrap" style="max-height:none"><table class="janpad-table"><thead><tr><th>क्र.</th><th>जनपद</th><th>नवीन कार्य संख्या</th><th>SIPRI में Planned Work</th><th>SIPRI Pending</th><th>Progress %</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section><section class="box" id="analysisSection"><h2>Category + Sub Engineer + Cluster Name-wise Planner New Work</h2><div class="analysis-note">Planning Summary Excel के Planner New Work और GP → Sub Engineer / Cluster mapping पर आधारित analysis</div><div class="tools"><select id="aDistrict"><option value="ALL">सभी District</option></select><select id="aJanpad"><option value="ALL">सभी जनपद</option></select><select id="aEngineer"><option value="ALL">सभी उपयंत्री</option></select><select id="aCluster"><option value="ALL">सभी क्लस्टर</option></select><select id="aCategory"><option value="ALL">सभी Category</option></select><input id="aQ" placeholder="Category / Engineer / Cluster खोजें"><button onclick="window.print()">प्रिंट</button></div><div class="wrap"><table class="analysis-table"><thead><tr><th>क्र.</th><th>District</th><th>जनपद</th><th>Category Name</th><th>Sub Engineer / उपयंत्री</th><th>Cluster Name</th><th>Planner New Work</th><th>SIPRI Planned</th><th>लंबित</th><th>योजना %</th></tr></thead><tbody id="analysisBody"><tr><td colspan="10" style="text-align:center">डेटा लोड हो रहा है…</td></tr></tbody></table></div></section><div class="meta" id="meta"></div></main><script src="planner-portal-data.js?v=2"></script><script src="planner-new-work-data-gzip.js"></script><script src="planner-engineer-summary-data.js"></script><script>
+<div class="kpis"><div class="kpi"><small>District MAIHAR</small><strong>3 जनपद<span>245 ग्राम पंचायत</span></strong></div><div class="kpi"><small>District SATNA</small><strong>5 जनपद<span>452 ग्राम पंचायत</span></strong></div><div class="kpi"><small>Planner Portal में लिए गए नवीन कार्य</small><strong id="kNew">32,994</strong></div><div class="kpi"><small>SIPRI में योजनाबद्ध</small><strong id="kSipri">0</strong></div></div><section class="box" id="janpadSection"><h2>जनपदवार — Planner Portal से SIPRI प्रगति</h2>
+<div class="tools">
+  <select id="janpadSort">
+    <option value="default">Sort — District / Default</option>
+    <option value="nameAsc">Name — A to Z</option>
+    <option value="nameDesc">Name — Z to A</option>
+    <option value="newAsc">New Work — Lowest to Highest</option>
+    <option value="newDesc">New Work — Highest to Lowest</option>
+    <option value="progressAsc">Progress % — Lowest to Highest</option>
+    <option value="progressDesc">Progress % — Highest to Lowest</option>
+  </select>
+</div><div class="wrap" style="max-height:none"><table class="janpad-table"><thead><tr><th>क्र.</th><th>जनपद</th><th>नवीन कार्य संख्या</th><th>SIPRI में Planned Work</th><th>SIPRI Pending</th><th>Progress %</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section><section class="box" id="analysisSection"><h2>Category + Sub Engineer + Cluster Name-wise Planner New Work</h2><div class="analysis-note">Planning Summary Excel के Planner New Work और GP → Sub Engineer / Cluster mapping पर आधारित analysis</div><div class="tools"><select id="aDistrict"><option value="ALL">सभी District</option></select><select id="aJanpad"><option value="ALL">सभी जनपद</option></select><select id="aEngineer"><option value="ALL">सभी उपयंत्री</option></select><select id="aCluster"><option value="ALL">सभी क्लस्टर</option></select><select id="aCategory"><option value="ALL">सभी Category</option></select>
+<select id="aSort">
+  <option value="default">Sort — Default</option>
+  <option value="nameAsc">Name — A to Z</option>
+  <option value="nameDesc">Name — Z to A</option>
+  <option value="plannerAsc">Planner Work — Lowest to Highest</option>
+  <option value="plannerDesc">Planner Work — Highest to Lowest</option>
+  <option value="progressAsc">Progress % — Lowest to Highest</option>
+  <option value="progressDesc">Progress % — Highest to Lowest</option>
+</select><input id="aQ" placeholder="Category / Engineer / Cluster खोजें"><button onclick="window.print()">प्रिंट</button></div><div class="wrap"><table class="analysis-table"><thead><tr><th>क्र.</th><th>District</th><th>जनपद</th><th>Category Name</th><th>Sub Engineer / उपयंत्री</th><th>Cluster Name</th><th>Planner New Work</th><th>SIPRI Planned</th><th>लंबित</th><th>योजना %</th></tr></thead><tbody id="analysisBody"><tr><td colspan="10" style="text-align:center">डेटा लोड हो रहा है…</td></tr></tbody></table></div></section><div class="meta" id="meta"></div></main><script src="planner-portal-data.js?v=2"></script><script src="planner-new-work-data-gzip.js"></script><script src="planner-engineer-summary-data.js"></script><script>
 function printSelected(){
   const scope=document.getElementById('printScope')?.value||'all';
   document.body.classList.remove('print-janpad','print-analysis');
@@ -35,19 +55,42 @@ function printSelected(){
     {district:'MAIHAR',blocks:['Amarpatan','Maihar','Ramnagar']},
     {district:'SATNA',blocks:['Majhgawan','Nagod','Rampur baghelan','Sohawal','Unchahara']}
   ];
+  const sort=$('janpadSort')?.value||'default';
   let grandP=0,grandS=0,sn=1,h='';
   for(const g of groups){
-    let dp=0,ds=0;
-    for(const b of g.blocks){
+    let items=g.blocks.map(b=>{
       const p=Number(OFF.blocks[b]||0);
       const s=ER.filter(x=>x[1]===b).reduce((a,x)=>a+Number(x[4]||0),0);
       const pend=Math.max(0,p-s),pct=p?100*s/p:0;
-      dp+=p;ds+=s;grandP+=p;grandS+=s;
-      const label=b==='Sohawal'?'SATNA':b.toUpperCase();
-      h+=`<tr><td>${sn++}</td><td><b>${esc(label)}</b></td><td class="good">${n(p)}</td><td>${n(s)}</td><td class="bad">${n(pend)}</td><td class="bad">${pct.toFixed(1)}%</td></tr>`;
+      return{b,p,s,pend,pct,label:b==='Sohawal'?'SATNA':b.toUpperCase()};
+    });
+    if(sort==='nameAsc')items.sort((a,b)=>a.label.localeCompare(b.label,'en',{sensitivity:'base'}));
+    else if(sort==='nameDesc')items.sort((a,b)=>b.label.localeCompare(a.label,'en',{sensitivity:'base'}));
+    else if(sort==='newAsc')items.sort((a,b)=>a.p-b.p||a.label.localeCompare(b.label));
+    else if(sort==='newDesc')items.sort((a,b)=>b.p-a.p||a.label.localeCompare(b.label));
+    else if(sort==='progressAsc')items.sort((a,b)=>a.pct-b.pct||a.label.localeCompare(b.label));
+    else if(sort==='progressDesc')items.sort((a,b)=>b.pct-a.pct||a.label.localeCompare(b.label));
+    let dp=0,ds=0;
+    for(const x of items){
+      dp+=x.p;ds+=x.s;grandP+=x.p;grandS+=x.s;
+      h+=`<tr><td>${sn++}</td><td><b>${esc(x.label)}</b></td><td class="good">${n(x.p)}</td><td>${n(x.s)}</td><td class="bad">${n(x.pend)}</td><td class="bad">${x.pct.toFixed(1)}%</td></tr>`;
     }
     h+=`<tr class="district-total"><td></td><td>${g.district} DISTRICT TOTAL</td><td>${n(dp)}</td><td>${n(ds)}</td><td>${n(Math.max(0,dp-ds))}</td><td>${dp?(100*ds/dp).toFixed(1):'0.0'}%</td></tr>`;
   }
   h+=`<tr class="grand-total"><td></td><td>कुल (MAIHAR + SATNA)</td><td>${n(grandP)}</td><td>${n(grandS)}</td><td>${n(Math.max(0,grandP-grandS))}</td><td>${grandP?(100*grandS/grandP).toFixed(1):'0.0'}%</td></tr>`;
   $('janpadBody').innerHTML=h;
-}renderJanpad();$('meta').textContent='Metric: Number Of New Works Taken In Planner Portal • Source: Official Planner • Updated: '+(d.updatedAt||'—');let A={d:[],b:[],c:[],e:[],l:[],r:[]},R=[];async function loadA(){const bin=Uint8Array.from(atob(window.PNWD_GZIP||''),c=>c.charCodeAt(0));const ds=new DecompressionStream('gzip');const txt=await new Response(new Blob([bin]).stream().pipeThrough(ds)).text();A=JSON.parse(txt);if(typeof window.applyPlannerEngineerCorrections==='function')A=window.applyPlannerEngineerCorrections(A);R=(A.r||[]).map(x=>({district:A.d[x[0]],janpad:A.b[x[1]],category:A.c[x[2]],engineer:A.e[x[3]],cluster:A.l[x[4]],planner:Number(x[5]||0),sipri:Number(x[6]||0)}));initA()}function fillA(id,vals,label){const el=$(id),old=el.value;el.innerHTML=`<option value="ALL">${label}</option>`+[...new Set(vals)].filter(Boolean).sort((a,b)=>a.localeCompare(b,'hi')).map(v=>`<option>${esc(v)}</option>`).join('');if([...el.options].some(o=>o.value===old))el.value=old}function cascadeA(){const dv=$('aDistrict').value;fillA('aJanpad',R.filter(x=>dv==='ALL'||x.district===dv).map(x=>x.janpad),'सभी जनपद');const jv=$('aJanpad').value,base=R.filter(x=>(dv==='ALL'||x.district===dv)&&(jv==='ALL'||x.janpad===jv));fillA('aEngineer',base.map(x=>x.engineer),'सभी उपयंत्री');fillA('aCluster',base.map(x=>x.cluster),'सभी क्लस्टर');fillA('aCategory',base.map(x=>x.category),'सभी Category')}function renderA(){const dv=$('aDistrict').value,jv=$('aJanpad').value,ev=$('aEngineer').value,lv=$('aCluster').value,cv=$('aCategory').value,qv=$('aQ').value.trim().toLowerCase(),r=R.filter(x=>(dv==='ALL'||x.district===dv)&&(jv==='ALL'||x.janpad===jv)&&(ev==='ALL'||x.engineer===ev)&&(lv==='ALL'||x.cluster===lv)&&(cv==='ALL'||x.category===cv)&&(!qv||[x.category,x.engineer,x.cluster,x.janpad].join(' ').toLowerCase().includes(qv)));let p=0,s=0;$('analysisBody').innerHTML=r.map((x,i)=>{p+=x.planner;s+=x.sipri;const pend=Math.max(0,x.planner-x.sipri),pct=x.planner?100*x.sipri/x.planner:0;return `<tr><td>${i+1}</td><td>${esc(x.district)}</td><td>${esc(x.janpad)}</td><td><b>${esc(x.category)}</b></td><td>${esc(x.engineer)}</td><td>${esc(x.cluster)}</td><td class="good">${n(x.planner)}</td><td>${n(x.sipri)}</td><td class="bad">${n(pend)}</td><td class="bad">${pct.toFixed(1)}%</td></tr>`}).join('')+`<tr class="total"><td></td><td colspan="5">Mapped Category Detail Total</td><td>${n(p)}</td><td>${n(s)}</td><td>${n(Math.max(0,p-s))}</td><td>${p?(100*s/p).toFixed(1):'0.0'}%</td></tr>`}function initA(){fillA('aDistrict',R.map(x=>x.district),'सभी District');cascadeA();renderA();$('aDistrict').onchange=()=>{cascadeA();renderA()};$('aJanpad').onchange=()=>{cascadeA();renderA()};['aEngineer','aCluster','aCategory'].forEach(id=>$(id).onchange=renderA);$('aQ').oninput=renderA}loadA().catch(e=>{$('analysisBody').innerHTML=`<tr><td colspan="10" style="text-align:center;color:#c62828">Data load error: ${esc(e.message)}</td></tr>`});})();</script></body></html>
+}renderJanpad();$('janpadSort').onchange=renderJanpad;$('meta').textContent='Metric: Number Of New Works Taken In Planner Portal • Source: Official Planner • Updated: '+(d.updatedAt||'—');let A={d:[],b:[],c:[],e:[],l:[],r:[]},R=[];async function loadA(){const bin=Uint8Array.from(atob(window.PNWD_GZIP||''),c=>c.charCodeAt(0));const ds=new DecompressionStream('gzip');const txt=await new Response(new Blob([bin]).stream().pipeThrough(ds)).text();A=JSON.parse(txt);if(typeof window.applyPlannerEngineerCorrections==='function')A=window.applyPlannerEngineerCorrections(A);R=(A.r||[]).map(x=>({district:A.d[x[0]],janpad:A.b[x[1]],category:A.c[x[2]],engineer:A.e[x[3]],cluster:A.l[x[4]],planner:Number(x[5]||0),sipri:Number(x[6]||0)}));initA()}function fillA(id,vals,label){const el=$(id),old=el.value;el.innerHTML=`<option value="ALL">${label}</option>`+[...new Set(vals)].filter(Boolean).sort((a,b)=>a.localeCompare(b,'hi')).map(v=>`<option>${esc(v)}</option>`).join('');if([...el.options].some(o=>o.value===old))el.value=old}function cascadeA(){const dv=$('aDistrict').value;fillA('aJanpad',R.filter(x=>dv==='ALL'||x.district===dv).map(x=>x.janpad),'सभी जनपद');const jv=$('aJanpad').value,base=R.filter(x=>(dv==='ALL'||x.district===dv)&&(jv==='ALL'||x.janpad===jv));fillA('aEngineer',base.map(x=>x.engineer),'सभी उपयंत्री');fillA('aCluster',base.map(x=>x.cluster),'सभी क्लस्टर');fillA('aCategory',base.map(x=>x.category),'सभी Category')}function renderA(){
+  const dv=$('aDistrict').value,jv=$('aJanpad').value,ev=$('aEngineer').value,lv=$('aCluster').value,cv=$('aCategory').value,qv=$('aQ').value.trim().toLowerCase(),sort=$('aSort')?.value||'default';
+  let r=R.filter(x=>(dv==='ALL'||x.district===dv)&&(jv==='ALL'||x.janpad===jv)&&(ev==='ALL'||x.engineer===ev)&&(lv==='ALL'||x.cluster===lv)&&(cv==='ALL'||x.category===cv)&&(!qv||[x.category,x.engineer,x.cluster,x.janpad].join(' ').toLowerCase().includes(qv)));
+  if(sort!=='default')r=[...r];
+  const nameKey=x=>[x.engineer,x.category,x.cluster,x.janpad].join(' | ');
+  const progress=x=>x.planner?100*x.sipri/x.planner:0;
+  if(sort==='nameAsc')r.sort((a,b)=>nameKey(a).localeCompare(nameKey(b),'hi',{sensitivity:'base'}));
+  else if(sort==='nameDesc')r.sort((a,b)=>nameKey(b).localeCompare(nameKey(a),'hi',{sensitivity:'base'}));
+  else if(sort==='plannerAsc')r.sort((a,b)=>a.planner-b.planner||nameKey(a).localeCompare(nameKey(b),'hi'));
+  else if(sort==='plannerDesc')r.sort((a,b)=>b.planner-a.planner||nameKey(a).localeCompare(nameKey(b),'hi'));
+  else if(sort==='progressAsc')r.sort((a,b)=>progress(a)-progress(b)||nameKey(a).localeCompare(nameKey(b),'hi'));
+  else if(sort==='progressDesc')r.sort((a,b)=>progress(b)-progress(a)||nameKey(a).localeCompare(nameKey(b),'hi'));
+  let p=0,s=0;
+  $('analysisBody').innerHTML=r.map((x,i)=>{p+=x.planner;s+=x.sipri;const pend=Math.max(0,x.planner-x.sipri),pct=x.planner?100*x.sipri/x.planner:0;return `<tr><td>${i+1}</td><td>${esc(x.district)}</td><td>${esc(x.janpad)}</td><td><b>${esc(x.category)}</b></td><td>${esc(x.engineer)}</td><td>${esc(x.cluster)}</td><td class="good">${n(x.planner)}</td><td>${n(x.sipri)}</td><td class="bad">${n(pend)}</td><td class="bad">${pct.toFixed(1)}%</td></tr>`}).join('')+`<tr class="total"><td></td><td colspan="5">Mapped Category Detail Total</td><td>${n(p)}</td><td>${n(s)}</td><td>${n(Math.max(0,p-s))}</td><td>${p?(100*s/p).toFixed(1):'0.0'}%</td></tr>`;
+}function initA(){fillA('aDistrict',R.map(x=>x.district),'सभी District');cascadeA();renderA();$('aDistrict').onchange=()=>{cascadeA();renderA()};$('aJanpad').onchange=()=>{cascadeA();renderA()};['aEngineer','aCluster','aCategory','aSort'].forEach(id=>$(id).onchange=renderA);$('aQ').oninput=renderA}loadA().catch(e=>{$('analysisBody').innerHTML=`<tr><td colspan="10" style="text-align:center;color:#c62828">Data load error: ${esc(e.message)}</td></tr>`});})();</script></body></html>
