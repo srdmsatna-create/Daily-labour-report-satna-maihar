@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ek Bagiya Print / PDF</title>
+<style>
+:root{font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#102a43}
+*{box-sizing:border-box}body{margin:0;background:#eef4fa}
+.toolbar{position:sticky;top:0;z-index:10;display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 14px;background:#073763;color:#fff}
+.toolbar b{margin-right:auto}.toolbar select,.toolbar button{min-height:38px;border-radius:8px;border:1px solid #b7c9da;padding:8px 11px;font-weight:800}
+.toolbar button{background:#fff;color:#073763;cursor:pointer}
+#status{font-size:12px;color:#d7ecff;width:100%}
+#stage{max-width:1500px;margin:14px auto;padding:0 12px}
+iframe{width:100%;height:78vh;border:1px solid #b8c8d8;border-radius:12px;background:#fff}
+#printHost{display:none}
+@media print{
+ @page{size:A4 landscape;margin:7mm}
+ body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .toolbar,#stage{display:none!important}
+ #printHost{display:block!important}
+ #printHost .print-title{text-align:center;margin:0 0 4mm}
+ #printHost .print-title h1{font-size:17pt;margin:0 0 1mm}
+ #printHost .print-title p{font-size:8pt;margin:0;color:#475569}
+ #printHost .ek-block-summary{display:block!important;margin:0 0 5mm!important;border:0!important;border-radius:0!important;overflow:visible!important;background:#fff!important}
+ #printHost .ek-block-title{background:#b7ddea!important;color:#0670bc!important;text-align:center!important;font-size:14pt!important;font-weight:900!important;padding:2mm!important;text-decoration:underline!important}
+ #printHost .table-wrap,#printHost .ek-block-wrap{display:block!important;overflow:visible!important;max-height:none!important;border:0!important}
+ #printHost #ekBlockTable,#printHost .ek-block-table{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
+ #printHost #ekBlockTable th,#printHost #ekBlockTable td,#printHost .ek-block-table th,#printHost .ek-block-table td{border:1px solid #5f6b76!important;font-size:8pt!important;line-height:1.12!important;padding:1.6mm .7mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important}
+ #printHost #ekBlockTable th,#printHost .ek-block-table th{background:#eef5ff!important;font-weight:800!important}
+ #printHost #reportTable{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
+ #printHost #reportTable th,#printHost #reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}
+ #printHost #reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}
+ #printHost #reportTable thead,#printHost #ekBlockTable thead{display:table-header-group!important}
+ #printHost #reportTable tr,#printHost #ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}
+ #printHost .district-total td,#printHost .grand-total td,#printHost .total-row td{font-weight:900!important;background:#dbe9fb!important}
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <b>एक बगिया माँ के नाम — Safe Print / PDF</b>
+  <select id="scope">
+    <option value="summary">Block / District Summary</option>
+    <option value="detail">Engineer / Cluster Detail</option>
+    <option value="all">पूरी Ek Bagiya Report</option>
+  </select>
+  <button id="prepare">Print / PDF</button>
+  <div id="status">Dashboard load हो रहा है…</div>
+</div>
+<div id="stage"><iframe id="dash" src="./?ekprint=1"></iframe></div>
+<div id="printHost"></div>
+<script>
+const f=document.getElementById('dash'),statusEl=document.getElementById('status'),host=document.getElementById('printHost');
+function cleanClone(el){
+  const x=el.cloneNode(true);
+  x.querySelectorAll('button,select,input,.no-print,script,style').forEach(n=>n.remove());
+  return x;
+}
+async function prepare(){
+  const d=f.contentDocument,w=f.contentWindow;
+  if(!d||!w){statusEl.textContent='Dashboard access नहीं मिला।';return}
+  const tab=d.querySelector('#v64MainTabs .tab[data-view="ekbagiya"]');
+  if(tab && !tab.classList.contains('active')) tab.click();
+  statusEl.textContent='Ek Bagiya report तैयार हो रही है…';
+  await new Promise(r=>setTimeout(r,700));
+  const scope=document.getElementById('scope').value;
+  const summary=d.getElementById('ekBlockSummary');
+  const detail=d.getElementById('reportTable');
+  const title=d.getElementById('viewTitle')?.textContent||'एक बगिया माँ के नाम';
+  const meta=d.getElementById('viewMeta')?.textContent||'';
+  host.innerHTML='';
+  if(scope!=='summary'){
+    const t=document.createElement('div');t.className='print-title';
+    t.innerHTML='<h1>'+title+'</h1><p>'+meta+'</p>';
+    host.appendChild(t);
+  }
+  if((scope==='summary'||scope==='all')&&summary) host.appendChild(cleanClone(summary));
+  if((scope==='detail'||scope==='all')&&detail){
+    const wrap=document.createElement('div');wrap.className='table-wrap';
+    wrap.appendChild(cleanClone(detail));host.appendChild(wrap);
+  }
+  if(!host.children.length){statusEl.textContent='Ek Bagiya table नहीं मिली।';return}
+  statusEl.textContent='Print preview खुल रहा है…';
+  setTimeout(()=>window.print(),120);
+}
+f.addEventListener('load',()=>{
+  statusEl.textContent='Dashboard loaded. Print/PDF के लिए विकल्प चुनें।';
+});
+document.getElementById('prepare').addEventListener('click',prepare);
+</script>
+</body></html>
