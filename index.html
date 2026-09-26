@@ -1117,6 +1117,31 @@ body[data-report-view="official"] .official-grid th{
 /* SRDM_FIXED_PORTAL_CARDS_V2 */
 .srdm-portal-card .srdm-app-icon.srdm-thumb-icon{width:70px!important;height:70px!important;min-width:70px!important;padding:0!important;overflow:hidden!important;background:#fff!important;border-radius:15px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}.srdm-portal-card .srdm-app-icon.srdm-thumb-icon svg,.srdm-portal-card .srdm-app-icon.srdm-thumb-icon img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important}.srdm-portal-jgsa .srdm-app-icon{font-size:34px!important;background:#04a6b7!important;color:#fff!important}
 
+
+/* SRDM_MAIN_EK_BLOCK_SUMMARY_V1 */
+.ek-block-summary{margin:0 14px 14px;border:1px solid #8fa8bd;border-radius:12px;overflow:hidden;background:#fff}
+.ek-block-title{background:#b7ddea;color:#0670bc;text-align:center;font-size:22px;font-weight:950;text-decoration:underline;padding:8px 10px}
+.ek-block-wrap{max-height:none!important;overflow:auto!important}
+.ek-block-table{min-width:1180px;width:100%;border-collapse:collapse;table-layout:fixed}
+.ek-block-table th,.ek-block-table td{border:1px solid #66727d!important;text-align:center!important;vertical-align:middle!important;padding:8px 5px!important;font-size:14px!important;font-weight:800!important;background:#fff}
+.ek-block-table th{color:#111!important;background:#fff!important}
+.ek-block-table th:first-child{color:#0a6b30!important}
+.ek-block-table .pct-head{background:#92d347!important}
+.ek-block-table td:first-child{text-align:left!important;font-weight:950!important}
+.ek-block-table .pct-cell{background:#fff600!important;font-weight:950!important}
+.ek-block-table .district-total td{background:#dfeaf3!important;color:#112f4b!important;font-weight:950!important;border-top:2px solid #6f96b8!important;border-bottom:2px solid #6f96b8!important}
+.ek-block-table .district-total td:first-child{background:#fff600!important;text-align:center!important}
+.ek-block-table .district-total td.pct-cell{background:#fff600!important}
+.ek-block-table .grand-total td{background:#cadfed!important;color:#082d50!important;font-weight:950!important;border-top:3px solid #315f91!important;border-bottom:3px solid #315f91!important}
+.ek-block-table .grand-total td:first-child{background:#fff600!important;text-align:center!important}
+.ek-block-table .grand-total td.pct-cell{background:#fff600!important}
+body:not([data-report-view="ekbagiya"]) #ekBlockSummary{display:none!important}
+@media print{
+  body[data-report-view="ekbagiya"] #ekBlockSummary{display:block!important;margin:0 0 3mm!important}
+  .ek-block-table{min-width:0!important;width:100%!important}
+  .ek-block-table th,.ek-block-table td{font-size:6.3pt!important;padding:.8mm .4mm!important}
+  .ek-block-title{font-size:12pt!important;padding:2mm!important}
+}
 </style>
 <style id="SRDM_PREMIUM_TABS_AND_ZERO_TABLE_V1">
 /* Premium dashboard navigation — bold, attractive, soft pulse without harsh flashing */
@@ -1910,7 +1935,12 @@ body[data-report-view="category"] #reportTable tbody tr.total-row td{font-size:2
 
 <section class="kpis ui-retired" id="kpis"></section>
 <section class="alerts ui-retired" id="alerts"></section>
-<section class="report-card clean-report-card"><div class="report-head"><div><h2 id="viewTitle">e-Muster Issuance Report</h2><p id="viewMeta"></p></div></div><div id="reportDeficiencyAlert" class="report-deficiency-alert" hidden></div><div class="table-wrap"><table id="reportTable"></table></div></section>
+<section class="report-card clean-report-card"><div class="report-head"><div><h2 id="viewTitle">e-Muster Issuance Report</h2><p id="viewMeta"></p></div></div><div id="reportDeficiencyAlert" class="report-deficiency-alert" hidden></div>
+<div id="ekBlockSummary" class="ek-block-summary" hidden>
+  <div class="ek-block-title">एक बगिया माँ के नाम — ब्लॉक वार स्थिति (Amount in Lakh)</div>
+  <div class="table-wrap ek-block-wrap"><table id="ekBlockTable" class="ek-block-table"></table></div>
+</div>
+<div class="table-wrap"><table id="reportTable"></table></div></section>
 <section class="note ui-retired"><b>Engineer-wise:</b> अब हर Janpad में प्रत्येक Engineer / Upyantri की केवल एक consolidated row दिखाई जाती है। एक Engineer के एक से अधिक Cluster होने पर Cluster(s) में सभी Cluster साथ दिखेंगे। Engineer-wise GP, Progress, Ongoing, Works with MR, Labour और Muster Rolls अब RepDay के Engineer distribution पर आधारित रहते हुए प्रत्येक Janpad के Official Sheet1 / Screen-2 totals से exact reconcile होते हैं। PMAY-G / Ek Bagiya ongoing counts VBG work-level mapping से आते हैं।<br><b>Dysfunctional GP:</b> Engineer-wise count अब <b>Total GP − GP Progress</b> से बनता है और प्रत्येक Janpad का total Official Sheet1 / Screen-2 के Dysfunctional GP से exact match करता है।</section>
 </main><footer>SRDM SATNA • VB-G RAM G • District Satna & Maihar • 8 Janpad Monitoring</footer>
 
@@ -2282,8 +2312,53 @@ function ekBagiyaFiltered(){
   });
   return source.filter(r=>(d==='ALL'||clean(r.Zila)===d)&&(j==='ALL'||clean(r.Janpad)===j)&&(e==='ALL'||clean(r.Upyantri)===e)&&(c==='ALL'||clean(r.Cluster)===c));
 }
+
+function renderEkBagiyaBlockSummary(src){
+  const wrap=$('ekBlockSummary'),tbl=$('ekBlockTable');
+  if(!wrap||!tbl)return;
+  wrap.hidden=false;
+  const jp=v=>{const x=clean(v).toUpperCase();return x==='SOHAWAL'?'SATNA':x};
+  const groups=[
+    {district:'MAIHAR',blocks:['AMARPATAN','MAIHAR','RAMNAGAR']},
+    {district:'SATNA',blocks:['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']}
+  ];
+  const target={AMARPATAN:100,MAIHAR:100,RAMNAGAR:100,MAJHGAWAN:100,NAGOD:100,'RAMPUR BAGHELAN':100,SATNA:100,UNCHAHARA:100};
+  const map=new Map();
+  for(const r of src){
+    const j=jp(r.Janpad),d=['AMARPATAN','MAIHAR','RAMNAGAR'].includes(j)?'MAIHAR':'SATNA',k=d+'|'+j;
+    if(!map.has(k))map.set(k,{j,target:target[j]||100,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0});
+    const a=map.get(k);
+    a.works++;
+    a.san+=num(r['Sanction Amount Total']);
+    if(clean(r['Work Status']).toLowerCase()==='ongoing')a.ongoing++;
+    a.wageTarget+=num(r['Wage Sanctioned']);
+    a.wageBooked+=num(r['Overall Booked Wages']);
+    a.matTarget+=num(r['Material Sanctioned']);
+    a.matBooked+=num(r['Overall Booked Material']);
+  }
+  const f=v=>(num(v)/100000).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+  const row=(a,cls='')=>{
+    const wp=a.wageTarget?100*a.wageBooked/a.wageTarget:0,mp=a.matTarget?100*a.matBooked/a.matTarget:0;
+    const totalCost=a.wageTarget+a.matTarget,totalExp=a.wageBooked+a.matBooked,tp=totalCost?100*totalExp/totalCost:0;
+    return `<tr class="${cls}"><td>${esc(a.j)}</td><td>${fmt(a.target)}</td><td>${fmt(a.works)}</td><td>${f(a.san)}</td><td>${fmt(a.ongoing)}</td><td>${f(a.wageTarget)}</td><td>${f(a.wageBooked)}</td><td class="pct-cell">${wp.toFixed(2)}%</td><td>${f(a.matTarget)}</td><td>${f(a.matBooked)}</td><td>${mp.toFixed(2)}%</td><td>${f(totalCost)}</td><td>${f(totalExp)}</td><td class="pct-cell">${tp.toFixed(2)}%</td></tr>`;
+  };
+  let h=`<thead><tr><th rowspan="2">Block</th><th>Block</th><th>Sanctioned</th><th>Sanctioned</th><th>Ongoing</th><th>Target Wage</th><th>Wage</th><th rowspan="2" class="pct-head">%</th><th>Target Material</th><th>Material</th><th rowspan="2">%</th><th rowspan="2">Total<br>Cost</th><th rowspan="2">Total<br>Exp</th><th rowspan="2" class="pct-head">%</th></tr><tr><th>Target</th><th>Works</th><th>Cost</th><th>Works</th><th>Cost</th><th>Booked</th><th>Cost</th><th>Booked</th></tr></thead><tbody>`;
+  const grand={j:'कुल (MAIHAR + SATNA)',target:0,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
+  for(const g of groups){
+    const dt={j:g.district+' DISTRICT TOTAL',target:0,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
+    for(const j of g.blocks){
+      const a=map.get(g.district+'|'+j)||{j,target:target[j]||100,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
+      h+=row(a);
+      for(const k of ['target','works','san','ongoing','wageTarget','wageBooked','matTarget','matBooked']){dt[k]+=a[k];grand[k]+=a[k]}
+    }
+    h+=row(dt,'district-total');
+  }
+  h+=row(grand,'grand-total')+'</tbody>';
+  tbl.innerHTML=h;
+}
 function renderEkBagiyaDashboard(){
   const src=ekBagiyaFiltered();
+  renderEkBagiyaBlockSummary(src);
   const m=new Map();
   const bucket=p=>p<=0?'b0':p<=25?'b25':p<=60?'b60':p<=75?'b75':p<=90?'b90':'b90p';
   for(const r of src){
@@ -2629,7 +2704,7 @@ function renderIncompleteWorks(){
  data.forEach((r,i)=>{h+=`<tr>${cell(i+1,true)}${cell(r.category)}${cell(r.incomplete,true)}<td class="zero-exp">${fmt(r.zero1)}</td><td class="zero-exp">${fmt(r.zero2)}</td><td class="zero-exp">${fmt(r.zero3)}</td><td class="zero-exp">${fmt(r.zeroInception)}</td>${cell(r.onlyMaterial,true)}<td class="low-util">${fmt(r.u5)}</td><td class="low-util">${fmt(r.u5to30)}</td>${cell(r.u75to100,true)}${cell(r.u100p,true)}</tr>`});
  const keys=['incomplete','zero1','zero2','zero3','zeroInception','onlyMaterial','u5','u5to30','u75to100','u100p'],t={};keys.forEach(k=>t[k]=sum(data,k));h+=`<tr class="total-row"><td></td><td>TOTAL</td>${keys.map(k=>cell(t[k],true)).join('')}</tr>`;if(!data.length)h+=`<tr><td colspan="12" class="empty-table">Current filters में incomplete work नहीं मिला।</td></tr>`;h+='</tbody>';$('reportTable').innerHTML=h;
 }
-function render(){document.body.dataset.reportView=view;const list=filteredRows();const deficiencyAlert=$('reportDeficiencyAlert');if(deficiencyAlert){deficiencyAlert.hidden=true;deficiencyAlert.innerHTML=''}$('reportDate').textContent=todayDate();kpis(list);renderAlerts(list);$('reportTable').className='report-table '+(view==='dysjanpad'?'dysfunctional-grid':view==='emuster'?'emuster-grid':view==='state'?'emuster-grid':view==='official'?'official-grid':view==='engineer'?'engineer-grid':view==='district'?'district-grid':view==='priority'?'priority-grid':view==='dysfunctional'?'dysfunctional-grid':view==='category'?'category-grid':view==='categorysubeng'?'category-subeng-grid':view==='categoryworks'?'ongoing-detail-grid':view==='mandaysgen'?'category-grid':view==='expbucket'?'expbucket-grid':view==='ongoingall'?'ongoing-summary-grid':view==='ongoingdetails'?'ongoing-detail-grid':view==='ekbagiya'?'ekbagiya-grid':'gp-grid');if(view==='dysjanpad')return renderJanpadDysfunctional();if(view==='emuster')return renderEmuster();if(view==='state')return renderStateDistrict();if(view==='official')return renderOfficial();if(view==='ekbagiya')return renderEkBagiyaDashboard();if(view==='ongoingall')return renderOngoingAllSummary();if(view==='ongoingdetails')return renderOngoingDetails();if(view==='category')return renderCategoryBuckets();if(view==='categorysubeng')return renderCategorySubEngineer();if(view==='categoryworks')return renderCategoryWorks();if(view==='mandaysgen')return renderMandaysGeneration();if(view==='expbucket')return renderExpBuckets();if(view==='priority')return renderPriorityAlerts(list);if(view==='dysfunctional')return renderDysfunctionalBucket(list);if(view==='engineer')return renderEngineerOfficial();if(view==='district'){if($('engineerFilter').value==='ALL'&&$('clusterFilter').value==='ALL'&&daily.length){const dd=dailyFiltered().map(r=>({...r,district:districtOf(r.janpad)}));const d=aggregate(dd,['district'],['totalGP','gpsProgress','labour','worksMR','mrs','noEkyc']);const om=aggregate(officialFiltered().map(r=>({...r,district:districtOf(r.janpad)})),['district'],['ongoingAll']);const ox=new Map(om.map(r=>[r.district,r.ongoingAll]));d.forEach(r=>r.ongoing=ox.get(r.district)||0);return standardTable(d,[['district','District'],['totalGP','Total GP',1],['gpsProgress','GP Progress',1],['labour','Labour',1],['ongoing','Ongoing Works',1],['worksMR','Works with MR',1],['mrs','Muster Rolls',1]],'Full District Report: Screen 2 Matched')}const d=aggregate(list.map(r=>({...r,district:districtOf(r.janpad)})),['district'],['gps','gpsProgress','ongoing','worksMR','labour','mrs','noEkyc']);return standardTable(d,[['district','District'],['gps','Total GP',1],['gpsProgress','GP Progress',1],['labour','Labour',1],['ongoing','Ongoing Works',1],['worksMR','Works with MR',1],['mrs','Muster Rolls',1]],'Full District Report')}return standardTable(list,[['janpad','Janpad'],['engineer','Engineer'],['cluster','Cluster'],['panchayat','Gram Panchayat'],['labour','Labour',1],['ongoing','Ongoing Works',1],['worksMR','Works with MR',1],['mrs','Muster Rolls',1]],'Gram Panchayat Detail')}
+function render(){document.body.dataset.reportView=view;const ekSummary=$('ekBlockSummary');if(ekSummary&&view!=='ekbagiya')ekSummary.hidden=true;const list=filteredRows();const deficiencyAlert=$('reportDeficiencyAlert');if(deficiencyAlert){deficiencyAlert.hidden=true;deficiencyAlert.innerHTML=''}$('reportDate').textContent=todayDate();kpis(list);renderAlerts(list);$('reportTable').className='report-table '+(view==='dysjanpad'?'dysfunctional-grid':view==='emuster'?'emuster-grid':view==='state'?'emuster-grid':view==='official'?'official-grid':view==='engineer'?'engineer-grid':view==='district'?'district-grid':view==='priority'?'priority-grid':view==='dysfunctional'?'dysfunctional-grid':view==='category'?'category-grid':view==='categorysubeng'?'category-subeng-grid':view==='categoryworks'?'ongoing-detail-grid':view==='mandaysgen'?'category-grid':view==='expbucket'?'expbucket-grid':view==='ongoingall'?'ongoing-summary-grid':view==='ongoingdetails'?'ongoing-detail-grid':view==='ekbagiya'?'ekbagiya-grid':'gp-grid');if(view==='dysjanpad')return renderJanpadDysfunctional();if(view==='emuster')return renderEmuster();if(view==='state')return renderStateDistrict();if(view==='official')return renderOfficial();if(view==='ekbagiya')return renderEkBagiyaDashboard();if(view==='ongoingall')return renderOngoingAllSummary();if(view==='ongoingdetails')return renderOngoingDetails();if(view==='category')return renderCategoryBuckets();if(view==='categorysubeng')return renderCategorySubEngineer();if(view==='categoryworks')return renderCategoryWorks();if(view==='mandaysgen')return renderMandaysGeneration();if(view==='expbucket')return renderExpBuckets();if(view==='priority')return renderPriorityAlerts(list);if(view==='dysfunctional')return renderDysfunctionalBucket(list);if(view==='engineer')return renderEngineerOfficial();if(view==='district'){if($('engineerFilter').value==='ALL'&&$('clusterFilter').value==='ALL'&&daily.length){const dd=dailyFiltered().map(r=>({...r,district:districtOf(r.janpad)}));const d=aggregate(dd,['district'],['totalGP','gpsProgress','labour','worksMR','mrs','noEkyc']);const om=aggregate(officialFiltered().map(r=>({...r,district:districtOf(r.janpad)})),['district'],['ongoingAll']);const ox=new Map(om.map(r=>[r.district,r.ongoingAll]));d.forEach(r=>r.ongoing=ox.get(r.district)||0);return standardTable(d,[['district','District'],['totalGP','Total GP',1],['gpsProgress','GP Progress',1],['labour','Labour',1],['ongoing','Ongoing Works',1],['worksMR','Works with MR',1],['mrs','Muster Rolls',1]],'Full District Report: Screen 2 Matched')}const d=aggregate(list.map(r=>({...r,district:districtOf(r.janpad)})),['district'],['gps','gpsProgress','ongoing','worksMR','labour','mrs','noEkyc']);return standardTable(d,[['district','District'],['gps','Total GP',1],['gpsProgress','GP Progress',1],['labour','Labour',1],['ongoing','Ongoing Works',1],['worksMR','Works with MR',1],['mrs','Muster Rolls',1]],'Full District Report')}return standardTable(list,[['janpad','Janpad'],['engineer','Engineer'],['cluster','Cluster'],['panchayat','Gram Panchayat'],['labour','Labour',1],['ongoing','Ongoing Works',1],['worksMR','Works with MR',1],['mrs','Muster Rolls',1]],'Gram Panchayat Detail')}
 const renderExistingDashboard=render;
 render=function(){
  if(view==='incomplete'){
