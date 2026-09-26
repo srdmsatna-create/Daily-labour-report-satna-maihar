@@ -1099,73 +1099,84 @@ body[data-report-view="official"] .official-grid th{
 .ekbagiya-tab{font-weight:900}.report-table.ekbagiya-grid{min-width:1540px}.report-table.ekbagiya-grid th:nth-child(-n+4),.report-table.ekbagiya-grid td:nth-child(-n+4){text-align:left}.report-table.ekbagiya-grid td:nth-child(5),.report-table.ekbagiya-grid td:nth-child(6){font-weight:850}.report-table.ekbagiya-grid td:nth-child(7){font-weight:850;color:#a13a29}.report-table.ekbagiya-grid td:nth-child(18){font-weight:900;color:#0d5e46}@media print{.report-table.ekbagiya-grid{min-width:0!important;table-layout:fixed}.report-table.ekbagiya-grid th,.report-table.ekbagiya-grid td{font-size:calc(6.2px * var(--table-font-scale));padding:1.8px;white-space:normal;word-break:break-word}}
 
 
-/* SRDM_EK_BAGIYA_PRINT_SCOPE_V2 */
+/* SRDM_EK_BAGIYA_PRINT_SCOPE_V3 */
 @media print{
-  /* When Ek Bagiya scoped print is active, print ONLY the report card. */
-  body.ek-print-all > header,
-  body.ek-print-summary > header,
-  body.ek-print-detail > header,
-  body.ek-print-all > footer,
-  body.ek-print-summary > footer,
-  body.ek-print-detail > footer,
-  body.ek-print-all > .login-screen,
-  body.ek-print-summary > .login-screen,
-  body.ek-print-detail > .login-screen{display:none!important}
+  body[data-ek-print-scope] > header,
+  body[data-ek-print-scope] > footer,
+  body[data-ek-print-scope] > .login-screen{display:none!important}
 
-  body.ek-print-all main.shell > *:not(.clean-report-card),
-  body.ek-print-summary main.shell > *:not(.clean-report-card),
-  body.ek-print-detail main.shell > *:not(.clean-report-card){display:none!important}
+  body[data-ek-print-scope] main.shell > *{display:none!important}
+  body[data-ek-print-scope] main.shell > .clean-report-card{
+    display:block!important;
+    width:100%!important;max-width:none!important;
+    margin:0!important;padding:0!important;border:0!important;box-shadow:none!important;
+  }
+  body[data-ek-print-scope] main.shell{
+    display:block!important;width:100%!important;max-width:none!important;
+    margin:0!important;padding:0!important;
+  }
 
-  body.ek-print-all main.shell,
-  body.ek-print-summary main.shell,
-  body.ek-print-detail main.shell{display:block!important;max-width:none!important;width:100%!important;margin:0!important;padding:0!important}
+  body[data-ek-print-scope] .clean-report-card .report-head{
+    display:block!important;padding:0 0 3mm!important;
+  }
+  body[data-ek-print-scope] .clean-report-card .report-head h2{font-size:15pt!important;margin:0 0 1mm!important}
+  body[data-ek-print-scope] .clean-report-card .report-head p{font-size:8pt!important;margin:0!important}
 
-  body.ek-print-all .clean-report-card,
-  body.ek-print-summary .clean-report-card,
-  body.ek-print-detail .clean-report-card{display:block!important;width:100%!important;margin:0!important;padding:0!important;border:0!important;box-shadow:none!important}
+  body[data-ek-print-scope="summary"] #ekBlockSummary{
+    display:block!important;margin:0!important;border:0!important;border-radius:0!important;
+  }
+  body[data-ek-print-scope="summary"] .clean-report-card > .table-wrap{display:none!important}
+  body[data-ek-print-scope="summary"] #reportTable{display:none!important}
+  body[data-ek-print-scope="summary"] #ekBlockSummary .ek-block-wrap{
+    display:block!important;overflow:visible!important;border:0!important;
+  }
+  body[data-ek-print-scope="summary"] #ekBlockTable{
+    display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;
+    table-layout:fixed!important;border-collapse:collapse!important;
+  }
+  body[data-ek-print-scope="summary"] #ekBlockTable thead{display:table-header-group!important}
+  body[data-ek-print-scope="summary"] #ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}
+  body[data-ek-print-scope="summary"] #ekBlockTable th,
+  body[data-ek-print-scope="summary"] #ekBlockTable td{
+    font-size:8pt!important;line-height:1.12!important;padding:2mm .8mm!important;
+    white-space:normal!important;word-break:break-word!important;
+  }
 
-  body.ek-print-all .report-head,
-  body.ek-print-summary .report-head,
-  body.ek-print-detail .report-head{display:block!important;padding:0 0 3mm!important}
+  body[data-ek-print-scope="detail"] #ekBlockSummary{display:none!important}
+  body[data-ek-print-scope="detail"] .clean-report-card > .table-wrap{
+    display:block!important;overflow:visible!important;border:0!important;
+  }
+  body[data-ek-print-scope="detail"] #reportTable{
+    display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;
+    table-layout:fixed!important;
+  }
+  body[data-ek-print-scope="detail"] #reportTable thead{display:table-header-group!important}
+  body[data-ek-print-scope="detail"] #reportTable tr{break-inside:avoid!important;page-break-inside:avoid!important}
+  body[data-ek-print-scope="detail"] #reportTable th,
+  body[data-ek-print-scope="detail"] #reportTable td{
+    font-size:6pt!important;line-height:1.08!important;padding:.7mm .45mm!important;
+    white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important;
+  }
 
-  body.ek-print-all .report-head h2,
-  body.ek-print-summary .report-head h2,
-  body.ek-print-detail .report-head h2{font-size:15pt!important;margin:0 0 1mm!important}
-
-  body.ek-print-all .report-head p,
-  body.ek-print-summary .report-head p,
-  body.ek-print-detail .report-head p{font-size:8pt!important;margin:0!important}
-
-  /* Summary only */
-  body.ek-print-summary #ekBlockSummary{display:block!important;margin:0!important;border:0!important;border-radius:0!important}
-  body.ek-print-summary .clean-report-card > .table-wrap{display:none!important}
-  body.ek-print-summary #reportTable{display:none!important}
-  body.ek-print-summary .ek-block-wrap{display:block!important;overflow:visible!important;border:0!important}
-  body.ek-print-summary .ek-block-table{display:table!important;min-width:0!important;width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
-  body.ek-print-summary .ek-block-table thead{display:table-header-group!important}
-  body.ek-print-summary .ek-block-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
-  body.ek-print-summary .ek-block-table th,
-  body.ek-print-summary .ek-block-table td{font-size:8pt!important;line-height:1.15!important;padding:2.2mm 1mm!important;white-space:normal!important;word-break:break-word!important}
-
-  /* Engineer / Cluster detail only */
-  body.ek-print-detail #ekBlockSummary{display:none!important}
-  body.ek-print-detail .clean-report-card > .table-wrap{display:block!important;overflow:visible!important;border:0!important}
-  body.ek-print-detail #reportTable{display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important}
-  body.ek-print-detail #reportTable thead{display:table-header-group!important}
-  body.ek-print-detail #reportTable tr{break-inside:avoid!important;page-break-inside:avoid!important}
-  body.ek-print-detail #reportTable th,
-  body.ek-print-detail #reportTable td{font-size:6.1pt!important;line-height:1.1!important;padding:.8mm .5mm!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}
-
-  /* Full Ek Bagiya report only — not the rest of portal */
-  body.ek-print-all #ekBlockSummary{display:block!important;margin:0 0 4mm!important}
-  body.ek-print-all .ek-block-wrap,
-  body.ek-print-all .clean-report-card > .table-wrap{display:block!important;overflow:visible!important}
-  body.ek-print-all .ek-block-table,
-  body.ek-print-all #reportTable{display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important}
-  body.ek-print-all .ek-block-table th,
-  body.ek-print-all .ek-block-table td{font-size:7pt!important;padding:1.3mm .7mm!important;white-space:normal!important;word-break:break-word!important}
-  body.ek-print-all #reportTable th,
-  body.ek-print-all #reportTable td{font-size:5.8pt!important;padding:.7mm .45mm!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}
+  body[data-ek-print-scope="all"] #ekBlockSummary{display:block!important;margin:0 0 4mm!important}
+  body[data-ek-print-scope="all"] #ekBlockSummary .ek-block-wrap,
+  body[data-ek-print-scope="all"] .clean-report-card > .table-wrap{
+    display:block!important;overflow:visible!important;
+  }
+  body[data-ek-print-scope="all"] #ekBlockTable,
+  body[data-ek-print-scope="all"] #reportTable{
+    display:table!important;width:100%!important;min-width:0!important;max-width:100%!important;
+    table-layout:fixed!important;
+  }
+  body[data-ek-print-scope="all"] #ekBlockTable th,
+  body[data-ek-print-scope="all"] #ekBlockTable td{
+    font-size:7pt!important;padding:1.2mm .6mm!important;white-space:normal!important;word-break:break-word!important;
+  }
+  body[data-ek-print-scope="all"] #reportTable th,
+  body[data-ek-print-scope="all"] #reportTable td{
+    font-size:5.8pt!important;padding:.6mm .4mm!important;white-space:normal!important;
+    word-break:break-word!important;overflow-wrap:anywhere!important;
+  }
 }
 
 /* SRDM_PORTAL_THUMBNAILS_V1 */
@@ -2964,22 +2975,24 @@ $('allWorksExcelBtn')?.addEventListener('click',()=>{
     printBtn.parentNode.replaceChild(cloned,printBtn);
     cloned.addEventListener('click',()=>{
       setPrintOrientation();
-      document.body.classList.remove('ek-print-all','ek-print-summary','ek-print-detail');
-      if(typeof view!=='undefined' && view==='ekbagiya'){
+      const activeView=document.querySelector('#v64MainTabs .tab.active')?.dataset?.view || (typeof view!=='undefined'?view:'');
+      if(activeView==='ekbagiya'){
         const scope=document.getElementById('ekPrintScope')?.value||'all';
-        document.body.classList.add(scope==='summary'?'ek-print-summary':scope==='detail'?'ek-print-detail':'ek-print-all');
+        document.body.setAttribute('data-ek-print-scope',scope);
+      }else{
+        document.body.removeAttribute('data-ek-print-scope');
       }
-      const cleanup=()=>document.body.classList.remove('ek-print-all','ek-print-summary','ek-print-detail');
+      const cleanup=()=>document.body.removeAttribute('data-ek-print-scope');
       window.addEventListener('afterprint',cleanup,{once:true});
-      requestAnimationFrame(()=>requestAnimationFrame(()=>window.print()));
-      setTimeout(cleanup,4000);
+      setTimeout(()=>window.print(),180);
     });
   }
   function syncEkPrintScope(){
     const s=document.getElementById('ekPrintScope');
-    if(s)s.style.display=(typeof view!=='undefined'&&view==='ekbagiya')?'inline-flex':'none';
+    const activeView=document.querySelector('#v64MainTabs .tab.active')?.dataset?.view || (typeof view!=='undefined'?view:'');
+    if(s)s.style.display=(activeView==='ekbagiya')?'inline-flex':'none';
   }
-  document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTimeout(syncEkPrintScope,0)));
+  document.querySelectorAll('#v64MainTabs .tab').forEach(b=>b.addEventListener('click',()=>setTimeout(syncEkPrintScope,30)));
   syncEkPrintScope();
   setPrintOrientation();applyScale();
 })();
