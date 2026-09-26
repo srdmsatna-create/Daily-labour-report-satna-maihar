@@ -1723,7 +1723,7 @@ body[data-report-view="category"] #reportTable .exp-pct-chip{
 }
 body[data-report-view="category"] #reportTable tbody tr.total-row td{font-size:21px!important;font-weight:950!important}
 </style>
-</head>
+<meta name="srdm-build" content="SRDM_EK_SANCTION_FIX_20260926"></head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
@@ -1980,7 +1980,7 @@ body[data-report-view="category"] #reportTable tbody tr.total-row td{font-size:2
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=49"></script><script src="ek-bagiya/data.js?v=20260925"></script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');document.write('<script src="ongoing-details.js?live='+Date.now()+'"><\/script>');</script><script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=49"></script><script src="ek-bagiya/data.js?v=20260925"></script><script>try{window.EK_BAGIYA_WORK_DETAILS=(typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS))?WORK_DETAILS:[];}catch(e){window.EK_BAGIYA_WORK_DETAILS=[];}</script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');document.write('<script src="ongoing-details.js?live='+Date.now()+'"><\/script>');</script><script>
 /* Embedded ongoing-details.js - EXCEL FINAL CATEGORY V8 */
 window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
 </script><script src="ongoing-vbg-25-09-2026.js?v=20260925"></script><script src="gp-sector-mapping-overrides.js?v=20260925b"></script><script>
@@ -2309,11 +2309,11 @@ function renderOngoingAllSummary(){
 /* SRDM_EK_SANCTION_SPLIT_FIX_20260926: Target Wage=Wage Sanctioned; Target Material=Material Sanctioned only */
 function ekBagiyaFiltered(){
   const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value;
-  const old=typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS)?WORK_DETAILS:[];
-  const oldByCode=new Map(old.map(r=>[clean(r['Work Code']),r]));
+  const old=(Array.isArray(window.EK_BAGIYA_WORK_DETAILS)&&window.EK_BAGIYA_WORK_DETAILS.length)?window.EK_BAGIYA_WORK_DETAILS:((typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS))?WORK_DETAILS:[]);
+  const normCode=v=>clean(v).toUpperCase();const oldByCode=new Map(old.map(r=>[normCode(r['Work Code']),r]));
   const live=(Array.isArray(ongoingDetails)?ongoingDetails:[]).filter(r=>{const cat=resolvedFinalCategory(r);return cat==='Ek Bagiya'||cat==='Ek Bagiya Maa Ke Naam';});
   const source=live.map((r,i)=>{
-    const code=clean(r.code),o=oldByCode.get(code)||{};
+    const code=clean(r.code),o=oldByCode.get(normCode(code))||{};
     const san=num(r.sanction)||num(o['Sanction Amount Total']);
     const nw=num(r.nregaBookedWage),nm=num(r.nregaBookedMaterial),vw=num(r.vbgBookedWage),vm=num(r.vbgBookedMaterial);
     const nb=Number.isFinite(+r.nregaBooked)?num(r.nregaBooked):(nw+nm), vb=Number.isFinite(+r.vbgBooked)?num(r.vbgBooked):(vw+vm);
