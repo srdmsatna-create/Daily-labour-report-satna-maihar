@@ -41,7 +41,6 @@ body.print-analysis .kpis{display:none!important}
 body.print-analysis .meta{display:none!important}
 body.print-analysis #analysisSection,
 body.print-janpad #janpadSection{break-before:auto!important;page-break-before:auto!important}
-body.print-janpad @page{size:A4 portrait;margin:10mm}
 }
 </style></head><body><header><div class="head"><div><h1>Planner Portal</h1><div class="sub">Number Of New Works Taken In Planner Portal • SIPRI Progress • Category • Sub Engineer • Cluster • FY 2026-27</div></div><a class="back" href="./">← SRDM Applications</a></div></header><main>
 <div class="tools print-toolbar" style="margin-bottom:10px">
@@ -72,7 +71,7 @@ body.print-janpad @page{size:A4 portrait;margin:10mm}
   <option value="plannerDesc">Planner Work — Highest to Lowest</option>
   <option value="progressAsc">Progress % — Lowest to Highest</option>
   <option value="progressDesc">Progress % — Highest to Lowest</option>
-</select><input id="aQ" placeholder="Category / Engineer / Cluster खोजें"><button onclick="window.print()">प्रिंट</button></div><div class="wrap"><table class="analysis-table"><thead><tr><th>क्र.</th><th>District</th><th>जनपद</th><th>Category Name</th><th>Sub Engineer / उपयंत्री</th><th>Cluster Name</th><th>Planner New Work</th><th>SIPRI Planned</th><th>लंबित</th><th>योजना %</th></tr></thead><tbody id="analysisBody"><tr><td colspan="10" style="text-align:center">डेटा लोड हो रहा है…</td></tr></tbody></table></div></section><div class="meta" id="meta"></div></main><script src="planner-portal-data.js?v=2"></script><script src="planner-new-work-data-gzip.js"></script><script src="planner-engineer-summary-data.js"></script><script>
+</select><input id="aQ" placeholder="Category / Engineer / Cluster खोजें"><button type="button" onclick="document.getElementById('printScope').value='analysis';printSelected()">प्रिंट / PDF</button></div><div class="wrap"><table class="analysis-table"><thead><tr><th>क्र.</th><th>District</th><th>जनपद</th><th>Category Name</th><th>Sub Engineer / उपयंत्री</th><th>Cluster Name</th><th>Planner New Work</th><th>SIPRI Planned</th><th>लंबित</th><th>योजना %</th></tr></thead><tbody id="analysisBody"><tr><td colspan="10" style="text-align:center">डेटा लोड हो रहा है…</td></tr></tbody></table></div></section><div class="meta" id="meta"></div></main><script src="planner-portal-data.js?v=2"></script><script src="planner-new-work-data-gzip.js"></script><script src="planner-engineer-summary-data.js"></script><script>
 function printSelected(){
   const scope=document.getElementById('printScope')?.value||'all';
   document.body.classList.remove('print-janpad','print-analysis','print-all');
