@@ -1803,7 +1803,10 @@ body[data-report-view="category"] #reportTable .exp-pct-chip{
 }
 body[data-report-view="category"] #reportTable tbody tr.total-row td{font-size:21px!important;font-weight:950!important}
 </style>
-<meta name="srdm-build" content="SRDM_EK_SANCTION_FIX_20260926"></head>
+<meta name="srdm-build" content="SRDM_EK_SANCTION_FIX_20260926"><style id="SRDM_EK_PRINT_SELECTOR_VISIBILITY_V1">
+body[data-report-view="ekbagiya"] #ekPrintScope{display:inline-flex!important}
+body:not([data-report-view="ekbagiya"]) #ekPrintScope{display:none!important}
+</style></head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
@@ -2024,7 +2027,6 @@ body[data-report-view="category"] #reportTable tbody tr.total-row td{font-size:2
       <option value="summary">Ek Bagiya PDF — Block / District Summary</option>
       <option value="detail">Ek Bagiya PDF — Engineer / Cluster Detail</option>
     </select>
-    <button id="ekPrintGoBtn" type="button" style="display:none;background:#0b7a3b;color:#fff;border-color:#0b7a3b;font-weight:800">Ek Bagiya Print / PDF</button>
     <button id="printBtn">Print / PDF</button>
     <button id="csvBtn">CSV Export</button>
     <button id="allWorksExcelBtn" type="button" style="background:#0b7a3b;color:#fff;border-color:#0b7a3b;font-weight:800">Download Excel Sheet — Screen & All Categories</button>
@@ -2976,16 +2978,11 @@ $('allWorksExcelBtn')?.addEventListener('click',()=>{
     printBtn.parentNode.replaceChild(cloned,printBtn);
     cloned.addEventListener('click',()=>{
       setPrintOrientation();
-      const activeView=document.querySelector('#v64MainTabs .tab.active')?.dataset?.view || (typeof view!=='undefined'?view:'');
-      if(activeView==='ekbagiya'){
-        const scope=document.getElementById('ekPrintScope')?.value||'all';
-        document.body.setAttribute('data-ek-print-scope',scope);
-      }else{
-        document.body.removeAttribute('data-ek-print-scope');
+      if(document.body.dataset.reportView==='ekbagiya'){
+        srdmPrintEkBagiyaOnly();
+        return;
       }
-      const cleanup=()=>document.body.removeAttribute('data-ek-print-scope');
-      window.addEventListener('afterprint',cleanup,{once:true});
-      setTimeout(()=>window.print(),180);
+      window.print();
     });
   }
   function syncEkPrintScope(){
@@ -3912,4 +3909,66 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 })();
 </script>
 
-<!-- SRDM_MUSTER_EMB_CARD_START --><button type="button" class="srdm-app-card" id="musterEmbLauncher"><span class="srdm-app-icon">M</span><span class="srdm-app-copy"><strong>Muster Roll &amp; e-MB Monitoring</strong><span>FY 2026-27 • Satna block-wise status</span></span><span class="srdm-app-new">New</span></button><script>(function(){var y=document.getElementById('musterEmbLauncher');if(!y)return;var a=document.getElementById('yuktdharaLauncher');if(a){a.insertAdjacentElement('afterend',y);return}var c=document.querySelectorAll('button,a,.srdm-app-card');for(var i=0;i<c.length;i++){var x=(c[i].innerText||'').replace(/\s+/g,' ').toLowerCase();if(x.indexOf('vb-gram g statistics')>=0||x.indexOf('vb-g ram g statistics')>=0){c[i].insertAdjacentElement('afterend',y);break}}})();</script><!-- SRDM_MUSTER_EMB_CARD_END --><!-- SRDM_MUSTER_EMB_SECTION_START --><section class="muster-emb-section no-print" id="musterEmbMonitoring"><div class="muster-emb-head"><div><h2>Muster Roll &amp; e-MB Monitoring Report</h2><small>R4.4 • SATNA • Gram Panchayat-wise + Sub Engineer mapping</small></div><span class="muster-emb-pill">FY 2026-2027</span></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px"><select id="musterBlockFilter" style="padding:10px;border:1px solid #e65100;border-radius:9px"><option value="ALL">— सभी जनपद —</option></select><select id="musterEngineerFilter" style="padding:10px;border:1px solid #e65100;border-radius:9px"><option value="ALL">— सभी उपयंत्री —</option></select><button type="button" onclick="window.print()" style="padding:10px 16px;border:0;border-radius:9px;background:#123f73;color:#fff;font-weight:800">प्रिंट / PDF बनाएँ</button><button type="button" id="musterCsv" style="padding:10px 16px;border:1px solid #123f73;border-radius:9px;background:#fff;color:#123f73;font-weight:800">Excel डाउनलोड</button></div><div id="musterZeroAlert" style="display:none;margin:8px 0 12px;padding:10px 12px;border:2px solid #dc2626;border-radius:12px;background:#fff1f2;color:#991b1b;font-size:12px;line-height:1.5"></div><div class="muster-emb-wrap"><table class="muster-emb-table"><thead><tr><th>क्र.</th><th>जनपद</th><th>ग्राम पंचायत</th><th>कुल MR जारी</th><th>कुल MR भरे</th><th>e-MB भरा (TA/JE)</th><th>e-MB रहित</th><th>e-MB लंबित (T+5)</th><th>e-MB सत्यापित (AE)</th><th>सत्यापन लंबित (T+5)</th><th>उपयंत्री</th></tr></thead><tbody id="musterEmbBody"><tr><td colspan="11">Official data loading…</td></tr></tbody></table></div><div class="muster-emb-source"><span id="musterEmbDate">FY 2026-27</span> • <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/MusterRolle_EMBStatus.aspx?payload=ZXiXTJ0HzQl7fz4W7woa23KDguzp-Is4I63qmc6Kyc1jl3ibJtUhejzlAtv-fAxwYpqJyyVqtiJi6sPlWJ357Cb4q5KyW0qMVPUtVVbI2jF4KrNWijPnHjLZhYy2hn-IsDls6eL7mtZ3bO4TEFNgNLvBwskkuj-k-JBiAHVCc1URsDldWZBA_b0p11E4y43kiQmP7PzLsOsegcEuX8tvBUfVun1-KPT6ttJfedEcB7dCuEcZY6uUT99T_4E5JucKgEhkZbRWFH7ERjpKjdJv4w" target="_blank" rel="noopener noreferrer">Portal पर खोलें</a></div></section><script src="muster-emb-data.js?v=20260925"></script><script>(function(){const d=window.MUSTER_EMB_REPORT,b=document.getElementById('musterEmbBody'),bf=document.getElementById('musterBlockFilter'),ef=document.getElementById('musterEngineerFilter'),k=['issued','filled','embFilled','noEmb','pendingEmb','verifiedAE','pendingVerification'],n=new Intl.NumberFormat('en-IN');if(!d||!Array.isArray(d.gpRows)){b.innerHTML='<tr><td colspan="11">Official GP data unavailable</td></tr>';return}const uniq=a=>[...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'hi'));uniq(d.gpRows.map(r=>r.block)).forEach(x=>bf.add(new Option(x,x)));function engineers(){const old=ef.value;ef.innerHTML='<option value="ALL">— सभी उपयंत्री —</option>';uniq(d.gpRows.filter(r=>bf.value==='ALL'||r.block===bf.value).map(r=>r.engineer)).forEach(x=>ef.add(new Option(x,x)));if([...ef.options].some(o=>o.value===old))ef.value=old}function render(){const rows=d.gpRows.filter(r=>(bf.value==='ALL'||r.block===bf.value)&&(ef.value==='ALL'||r.engineer===ef.value)),t=Object.fromEntries(k.map(x=>[x,0]));b.innerHTML=rows.map((r,i)=>{k.forEach(x=>t[x]+=Number(r[x]||0));return `<tr><td>${i+1}</td><td><b>${r.block}</b></td><td>${r.panchayat}</td>${k.map(x=>`<td>${n.format(r[x]||0)}</td>`).join('')}<td><b>${r.engineer||'Unmapped'}</b></td></tr>`}).join('')+`<tr class="total-row"><td></td><td>TOTAL</td><td>${n.format(rows.length)} GP</td>${k.map(x=>`<td>${n.format(t[x])}</td>`).join('')}<td></td></tr>`}bf.onchange=()=>{engineers();render()};ef.onchange=render;engineers();render();document.getElementById('musterCsv').onclick=()=>{const rows=d.gpRows.filter(r=>(bf.value==='ALL'||r.block===bf.value)&&(ef.value==='ALL'||r.engineer===ef.value)),head=['Janpad','Gram Panchayat','MR Issued','MR Filled','e-MB Filled','No e-MB','Pending e-MB','AE Verified','Pending Verification','Upyantri'],csv=[head,...rows.map(r=>[r.block,r.panchayat,...k.map(x=>r[x]),r.engineer])].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\\r\\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='Muster_eMB_Engineer_GP_Report.csv';a.click()};document.getElementById('musterEmbDate').textContent=`FY ${d.financialYear} • Last updated ${d.officialDate||'portal'} • ${d.gpRows.length} GP`;document.getElementById('musterEmbLauncher')?.addEventListener('click',()=>document.getElementById('musterEmbMonitoring')?.scrollIntoView({behavior:'smooth'}));})();</script><script>(function(){var d=window.MUSTER_EMB_REPORT,e=document.getElementById('musterZeroAlert');if(!d||!e||!Array.isArray(d.gpRows))return;var z=d.gpRows.filter(function(r){return Number(r.issued||0)===0});if(!z.length)return;e.style.display='block';e.innerHTML='<b>⚠ Muster Roll जारी नहीं — '+z.length+' Gram Panchayat Alert</b><br>'+z.map(function(r){return '<span style="display:inline-block;margin:4px 7px 0 0;padding:3px 7px;border-radius:999px;background:#fee2e2"><b>'+r.panchayat+'</b> • '+r.block+' • '+(r.engineer||'Unmapped')+'</span>'}).join('');})();</script><!-- SRDM_MUSTER_EMB_SECTION_END --><script src="shramik-niyojan-data.js?v=20260925"></script><script src="shramik-niyojan.js?v=35"></script><script src="muster-emb-cluster-cards.js?v=2"></script><script src="ek-bagiya-cluster-cards.js?v=8"></script><script src="ek-bagiya-print.js?v=20260926-2"></script></body></html>
+<!-- SRDM_MUSTER_EMB_CARD_START --><button type="button" class="srdm-app-card" id="musterEmbLauncher"><span class="srdm-app-icon">M</span><span class="srdm-app-copy"><strong>Muster Roll &amp; e-MB Monitoring</strong><span>FY 2026-27 • Satna block-wise status</span></span><span class="srdm-app-new">New</span></button><script>(function(){var y=document.getElementById('musterEmbLauncher');if(!y)return;var a=document.getElementById('yuktdharaLauncher');if(a){a.insertAdjacentElement('afterend',y);return}var c=document.querySelectorAll('button,a,.srdm-app-card');for(var i=0;i<c.length;i++){var x=(c[i].innerText||'').replace(/\s+/g,' ').toLowerCase();if(x.indexOf('vb-gram g statistics')>=0||x.indexOf('vb-g ram g statistics')>=0){c[i].insertAdjacentElement('afterend',y);break}}})();</script><!-- SRDM_MUSTER_EMB_CARD_END --><!-- SRDM_MUSTER_EMB_SECTION_START --><section class="muster-emb-section no-print" id="musterEmbMonitoring"><div class="muster-emb-head"><div><h2>Muster Roll &amp; e-MB Monitoring Report</h2><small>R4.4 • SATNA • Gram Panchayat-wise + Sub Engineer mapping</small></div><span class="muster-emb-pill">FY 2026-2027</span></div><div style="display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px"><select id="musterBlockFilter" style="padding:10px;border:1px solid #e65100;border-radius:9px"><option value="ALL">— सभी जनपद —</option></select><select id="musterEngineerFilter" style="padding:10px;border:1px solid #e65100;border-radius:9px"><option value="ALL">— सभी उपयंत्री —</option></select><button type="button" onclick="window.print()" style="padding:10px 16px;border:0;border-radius:9px;background:#123f73;color:#fff;font-weight:800">प्रिंट / PDF बनाएँ</button><button type="button" id="musterCsv" style="padding:10px 16px;border:1px solid #123f73;border-radius:9px;background:#fff;color:#123f73;font-weight:800">Excel डाउनलोड</button></div><div id="musterZeroAlert" style="display:none;margin:8px 0 12px;padding:10px 12px;border:2px solid #dc2626;border-radius:12px;background:#fff1f2;color:#991b1b;font-size:12px;line-height:1.5"></div><div class="muster-emb-wrap"><table class="muster-emb-table"><thead><tr><th>क्र.</th><th>जनपद</th><th>ग्राम पंचायत</th><th>कुल MR जारी</th><th>कुल MR भरे</th><th>e-MB भरा (TA/JE)</th><th>e-MB रहित</th><th>e-MB लंबित (T+5)</th><th>e-MB सत्यापित (AE)</th><th>सत्यापन लंबित (T+5)</th><th>उपयंत्री</th></tr></thead><tbody id="musterEmbBody"><tr><td colspan="11">Official data loading…</td></tr></tbody></table></div><div class="muster-emb-source"><span id="musterEmbDate">FY 2026-27</span> • <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/MusterRolle_EMBStatus.aspx?payload=ZXiXTJ0HzQl7fz4W7woa23KDguzp-Is4I63qmc6Kyc1jl3ibJtUhejzlAtv-fAxwYpqJyyVqtiJi6sPlWJ357Cb4q5KyW0qMVPUtVVbI2jF4KrNWijPnHjLZhYy2hn-IsDls6eL7mtZ3bO4TEFNgNLvBwskkuj-k-JBiAHVCc1URsDldWZBA_b0p11E4y43kiQmP7PzLsOsegcEuX8tvBUfVun1-KPT6ttJfedEcB7dCuEcZY6uUT99T_4E5JucKgEhkZbRWFH7ERjpKjdJv4w" target="_blank" rel="noopener noreferrer">Portal पर खोलें</a></div></section><script src="muster-emb-data.js?v=20260925"></script><script>(function(){const d=window.MUSTER_EMB_REPORT,b=document.getElementById('musterEmbBody'),bf=document.getElementById('musterBlockFilter'),ef=document.getElementById('musterEngineerFilter'),k=['issued','filled','embFilled','noEmb','pendingEmb','verifiedAE','pendingVerification'],n=new Intl.NumberFormat('en-IN');if(!d||!Array.isArray(d.gpRows)){b.innerHTML='<tr><td colspan="11">Official GP data unavailable</td></tr>';return}const uniq=a=>[...new Set(a.filter(Boolean))].sort((x,y)=>x.localeCompare(y,'hi'));uniq(d.gpRows.map(r=>r.block)).forEach(x=>bf.add(new Option(x,x)));function engineers(){const old=ef.value;ef.innerHTML='<option value="ALL">— सभी उपयंत्री —</option>';uniq(d.gpRows.filter(r=>bf.value==='ALL'||r.block===bf.value).map(r=>r.engineer)).forEach(x=>ef.add(new Option(x,x)));if([...ef.options].some(o=>o.value===old))ef.value=old}function render(){const rows=d.gpRows.filter(r=>(bf.value==='ALL'||r.block===bf.value)&&(ef.value==='ALL'||r.engineer===ef.value)),t=Object.fromEntries(k.map(x=>[x,0]));b.innerHTML=rows.map((r,i)=>{k.forEach(x=>t[x]+=Number(r[x]||0));return `<tr><td>${i+1}</td><td><b>${r.block}</b></td><td>${r.panchayat}</td>${k.map(x=>`<td>${n.format(r[x]||0)}</td>`).join('')}<td><b>${r.engineer||'Unmapped'}</b></td></tr>`}).join('')+`<tr class="total-row"><td></td><td>TOTAL</td><td>${n.format(rows.length)} GP</td>${k.map(x=>`<td>${n.format(t[x])}</td>`).join('')}<td></td></tr>`}bf.onchange=()=>{engineers();render()};ef.onchange=render;engineers();render();document.getElementById('musterCsv').onclick=()=>{const rows=d.gpRows.filter(r=>(bf.value==='ALL'||r.block===bf.value)&&(ef.value==='ALL'||r.engineer===ef.value)),head=['Janpad','Gram Panchayat','MR Issued','MR Filled','e-MB Filled','No e-MB','Pending e-MB','AE Verified','Pending Verification','Upyantri'],csv=[head,...rows.map(r=>[r.block,r.panchayat,...k.map(x=>r[x]),r.engineer])].map(a=>a.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\\r\\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['﻿'+csv],{type:'text/csv'}));a.download='Muster_eMB_Engineer_GP_Report.csv';a.click()};document.getElementById('musterEmbDate').textContent=`FY ${d.financialYear} • Last updated ${d.officialDate||'portal'} • ${d.gpRows.length} GP`;document.getElementById('musterEmbLauncher')?.addEventListener('click',()=>document.getElementById('musterEmbMonitoring')?.scrollIntoView({behavior:'smooth'}));})();</script><script>(function(){var d=window.MUSTER_EMB_REPORT,e=document.getElementById('musterZeroAlert');if(!d||!e||!Array.isArray(d.gpRows))return;var z=d.gpRows.filter(function(r){return Number(r.issued||0)===0});if(!z.length)return;e.style.display='block';e.innerHTML='<b>⚠ Muster Roll जारी नहीं — '+z.length+' Gram Panchayat Alert</b><br>'+z.map(function(r){return '<span style="display:inline-block;margin:4px 7px 0 0;padding:3px 7px;border-radius:999px;background:#fee2e2"><b>'+r.panchayat+'</b> • '+r.block+' • '+(r.engineer||'Unmapped')+'</span>'}).join('');})();</script><!-- SRDM_MUSTER_EMB_SECTION_END --><script src="shramik-niyojan-data.js?v=20260925"></script><script src="shramik-niyojan.js?v=35"></script><script src="muster-emb-cluster-cards.js?v=2"></script><script src="ek-bagiya-cluster-cards.js?v=8"></script><script id="SRDM_EK_PRINT_IFRAME_V1">
+function srdmPrintEkBagiyaOnly(){
+  var scope=document.getElementById('ekPrintScope')?.value||'all';
+  var summary=document.getElementById('ekBlockSummary');
+  var detail=document.getElementById('reportTable');
+  var title=document.getElementById('viewTitle')?.textContent||'एक बगिया माँ के नाम';
+  var meta=document.getElementById('viewMeta')?.textContent||'';
+
+  function clonedHtml(node){
+    if(!node)return '';
+    var x=node.cloneNode(true);
+    x.querySelectorAll('script,style,button,select,input,.no-print').forEach(function(n){n.remove();});
+    return x.outerHTML;
+  }
+  var body='';
+  if(scope==='summary'){
+    body=clonedHtml(summary);
+  }else if(scope==='detail'){
+    body='<div class="ek-print-title"><h1>'+title+'</h1><p>'+meta+'</p></div>'+clonedHtml(detail);
+  }else{
+    body='<div class="ek-print-title"><h1>'+title+'</h1><p>'+meta+'</p></div>'+clonedHtml(summary)+clonedHtml(detail);
+  }
+  if(!body){alert('Ek Bagiya print data उपलब्ध नहीं है।');return;}
+
+  var old=document.getElementById('srdmEkPrintFrame');
+  if(old)old.remove();
+  var frame=document.createElement('iframe');
+  frame.id='srdmEkPrintFrame';
+  frame.setAttribute('aria-hidden','true');
+  frame.style.position='fixed';
+  frame.style.right='0';
+  frame.style.bottom='0';
+  frame.style.width='1px';
+  frame.style.height='1px';
+  frame.style.border='0';
+  frame.style.opacity='0';
+  document.body.appendChild(frame);
+
+  var doc=frame.contentDocument||frame.contentWindow.document;
+  doc.open();
+  doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>'+
+    '@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box}html,body{margin:0;padding:0;background:#fff;color:#111;font-family:Arial,"Noto Sans Devanagari",sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+    '.ek-print-title{text-align:center;margin:0 0 4mm}.ek-print-title h1{font-size:17pt;margin:0 0 1mm}.ek-print-title p{font-size:8pt;margin:0;color:#475569}'+
+    '.ek-block-summary{display:block!important;margin:0 0 5mm!important;border:0!important;border-radius:0!important;overflow:visible!important;background:#fff!important}.ek-block-title{background:#b7ddea!important;color:#0670bc!important;text-align:center!important;font-size:14pt!important;font-weight:900!important;padding:2mm!important;text-decoration:underline!important}'+
+    '.table-wrap,.ek-block-wrap{display:block!important;overflow:visible!important;max-height:none!important;border:0!important}'+
+    '#ekBlockTable,.ek-block-table{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}'+
+    '#ekBlockTable th,#ekBlockTable td,.ek-block-table th,.ek-block-table td{border:1px solid #5f6b76!important;font-size:8pt!important;line-height:1.12!important;padding:1.6mm .7mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important}'+
+    '#ekBlockTable th,.ek-block-table th{background:#eef5ff!important;font-weight:800!important}'+
+    '#reportTable{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin-top:3mm}'+
+    '#reportTable th,#reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}'+
+    '#reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}#reportTable thead,#ekBlockTable thead{display:table-header-group!important}#reportTable tr,#ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}.district-total td,.grand-total td,.total-row td{font-weight:900!important;background:#dbe9fb!important}'+
+    '</style></head><body>'+body+'</body></html>');
+  doc.close();
+
+  setTimeout(function(){
+    try{
+      frame.contentWindow.focus();
+      frame.contentWindow.print();
+    }catch(e){alert('Print शुरू नहीं हो पाया। Page refresh करके फिर प्रयास करें।');}
+    setTimeout(function(){if(frame&&frame.parentNode)frame.remove();},3000);
+  },300);
+}
+</script></body></html>
