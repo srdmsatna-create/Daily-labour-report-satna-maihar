@@ -2344,6 +2344,12 @@ function renderEkBagiyaBlockSummary(src){
     {district:'SATNA',blocks:['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']}
   ];
   const sanctionTarget={AMARPATAN:100,MAIHAR:100,RAMNAGAR:100,MAJHGAWAN:100,NAGOD:100,'RAMPUR BAGHELAN':100,SATNA:100,UNCHAHARA:100};
+  const sanctionedWorksByBlock={AMARPATAN:106,MAIHAR:100,RAMNAGAR:109,MAJHGAWAN:101,NAGOD:101,'RAMPUR BAGHELAN':96,SATNA:103,UNCHAHARA:105};
+  const sanctionSplitByBlock={
+    AMARPATAN:[92.1272,135.22509],MAIHAR:[71.77953,102.1171],RAMNAGAR:[78.39764,108.28879],
+    MAJHGAWAN:[79.5208,113.5704],NAGOD:[76.93422,115.27895],'RAMPUR BAGHELAN':[70.667,96.15858],
+    SATNA:[69.71766,104.38379],UNCHAHARA:[81.16452,111.1069]
+  };
   const map=new Map();
   for(const r of src){
     const j=jp(r.Janpad),d=['AMARPATAN','MAIHAR','RAMNAGAR'].includes(j)?'MAIHAR':'SATNA',k=d+'|'+j;
@@ -2368,7 +2374,10 @@ function renderEkBagiyaBlockSummary(src){
   for(const g of groups){
     const dt={j:g.district+' DISTRICT TOTAL',sanctionTarget:0,works:0,sanctionedWorks:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
     for(const j of g.blocks){
-      const a=map.get(g.district+'|'+j)||{j,sanctionTarget:sanctionTarget[j]||100,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};a.sanctionedWorks=sanctionedWorksByBlock[j]||0;
+      const a=map.get(g.district+'|'+j)||{j,sanctionTarget:sanctionTarget[j]||100,works:0,san:0,ongoing:0,wageTarget:0,wageBooked:0,matTarget:0,matBooked:0};
+      a.sanctionedWorks=sanctionedWorksByBlock[j]||0;
+      const split=sanctionSplitByBlock[j];
+      if(split){a.wageTarget=split[0]*100000;a.matTarget=split[1]*100000;}
       h+=row(a);
       for(const k of ['sanctionTarget','san','ongoing','wageTarget','wageBooked','matTarget','matBooked']){dt[k]+=a[k];grand[k]+=a[k]}dt.works+=a.works;grand.works+=a.works;dt.sanctionedWorks+=a.sanctionedWorks||0;grand.sanctionedWorks+=a.sanctionedWorks||0;
     }
