@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Payment | एक बगिया माँ के नाम</title>
+<style>
+:root{--navy:#0b3159;--blue:#1769aa;--line:#8195aa;--soft:#eef5ff;--green:#0f766e;--ink:#162534}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,"Segoe UI","Noto Sans Devanagari",Arial,sans-serif;background:#f3f6fa;color:var(--ink)}
+.top{background:linear-gradient(125deg,#071e36,#1769aa);color:#fff;padding:18px 24px}
+.topin{max-width:1700px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.top h1{margin:0;font-size:25px}.top p{margin:4px 0 0;font-size:12px;opacity:.86}
+.back{color:#fff;text-decoration:none;border:1px solid #ffffff55;border-radius:9px;padding:8px 12px;font-weight:800}
+main{max-width:1700px;margin:18px auto;padding:0 14px}
+.card{background:#fff;border:1px solid #c8d6e5;border-radius:14px;box-shadow:0 5px 18px #173a5b12;overflow:hidden}
+.head{padding:12px 14px;background:#b7ddea;color:#075f99;text-align:center;font-size:21px;font-weight:950;text-decoration:underline}
+.sub{padding:8px 14px;text-align:center;font-size:12px;color:#596d83;border-bottom:1px solid #d7e1ec}
+.wrap{overflow:auto}.tbl{border-collapse:collapse;width:100%;min-width:1450px;table-layout:fixed}
+.tbl th,.tbl td{border:1px solid #5f6b76;padding:7px 5px;text-align:center;vertical-align:middle;font-size:12px;line-height:1.18}
+.tbl th{background:#eef5ff;font-weight:900}.tbl thead tr:first-child th{background:#cfe3ff;color:#07325e}
+.tbl .pct{background:#fff600;font-weight:950}.tbl td:first-child{text-align:left;font-weight:900}
+.tbl .district td{background:#dfeaf3;font-weight:950;border-top:2px solid #6f96b8;border-bottom:2px solid #6f96b8}
+.tbl .district td:first-child{background:#fff600;text-align:center}.tbl .grand td{background:#cadfed;font-weight:950;border-top:3px solid #315f91;border-bottom:3px solid #315f91}.tbl .grand td:first-child{background:#fff600;text-align:center}
+.note{padding:12px 14px;font-size:12px;line-height:1.5;background:#fffdf2;border-top:1px solid #e7db9b}
+.actions{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.actions button{border:1px solid #b9cadd;background:#fff;color:#123f72;border-radius:9px;padding:9px 13px;font-weight:850;cursor:pointer}.actions .primary{background:#0f766e;color:#fff;border-color:#0f766e}
+.status{padding:14px;text-align:center;color:#61758a;font-weight:700}
+@media(max-width:760px){.top h1{font-size:20px}.head{font-size:17px}.tbl th,.tbl td{font-size:10px;padding:5px 3px}}
+@media print{.top,.actions{display:none!important}body{background:#fff}main{max-width:none;margin:0;padding:0}.card{border:0;box-shadow:none}.wrap{overflow:visible}.tbl{min-width:0;width:100%;table-layout:fixed}.tbl th,.tbl td{font-size:7pt;padding:1.1mm .5mm}@page{size:A4 landscape;margin:7mm}}
+</style>
+</head>
+<body>
+<header class="top"><div class="topin"><div><h1>💳 Payment — एक बगिया माँ के नाम</h1><p>SATNA + MAIHAR • Janpad-wise भुगतान की स्थिति</p></div><a class="back" href="index.html">← SRDM Applications</a></div></header>
+<main>
+<div class="actions"><button class="primary" onclick="window.print()">Print / PDF</button><button onclick="downloadCSV()">CSV Download</button></div>
+<section class="card">
+<div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति)</div>
+<div class="sub">Amount in ₹ Lakh • Booked / Paid figures Ek Bagiya work-level source से</div>
+<div class="wrap"><table class="tbl" id="paymentTable"><tbody><tr><td class="status">डेटा लोड हो रहा है…</td></tr></tbody></table></div>
+<div class="note"><b>नोट:</b> स्वीकृति राशि के विरुद्ध Booked Wage और Booked Material तथा Paid Wage और Paid Material पोर्टल के work-level data से लिये गये हैं। Pending Payment = Booked − Paid. % Paid Amount = Paid Total ÷ Booked Total × 100.</div>
+</section>
+</main>
+<script>
+const OFFICERS={AMARPATAN:'Rajesh Budhauliya',MAIHAR:'Om Prakash Sharma',RAMNAGAR:'Vinay Singh',MAJHGAWAN:'Pradeep Singh',NAGOD:'Anil Awadhiya','RAMPUR BAGHELAN':'Santosh Shukla',SATNA:'Yashwant Singh',UNCHAHARA:'Satya Kama Gautam'};
+const ORDER=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
+let exportRows=[];
+function parseCSV(text){
+ text=text.replace(/^\uFEFF/,'');const rows=[];let row=[],cell='',q=false;
+ for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(q){if(c==='"'&&n==='"'){cell+='"';i++}else if(c==='"')q=false;else cell+=c}else if(c==='"')q=true;else if(c===','){row.push(cell);cell=''}else if(c==='\n'){row.push(cell.replace(/\r$/,''));rows.push(row);row=[];cell=''}else cell+=c}
+ if(cell||row.length){row.push(cell.replace(/\r$/,''));rows.push(row)}return rows;
+}
+const num=v=>{const n=Number(String(v??'').replace(/,/g,''));return Number.isFinite(n)?n:0}, lakh=v=>num(v)/100000;
+const f=v=>num(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+function summarize(text){
+ const a=parseCSV(text),h=a[0],ix=Object.fromEntries(h.map((x,i)=>[x.trim(),i])), rows=a.slice(1).filter(r=>r[ix['Work Code']]);
+ const m=new Map();
+ for(const r of rows){const j=String(r[ix.Janpad]||'').trim().toUpperCase();if(!ORDER.includes(j))continue;if(!m.has(j))m.set(j,{janpad:j,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0});const x=m.get(j);x.works++;if(String(r[ix['Work Status']]||'').trim().toLowerCase()==='ongoing')x.ongoing++;x.sw+=lakh(r[ix['Wage Sanctioned']]);x.sm+=lakh(r[ix['Material Sanctioned']]);x.bw+=lakh(r[ix['Amount Booked Since Inception Wages']]);x.bm+=lakh(r[ix['Amount Booked Since Inception Material']]);x.pw+=lakh(r[ix['Wage Amount Paid since inception']]);x.pm+=lakh(r[ix['Material Amount Paid since inception']]);}
+ return ORDER.map(j=>m.get(j)||{janpad:j,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0});
+}
+function total(rows,label){const x={janpad:label,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};for(const r of rows)for(const k of ['works','ongoing','sw','sm','bw','bm','pw','pm'])x[k]+=num(r[k]);return x}
+function render(rows){
+ const all=[...rows.slice(0,3),total(rows.slice(0,3),'DISTRICT MAIHAR TOTAL'),...rows.slice(3),total(rows.slice(3),'DISTRICT SATNA TOTAL'),total(rows,'कुल (MAIHAR + SATNA)')];
+ exportRows=[];
+ let h='<thead><tr><th rowspan="2">Janpad</th><th colspan="5">Sanction Works & Amount in Lakhs</th><th colspan="3">Booked Amount in Lakhs</th><th colspan="3">Paid Amount in Lakhs</th><th rowspan="2">% Paid Amount</th><th colspan="3">Pending Payment in Lakhs</th><th rowspan="2">Assistant Account Officer</th></tr><tr><th>Works</th><th>Ongoing</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th></tr></thead><tbody>';
+ for(const r of all){const st=r.sw+r.sm,bt=r.bw+r.bm,pt=r.pw+r.pm,nw=Math.max(0,r.bw-r.pw),nm=Math.max(0,r.bm-r.pm),nt=nw+nm,pct=bt?pt*100/bt:0;const isD=r.janpad.startsWith('DISTRICT'),isG=r.janpad.startsWith('कुल');const cls=isG?'grand':isD?'district':'';h+='<tr class="'+cls+'"><td>'+r.janpad+'</td><td>'+r.works.toLocaleString('en-IN')+'</td><td>'+r.ongoing.toLocaleString('en-IN')+'</td><td>'+f(r.sw)+'</td><td>'+f(r.sm)+'</td><td>'+f(st)+'</td><td>'+f(r.bw)+'</td><td>'+f(r.bm)+'</td><td>'+f(bt)+'</td><td>'+f(r.pw)+'</td><td>'+f(r.pm)+'</td><td>'+f(pt)+'</td><td class="pct">'+pct.toFixed(2)+'%</td><td>'+f(nw)+'</td><td>'+f(nm)+'</td><td>'+f(nt)+'</td><td>'+(OFFICERS[r.janpad]||'')+'</td></tr>';exportRows.push([r.janpad,r.works,r.ongoing,r.sw,r.sm,st,r.bw,r.bm,bt,r.pw,r.pm,pt,pct,nw,nm,nt,OFFICERS[r.janpad]||'']);}
+ h+='</tbody>';document.getElementById('paymentTable').innerHTML=h;
+}
+function downloadCSV(){if(!exportRows.length)return;const head=['Janpad','Works','Ongoing','Sanction Wages Lakh','Sanction Material Lakh','Sanction Total Lakh','Booked Wages Lakh','Booked Material Lakh','Booked Total Lakh','Paid Wages Lakh','Paid Material Lakh','Paid Total Lakh','% Paid Amount','Pending Wages Lakh','Pending Material Lakh','Pending Total Lakh','Assistant Account Officer'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\uFEFF'+[head,...exportRows].map(r=>r.map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Payment_Status.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+fetch('ek-bagiya/work_details.csv?live='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.text()}).then(t=>render(summarize(t))).catch(e=>document.getElementById('paymentTable').innerHTML='<tbody><tr><td class="status">Payment data load नहीं हुआ। Page refresh करें।</td></tr></tbody>');
+</script>
+</body></html>
