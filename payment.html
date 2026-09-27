@@ -38,7 +38,7 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 <main>
 <div class="actions"><button class="primary" onclick="window.print()">Payment Table Print / PDF</button><button onclick="downloadCSV()">CSV Download</button><button onclick="document.getElementById('paymentNotice').scrollIntoView({behavior:'smooth'})" style="background:#0b5f94;color:#fff;border-color:#0b5f94">जनपदवार कारण बताओ सूचना पत्र</button></div>
 <section class="card">
-<div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति)</div>
+<div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति) — दिनांक 26/09/2026</div>
 <div class="sub">Official Sanction Works: <b style="color:#0b5f94;font-size:14px">821</b> • Amount in ₹ Lakh • Booked / Paid figures Ek Bagiya work-level source से</div>
 <div class="wrap"><table class="tbl" id="paymentTable"><tbody><tr><td class="status">डेटा लोड हो रहा है…</td></tr></tbody></table></div>
 <div class="note"><b>नोट:</b> स्वीकृति राशि के विरुद्ध Booked Wage और Booked Material तथा Paid Wage और Paid Material पोर्टल के work-level data से लिये गये हैं। Pending Payment = Booked − Paid. % Paid Amount = Paid Total ÷ Booked Total × 100.</div>
@@ -98,7 +98,7 @@ function scnHTML(r){
  const pendingMaterial=Math.max(0,bookedMaterial-paidMaterial);
  return `
    <div class="official-letterhead" style="display:grid;grid-template-columns:155px 1fr 155px;align-items:center;gap:10px;border-bottom:2px solid #354b60;padding-bottom:7px;margin-bottom:7px"><img src="assets/vbgramg-logo.svg" alt="VB-GRAM-G" style="width:145px;height:90px;object-fit:contain;object-position:left center;display:block"><div class="notice-office" style="text-align:center">कार्यालय अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला पंचायत सतना (म.प्र.)</div><div></div></div>
-   <div class="notice-meta" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin:8px 0 12px;padding:5px 0;border-top:1px solid #b8c6d3;border-bottom:1px solid #b8c6d3"><span style="white-space:nowrap"><b>पत्र क्र.:</b> __________ / VBG RAM G/MIS/2026-2027</span><span style="white-space:nowrap;margin-left:auto;text-align:right"><b>सतना दिनांक</b>&nbsp;&nbsp;/&nbsp;&nbsp;/2026</span></div>
+   <div class="notice-meta" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin:8px 0 12px;padding:5px 0;border-top:1px solid #b8c6d3;border-bottom:1px solid #b8c6d3"><span style="white-space:nowrap"><b>पत्र क्र.:</b> __________ / VBG RAM G/MIS/2026-2027</span><span style="white-space:nowrap;margin-left:auto;text-align:right"><b>सतना दिनांक</b>&nbsp;&nbsp;26/09/2026</span></div>
    <div><b>प्रति,</b><br><b>${officer}</b><br>सहायक लेखाधिकारी, जनपद पंचायत ${janpadHi}।</div>
    <div class="notice-subject">विषय: “एक बगिया माँ के नाम” के हितग्राहियों का शत-प्रतिशत सामग्री भुगतान आज दिनांक तक सुनिश्चित न किए जाने के संबंध में कारण बताओ सूचना पत्र।</div>
    <p>“एक बगिया माँ के नाम” योजना अंतर्गत हितग्राहियों के भुगतान के संबंध में समय-समय पर स्पष्ट निर्देश दिए जाने एवं भुगतान प्रगति की समीक्षा किए जाने के उपरांत भी आपके जनपद में आज दिनांक तक शत-प्रतिशत सामग्री भुगतान सुनिश्चित नहीं किया गया है।</p>
@@ -108,7 +108,7 @@ function scnHTML(r){
    <p>यदि किसी प्रकरण में तकनीकी, अभिलेखीय अथवा अन्य वास्तविक बाधा हो तो संबंधित प्रकरण का कार्य कोड, हितग्राही का नाम, लंबित राशि एवं बाधा का कारण पृथक सूची में संलग्न करते हुए प्रस्तुत करें। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</p>
    <div class="notice-sign main-letter-sign"><div>अतिरिक्त जिला कार्यक्रम समन्वयक /<br>मुख्य कार्यपालन अधिकारी<br>जिला पंचायत सतना</div></div>
    <div class="pratilipi-title" style="margin-top:18px;margin-bottom:0;font-weight:900;line-height:1.15">प्रतिलिपि:</div>
-   <div class="endorsement-line" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin:1px 0 8px;padding:4px 0;border-top:1px solid #aebdca;border-bottom:1px solid #aebdca"><span style="white-space:nowrap"><b>पृष्ठांकन क्र.:</b> __________ / VBG RAM G/MIS/2026-2027</span><span style="white-space:nowrap"><b>सतना दिनांक</b>&nbsp;&nbsp;/&nbsp;&nbsp;/2026</span></div>
+   <div class="endorsement-line" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin:1px 0 8px;padding:4px 0;border-top:1px solid #aebdca;border-bottom:1px solid #aebdca"><span style="white-space:nowrap"><b>पृष्ठांकन क्र.:</b> __________ / VBG RAM G/MIS/2026-2027</span><span style="white-space:nowrap"><b>सतना दिनांक</b>&nbsp;&nbsp;26/09/2026</span></div>
    <ol style="margin:8px 0 0 22px;line-height:1.75">
      <li>आयुक्त, VB-GRAM-G, विकास भवन, भोपाल की ओर सादर सूचनार्थ।</li>
      <li>आयुक्त, रीवा संभाग, रीवा की ओर सादर संप्रेषित।</li>
