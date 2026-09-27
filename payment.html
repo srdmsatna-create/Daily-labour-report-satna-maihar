@@ -7,23 +7,23 @@
 <title>Payment | एक बगिया माँ के नाम</title>
 <style>
 :root{--navy:#0b3159;--blue:#1769aa;--line:#8195aa;--soft:#eef5ff;--green:#0f766e;--ink:#162534}
-*{box-sizing:border-box}body{margin:0;font-family:Inter,"Segoe UI","Noto Sans Devanagari",Arial,sans-serif;background:#f3f6fa;color:var(--ink)}
-.top{background:linear-gradient(125deg,#071e36,#1769aa);color:#fff;padding:18px 24px}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,"Segoe UI","Noto Sans Devanagari",Arial,sans-serif;background:linear-gradient(180deg,#edf4fb 0,#f7f9fc 220px,#f3f6fa 100%);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+.top{background:linear-gradient(120deg,#071e36 0%,#0c4f86 52%,#1683b8 100%);color:#fff;padding:22px 24px;box-shadow:0 10px 30px rgba(4,37,69,.22);position:relative;overflow:hidden}.top:after{content:"";position:absolute;width:360px;height:360px;border-radius:50%;right:-120px;top:-230px;background:rgba(255,255,255,.08)}
 .topin{max-width:1700px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.top h1{margin:0;font-size:25px}.top p{margin:4px 0 0;font-size:12px;opacity:.86}
-.back{color:#fff;text-decoration:none;border:1px solid #ffffff55;border-radius:9px;padding:8px 12px;font-weight:800}
-main{max-width:1700px;margin:18px auto;padding:0 14px}
-.card{background:#fff;border:1px solid #c8d6e5;border-radius:14px;box-shadow:0 5px 18px #173a5b12;overflow:hidden}
-.head{padding:12px 14px;background:#b7ddea;color:#075f99;text-align:center;font-size:21px;font-weight:950;text-decoration:underline}
-.sub{padding:8px 14px;text-align:center;font-size:12px;color:#596d83;border-bottom:1px solid #d7e1ec}
+.top h1{margin:0;font-size:26px;line-height:1.2;font-weight:900;letter-spacing:.1px}.top p{margin:6px 0 0;font-size:13px;opacity:.9;font-weight:600}
+.back{color:#fff;text-decoration:none;border:1px solid #ffffff66;border-radius:11px;padding:9px 13px;font-weight:850;background:rgba(255,255,255,.08);backdrop-filter:blur(4px);position:relative;z-index:2}
+main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
+.card{background:rgba(255,255,255,.98);border:1px solid #c5d4e4;border-radius:18px;box-shadow:0 14px 38px rgba(25,61,97,.10);overflow:hidden}
+.head{padding:15px 16px;background:linear-gradient(180deg,#dff1ff,#c9e4f7);color:#064e7c;text-align:center;font-size:22px;line-height:1.2;font-weight:950;letter-spacing:.15px;border-bottom:1px solid #9fc4de}
+.sub{padding:9px 14px;text-align:center;font-size:12.5px;color:#52677d;border-bottom:1px solid #d7e1ec;background:#f8fbfe;font-weight:650}
 .wrap{overflow:auto}.tbl{border-collapse:collapse;width:100%;min-width:1450px;table-layout:fixed}
-.tbl th,.tbl td{border:1px solid #5f6b76;padding:7px 5px;text-align:center;vertical-align:middle;font-size:12px;line-height:1.18}
-.tbl th{background:#eef5ff;font-weight:900}.tbl thead tr:first-child th{background:#cfe3ff;color:#07325e}
-.tbl .pct{background:#fff600;font-weight:950}.tbl td:first-child{text-align:left;font-weight:900}
+.tbl th,.tbl td{border:1px solid #8194a8;padding:8px 6px;text-align:center;vertical-align:middle;font-size:12.5px;line-height:1.25}
+.tbl th{background:#edf5fc;font-weight:900;color:#123e67;white-space:normal}.tbl thead tr:first-child th{background:linear-gradient(180deg,#cfe8fb,#bddcf4);color:#07325e;font-size:12.5px}
+.tbl .pct{background:#fff600;font-weight:950}.tbl td:first-child{text-align:left;font-weight:900;color:#123e67;padding-left:10px}.tbl tbody tr:nth-child(even):not(.district):not(.grand) td{background:#f8fbfe}.tbl tbody tr:hover:not(.district):not(.grand) td{background:#eef7ff}
 .tbl .district td{background:#dfeaf3;font-weight:950;border-top:2px solid #6f96b8;border-bottom:2px solid #6f96b8}
 .tbl .district td:first-child{background:#fff600;text-align:center}.tbl .grand td{background:#cadfed;font-weight:950;border-top:3px solid #315f91;border-bottom:3px solid #315f91}.tbl .grand td:first-child{background:#fff600;text-align:center}
 .note{padding:12px 14px;font-size:12px;line-height:1.5;background:#fffdf2;border-top:1px solid #e7db9b}
-.actions{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}.actions button{border:1px solid #b9cadd;background:#fff;color:#123f72;border-radius:9px;padding:9px 13px;font-weight:850;cursor:pointer}.actions .primary{background:#0f766e;color:#fff;border-color:#0f766e}
+.actions{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}.actions button{border:1px solid #b9cadd;background:#fff;color:#123f72;border-radius:11px;padding:10px 15px;font-weight:850;cursor:pointer;box-shadow:0 4px 12px rgba(31,71,110,.08);transition:.18s ease}.actions button:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(31,71,110,.13)}.actions .primary{background:linear-gradient(135deg,#0f766e,#159a88);color:#fff;border-color:#0f766e}
 .status{padding:14px;text-align:center;color:#61758a;font-weight:700}
 @media(max-width:760px){.top h1{font-size:20px}.head{font-size:17px}.tbl th,.tbl td{font-size:10px;padding:5px 3px}}
 @media print{.top,.actions{display:none!important}body{background:#fff}main{max-width:none;margin:0;padding:0}.card{border:0;box-shadow:none}.wrap{overflow:visible}.tbl{min-width:0;width:100%;table-layout:fixed}.tbl th,.tbl td{font-size:7pt;padding:1.1mm .5mm}@page{size:A4 landscape;margin:7mm}}
@@ -35,13 +35,14 @@ main{max-width:1700px;margin:18px auto;padding:0 14px}
 <div class="actions"><button class="primary" onclick="window.print()">Print / PDF</button><button onclick="downloadCSV()">CSV Download</button></div>
 <section class="card">
 <div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति)</div>
-<div class="sub">Amount in ₹ Lakh • Booked / Paid figures Ek Bagiya work-level source से</div>
+<div class="sub">Official Sanction Works: <b style="color:#0b5f94;font-size:14px">821</b> • Amount in ₹ Lakh • Booked / Paid figures Ek Bagiya work-level source से</div>
 <div class="wrap"><table class="tbl" id="paymentTable"><tbody><tr><td class="status">डेटा लोड हो रहा है…</td></tr></tbody></table></div>
 <div class="note"><b>नोट:</b> स्वीकृति राशि के विरुद्ध Booked Wage और Booked Material तथा Paid Wage और Paid Material पोर्टल के work-level data से लिये गये हैं। Pending Payment = Booked − Paid. % Paid Amount = Paid Total ÷ Booked Total × 100.</div>
 </section>
 </main>
 <script>
 const OFFICERS={AMARPATAN:'Rajesh Budhauliya',MAIHAR:'Om Prakash Sharma',RAMNAGAR:'Vinay Singh',MAJHGAWAN:'Pradeep Singh',NAGOD:'Anil Awadhiya','RAMPUR BAGHELAN':'Santosh Shukla',SATNA:'Yashwant Singh',UNCHAHARA:'Satya Kama Gautam'};
+const SANCTIONED_WORKS={AMARPATAN:106,MAIHAR:100,RAMNAGAR:109,MAJHGAWAN:101,NAGOD:101,'RAMPUR BAGHELAN':96,SATNA:103,UNCHAHARA:105};
 const ORDER=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
 let exportRows=[];
 function parseCSV(text){
@@ -55,7 +56,7 @@ function summarize(text){
  const a=parseCSV(text),h=a[0],ix=Object.fromEntries(h.map((x,i)=>[x.trim(),i])), rows=a.slice(1).filter(r=>r[ix['Work Code']]);
  const m=new Map();
  for(const r of rows){const j=String(r[ix.Janpad]||'').trim().toUpperCase();if(!ORDER.includes(j))continue;if(!m.has(j))m.set(j,{janpad:j,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0});const x=m.get(j);x.works++;if(String(r[ix['Work Status']]||'').trim().toLowerCase()==='ongoing')x.ongoing++;x.sw+=lakh(r[ix['Wage Sanctioned']]);x.sm+=lakh(r[ix['Material Sanctioned']]);x.bw+=lakh(r[ix['Amount Booked Since Inception Wages']]);x.bm+=lakh(r[ix['Amount Booked Since Inception Material']]);x.pw+=lakh(r[ix['Wage Amount Paid since inception']]);x.pm+=lakh(r[ix['Material Amount Paid since inception']]);}
- return ORDER.map(j=>m.get(j)||{janpad:j,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0});
+ return ORDER.map(j=>{const x=m.get(j)||{janpad:j,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};x.works=SANCTIONED_WORKS[j]||x.works;return x;});
 }
 function total(rows,label){const x={janpad:label,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};for(const r of rows)for(const k of ['works','ongoing','sw','sm','bw','bm','pw','pm'])x[k]+=num(r[k]);return x}
 function render(rows){
