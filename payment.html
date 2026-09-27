@@ -25,7 +25,7 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 .note{padding:12px 14px;font-size:12px;line-height:1.5;background:#fffdf2;border-top:1px solid #e7db9b}
 .actions{display:flex;gap:10px;margin:14px 0;flex-wrap:wrap}.actions button{border:1px solid #b9cadd;background:#fff;color:#123f72;border-radius:11px;padding:10px 15px;font-weight:850;cursor:pointer;box-shadow:0 4px 12px rgba(31,71,110,.08);transition:.18s ease}.actions button:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(31,71,110,.13)}.actions .primary{background:linear-gradient(135deg,#0f766e,#159a88);color:#fff;border-color:#0f766e}
 .status{padding:14px;text-align:center;color:#61758a;font-weight:700}
-.tbl th:nth-child(1),.tbl td:nth-child(1){width:112px;min-width:112px}
+.tbl th:nth-child(1),.tbl td:nth-child(1){width:94px;min-width:94px}
 .tbl th:nth-child(2),.tbl td:nth-child(2){width:68px;min-width:68px}
 .tbl th:nth-child(3),.tbl td:nth-child(3){width:78px;min-width:78px}
 .tbl th:nth-child(4),.tbl td:nth-child(4),
@@ -115,7 +115,7 @@ function scnHTML(r){
  const paidMaterial=r.pm;
  const pendingMaterial=Math.max(0,bookedMaterial-paidMaterial);
  return `
-   <div class="notice-office">कार्यालय अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला पंचायत सतना (म.प्र.)</div>
+   <div style="display:flex;align-items:center;gap:14px"><img src="assets/vbgramg-logo.svg" alt="VB-GRAM-G" style="width:120px;height:auto;object-fit:contain"><div class="notice-office" style="flex:1">कार्यालय अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला पंचायत सतना (म.प्र.)</div></div>
    <div class="notice-meta"><div>पत्र क्र.: __________ / VBG RAM G/MIS/2026-2027</div><div>सतना दिनांक&nbsp;&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;&nbsp; /2026</div></div>
    <div><b>प्रति,</b><br><b>${officer}</b><br>सहायक लेखाधिकारी, जनपद पंचायत ${janpadHi}।</div>
    <div class="notice-subject">विषय: “एक बगिया माँ के नाम” के हितग्राहियों का शत-प्रतिशत सामग्री भुगतान आज दिनांक तक सुनिश्चित न किए जाने के संबंध में कारण बताओ सूचना पत्र।</div>
