@@ -56,6 +56,15 @@
     });
   }
 
+
+  function ensurePageFix(){
+    let st=document.getElementById('srdmEk755PageFix');
+    if(st)return;
+    st=document.createElement('style');st.id='srdmEk755PageFix';
+    st.textContent='html,body{max-width:100%;overflow-x:hidden}#srdmEkAll755Works{box-sizing:border-box}#srdmEkAll755Works *{box-sizing:border-box}@media(max-width:900px){#srdmEkAll755Works{margin:14px 8px 24px!important;width:calc(100% - 16px)!important;border-radius:10px!important}#srdmEkAll755Works table{font-size:9.5px!important}#srdmEkAll755Works th,#srdmEkAll755Works td{padding:4px 3px!important}}';
+    document.head.appendChild(st);
+  }
+
   function renderAllWorks(){
     const works=getWorks();
     if(!works.length)return;
@@ -63,7 +72,7 @@
     if(!box){
       box=document.createElement('section');
       box.id='srdmEkAll755Works';
-      box.style.cssText='margin:22px auto 32px;max-width:1650px;background:#fff;border:1px solid #c7d5e5;border-radius:14px;box-shadow:0 5px 18px rgba(20,50,85,.08);overflow:hidden';
+      box.style.cssText='margin:22px 14px 32px;width:calc(100% - 28px);max-width:none;background:#fff;border:1px solid #c7d5e5;border-radius:14px;box-shadow:0 5px 18px rgba(20,50,85,.08);overflow:hidden;font-family:Inter,"Segoe UI","Noto Sans Devanagari",Arial,sans-serif';
       const footer=document.querySelector('footer');
       if(footer&&footer.parentNode)footer.parentNode.insertBefore(box,footer);else document.body.appendChild(box);
     }
@@ -73,10 +82,10 @@
       String(pick(a,'Panchayat Name','GP')).localeCompare(String(pick(b,'Panchayat Name','GP')),'hi')||
       String(pick(a,'Work Code')).localeCompare(String(pick(b,'Work Code')))
     );
-    let h='<div style="padding:14px 16px;background:linear-gradient(125deg,#0b3159,#1769aa);color:#fff"><div style="font-size:20px;font-weight:900">एक बगिया माँ के नाम — सभी '+rows.length+' कार्यों की एक साथ सूची</div><div style="font-size:12px;opacity:.9;margin-top:4px">कोई 300-row limit नहीं • सभी verified works नीचे एक ही सूची में</div></div>';
-    h+='<div style="overflow:auto;max-height:none"><table style="border-collapse:collapse;min-width:2050px;width:100%;font-size:12px"><thead><tr>'+
+    let h='<div style="padding:12px 14px;background:linear-gradient(125deg,#0b3159,#1769aa);color:#fff"><div style="font-size:18px;line-height:1.25;font-weight:900">एक बगिया माँ के नाम — सभी '+rows.length+' कार्यों की एक साथ सूची</div><div style="font-size:11px;line-height:1.35;opacity:.92;margin-top:3px">सभी verified works एक ही continuous list में • horizontal scroll केवल जरूरत पर</div></div>';
+    h+='<div style="overflow-x:auto;overflow-y:visible;max-height:none;width:100%"><table style="border-collapse:collapse;width:100%;min-width:1680px;table-layout:fixed;font-size:10.5px;line-height:1.22;color:#172334"><colgroup><col style="width:48px"><col style="width:72px"><col style="width:110px"><col style="width:145px"><col style="width:110px"><col style="width:120px"><col style="width:82px"><col style="width:90px"><col style="width:150px"><col style="width:330px"><col style="width:105px"><col style="width:110px"><col style="width:110px"><col style="width:110px"><col style="width:90px"><col style="width:125px"><col style="width:125px"><col style="width:115px"></colgroup><thead><tr>'+
       ['S.No.','District','Janpad','Sub Engineer / Upyantri','Cluster','GP','FY','Status','Work Code','Work Name','Sanction ₹','MGNREGA Booked ₹','VB-G RAM G Booked ₹','Overall Booked ₹','Overall Exp %','MGNREGA Mandays Till 31 Mar 2026','NREGA Mandays 01 Apr–30 Jun','Mandays 01 Jul–Today']
-      .map(x=>'<th style="position:sticky;top:0;z-index:2;background:#d5e5f6;color:#07325e;border:1px solid #8aa2bd;padding:7px 6px;text-align:center">'+x+'</th>').join('')+
+      .map(x=>'<th style="position:sticky;top:0;z-index:2;background:#d5e5f6;color:#07325e;border:1px solid #8aa2bd;padding:6px 4px;text-align:center;font-size:10.5px;line-height:1.15;font-weight:900;white-space:normal;word-break:normal">'+x+'</th>').join('')+
       '</tr></thead><tbody>';
     rows.forEach((r,i)=>{
       const san=num(pick(r,'Sanction Amount Total','Sanction Total Rs','sanction'));
@@ -92,13 +101,14 @@
         pick(r,'Panchayat Name','GP'),pick(r,'Fin Year','FY'),pick(r,'Work Status','Status'),pick(r,'Work Code'),pick(r,'Work Name'),
         san,nrega,vbg,overall,(String(exp).includes('%')?exp:(num(exp).toFixed(1)+'%')),tillMar,aprJun,jul
       ];
-      h+='<tr>'+vals.map((v,j)=>'<td style="border:1px solid #aab8c8;padding:6px 5px;vertical-align:top;'+(j===9?'min-width:320px;text-align:left;':'text-align:center;')+'">'+esc(typeof v==='number'?fmt(v):v)+'</td>').join('')+'</tr>';
+      h+='<tr style="background:'+(i%2?'#f7faff':'#ffffff')+'">'+vals.map((v,j)=>'<td style="border:1px solid #aab8c8;padding:5px 4px;vertical-align:middle;font-size:10.5px;line-height:1.25;white-space:normal;overflow-wrap:anywhere;word-break:normal;'+(j===9?'text-align:left;font-weight:600;':'text-align:center;')+(j===8?'font-family:Consolas,monospace;font-size:10px;':'')+'">'+esc(typeof v==='number'?fmt(v):v)+'</td>').join('')+'</tr>';
     });
     h+='</tbody></table></div>';
     box.innerHTML=h;
   }
 
   function boot(){
+    ensurePageFix();
     renderAllWorks();
     setTimeout(renderAllWorks,800);
     setTimeout(renderAllWorks,2200);
