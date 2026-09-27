@@ -30,7 +30,34 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 @media(max-width:760px){.notice-body{padding:16px;font-size:14px}.notice-meta{font-weight:900;font-size:17px}.notice-meta div:last-child{text-align:left}.notice-sign{justify-content:center}.notice-sign div{min-width:0}}
 
 @media(max-width:760px){.top h1{font-size:20px}.head{font-size:18px}.tbl{min-width:1603px;width:1603px}.tbl th,.tbl td{font-size:11px;padding:5px 3px}.tbl td{white-space:nowrap}}
-@media print{body:not(.notice-print) #paymentNotice{display:none!important}.top,.actions,.notice-actions{display:none!important}body{background:#fff}main{max-width:none;margin:0;padding:0}body:not(.notice-print) main>.card{display:block!important}.card{border:0;box-shadow:none}.wrap{overflow:visible}.tbl{min-width:0;width:100%;table-layout:fixed}.tbl th,.tbl td{font-size:7.5pt;padding:1.15mm .5mm}.tbl th:nth-child(n),.tbl td:nth-child(n){min-width:0!important;max-width:none!important;width:auto!important}body.notice-print main>.card{display:none!important}body.notice-print #paymentNotice{display:block!important;border:0!important;box-shadow:none!important;margin:0!important;page-break-before:always}body.notice-print #paymentNotice .notice-body{padding:0 8mm 0;font-size:12.5pt;line-height:1.6}body.notice-print #paymentNotice .notice-head{font-size:16pt;padding:8mm 5mm 4mm}body.notice-print #paymentNotice .notice-table th,body.notice-print #paymentNotice .notice-table td{font-size:9pt;padding:1.5mm}body.notice-print #paymentNotice .notice-sign{margin-top:12mm}@page{size:A4 landscape;margin:6mm}body.notice-print{--print-mode:notice}}@media print{body.notice-print #paymentNotice{break-before:page}}
+@media print{
+  @page{size:A4 landscape;margin:5mm}
+  body:not(.notice-print) #paymentNotice{display:none!important}
+  .top,.actions,.notice-actions{display:none!important}
+  body{background:#fff!important}
+  main{max-width:none!important;margin:0!important;padding:0!important}
+  body:not(.notice-print) main>.card{display:block!important}
+  .card{border:0!important;box-shadow:none!important;border-radius:0!important}
+  .head{font-size:14pt!important;padding:4mm 2mm!important}
+  .sub{font-size:8.5pt!important;padding:2mm!important}
+  .wrap{overflow:visible!important;width:100%!important}
+  .tbl{width:100%!important;min-width:0!important;table-layout:fixed!important}
+  .tbl th,.tbl td{font-size:6.7pt!important;line-height:1.08!important;padding:1.2mm .45mm!important;white-space:normal!important;word-break:normal!important;overflow-wrap:anywhere!important}
+  .tbl thead tr:first-child th{font-size:7.4pt!important;padding-top:1.4mm!important;padding-bottom:1.4mm!important}
+  .tbl thead tr:nth-child(2) th{font-size:6.5pt!important;padding:1.1mm .35mm!important}
+  .tbl td:first-child{font-size:6.9pt!important;padding-left:1mm!important}
+  .tbl .pct,.tbl .pending-cell,.tbl .pending-total{font-size:6.9pt!important}
+  .tbl th:nth-child(n),.tbl td:nth-child(n){min-width:0!important;max-width:none!important;width:auto!important}
+  .note{font-size:7.4pt!important;line-height:1.25!important;padding:2mm 2.5mm!important}
+  body.notice-print main>.card{display:none!important}
+  body.notice-print #paymentNotice{display:block!important;border:0!important;box-shadow:none!important;margin:0!important;page-break-before:always}
+  body.notice-print #paymentNotice .notice-body{padding:0 8mm 0;font-size:12.5pt;line-height:1.6}
+  body.notice-print #paymentNotice .notice-head{font-size:16pt;padding:8mm 5mm 4mm}
+  body.notice-print #paymentNotice .notice-table th,body.notice-print #paymentNotice .notice-table td{font-size:9pt;padding:1.5mm}
+  body.notice-print #paymentNotice .notice-sign{margin-top:12mm}
+  body.notice-print{--print-mode:notice}
+}
+@media print{body.notice-print #paymentNotice{break-before:page}}
 </style>
 </head>
 <body>
