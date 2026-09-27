@@ -43,7 +43,7 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 .tbl th:nth-child(13),.tbl td:nth-child(13){width:78px;min-width:78px}
 .tbl th:nth-child(17),.tbl td:nth-child(17){width:138px;min-width:138px}
 
-.notice-card{margin:20px 0 0;background:#fff;border:1px solid #b9c8d8;border-radius:18px;box-shadow:0 14px 38px rgba(25,61,97,.10);overflow:hidden}.notice-head{background:#eef4f8;color:#0b3159;padding:16px 20px;text-align:center;font-size:24px;font-weight:950;letter-spacing:.1px;border-bottom:2px solid #9fb2c5}.notice-body{padding:24px 28px 30px;font-family:"Noto Sans Devanagari","Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.85;color:#1f2937}.notice-office{text-align:center;font-weight:950;font-size:22px;line-height:1.55}.notice-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0 14px;font-weight:800}.notice-meta div:last-child{text-align:right}.notice-subject{margin:16px 0;padding:12px 14px;background:#f5f8fb;border-left:5px solid #5f7892;font-weight:950;font-size:18px}.notice-body p{margin:11px 0;text-align:justify}.notice-warning{margin:16px 0;padding:14px 16px;background:#f7f9fb;border:1px solid #aebdca;border-left:5px solid #5f7892;color:#1f2937;font-weight:900;font-size:17px}.notice-sign{margin-top:26px;display:flex;justify-content:flex-end}.notice-sign div{text-align:center;font-weight:900;min-width:320px}.notice-table{width:100%;border-collapse:collapse;margin:16px 0 8px}.notice-table th,.notice-table td{border:1px solid #8899aa;padding:7px 6px;text-align:center;font-size:12px}.notice-table th{background:#eef4f8}.notice-table .pending-cell{background:#f4f7fa;color:#0b3159;font-weight:950}
+.notice-card{margin:20px 0 0;background:#fff;border:1px solid #b9c8d8;border-radius:18px;box-shadow:0 14px 38px rgba(25,61,97,.10);overflow:hidden}.notice-head{background:#eef4f8;color:#0b3159;padding:16px 20px;text-align:center;font-size:24px;font-weight:950;letter-spacing:.1px;border-bottom:2px solid #9fb2c5}.notice-body{padding:24px 28px 30px;font-family:"Noto Sans Devanagari","Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.85;color:#1f2937}.notice-office{text-align:center;font-weight:950;font-size:22px;line-height:1.55}.notice-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:18px 0 14px;font-weight:800}.notice-meta div:last-child{text-align:right}.notice-subject{margin:16px 0;padding:12px 14px;background:#f5f8fb;border-left:5px solid #5f7892;font-weight:950;font-size:18px}.notice-body p{margin:11px 0;text-align:justify}.notice-warning{margin:16px 0;padding:14px 16px;background:#f7f9fb;border:1px solid #aebdca;border-left:5px solid #5f7892;color:#1f2937;font-weight:900;font-size:17px}.notice-sign{margin-top:26px;display:flex;justify-content:flex-end}.notice-sign div{text-align:center;font-weight:900;min-width:320px}.pratilipi-sign{margin-top:10px;display:flex;justify-content:flex-end}.pratilipi-sign div{text-align:right!important;min-width:390px;font-size:18px;line-height:1.5;font-weight:950}.notice-table{width:100%;border-collapse:collapse;margin:16px 0 8px}.notice-table th,.notice-table td{border:1px solid #8899aa;padding:7px 6px;text-align:center;font-size:12px}.notice-table th{background:#eef4f8}.notice-table .pending-cell{background:#f4f7fa;color:#0b3159;font-weight:950}
 .notice-actions{display:flex;gap:8px;justify-content:flex-end;margin-bottom:10px;flex-wrap:wrap}.notice-actions button{border:1px solid #c3cfdb;border-radius:9px;background:#fff;padding:8px 12px;font-weight:850;cursor:pointer}.scn-picker{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 14px;padding:12px;background:#f5f9fd;border:1px solid #cfdae6;border-radius:12px}.scn-picker label{font-weight:900;color:#123e67}.scn-picker select{min-width:230px;padding:9px 10px;border:1px solid #9fb2c5;border-radius:9px;background:#fff;font-weight:800}.scn-picker button{padding:10px 14px;border:1px solid #5f7892;border-radius:9px;background:#0b5f94;color:#fff;font-weight:900;cursor:pointer;font-size:15px}.scn-amount{font-weight:950;color:#0b3159;font-size:18px}
 @media(max-width:760px){.notice-body{padding:16px;font-size:14px}.notice-meta{grid-template-columns:1fr}.notice-meta div:last-child{text-align:left}.notice-sign{justify-content:center}.notice-sign div{min-width:0}}
 
@@ -78,6 +78,7 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 const OFFICERS={AMARPATAN:'राजेश बुधौलिया',MAIHAR:'ओम प्रकाश शर्मा',RAMNAGAR:'विनय सिंह',MAJHGAWAN:'प्रदीप सिंह',NAGOD:'अनिल अवधिया','RAMPUR BAGHELAN':'संतोष शुक्ला',SATNA:'यशवंत सिंह',UNCHAHARA:'सत्य काम गौतम'};
 const SANCTIONED_WORKS={AMARPATAN:106,MAIHAR:100,RAMNAGAR:109,MAJHGAWAN:101,NAGOD:101,'RAMPUR BAGHELAN':96,SATNA:103,UNCHAHARA:105};
 const ORDER=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
+const JANPAD_HI={AMARPATAN:'अमरपाटन',MAIHAR:'मैहर',RAMNAGAR:'रामनगर',MAJHGAWAN:'मझगवां',NAGOD:'नागौद','RAMPUR BAGHELAN':'रामपुर बघेलान',SATNA:'सतना',UNCHAHARA:'उचेहरा'};
 const DISTRICT={AMARPATAN:'MAIHAR',MAIHAR:'MAIHAR',RAMNAGAR:'MAIHAR',MAJHGAWAN:'SATNA',NAGOD:'SATNA','RAMPUR BAGHELAN':'SATNA',SATNA:'SATNA',UNCHAHARA:'SATNA'};
 let exportRows=[];
 let paymentRows=[];
@@ -99,11 +100,11 @@ function render(rows){
  const all=[...rows.slice(0,3),total(rows.slice(0,3),'DISTRICT MAIHAR TOTAL'),...rows.slice(3),total(rows.slice(3),'DISTRICT SATNA TOTAL'),total(rows,'कुल (MAIHAR + SATNA)')];
  exportRows=[];
  let h='<thead><tr><th rowspan="2">Janpad</th><th colspan="5">Sanction Works & Amount in Lakhs</th><th colspan="3">Booked Amount in Lakhs</th><th colspan="3">Paid Amount in Lakhs</th><th rowspan="2">% Paid Amount</th><th colspan="3" class="pending-head">Pending Payment in Lakhs</th><th rowspan="2">सहायक लेखाधिकारी</th></tr><tr><th>Works</th><th>Ongoing</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th class="pending-head">Wages</th><th class="pending-head">Material</th><th class="pending-head">Total</th></tr></thead><tbody>';
- for(const r of all){const st=r.sw+r.sm,bt=r.bw+r.bm,pt=r.pw+r.pm,nw=Math.max(0,r.bw-r.pw),nm=Math.max(0,r.bm-r.pm),nt=nw+nm,pct=bt?pt*100/bt:0;const isD=r.janpad.startsWith('DISTRICT'),isG=r.janpad.startsWith('कुल');const cls=isG?'grand':isD?'district':'';h+='<tr class="'+cls+'"><td>'+r.janpad+'</td><td>'+r.works.toLocaleString('en-IN')+'</td><td>'+r.ongoing.toLocaleString('en-IN')+'</td><td>'+f(r.sw)+'</td><td>'+f(r.sm)+'</td><td>'+f(st)+'</td><td>'+f(r.bw)+'</td><td>'+f(r.bm)+'</td><td>'+f(bt)+'</td><td>'+f(r.pw)+'</td><td>'+f(r.pm)+'</td><td>'+f(pt)+'</td><td class="pct">'+pct.toFixed(2)+'%</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nw)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nm)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nt)+'</td><td>'+(OFFICERS[r.janpad]||'')+'</td></tr>';exportRows.push([r.janpad,r.works,r.ongoing,r.sw,r.sm,st,r.bw,r.bm,bt,r.pw,r.pm,pt,pct,nw,nm,nt,OFFICERS[r.janpad]||'']);}
+ for(const r of all){const st=r.sw+r.sm,bt=r.bw+r.bm,pt=r.pw+r.pm,nw=Math.max(0,r.bw-r.pw),nm=Math.max(0,r.bm-r.pm),nt=nw+nm,pct=bt?pt*100/bt:0;const isD=r.janpad.startsWith('DISTRICT'),isG=r.janpad.startsWith('कुल');const cls=isG?'grand':isD?'district':'';const janpadLabel=(isD||isG)?r.janpad:(JANPAD_HI[r.janpad]||r.janpad);h+='<tr class="'+cls+'"><td>'+janpadLabel+'</td><td>'+r.works.toLocaleString('en-IN')+'</td><td>'+r.ongoing.toLocaleString('en-IN')+'</td><td>'+f(r.sw)+'</td><td>'+f(r.sm)+'</td><td>'+f(st)+'</td><td>'+f(r.bw)+'</td><td>'+f(r.bm)+'</td><td>'+f(bt)+'</td><td>'+f(r.pw)+'</td><td>'+f(r.pm)+'</td><td>'+f(pt)+'</td><td class="pct">'+pct.toFixed(2)+'%</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nw)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nm)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nt)+'</td><td>'+(OFFICERS[r.janpad]||'')+'</td></tr>';exportRows.push([r.janpad,r.works,r.ongoing,r.sw,r.sm,st,r.bw,r.bm,bt,r.pw,r.pm,pt,pct,nw,nm,nt,OFFICERS[r.janpad]||'']);}
  h+='</tbody>';document.getElementById('paymentTable').innerHTML=h;
  paymentRows=rows;
  const sel=document.getElementById('scnJanpad');
- sel.innerHTML=rows.map(r=>'<option value="'+r.janpad+'">'+r.janpad+' — '+(OFFICERS[r.janpad]||'')+'</option>').join('');
+ sel.innerHTML=rows.map(r=>'<option value="'+r.janpad+'">'+(JANPAD_HI[r.janpad]||r.janpad)+' — '+(OFFICERS[r.janpad]||'')+'</option>').join('');
  if(rows.length) showSCN(rows[0].janpad);
 }
 function scnHTML(r){
@@ -115,16 +116,16 @@ function scnHTML(r){
  return `
    <div class="notice-office">कार्यालय अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला पंचायत सतना (म.प्र.)</div>
    <div class="notice-meta"><div>पत्र क्र.: __________ / 2026</div><div>दिनांक: __________</div></div>
-   <div><b>प्रति,</b><br><b>${officer}</b><br>सहायक लेखाधिकारी, जनपद पंचायत ${r.janpad}।</div>
+   <div><b>प्रति,</b><br><b>${officer}</b><br>सहायक लेखाधिकारी, जनपद पंचायत ${janpadHi}।</div>
    <div class="notice-subject">विषय: “एक बगिया माँ के नाम” के हितग्राहियों का शत-प्रतिशत सामग्री भुगतान आज दिनांक तक सुनिश्चित न किए जाने के संबंध में कारण बताओ सूचना पत्र।</div>
    <p>“एक बगिया माँ के नाम” योजना अंतर्गत हितग्राहियों के भुगतान के संबंध में समय-समय पर स्पष्ट निर्देश दिए जाने एवं भुगतान प्रगति की समीक्षा किए जाने के उपरांत भी आपके जनपद में आज दिनांक तक शत-प्रतिशत सामग्री भुगतान सुनिश्चित नहीं किया गया है।</p>
-   <p>उपलब्ध पोर्टल आंकड़ों के अनुसार आपके जनपद <b>${r.janpad}</b> में सामग्री मद में कुल <span class="scn-amount">₹ ${f(bookedMaterial)} लाख</span> राशि बुक की गई है, जिसके विरुद्ध मात्र <span class="scn-amount">₹ ${f(paidMaterial)} लाख</span> का भुगतान किया गया है। अभी भी <span class="scn-amount">₹ ${f(pendingMaterial)} लाख</span> सामग्री भुगतान लंबित रखा गया है, जिसके लिए आपकी जिम्मेदारी तय की जाती है।</p>
+   <p>उपलब्ध पोर्टल आंकड़ों के अनुसार आपके जनपद <b>${janpadHi}</b> में सामग्री मद में कुल <span class="scn-amount">₹ ${f(bookedMaterial)} लाख</span> राशि बुक की गई है, जिसके विरुद्ध मात्र <span class="scn-amount">₹ ${f(paidMaterial)} लाख</span> का भुगतान किया गया है। अभी भी <span class="scn-amount">₹ ${f(pendingMaterial)} लाख</span> सामग्री भुगतान लंबित रखा गया है, जिसके लिए आपकी जिम्मेदारी तय की जाती है।</p>
    <p><b>आप स्पष्ट करें कि आपके द्वारा आज दिनांक तक “एक बगिया माँ के नाम” के पात्र हितग्राहियों का शत-प्रतिशत सामग्री भुगतान क्यों नहीं किया गया?</b> लंबित प्रत्येक प्रकरण में विलंब का स्पष्ट एवं तथ्यात्मक कारण प्रस्तुत करें।</p>
    <div class="notice-warning">आपको निर्देशित किया जाता है कि इस सूचना पत्र की प्राप्ति से एक सप्ताह के भीतर भुगतान योग्य समस्त लंबित सामग्री राशि का 100% भुगतान सुनिश्चित करें। एक सप्ताह के भीतर शत-प्रतिशत सामग्री भुगतान नहीं किए जाने तथा कारण बताओ सूचना पत्र का उत्तर संतोषजनक नहीं पाए जाने की स्थिति में आपके विरुद्ध संविदा शर्तों एवं शासकीय सेवा में लापरवाही मानते हुए नियमानुसार कार्रवाई की जाएगी, जिसके लिए आप स्वयं जिम्मेदार होंगे।</div>
    <p>यदि किसी प्रकरण में तकनीकी, अभिलेखीय अथवा अन्य वास्तविक बाधा हो तो संबंधित प्रकरण का कार्य कोड, हितग्राही का नाम, लंबित राशि एवं बाधा का कारण पृथक सूची में संलग्न करते हुए प्रस्तुत करें। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</p>
    <table class="notice-table">
      <thead><tr><th>जनपद</th><th>सहायक लेखाधिकारी</th><th>बुक सामग्री राशि (₹ लाख)</th><th>भुगतान सामग्री राशि (₹ लाख)</th><th>लंबित सामग्री राशि (₹ लाख)</th></tr></thead>
-     <tbody><tr><td>${r.janpad}</td><td>${officer}</td><td>${f(bookedMaterial)}</td><td>${f(paidMaterial)}</td><td class="pending-cell">${f(pendingMaterial)}</td></tr></tbody>
+     <tbody><tr><td>${janpadHi}</td><td>${officer}</td><td>${f(bookedMaterial)}</td><td>${f(paidMaterial)}</td><td class="pending-cell">${f(pendingMaterial)}</td></tr></tbody>
    </table>
    <div class="notice-sign"><div>अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला पंचायत सतना (म.प्र.)</div></div>
    <div style="margin-top:22px;font-weight:900">प्रतिलिपि:</div>
@@ -132,9 +133,10 @@ function scnHTML(r){
      <li>आयुक्त, VB-GRAM-G, विकास भवन, भोपाल की ओर सादर सूचनार्थ।</li>
      <li>आयुक्त, रीवा संभाग, रीवा की ओर सादर संप्रेषित।</li>
      <li>कलेक्टर, ${district} की ओर सादर सूचनार्थ।</li>
-     <li>मुख्य कार्यपालन अधिकारी, जनपद पंचायत ${r.janpad} की ओर लेख है कि अपने जनपद की लंबित सामग्री भुगतान राशि का परीक्षण कर भुगतान योग्य प्रकरणों का 100% भुगतान प्राथमिकता से सुनिश्चित कराएं तथा भुगतान में किसी तकनीकी, अभिलेखीय अथवा अन्य बाधा की स्थिति में कारण सहित स्पष्ट विवरण तत्काल कार्यालय को प्रस्तुत कराएं। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</li>
+     <li>मुख्य कार्यपालन अधिकारी, जनपद पंचायत ${janpadHi} की ओर लेख है कि अपने जनपद की लंबित सामग्री भुगतान राशि का परीक्षण कर भुगतान योग्य प्रकरणों का 100% भुगतान प्राथमिकता से सुनिश्चित कराएं तथा भुगतान में किसी तकनीकी, अभिलेखीय अथवा अन्य बाधा की स्थिति में कारण सहित स्पष्ट विवरण तत्काल कार्यालय को प्रस्तुत कराएं। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</li>
      <li>लेखाधिकारी, VB-GRAM-G, जिला पंचायत सतना — स्पष्ट करें कि आपके द्वारा कब-कब “एक बगिया माँ के नाम” के भुगतान का परीक्षण किया गया तथा संबंधित जनपद के सहायक लेखाधिकारी के विरुद्ध क्या-क्या कार्रवाई प्रस्तावित कर अधोहस्ताक्षरी के समक्ष प्रस्तुत की गई। यदि ऐसी कोई कार्रवाई प्रस्तावित नहीं की गई है, तो आप अपना स्पष्टीकरण प्रस्तुत करें।</li>
    </ol>
+   <div class="notice-sign pratilipi-sign"><div>अतिरिक्त जिला कार्यक्रम समन्वयक / मुख्य कार्यपालन अधिकारी<br>जिला पंचायत सतना</div></div>
  `;
 }
 function showSCN(janpad){
@@ -161,7 +163,7 @@ function printSelectedSCN(){
    .notice-table{width:100%;border-collapse:collapse;margin:12px 0 8px}
    .notice-table th,.notice-table td{border:1px solid #555;padding:6px 5px;text-align:center;font-size:10.5pt}
    .notice-sign{margin-top:18px;display:flex;justify-content:flex-end}
-   .notice-sign div{text-align:center;font-weight:900;min-width:280px}
+   .notice-sign div{text-align:center;font-weight:900;min-width:280px}.pratilipi-sign{display:flex;justify-content:flex-end;margin-top:10px}.pratilipi-sign div{text-align:right!important;min-width:360px;font-size:14pt;line-height:1.45;font-weight:900}
    ol{margin:8px 0 0 22px;padding-left:18px;font-size:11.5pt;line-height:1.5}
    li{margin:4px 0}
  `;
