@@ -97,6 +97,7 @@ function scnHTML(r){
  const paidMaterial=r.pm;
  const pendingMaterial=Math.max(0,bookedMaterial-paidMaterial);
  return `
+   <section class="print-page main-page"><div class="page-inner">
    <div class="official-letterhead" style="display:grid;grid-template-columns:155px 1fr 155px;align-items:center;gap:10px;border-bottom:2px solid #354b60;padding-bottom:7px;margin-bottom:7px"><img src="assets/vbgramg-logo.svg" alt="VB-GRAM-G" style="width:145px;height:90px;object-fit:contain;object-position:left center;display:block"><div class="notice-office" style="text-align:center">कार्यालय अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला पंचायत सतना (म.प्र.)</div><div></div></div>
    <div class="notice-meta" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin:8px 0 12px;padding:5px 0;border-top:1px solid #b8c6d3;border-bottom:1px solid #b8c6d3"><span style="white-space:nowrap"><b>पत्र क्र.:</b> __________ / VBG RAM G/MIS/2026-2027</span><span style="white-space:nowrap;margin-left:auto;text-align:right"><b>सतना दिनांक</b>&nbsp;&nbsp;26/09/2026</span></div>
    <div><b>प्रति,</b><br><b>${officer}</b><br>सहायक लेखाधिकारी, जनपद पंचायत ${janpadHi}।</div>
@@ -107,6 +108,8 @@ function scnHTML(r){
    <div class="notice-warning">आपको अंतिम रूप से निर्देशित किया जाता है कि इस सूचना पत्र की प्राप्ति से एक सप्ताह के भीतर भुगतान योग्य समस्त लंबित सामग्री राशि का 100% भुगतान सुनिश्चित करें। निर्धारित अवधि में भुगतान पूर्ण नहीं किए जाने अथवा उत्तर असंतोषजनक पाए जाने की स्थिति में इसे आदेशों की अवहेलना एवं दायित्व निर्वहन में गंभीर लापरवाही मानते हुए नियमानुसार उत्तरदायित्व निर्धारित कर कार्रवाई प्रस्तावित की जाएगी, जिसके लिए आप स्वयं उत्तरदायी होंगे।</div>
    <p>यदि किसी प्रकरण में तकनीकी, अभिलेखीय अथवा अन्य वास्तविक बाधा हो तो संबंधित प्रकरण का कार्य कोड, हितग्राही का नाम, लंबित राशि एवं बाधा का कारण पृथक सूची में संलग्न करते हुए प्रस्तुत करें। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</p>
    <div class="notice-sign main-letter-sign"><div>अतिरिक्त जिला कार्यक्रम समन्वयक /<br>मुख्य कार्यपालन अधिकारी<br>जिला पंचायत सतना</div></div>
+   </div></section>
+   <section class="print-page copy-page"><div class="page-inner">
    <div class="pratilipi-title" style="margin-top:18px;margin-bottom:0;font-weight:900;line-height:1.15">प्रतिलिपि:</div>
    <div class="endorsement-line" style="display:flex;justify-content:space-between;align-items:center;width:100%;margin:1px 0 8px;padding:4px 0;border-top:1px solid #aebdca;border-bottom:1px solid #aebdca"><span style="white-space:nowrap"><b>पृष्ठांकन क्र.:</b> __________ / VBG RAM G/MIS/2026-2027</span><span style="white-space:nowrap"><b>सतना दिनांक</b>&nbsp;&nbsp;26/09/2026</span></div>
    <ol style="margin:8px 0 0 22px;line-height:1.75">
@@ -117,6 +120,7 @@ function scnHTML(r){
      <li>लेखाधिकारी, VB-GRAM-G, जिला पंचायत सतना — स्पष्ट करें कि आपके द्वारा कब-कब “एक बगिया माँ के नाम” के भुगतान का परीक्षण किया गया तथा संबंधित जनपद के सहायक लेखाधिकारी के विरुद्ध क्या-क्या कार्रवाई प्रस्तावित कर अधोहस्ताक्षरी के समक्ष प्रस्तुत की गई। यदि ऐसी कोई कार्रवाई प्रस्तावित नहीं की गई है, तो आप अपना स्पष्टीकरण प्रस्तुत करें।</li>
    </ol>
    <div class="notice-sign pratilipi-sign"><div>अतिरिक्त जिला कार्यक्रम समन्वयक /<br>मुख्य कार्यपालन अधिकारी<br>जिला पंचायत सतना</div></div>
+   </div></section>
  `;
 }
 function showSCN(janpad){
@@ -130,10 +134,13 @@ function printSelectedSCN(){
  if(!r)return;
  const w=window.open('','_blank','width=1000,height=1200');
  const css=`
-   @page{size:A4 portrait;margin:7mm 10mm 7mm 10mm}
+   @page{size:A4 portrait;margin:7mm 10mm}
    *{box-sizing:border-box}
    html,body{margin:0;padding:0;background:#fff}
-   body{font-family:"Noto Sans Devanagari","Mangal","Nirmala UI","Segoe UI",Arial,sans-serif;color:#111;font-size:10.2pt;line-height:1.28}
+   body{font-family:"Noto Sans Devanagari","Mangal","Nirmala UI","Segoe UI",Arial,sans-serif;color:#111}
+   .print-page{width:190mm;height:283mm;overflow:hidden;break-after:page;page-break-after:always;position:relative}
+   .print-page:last-child{break-after:auto;page-break-after:auto}
+   .page-inner{width:100%;transform-origin:top left}
    .official-letterhead{display:grid!important;grid-template-columns:88px 1fr 88px!important;align-items:center!important;gap:6px!important;border-bottom:1.2px solid #33485c!important;padding:0 0 4px!important;margin:0 0 4px!important}
    .official-letterhead img{width:80px!important;height:48px!important;object-fit:contain!important;object-position:left center!important;display:block!important}
    .notice-office{text-align:center!important;font-weight:900!important;font-size:13.8pt!important;line-height:1.12!important}
@@ -145,7 +152,7 @@ function printSelectedSCN(){
    .notice-sign{display:flex!important;justify-content:flex-end!important}
    .main-letter-sign{margin-top:6px!important}
    .main-letter-sign div,.pratilipi-sign div{text-align:right!important;min-width:285px!important;font-size:10.2pt!important;line-height:1.22!important;font-weight:900!important}
-   .pratilipi-title{break-before:page!important;page-break-before:always!important;margin:0 0 5px!important;padding-top:1mm!important;line-height:1.15!important;font-size:11pt!important;font-weight:900!important}
+   .pratilipi-title{margin:0 0 5px!important;padding-top:1mm!important;line-height:1.15!important;font-size:11pt!important;font-weight:900!important}
    .endorsement-line{font-size:9.5pt!important;font-weight:900!important;margin:0 0 5px!important;padding:3px 0!important;border-top:1px solid #7f91a2!important;border-bottom:1px solid #7f91a2!important}
    ol{margin:5px 0 0 18px!important;padding-left:13px!important;font-size:9.7pt!important;line-height:1.3!important}
    li{margin:2.5px 0!important}
@@ -155,14 +162,29 @@ function printSelectedSCN(){
  w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><base href="https://srdmsatna.online/"><title>SCN - '+r.janpad+'</title><style>'+css+'</style></head><body>'+scnHTML(r)+'</body></html>');
  w.document.close();
  w.focus();
- const doPrint=()=>setTimeout(()=>w.print(),180);
+ const fitPages=()=>{
+   [...w.document.querySelectorAll('.print-page')].forEach(page=>{
+     const inner=page.querySelector('.page-inner');
+     if(!inner)return;
+     inner.style.transform='none';
+     inner.style.width='100%';
+     const h=inner.scrollHeight, ph=page.clientHeight;
+     const ww=inner.scrollWidth, pw=page.clientWidth;
+     const scale=Math.min(1, ph/h, pw/ww);
+     if(scale<1){
+       inner.style.transform='scale('+scale+')';
+       inner.style.width=(100/scale)+'%';
+     }
+   });
+ };
+ const doPrint=()=>{fitPages();setTimeout(()=>w.print(),220);};
  const imgs=[...w.document.images];
  if(!imgs.length){doPrint();}
  else{
-   let left=imgs.length;
-   const done=()=>{left--;if(left<=0)doPrint();};
+   let left=imgs.length, fired=false;
+   const done=()=>{left--;if(left<=0&&!fired){fired=true;doPrint();}};
    imgs.forEach(img=>{if(img.complete)done();else{img.addEventListener('load',done,{once:true});img.addEventListener('error',done,{once:true});}});
-   setTimeout(()=>{if(left>0)doPrint();},1500);
+   setTimeout(()=>{if(!fired){fired=true;doPrint();}},1600);
  }
 }
 function downloadCSV(){if(!exportRows.length)return;const head=['Janpad','Works','Ongoing','Sanction Wages Lakh','Sanction Material Lakh','Sanction Total Lakh','Booked Wages Lakh','Booked Material Lakh','Booked Total Lakh','Paid Wages Lakh','Paid Material Lakh','Paid Total Lakh','% Paid Amount','Pending Wages Lakh','Pending Material Lakh','Pending Total Lakh','सहायक लेखाधिकारी'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\uFEFF'+[head,...exportRows].map(r=>r.map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Payment_Status.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
