@@ -48,13 +48,13 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 @media(max-width:760px){.notice-body{padding:16px;font-size:14px}.notice-meta{grid-template-columns:1fr}.notice-meta div:last-child{text-align:left}.notice-sign{justify-content:center}.notice-sign div{min-width:0}}
 
 @media(max-width:760px){.top h1{font-size:20px}.head{font-size:18px}.tbl{min-width:1500px;width:1500px}.tbl th,.tbl td{font-size:11.5px;padding:6px 4px}.tbl td{white-space:nowrap}}
-@media print{.top,.actions,.notice-actions{display:none!important}body{background:#fff}body.notice-print main>.card{display:none!important}body.notice-print #paymentNotice{display:block!important;border:0!important;box-shadow:none!important;margin:0!important}main{max-width:none;margin:0;padding:0}.card{border:0;box-shadow:none}.wrap{overflow:visible}.tbl{min-width:0;width:100%;table-layout:fixed}.tbl th,.tbl td{font-size:7.5pt;padding:1.15mm .5mm}.tbl th:nth-child(n),.tbl td:nth-child(n){min-width:0!important;max-width:none!important;width:auto!important}@page{size:A4 landscape;margin:6mm}}
+@media print{.top,.actions,.notice-actions{display:none!important}body{background:#fff}main{max-width:none;margin:0;padding:0}.card{border:0;box-shadow:none}.wrap{overflow:visible}.tbl{min-width:0;width:100%;table-layout:fixed}.tbl th,.tbl td{font-size:7.5pt;padding:1.15mm .5mm}.tbl th:nth-child(n),.tbl td:nth-child(n){min-width:0!important;max-width:none!important;width:auto!important}body.notice-print main>.card{display:none!important}body.notice-print #paymentNotice{display:block!important;border:0!important;box-shadow:none!important;margin:0!important;page-break-before:always}body.notice-print #paymentNotice .notice-body{padding:0 8mm 0;font-size:12.5pt;line-height:1.6}body.notice-print #paymentNotice .notice-head{font-size:16pt;padding:8mm 5mm 4mm}body.notice-print #paymentNotice .notice-table th,body.notice-print #paymentNotice .notice-table td{font-size:9pt;padding:1.5mm}body.notice-print #paymentNotice .notice-sign{margin-top:12mm}@page{size:A4 landscape;margin:6mm}body.notice-print{--print-mode:notice}}@media print{body.notice-print #paymentNotice{break-before:page}}
 </style>
 </head>
 <body>
 <header class="top"><div class="topin"><div><h1>💳 Payment — एक बगिया माँ के नाम</h1><p>SATNA + MAIHAR • Janpad-wise भुगतान की स्थिति</p></div><a class="back" href="index.html">← SRDM Applications</a></div></header>
 <main>
-<div class="actions"><button class="primary" onclick="window.print()">Print / PDF</button><button onclick="downloadCSV()">CSV Download</button><button onclick="document.getElementById('paymentNotice').scrollIntoView({behavior:'smooth'})" style="background:#b91c1c;color:#fff;border-color:#b91c1c">कड़ा भुगतान नोटिस देखें</button></div>
+<div class="actions"><button class="primary" onclick="window.print()">Print / PDF</button><button onclick="downloadCSV()">CSV Download</button><button onclick="document.getElementById('paymentNotice').scrollIntoView({behavior:'smooth'})" style="background:#b91c1c;color:#fff;border-color:#b91c1c">कारण बताओ / सूचना पत्र देखें</button></div>
 <section class="card">
 <div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति)</div>
 <div class="sub">Official Sanction Works: <b style="color:#0b5f94;font-size:14px">821</b> • Amount in ₹ Lakh • Booked / Paid figures Ek Bagiya work-level source से</div>
@@ -63,18 +63,26 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 </section>
 
 <section class="notice-card" id="paymentNotice">
-  <div class="notice-head">कार्यालय अतिरिक्त जिला कार्यक्रम समन्वयक, जिला सतना — कड़ा भुगतान निर्देश</div>
+  <div class="notice-head">कारण बताओ / सूचना पत्र — एक बगिया माँ के नाम भुगतान</div>
   <div class="notice-body">
     <div class="notice-actions"><button onclick="printNotice()">केवल नोटिस Print / PDF</button></div>
     <div class="notice-office">कार्यालय अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला सतना (म.प्र.)</div>
     <div class="notice-meta"><div>पत्र क्र.: __________ / 2026</div><div>दिनांक: __________</div></div>
-    <div><b>प्रति,</b><br>समस्त Assistant Account Officer,<br>संबंधित जनपद पंचायत, जिला सतना / मैहर।</div>
-    <div class="notice-subject">विषय: “एक बगिया माँ के नाम” अंतर्गत सामग्री मद की लंबित राशि का 100% भुगतान तत्काल सुनिश्चित करने के संबंध में।</div>
-    <p>परिषद मुख्यालय से समय-समय पर सामग्री मद के भुगतान हेतु राशि जारी किए जाने तथा वीडियो कॉन्फ्रेंसिंग के माध्यम से बार-बार स्पष्ट निर्देश दिए जाने के उपरांत भी आपके जनपद स्तर पर सामग्री भुगतान की लंबित राशि शेष रहना अत्यंत गंभीर विषय है। उपलब्ध भुगतान विवरण के अनुसार कई जनपदों में Booked Material के विरुद्ध पूर्ण भुगतान अभी तक नहीं किया गया है।</p>
-    <p>आपसे यह स्पष्ट किया जाता है कि पर्याप्त निर्देश एवं राशि उपलब्ध कराए जाने के पश्चात भी लंबित सामग्री भुगतान का निस्तारण न होना कार्य में अनावश्यक विलंब तथा निर्देशों के अनुपालन में शिथिलता को दर्शाता है। अतः आपके जनपद में शेष समस्त पात्र सामग्री भुगतान की तत्काल समीक्षा कर, प्रकरणवार आवश्यक कार्रवाई करते हुए 100% भुगतान सुनिश्चित किया जाए।</p>
-    <div class="notice-warning">निर्देश: समस्त Assistant Account Officer अपने-अपने जनपद की लंबित सामग्री भुगतान राशि का परीक्षण कर भुगतान योग्य प्रकरणों का 100% भुगतान प्राथमिकता से सुनिश्चित करें तथा भुगतान में किसी तकनीकी, अभिलेखीय अथवा अन्य बाधा की स्थिति में कारण सहित स्पष्ट विवरण तत्काल कार्यालय को प्रस्तुत करें। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</div>
-    <p>नीचे प्रदर्शित Pending Payment विवरण को गंभीरता से लेते हुए, लंबित राशि के निस्तारण की स्थिति अद्यतन कर प्रतिवेदन कार्यालय में उपलब्ध कराना सुनिश्चित करें। भविष्य में समीक्षा / वीडियो कॉन्फ्रेंसिंग के दौरान लंबित भुगतान की प्रगति पृथक रूप से देखी जाएगी।</p>
-    <table class="notice-table" id="noticePendingTable"><thead><tr><th>Janpad</th><th>Assistant Account Officer</th><th>Pending Wages ₹ Lakh</th><th>Pending Material ₹ Lakh</th><th>Total Pending ₹ Lakh</th></tr></thead><tbody><tr><td colspan="5">डेटा लोड हो रहा है…</td></tr></tbody></table>
+    <div><b>प्रति,</b><br>समस्त सहायक लेखाधिकारी,<br>संबंधित जनपद पंचायत, जिला सतना / मैहर।</div>
+    <div class="notice-subject">विषय: “एक बगिया माँ के नाम” के हितग्राहियों का आज दिनांक तक शत-प्रतिशत भुगतान सुनिश्चित न किए जाने के संबंध में कारण बताओ / स्पष्टीकरण।</div>
+    <p>“एक बगिया माँ के नाम” योजना अंतर्गत हितग्राहियों के भुगतान के संबंध में समय-समय पर स्पष्ट निर्देश दिए जाने तथा भुगतान प्रगति की निरंतर समीक्षा किए जाने के उपरांत भी आज दिनांक तक आपके जनपद में शत-प्रतिशत भुगतान सुनिश्चित नहीं किया गया है। यह स्थिति अत्यंत गंभीर है।</p>
+    <p><b>अतः आप स्पष्ट करें कि आपके द्वारा आज दिनांक तक “एक बगिया माँ के नाम” के पात्र हितग्राहियों का शत-प्रतिशत भुगतान क्यों नहीं किया गया?</b> लंबित भुगतान के प्रत्येक प्रकरण का परीक्षण कर विलंब के वास्तविक कारण, तकनीकी/अभिलेखीय बाधा, भुगतान योग्य राशि तथा अपेक्षित निस्तारण तिथि का स्पष्ट विवरण प्रस्तुत करें।</p>
+    <div class="notice-warning">निर्देश: समस्त सहायक लेखाधिकारी अपने-अपने जनपद की लंबित सामग्री भुगतान राशि का परीक्षण कर भुगतान योग्य प्रकरणों का 100% भुगतान प्राथमिकता से सुनिश्चित करें तथा भुगतान में किसी तकनीकी, अभिलेखीय अथवा अन्य बाधा की स्थिति में कारण सहित स्पष्ट विवरण तत्काल कार्यालय को प्रस्तुत करें। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</div>
+    <p>नीचे प्रदर्शित लंबित भुगतान विवरण को आधार मानते हुए तत्काल आवश्यक कार्रवाई करें तथा अद्यतन भुगतान स्थिति एवं अपना कारणयुक्त स्पष्टीकरण कार्यालय में प्रस्तुत करना सुनिश्चित करें।</p>
+    <div style="margin-top:18px;font-weight:900">प्रतिलिपि:</div>
+    <ol style="margin:8px 0 0 22px;line-height:1.8">
+      <li>आयुक्त, VB-GRAM-G, विकास भवन, भोपाल की ओर सादर सूचनार्थ।</li>
+      <li>आयुक्त, रीवा संभाग, रीवा की ओर सादर संप्रेषित।</li>
+      <li>कलेक्टर, सतना / मैहर की ओर सादर सूचनार्थ।</li>
+      <li>मुख्य कार्यपालन अधिकारी, जनपद पंचायत समस्त की ओर लेख है कि अपने-अपने जनपद की लंबित सामग्री भुगतान राशि का परीक्षण कर भुगतान योग्य प्रकरणों का 100% भुगतान प्राथमिकता से सुनिश्चित करें तथा भुगतान में किसी तकनीकी, अभिलेखीय अथवा अन्य बाधा की स्थिति में कारण सहित स्पष्ट विवरण तत्काल कार्यालय को प्रस्तुत करें। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</li>
+      <li>लेखाधिकारी, VB-GRAM-G, जिला पंचायत — स्पष्ट करें कि आपके द्वारा कब-कब “एक बगिया माँ के नाम” के भुगतान का परीक्षण किया गया तथा संबंधित जनपद के सहायक लेखाधिकारी के विरुद्ध क्या-क्या कार्रवाई प्रस्तावित कर अधोहस्ताक्षरी के समक्ष प्रस्तुत की गई। यदि ऐसी कोई कार्रवाई प्रस्तावित नहीं की गई है, तो आप अपना स्पष्टीकरण प्रस्तुत करें।</li>
+    </ol>
+    <table class="notice-table" id="noticePendingTable"><thead><tr><th>Janpad</th><th>सहायक लेखाधिकारी</th><th>Pending Wages ₹ Lakh</th><th>Pending Material ₹ Lakh</th><th>Total Pending ₹ Lakh</th></tr></thead><tbody><tr><td colspan="5">डेटा लोड हो रहा है…</td></tr></tbody></table>
     <div class="notice-sign"><div>अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला सतना (म.प्र.)</div></div>
   </div>
 </section>
@@ -101,15 +109,43 @@ function total(rows,label){const x={janpad:label,works:0,ongoing:0,sw:0,sm:0,bw:
 function render(rows){
  const all=[...rows.slice(0,3),total(rows.slice(0,3),'DISTRICT MAIHAR TOTAL'),...rows.slice(3),total(rows.slice(3),'DISTRICT SATNA TOTAL'),total(rows,'कुल (MAIHAR + SATNA)')];
  exportRows=[];
- let h='<thead><tr><th rowspan="2">Janpad</th><th colspan="5">Sanction Works & Amount in Lakhs</th><th colspan="3">Booked Amount in Lakhs</th><th colspan="3">Paid Amount in Lakhs</th><th rowspan="2">% Paid Amount</th><th colspan="3" class="pending-head">Pending Payment in Lakhs</th><th rowspan="2">Assistant Account Officer</th></tr><tr><th>Works</th><th>Ongoing</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th class="pending-head">Wages</th><th class="pending-head">Material</th><th class="pending-head">Total</th></tr></thead><tbody>';
+ let h='<thead><tr><th rowspan="2">Janpad</th><th colspan="5">Sanction Works & Amount in Lakhs</th><th colspan="3">Booked Amount in Lakhs</th><th colspan="3">Paid Amount in Lakhs</th><th rowspan="2">% Paid Amount</th><th colspan="3" class="pending-head">Pending Payment in Lakhs</th><th rowspan="2">सहायक लेखाधिकारी</th></tr><tr><th>Works</th><th>Ongoing</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th class="pending-head">Wages</th><th class="pending-head">Material</th><th class="pending-head">Total</th></tr></thead><tbody>';
  for(const r of all){const st=r.sw+r.sm,bt=r.bw+r.bm,pt=r.pw+r.pm,nw=Math.max(0,r.bw-r.pw),nm=Math.max(0,r.bm-r.pm),nt=nw+nm,pct=bt?pt*100/bt:0;const isD=r.janpad.startsWith('DISTRICT'),isG=r.janpad.startsWith('कुल');const cls=isG?'grand':isD?'district':'';h+='<tr class="'+cls+'"><td>'+r.janpad+'</td><td>'+r.works.toLocaleString('en-IN')+'</td><td>'+r.ongoing.toLocaleString('en-IN')+'</td><td>'+f(r.sw)+'</td><td>'+f(r.sm)+'</td><td>'+f(st)+'</td><td>'+f(r.bw)+'</td><td>'+f(r.bm)+'</td><td>'+f(bt)+'</td><td>'+f(r.pw)+'</td><td>'+f(r.pm)+'</td><td>'+f(pt)+'</td><td class="pct">'+pct.toFixed(2)+'%</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nw)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nm)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nt)+'</td><td>'+(OFFICERS[r.janpad]||'')+'</td></tr>';exportRows.push([r.janpad,r.works,r.ongoing,r.sw,r.sm,st,r.bw,r.bm,bt,r.pw,r.pm,pt,pct,nw,nm,nt,OFFICERS[r.janpad]||'']);}
  h+='</tbody>';document.getElementById('paymentTable').innerHTML=h;
  const noticeRows=rows.map(r=>{const nw=Math.max(0,r.bw-r.pw),nm=Math.max(0,r.bm-r.pm),nt=nw+nm;return '<tr><td>'+r.janpad+'</td><td>'+(OFFICERS[r.janpad]||'')+'</td><td class="pending-cell">'+f(nw)+'</td><td class="pending-cell">'+f(nm)+'</td><td class="pending-cell">'+f(nt)+'</td></tr>';}).join('');
  const nt=total(rows,'TOTAL');const tnw=Math.max(0,nt.bw-nt.pw),tnm=Math.max(0,nt.bm-nt.pm),tnt=tnw+tnm;
  document.querySelector('#noticePendingTable tbody').innerHTML=noticeRows+'<tr style="font-weight:950;background:#fee2e2"><td colspan="2">TOTAL</td><td class="pending-cell">'+f(tnw)+'</td><td class="pending-cell">'+f(tnm)+'</td><td class="pending-cell">'+f(tnt)+'</td></tr>';
 }
-function printNotice(){document.body.classList.add('notice-print');window.print();setTimeout(()=>document.body.classList.remove('notice-print'),300);}
-function downloadCSV(){if(!exportRows.length)return;const head=['Janpad','Works','Ongoing','Sanction Wages Lakh','Sanction Material Lakh','Sanction Total Lakh','Booked Wages Lakh','Booked Material Lakh','Booked Total Lakh','Paid Wages Lakh','Paid Material Lakh','Paid Total Lakh','% Paid Amount','Pending Wages Lakh','Pending Material Lakh','Pending Total Lakh','Assistant Account Officer'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\uFEFF'+[head,...exportRows].map(r=>r.map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Payment_Status.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+function printNotice(){
+    const n=document.getElementById('paymentNotice').cloneNode(true);
+    n.querySelectorAll('.notice-actions').forEach(x=>x.remove());
+    const w=window.open('','_blank','width=1000,height=1200');
+    const css=`
+      @page{size:A4 portrait;margin:14mm}
+      *{box-sizing:border-box}
+      body{font-family:"Noto Sans Devanagari","Segoe UI",Arial,sans-serif;color:#111;margin:0}
+      .notice-card{border:0!important;box-shadow:none!important;margin:0!important}
+      .notice-head{background:#fff!important;color:#000!important;border-bottom:2px solid #000;padding:0 0 8px;text-align:center;font-size:17pt;font-weight:900}
+      .notice-body{padding:8px 0 0;font-size:12pt;line-height:1.55}
+      .notice-office{text-align:center;font-weight:900;font-size:15pt;line-height:1.45}
+      .notice-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0 12px;font-weight:700}
+      .notice-meta div:last-child{text-align:right}
+      .notice-subject{margin:10px 0;padding:8px 10px;border-left:4px solid #000;font-weight:900}
+      .notice-body p{margin:8px 0;text-align:justify}
+      .notice-warning{margin:10px 0;padding:9px 10px;border:1px solid #000;border-left:5px solid #000;font-weight:800}
+      .notice-sign{margin-top:18px;display:flex;justify-content:flex-end}
+      .notice-sign div{text-align:center;font-weight:900;min-width:280px}
+      .notice-table{width:100%;border-collapse:collapse;margin:12px 0 8px}
+      .notice-table th,.notice-table td{border:1px solid #555;padding:5px 4px;text-align:center;font-size:9.5pt}
+      ol{margin-top:6px;padding-left:24px}
+      li{margin:4px 0}
+    `;
+    w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>कारण बताओ / सूचना पत्र</title><style>'+css+'</style></head><body>'+n.outerHTML+'</body></html>');
+    w.document.close();
+    w.focus();
+    setTimeout(()=>{w.print();},400);
+  }
+function downloadCSV(){if(!exportRows.length)return;const head=['Janpad','Works','Ongoing','Sanction Wages Lakh','Sanction Material Lakh','Sanction Total Lakh','Booked Wages Lakh','Booked Material Lakh','Booked Total Lakh','Paid Wages Lakh','Paid Material Lakh','Paid Total Lakh','% Paid Amount','Pending Wages Lakh','Pending Material Lakh','Pending Total Lakh','सहायक लेखाधिकारी'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\uFEFF'+[head,...exportRows].map(r=>r.map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Payment_Status.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
 fetch('ek-bagiya/work_details.csv?live='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(r.status);return r.text()}).then(t=>render(summarize(t))).catch(e=>document.getElementById('paymentTable').innerHTML='<tbody><tr><td class="status">Payment data load नहीं हुआ। Page refresh करें।</td></tr></tbody>');
 </script>
 </body></html>
