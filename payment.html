@@ -109,6 +109,7 @@ function render(rows){
 }
 function scnHTML(r){
  const officer=OFFICERS[r.janpad]||'';
+ const janpadHi=JANPAD_HI[r.janpad]||r.janpad;
  const district=DISTRICT[r.janpad]||'';
  const bookedMaterial=r.bm;
  const paidMaterial=r.pm;
@@ -127,7 +128,6 @@ function scnHTML(r){
      <thead><tr><th>जनपद</th><th>सहायक लेखाधिकारी</th><th>बुक सामग्री राशि (₹ लाख)</th><th>भुगतान सामग्री राशि (₹ लाख)</th><th>लंबित सामग्री राशि (₹ लाख)</th></tr></thead>
      <tbody><tr><td>${janpadHi}</td><td>${officer}</td><td>${f(bookedMaterial)}</td><td>${f(paidMaterial)}</td><td class="pending-cell">${f(pendingMaterial)}</td></tr></tbody>
    </table>
-   <div class="notice-sign"><div>अतिरिक्त जिला कार्यक्रम समन्वयक<br>जिला पंचायत सतना (म.प्र.)</div></div>
    <div style="margin-top:22px;font-weight:900">प्रतिलिपि:</div>
    <ol style="margin:8px 0 0 22px;line-height:1.75">
      <li>आयुक्त, VB-GRAM-G, विकास भवन, भोपाल की ओर सादर सूचनार्थ।</li>
