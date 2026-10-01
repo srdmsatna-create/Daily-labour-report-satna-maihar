@@ -318,5 +318,5 @@ if __name__ == "__main__":
         # challenge page instead of the Persondays table. Never turn that
         # transient portal response into a failed daily deployment or overwrite
         # the last verified dashboard snapshot.
-        print(f"OFFICIAL PORTAL UNAVAILABLE - existing verified Shramik data preserved: {exc}")
-        sys.exit(0)
+        print(f"FAILED: official Persondays data was not refreshed: {exc}")
+        sys.exit(1)
