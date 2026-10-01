@@ -12,7 +12,7 @@ const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssTex
 rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • सतना • सीधी • सिंगरौली</small></div>';
 section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);
 const state=document.createElement('div');state.id='snStateDistrictReport';state.hidden=true;
-state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस","वित्तीय वर्ष 2026–27 जुलाई से सितम्बर तक","वित्तीय वर्ष 2026–27 अक्टूबर माह में","कुल उपलब्धि","अंतर","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
+state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस","वित्तीय वर्ष 2026–27 जुलाई से सितम्बर तक","वित्तीय वर्ष 2026–27 अक्टूबर माह में","कुल उपलब्धि","अंतर","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %","अपूर्ण कार्य (2026–27 तक)"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
 originalWrap.insertAdjacentElement('afterend',state);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=v=>v==null?'—':Number(v).toLocaleString('en-IN');
@@ -32,19 +32,19 @@ function render(){
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
  const chosen=selected==='__ALL__'?names:[selected], all=records(), days=Number(window.SHRAMIK_NIYOJAN.remainingOctoberDays);
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिला एवं जनपदवार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
- const totals={target:0,period1:0,period2:0,achievement:0,gap:0,daily:0}, tb=document.getElementById('snStateRows');
+ const totals={target:0,period1:0,period2:0,achievement:0,gap:0,daily:0,incomplete:0}, tb=document.getElementById('snStateRows');
  function cells(values){return values.map((v,j)=>'<td style="'+(j===1?'text-align:left;font-weight:850;':'text-align:right;font-weight:800;')+'">'+(typeof v==='string'?esc(v):fmt(v))+'</td>').join('');}
  tb.innerHTML=chosen.map((name,i)=>{
-  const d=all[name];if(!valid(d))return '<tr><td>'+ (i+1) +'</td><td>'+esc(name)+'</td><td colspan="13">समान अवधि के आँकड़े उपलब्ध नहीं हैं</td></tr>';
+  const d=all[name];if(!valid(d))return '<tr><td>'+ (i+1) +'</td><td>'+esc(name)+'</td><td colspan="14">समान अवधि के आँकड़े उपलब्ध नहीं हैं</td></tr>';
   const sum=k=>d.rows.reduce((a,r)=>a+Number(r[k]||0),0);
   const target=sum('target'),p1=sum('julyToSeptemberAchievement'),p2=sum('octoberAchievement'),achievement=p1+p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0;
   const known=k=>d.rows.every(r=>r[k]!=null)?sum(k):null;
-  const labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued');
-  for(const [k,v] of Object.entries({target,period1:p1,period2:p2,achievement,gap,daily}))totals[k]+=v;
-  const values=[i+1,name,target,p1,p2,achievement,gap,days,daily,labour,(achievement*100/target).toFixed(1)+'%',labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?(mr*100/ongoing).toFixed(1)+'%':'0.0%'];
+  const labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued'),incomplete=known('incompleteWorks');
+  for(const [k,v] of Object.entries({target,period1:p1,period2:p2,achievement,gap,daily,incomplete}))totals[k]+=v;
+  const values=[i+1,name,target,p1,p2,achievement,gap,days,daily,labour,(achievement*100/target).toFixed(1)+'%',labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?(mr*100/ongoing).toFixed(1)+'%':'0.0%',incomplete];
   return '<tr'+(name==='SATNA'?' style="background:#d8f3df;"':'')+'>'+cells(values)+'</tr>';
  }).join('');
- if(chosen.every(n=>valid(all[n]))){tb.innerHTML+='<tr style="background:#075d46;color:white;">'+cells(['','योग',totals.target,totals.period1,totals.period2,totals.achievement,totals.gap,days,totals.daily,null,(totals.achievement*100/totals.target).toFixed(1)+'%',null,null,null,null])+'</tr>';}
+ if(chosen.every(n=>valid(all[n]))){tb.innerHTML+='<tr style="background:#075d46;color:white;">'+cells(['','योग',totals.target,totals.period1,totals.period2,totals.achievement,totals.gap,days,totals.daily,null,(totals.achievement*100/totals.target).toFixed(1)+'%',null,null,null,null,totals.incomplete])+'</tr>';}
  ranks();
 }
 select.addEventListener('change',render);render();
