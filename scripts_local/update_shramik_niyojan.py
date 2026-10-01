@@ -136,7 +136,7 @@ def previous_url():
     explicit = os.environ.get("SHRAMIK_FY2526_URL", "").strip()
     if explicit:
         return explicit
-    return DEFAULT_CURRENT_URL.replace("fin_year=2026-2027", "fin_year=2025-2026")
+    return DEFAULT_CURRENT_URL.replace("https://vbgramgrep.dord.gov.in/VBGRAMG/", "https://mnregaweb4.dord.gov.in/netnregarep/").replace("fin_year=2026-2027", "fin_year=2025-2026")
 
 
 def fetch_report(page, url, require_all_blocks=True):
@@ -223,7 +223,7 @@ def calc(target, july_to_september, october, days):
         "difference": difference,
         "remainingDays": days,
         "dailyRequired": daily,
-        "dailyTarget125": math.ceil((difference / days) * 1.25) if days else 0,
+        "dailyTarget125": daily,
         "achievementPct": round((achievement * 100 / target), 2) if target else 0,
     }
 
@@ -270,7 +270,7 @@ def main():
     janpad_rows = []
     for block in ORDER:
         prev = previous_blocks.get(block, {})
-        baseline = sum(int(prev.get(m, 0)) for m in ("july", "august", "september", "october"))
+        baseline = {"AMARPATAN":71072,"MAIHAR":82541,"MAJHGAWAN":43096,"NAGOD":72817,"RAMNAGAR":75686,"RAMPUR BAGHELAN":138970,"SATNA":84825,"UNCHAHARA":52545}[block]
         cur = current_blocks[block]
         janpad_rows.append({
             "level": "janpad", "district": district(block), "janpad": block,
