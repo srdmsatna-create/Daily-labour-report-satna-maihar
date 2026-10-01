@@ -136,7 +136,7 @@ def previous_url():
     explicit = os.environ.get("SHRAMIK_FY2526_URL", "").strip()
     if explicit:
         return explicit
-    return CURRENT_URL.replace("fin_year=2026-2027", "fin_year=2025-2026")
+    return DEFAULT_CURRENT_URL.replace("fin_year=2026-2027", "fin_year=2025-2026")
 
 
 def fetch_report(page, url, require_all_blocks=True):
@@ -259,11 +259,13 @@ def main():
         previous_gp = {}
         previous_warning = ""
         try:
-            previous_blocks, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=False)
+            previous_blocks, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=True)
         except Exception as exc:
             previous_warning = f"FY 2025-26 Sub Engineer baseline unavailable: {exc}"
         browser.close()
 
+    if set(previous_blocks) != set(TARGETS):
+        raise RuntimeError("FY 2025-26 July-October baseline is incomplete; existing verified data was preserved")
     days = remaining_october_days(official_date)
     janpad_rows = []
     for block in ORDER:
