@@ -20,6 +20,7 @@ HOME = "https://vbgramg.dord.gov.in/vbgramg/home.aspx"
 
 DEFAULT_CURRENT_URL = "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Persondays&Digest=kG%2fjf+M7b1AUbpMqWwepqQ"
 CURRENT_URL = os.environ.get("SHRAMIK_FY2627_URL", "").strip() or DEFAULT_CURRENT_URL
+MIS_URL = "https://vbgramgrep.dord.gov.in/VBGRAMG/MISreport.aspx"
 
 TARGETS = {
     "AMARPATAN": {"august": 19419, "september": 17907},
@@ -143,6 +144,18 @@ def fetch_report(page, url, require_all_blocks=True):
     page.wait_for_timeout(2000)
     source = page.content()
     blocks, links = parse_block_rows(source)
+    # A stale Digest can return a landing/challenge page. Retry the same official
+    # report without Digest; the remaining query identifies State/District/FY/report.
+    if require_all_blocks and set(blocks) != set(TARGETS):
+        parts = urllib.parse.urlsplit(url)
+        qs = [(k, v) for k, v in urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
+              if k.lower() != "digest"]
+        clean_url = urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path,
+                                            urllib.parse.urlencode(qs), parts.fragment))
+        page.goto(clean_url, wait_until="domcontentloaded", timeout=90000)
+        page.wait_for_timeout(2000)
+        source = page.content()
+        blocks, links = parse_block_rows(source)
     if require_all_blocks and set(blocks) != set(TARGETS):
         raise RuntimeError(f"Persondays report parsed only {len(blocks)}/8 Janpads")
     if require_all_blocks and sum(x["july"] + x["august"] + x["september"] + x["october"] for x in blocks.values()) <= 0:
