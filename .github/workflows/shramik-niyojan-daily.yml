@@ -5,8 +5,10 @@ on:
   push:
     paths:
       - '.github/shramik-refresh-trigger.txt'
+      - 'scripts_local/update_shramik_niyojan.py'
+      - '.github/workflows/shramik-niyojan-daily.yml'
   schedule:
-    - cron: "35 2 * * *"   # 08:05 AM IST
+    - cron: "30 2 * * *"   # 08:00 AM IST
 
 permissions:
   contents: write
@@ -34,16 +36,38 @@ jobs:
           pip install playwright
           python -m playwright install --with-deps chromium
       - name: Update Shramik Niyojan
+        id: refresh
+        continue-on-error: true
         env:
           VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
-          SHRAMIK_FY2627_URL: "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?payload=v0-5YXVmpU91NQ9Jbk4c0c5c9vRvZ0r6SNmryYSJjN379CS6P3rf46ZugVPOMLfOSOtnPS4jHMPjYSGzPOUu_rrtNZd7GtPwI-7imr9qbJKj1vs5XzLF8-2MBcF0fvEDMeSm8VExajL98t0CH_yMkTagwXLFzsyY5RYAB_HK8yuwLzcrtf05JLMHVjOUdd8eO4PefiChLfNu_Eo6cVLa-DxMtysOSNnWhAhz3sarM1iBpU6rnf5PFuKW65UZJmfnoxHsW3GhgzA-43D-hJsaUZPDvjV_kyInV0RncuCGPTRYnmV74xZ1z9zd4azT8o3jJZD6d1XuwzSjSo22WSe6fMzfJ9w_G5Ft_l1ugBtUMrLsKN6giHsZ1CROpuLOunwbKTTOwXKKnRhslqhMST9_5Dj74hSNSPbAN1PGf3EuFTi0hUDYYIuLSsvN9VWu1UEA"
+          SHRAMIK_FY2627_URL: ${{ secrets.SHRAMIK_FY2627_URL }}
           SHRAMIK_FY2526_URL: ${{ secrets.SHRAMIK_FY2526_URL }}
-        run: python scripts_local/update_shramik_niyojan.py
+        run: |
+          for attempt in 1 2 3; do
+            if python scripts_local/update_shramik_niyojan.py; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then sleep 20; fi
+          done
+          exit 1
+      - name: Record refresh status
+        if: always()
+        env:
+          REFRESH_OUTCOME: ${{ steps.refresh.outcome }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          state = {"checkedAt": datetime.now(timezone.utc).isoformat(), "success": os.environ.get("REFRESH_OUTCOME") == "success"}
+          state["message"] = "Official Persondays refresh succeeded" if state["success"] else "Official Persondays refresh failed; last verified data retained"
+          Path("shramik-refresh-status.js").write_text("window.SHRAMIK_REFRESH_STATUS=" + json.dumps(state) + ";\n")
+          PY
       - name: Commit verified Shramik data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add shramik-niyojan-data.js
+          git add shramik-niyojan-data.js shramik-refresh-status.js
           if git diff --cached --quiet; then
             echo "No Shramik Niyojan data change."
             exit 0
@@ -51,3 +75,7 @@ jobs:
           git commit -m "Daily Shramik Niyojan update $(date -u +'%Y-%m-%d')"
           git pull --rebase origin main
           git push origin HEAD:main
+
+      - name: Report failed official refresh
+        if: steps.refresh.outcome != 'success'
+        run: exit 1
