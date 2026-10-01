@@ -26,16 +26,16 @@ function ranks(){
  document.getElementById('snDivisionRank').textContent=region.every(n=>valid(all[n]))?(1+region.filter(n=>score(all[n])>score(satna)).length)+' / 4':'तुलना डेटा उपलब्ध नहीं';
 }
 function render(){
- const selected=select.value,external=selected&&selected!=='SATNA';
+ const selected=select.value,external=!!selected;
  originalWrap.hidden=!!external;originalKpis.hidden=!!external;state.hidden=!external;
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort','snExcel']){const el=document.getElementById(id);if(el)el.disabled=!!external;}
- if(selected==='SATNA'){
+ if(!external&&selected==='SATNA'){
   const district=document.getElementById('snDistrict');district.value='SATNA';district.dispatchEvent(new Event('change'));
  }else if(!selected){
   const district=document.getElementById('snDistrict');district.value='ALL';district.dispatchEvent(new Event('change'));
  }
  if(external){
-  document.getElementById('snStateTitle').textContent=selected+' — श्रमिक नियोजन';
+  document.getElementById('snStateTitle').textContent=selected+' — श्रमिक नियोजन (जिला योग)';
   const d=records()[selected],tb=document.getElementById('snStateRows');
  const baseline=fixedBaseline.rows.find(r=>r.district===selected);
  document.getElementById('snStateTitle').textContent += baseline?' — 2025–26 जुलाई–अक्टूबर आधार: '+fmt(baseline.total):'';
