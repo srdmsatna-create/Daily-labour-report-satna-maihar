@@ -28,6 +28,7 @@ function ranks(){
 function render(){
  const selected=select.value, external=!!selected;
  originalWrap.hidden=external;originalKpis.hidden=external;state.hidden=!external;
+ for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el){const field=el.closest('label')||el;field.hidden=external;field.style.display=external?'none':'';}}
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort','snExcel']){const el=document.getElementById(id);if(el)el.disabled=external;}
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
  const chosen=selected==='__ALL__'?names:[selected], all=records(), days=Number(window.SHRAMIK_NIYOJAN.remainingOctoberDays);
