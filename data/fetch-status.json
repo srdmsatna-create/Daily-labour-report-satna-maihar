@@ -1,15 +1,15 @@
 {
-  "startedAt": "2026-09-28T02:46:51.935425+00:00",
+  "startedAt": "2026-10-01T09:32:57.749055+00:00",
   "ok": true,
   "source": "Official VB-G RAM G R6.9 (GitHub cloud diagnostic V2)",
   "steps": [
     {
       "step": "R6.9 category fetch",
       "ok": true,
-      "detail": "8/8 Janpads. Individual Labour/MR=1500/1126; PMAY Labour/MR=1032/888; Ek Bagiya Labour/MR=359/203."
+      "detail": "8/8 Janpads. Individual Labour/MR=1721/1277; PMAY Labour/MR=1150/999; Ek Bagiya Labour/MR=444/239."
     }
   ],
-  "officialDate": "28-09-2026",
-  "note": "8/8 Janpads. Individual Labour/MR=1500/1126; PMAY Labour/MR=1032/888; Ek Bagiya Labour/MR=359/203.",
-  "finishedAt": "2026-09-28T02:46:51.935447+00:00"
+  "officialDate": "01-10-2026",
+  "note": "8/8 Janpads. Individual Labour/MR=1721/1277; PMAY Labour/MR=1150/999; Ek Bagiya Labour/MR=444/239.",
+  "finishedAt": "2026-10-01T09:32:57.749071+00:00"
 }
