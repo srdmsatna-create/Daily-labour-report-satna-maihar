@@ -7,7 +7,7 @@ const tools=section.querySelector('.sn-tools'), originalWrap=section.querySelect
 const label=document.createElement('label');label.style.cssText='display:grid;gap:3px;font-weight:850;color:#075d46';
 label.textContent='प्रदेश के 52 स्रोत जिले';
 const select=document.createElement('select');select.id='snStateDistrict';select.innerHTML='<option value="">वर्तमान सतना + मैहर रिपोर्ट</option>'+names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
-label.appendChild(select);tools.insertBefore(label,tools.firstChild.nextSibling);
+label.appendChild(select);tools.insertBefore(label,tools.firstChild);
 const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0';
 rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • सतना • सीधी • सिंगरौली</small></div>';
 section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);
