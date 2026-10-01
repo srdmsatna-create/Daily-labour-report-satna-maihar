@@ -3,3 +3,4 @@ retry-session-aware-persondays
 fix-october-days-and-live-mandays-2026-10-01
 force-real-fetch-diagnostic-2026-10-01
 blank-secret-fallback-fixed-publish
+retry-without-stale-digest
