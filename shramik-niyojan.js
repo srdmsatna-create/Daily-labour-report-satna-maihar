@@ -132,7 +132,16 @@
     if(section.classList.contains('sn-cluster-mode'))drawClusterCards()
   }
   function fc(){let r=level.value==='engineer'?engineerRows:janpadRows,oldEng=eng.value,oldClu=clu.value,base=r.filter(x=>(dist.value==='ALL'||x.district===dist.value)&&(jan.value==='ALL'||x.janpad===jan.value)),e=[...new Set(base.map(x=>x.engineer).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'hi'));eng.innerHTML='<option value="ALL">सभी उपयंत्री</option>'+e.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');eng.value=e.includes(oldEng)?oldEng:'ALL';let c=[...new Set(base.filter(x=>eng.value==='ALL'||x.engineer===eng.value).map(x=>x.cluster).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'hi'));clu.innerHTML='<option value="ALL">सभी क्लस्टर</option>'+c.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');clu.value=c.includes(oldClu)?oldClu:'ALL'}level.onchange=()=>{options();fc();draw()};dist.onchange=()=>{jan.value='ALL';eng.value='ALL';clu.value='ALL';options();fc();draw()};jan.onchange=()=>{eng.value='ALL';clu.value='ALL';fc();draw()};eng.onchange=()=>{clu.value='ALL';fc();draw()};clu.onchange=draw;sort.onchange=draw;options();fc();draw();
-  document.getElementById('snDate').textContent=data.officialDate?'दिनांक '+data.officialDate:'अपडेटर चलाना शेष';document.getElementById('snWarnings').innerHTML=(data.warnings||[]).map(x=>`<div class="sn-warning">${esc(x)}</div>`).join('');
+  const todayIST=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date()).replaceAll('/','-');
+  const refresh=window.SHRAMIK_REFRESH_STATUS;
+  const isCurrent=data.officialDate===todayIST;
+  document.getElementById('snDate').textContent=(isCurrent?'आँकड़ों की दिनांक ':'अंतिम उपलब्ध आँकड़े: ')+(data.officialDate||'उपलब्ध नहीं');
+  if(!isCurrent||(refresh&&refresh.success===false)){
+    const warning=document.createElement('div');warning.className='sn-warning';
+    warning.textContent='आज का सत्यापित मानव दिवस डेटा अभी उपलब्ध नहीं है। अंतिम उपलब्ध आँकड़े दिखाए जा रहे हैं। स्वचालित अपडेट प्रतिदिन सुबह 8 बजे चलता है।';
+    section.querySelector('.sn-tools').insertAdjacentElement('afterend',warning);
+  }
+document.getElementById('snWarnings').innerHTML=(data.warnings||[]).map(x=>`<div class="sn-warning">${esc(x)}</div>`).join('');
   const reportTitle=section.querySelector('.sn-head h2');
   function openShramik(clusterMode=false){document.querySelectorAll('#yuktdharaMonitoring,#musterEmbMonitoring').forEach(x=>x.classList.remove('srdm-standalone-report-open'));document.body.classList.add('srdm-report-focus');section.classList.add('srdm-standalone-report-open');section.classList.toggle('sn-cluster-mode',clusterMode);reportTitle.textContent=clusterMode?'उपयंत्री-क्लस्टर कार्ड — मानव दिवस लक्ष्य एवं उपलब्धि':'श्रमिक नियोजन — मानव दिवस लक्ष्य एवं उपलब्धि';if(clusterMode){level.value='engineer';options();draw();drawClusterCards()}else draw();section.scrollIntoView({behavior:'smooth',block:'start'})}
   card.onclick=()=>openShramik(false);section.querySelector('.srdm-report-back').onclick=()=>{section.classList.remove('srdm-standalone-report-open','sn-cluster-mode');document.body.classList.remove('srdm-report-focus');document.getElementById('srdmApplications').scrollIntoView({behavior:'smooth',block:'start'})};
