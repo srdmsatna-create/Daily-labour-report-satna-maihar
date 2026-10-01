@@ -2,6 +2,18 @@
   const data=window.SHRAMIK_NIYOJAN;
   const apps=document.querySelector('#srdmApplications .srdm-app-grid');
   if(!apps||!data)return;
+  const calendarIST=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const calendarParts=Object.fromEntries(calendarIST.map(x=>[x.type,x.value]));
+  if(Number(calendarParts.year)===2026&&Number(calendarParts.month)===10){
+    const remainingDays=Math.max(0,31-Number(calendarParts.day));
+    data.remainingOctoberDays=remainingDays;data.remainingSeptemberDays=remainingDays;
+    for(const r of [...(data.rows||[]),...(data.engineerRows||[])]){
+      r.remainingDays=remainingDays;
+      r.dailyRequired=remainingDays?Math.ceil(Number(r.difference||0)/remainingDays):0;
+      r.dailyTarget125=remainingDays?Math.ceil(Number(r.difference||0)/remainingDays*1.25):0;
+    }
+  }
+
   const css=document.createElement('style');css.id='srdm-shramik-style';css.textContent=`
   #shramikNiyojanLauncher{--app-accent:#087f5b;--app-soft:#e9fbf4;--app-dark:#075d46;--app-shadow:rgba(8,127,91,.30);border:3px solid var(--app-accent)!important;background:linear-gradient(145deg,var(--app-soft),#fff 76%)!important}
   #shramikNiyojanLauncher .srdm-app-icon{background:#087f5b!important;color:#fff!important}
