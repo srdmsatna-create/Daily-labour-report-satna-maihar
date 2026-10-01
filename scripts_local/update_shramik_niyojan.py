@@ -101,7 +101,7 @@ def parse_gp_rows(source):
         if len(cells) < 8 or not re.fullmatch(r"\d+", cells[0] or ""):
             continue
         gp = norm(cells[1])
-        if not gp or gp in {"TOTAL", "BLOCK TOTAL"}:
+        if not gp or gp in {"TOTAL", "BLOCK TOTAL"} or re.fullmatch(r"\d+", gp):
             continue
         values = month_values_after(cells, 1)
         if values:
@@ -156,6 +156,26 @@ def fetch_report(page, url, require_all_blocks=True):
         page.wait_for_timeout(2000)
         source = page.content()
         blocks, links = parse_block_rows(source)
+    if require_all_blocks and set(blocks) != set(TARGETS):
+        # Payload links can be session-bound. Re-enter through the official MIS
+        # page and click the Persondays report so ASP.NET creates a fresh session.
+        try:
+            page.goto(MIS_URL, wait_until="domcontentloaded", timeout=90000)
+            page.wait_for_timeout(1500)
+            candidates = page.locator("a")
+            for i in range(min(candidates.count(), 500)):
+                a = candidates.nth(i)
+                txt = (a.inner_text() or "").strip()
+                href = a.get_attribute("href") or ""
+                if re.search(r"person\s*days|persondays|मानव", txt, re.I) or "demand_emp_demand" in href:
+                    a.click()
+                    page.wait_for_timeout(2000)
+                    source = page.content()
+                    blocks, links = parse_block_rows(source)
+                    if set(blocks) == set(TARGETS):
+                        break
+        except Exception:
+            pass
     if require_all_blocks and set(blocks) != set(TARGETS):
         raise RuntimeError(f"Persondays report parsed only {len(blocks)}/8 Janpads")
     if require_all_blocks and sum(x["july"] + x["august"] + x["september"] + x["october"] for x in blocks.values()) <= 0:
