@@ -5,3 +5,4 @@ force-real-fetch-diagnostic-2026-10-01
 blank-secret-fallback-fixed-publish
 retry-without-stale-digest
 refresh-current-official-report
+payload-persondays-refresh
