@@ -34,6 +34,10 @@ jobs:
           pip install playwright
           python -m playwright install --with-deps chromium
       - name: Update Shramik Niyojan
+        env:
+          VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
+          SHRAMIK_FY2627_URL: ${{ secrets.SHRAMIK_FY2627_URL }}
+          SHRAMIK_FY2526_URL: ${{ secrets.SHRAMIK_FY2526_URL }}
         run: python scripts_local/update_shramik_niyojan.py
       - name: Commit verified Shramik data
         run: |
