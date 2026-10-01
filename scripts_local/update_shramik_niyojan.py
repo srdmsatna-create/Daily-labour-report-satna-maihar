@@ -18,10 +18,8 @@ OUT = ROOT / "shramik-niyojan-data.js"
 COOKIE = os.environ.get("VBGRAM_COOKIE", "").strip()
 HOME = "https://vbgramg.dord.gov.in/vbgramg/home.aspx"
 
-CURRENT_URL = os.environ.get(
-    "SHRAMIK_FY2627_URL",
-    "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Persondays&Digest=kG%2fjf+M7b1AUbpMqWwepqQ",
-)
+DEFAULT_CURRENT_URL = "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Persondays&Digest=kG%2fjf+M7b1AUbpMqWwepqQ"
+CURRENT_URL = os.environ.get("SHRAMIK_FY2627_URL", "").strip() or DEFAULT_CURRENT_URL
 
 TARGETS = {
     "AMARPATAN": {"august": 19419, "september": 17907},
@@ -134,7 +132,7 @@ def load_mapping():
 
 
 def previous_url():
-    explicit = os.environ.get("SHRAMIK_FY2526_URL")
+    explicit = os.environ.get("SHRAMIK_FY2526_URL", "").strip()
     if explicit:
         return explicit
     return CURRENT_URL.replace("fin_year=2026-2027", "fin_year=2025-2026")
