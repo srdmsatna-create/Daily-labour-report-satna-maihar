@@ -144,8 +144,8 @@ def fetch_report(page, url, require_all_blocks=True):
     blocks, links = parse_block_rows(source)
     if require_all_blocks and set(blocks) != set(TARGETS):
         raise RuntimeError(f"Persondays report parsed only {len(blocks)}/8 Janpads")
-    if require_all_blocks and sum(x["august"] + x["september"] for x in blocks.values()) <= 0:
-        raise RuntimeError("Persondays report returned zero August/September achievement")
+    if require_all_blocks and sum(x["july"] + x["august"] + x["september"] + x["october"] for x in blocks.values()) <= 0:
+        raise RuntimeError("Persondays report returned zero July-October achievement")
     gp_rows = {}
     for block, href in links.items():
         detail_url = urllib.parse.urljoin(page.url, href)
@@ -166,23 +166,25 @@ def parse_date(value):
     return date.today()
 
 
-def remaining_september_days(as_on):
+def remaining_october_days(as_on):
     d = parse_date(as_on)
-    if d < date(2026, 9, 1):
-        return 30
-    if d > date(2026, 9, 30):
+    if d < date(2026, 10, 1):
+        return 31
+    if d > date(2026, 10, 31):
         return 0
-    return max(0, 30 - d.day)
+    return max(0, 31 - d.day)
 
 
-def calc(target, august, september, days):
-    achievement = august + september
+def calc(target, july_to_september, october, days):
+    achievement = july_to_september + october
     difference = max(0, target - achievement)
     daily = math.ceil(difference / days) if days else 0
     return {
         "target": target,
-        "augustAchievement": august,
-        "septemberAchievement": september,
+        "augustAchievement": july_to_september,
+        "septemberAchievement": october,
+        "julyToSeptemberAchievement": july_to_september,
+        "octoberAchievement": october,
         "achievement": achievement,
         "difference": difference,
         "remainingDays": days,
@@ -203,23 +205,25 @@ def main():
         )
         page = context.new_page()
         current_blocks, current_gp, official_date = fetch_report(page, CURRENT_URL)
+        previous_blocks = {}
         previous_gp = {}
         previous_warning = ""
         try:
-            _, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=False)
+            previous_blocks, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=False)
         except Exception as exc:
             previous_warning = f"FY 2025-26 Sub Engineer baseline unavailable: {exc}"
         browser.close()
 
-    days = remaining_september_days(official_date)
+    days = remaining_october_days(official_date)
     janpad_rows = []
     for block in ORDER:
-        baseline = TARGETS[block]["august"] + TARGETS[block]["september"]
+        prev = previous_blocks.get(block, {})
+        baseline = sum(int(prev.get(m, 0)) for m in ("july", "august", "september", "october"))
         cur = current_blocks[block]
         janpad_rows.append({
             "level": "janpad", "district": district(block), "janpad": block,
             "engineer": "", "cluster": "",
-            **calc(baseline, cur["august"], cur["september"], days),
+            **calc(baseline, cur["july"] + cur["august"] + cur["september"], cur["october"], days),
         })
 
     # Exact Sub Engineer rows are produced only when both FYs have GP detail.
@@ -233,17 +237,17 @@ def main():
         for block, gp in all_keys:
             owner = mapping.get((block, gp), {"engineer": "Unmapped", "cluster": "Unmapped"})
             key = (block, owner["engineer"], owner["cluster"])
-            row = grouped.setdefault(key, {"target": 0, "august": 0, "september": 0})
+            row = grouped.setdefault(key, {"target": 0, "julyToSeptember": 0, "october": 0})
             cur = current_gp.get(block, {}).get(gp, {})
             prev = previous_gp.get(block, {}).get(gp, {})
-            row["august"] += int(cur.get("august", 0))
-            row["september"] += int(cur.get("september", 0))
-            row["target"] += int(prev.get("august", 0)) + int(prev.get("september", 0))
+            row["julyToSeptember"] += sum(int(cur.get(m, 0)) for m in ("july", "august", "september"))
+            row["october"] += int(cur.get("october", 0))
+            row["target"] += sum(int(prev.get(m, 0)) for m in ("july", "august", "september", "october"))
     for (block, engineer, cluster), values in sorted(grouped.items()):
         engineer_rows.append({
             "level": "engineer", "district": district(block), "janpad": block,
             "engineer": engineer, "cluster": cluster,
-            **calc(values["target"], values["august"], values["september"], days),
+            **calc(values["target"], values["julyToSeptember"], values["october"], days),
         })
 
     # One official monthly Persondays record per Janpad + Gram Panchayat.  Ek
@@ -270,6 +274,8 @@ def main():
         "updatedAt": datetime.now(timezone.utc).isoformat(),
         "source": CURRENT_URL,
         "remainingSeptemberDays": days,
+        "remainingOctoberDays": days,
+        "periodLabels": {"target": "वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस", "period1": "वित्तीय वर्ष 2026–27 जुलाई से सितम्बर", "period2": "वित्तीय वर्ष 2026–27 अक्टूबर तक"},
         "targetTotal": sum(x["target"] for x in janpad_rows),
         "rows": janpad_rows,
         "engineerRows": engineer_rows,
