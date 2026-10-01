@@ -36,7 +36,7 @@ jobs:
       - name: Update Shramik Niyojan
         env:
           VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
-          SHRAMIK_FY2627_URL: "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=&rbl=0&rblhpb=Persondays&Digest=Np4YyJY2vVdFsCSA%2f3rN%2fg"
+          SHRAMIK_FY2627_URL: "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?payload=f3pAdpSH0D2ksLrgBJlJyGT5-ciQnM96jHdrk-6lyw0BNtpA7SA155AAYH8sTl7Uwx6YdMOP62dzTTUk4js8_Vlwxk5xp7XLEXw5-r0L9OX3qx-zF68AZHWHyI3_IKL7U_XZFWII2TzhZR6dNVPepu8d5hV2cHFmQxYmjt1XwVUleZQboQTxmhKe9915hIPA5SgVl4rYYRPoNmuzM2UQj-Vc0zJKuj-XTWpFynG2qwUmj523SWATo7xOH1o0G-d07y8qi5RzpshAU-m7SOsT5H62NDRSeP6GRFgWgwMhnPGOfUpFhyeMRrKFNOvbZdF3FiyPDbqt3Co4S9x9gtZmA13kziHkYHJpkvoF9Yvc8DTbFgTdWy7iWlSkHn_IIcxcvwby_6d6fSt8J2QEPryoczpN75E84iy6Mxw7wcOvesi3vXUK5ZHkDkTxDfBDtGuA"
           SHRAMIK_FY2526_URL: ${{ secrets.SHRAMIK_FY2526_URL }}
         run: python scripts_local/update_shramik_niyojan.py
       - name: Commit verified Shramik data
