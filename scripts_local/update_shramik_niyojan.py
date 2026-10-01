@@ -265,7 +265,8 @@ def main():
         browser.close()
 
     if set(previous_blocks) != set(TARGETS):
-        raise RuntimeError("FY 2025-26 July-October baseline is incomplete; existing verified data was preserved")
+        previous_warning = "FY 2025-26 GP detail unavailable; fixed verified Janpad baseline retained"
+        previous_gp = {}
     days = remaining_october_days(official_date)
     janpad_rows = []
     for block in ORDER:
@@ -282,7 +283,7 @@ def main():
     engineer_rows = []
     grouped = {}
     all_keys = set()
-    if previous_gp:
+    if previous_gp and all(sum(int(previous_gp.get(block, {}).get(gp, {}).get(m, 0)) for gp in previous_gp.get(block, {}) for m in ("july", "august", "september", "october")) == {"AMARPATAN":71072,"MAIHAR":82541,"MAJHGAWAN":43096,"NAGOD":72817,"RAMNAGAR":75686,"RAMPUR BAGHELAN":138970,"SATNA":84825,"UNCHAHARA":52545}[block] for block in ORDER):
         for block in ORDER:
             all_keys.update((block, gp) for gp in current_gp.get(block, {}))
             all_keys.update((block, gp) for gp in previous_gp.get(block, {}))
@@ -331,6 +332,8 @@ def main():
         "targetTotal": sum(x["target"] for x in janpad_rows),
         "rows": janpad_rows,
         "engineerRows": engineer_rows,
+        "engineerPeriodDataAvailable": bool(engineer_rows),
+        "baselineLocked": True,
         "gpMandaysRows": gp_mandays_rows,
         "gpMandaysSource": CURRENT_URL,
         "warnings": [x for x in [previous_warning] if x],
