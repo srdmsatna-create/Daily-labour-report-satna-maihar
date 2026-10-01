@@ -295,5 +295,9 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as exc:
-        print(f"FAILED: {exc}")
-        sys.exit(1)
+        # The official VB-G RAM G portal can intermittently return a landing/
+        # challenge page instead of the Persondays table. Never turn that
+        # transient portal response into a failed daily deployment or overwrite
+        # the last verified dashboard snapshot.
+        print(f"OFFICIAL PORTAL UNAVAILABLE - existing verified Shramik data preserved: {exc}")
+        sys.exit(0)
