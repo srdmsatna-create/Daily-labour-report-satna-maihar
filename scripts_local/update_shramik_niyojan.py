@@ -15,6 +15,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "shramik-niyojan-data.js"
 
+COOKIE = os.environ.get("VBGRAM_COOKIE", "").strip()
+HOME = "https://vbgramg.dord.gov.in/vbgramg/home.aspx"
+
 CURRENT_URL = os.environ.get(
     "SHRAMIK_FY2627_URL",
     "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Persondays&Digest=kG%2fjf+M7b1AUbpMqWwepqQ",
@@ -203,7 +206,23 @@ def main():
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36"
         )
+        if COOKIE:
+            cookies = []
+            for pair in COOKIE.split(";"):
+                if "=" not in pair:
+                    continue
+                k, v = pair.strip().split("=", 1)
+                for domain in ("vbgramgrep.dord.gov.in", "vbgramg.dord.gov.in"):
+                    cookies.append({"name": k, "value": v, "domain": domain, "path": "/"})
+            if cookies:
+                context.add_cookies(cookies)
         page = context.new_page()
+        # Warm the official portal session before opening the deep Persondays report.
+        try:
+            page.goto(HOME, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1500)
+        except Exception:
+            pass
         current_blocks, current_gp, official_date = fetch_report(page, CURRENT_URL)
         previous_blocks = {}
         previous_gp = {}
