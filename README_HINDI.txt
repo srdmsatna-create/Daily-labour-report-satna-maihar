@@ -1,22 +1,7 @@
-SRDM SATNA MANDAYS DASHBOARD UPDATE
-===================================
+Shramik Niyojan replacement
+Replace only:
+1. shramik-niyojan.js -> main dashboard folder
+2. scripts_local/update_shramik_niyojan.py -> scripts_local folder
 
-1. ZIP को किसी नए folder में Extract All करें।
-2. UPDATE_LIVE_DASHBOARD.bat पर double-click करें।
-3. अपने GitHub dashboard repository का local folder path paste करें।
-   उदाहरण: D:\srdmsatna-dashboard
-4. BAT पुरानी index.html का backup बनाएगी।
-5. corrected index.html copy करके Git commit और push करेगी।
-6. 1-3 मिनट बाद https://srdmsatna.online/ खोलकर Ctrl+F5 दबाएँ।
-
-इस package में सुधार:
-- RAMPOR BAGHELAN spelling को RAMPUR BAGHELAN किया गया है।
-- 97 GP को master Engineer/Cluster mapping से जोड़ा गया है।
-- Unmapped rows अब 0 हैं।
-- Zero Mandays GP 40 हैं।
-- सही distinct Engineer-Cluster groups 25 हैं।
-
-जरूरी:
-- Computer में Git installed होना चाहिए।
-- Repository पहले से computer में cloned/downloaded Git folder होना चाहिए।
-- GitHub login/authorization active होना चाहिए।
+Heading fixed exactly as requested.
+Data script uses official Persondays report and preserves old valid data if July-Oct baseline cannot be verified.
