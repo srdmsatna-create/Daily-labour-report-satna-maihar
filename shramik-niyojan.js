@@ -147,7 +147,7 @@
   const todayIST=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date()).replaceAll('/','-');
   const refresh=window.SHRAMIK_REFRESH_STATUS;
   const isCurrent=data.officialDate===todayIST;
-  document.getElementById('snDate').textContent=(isCurrent?'आँकड़ों की दिनांक ':'अंतिम उपलब्ध आँकड़े: ')+(data.officialDate||'उपलब्ध नहीं');
+  document.getElementById('snDate').textContent='दिनांक '+(data.officialDate||'उपलब्ध नहीं');
 document.getElementById('snWarnings').innerHTML=(data.warnings||[]).map(x=>`<div class="sn-warning">${esc(x)}</div>`).join('');
   const reportTitle=section.querySelector('.sn-head h2');
   function openShramik(clusterMode=false){document.querySelectorAll('#yuktdharaMonitoring,#musterEmbMonitoring').forEach(x=>x.classList.remove('srdm-standalone-report-open'));document.body.classList.add('srdm-report-focus');section.classList.add('srdm-standalone-report-open');section.classList.toggle('sn-cluster-mode',clusterMode);reportTitle.textContent=clusterMode?'उपयंत्री-क्लस्टर कार्ड — मानव दिवस लक्ष्य एवं उपलब्धि':'श्रमिक नियोजन — मानव दिवस लक्ष्य एवं उपलब्धि';if(clusterMode){level.value='engineer';options();draw();drawClusterCards()}else draw();section.scrollIntoView({behavior:'smooth',block:'start'})}
