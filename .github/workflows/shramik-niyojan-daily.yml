@@ -36,7 +36,7 @@ jobs:
       - name: Update Shramik Niyojan
         env:
           VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
-          SHRAMIK_FY2627_URL: "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?payload=f3pAdpSH0D2ksLrgBJlJyGT5-ciQnM96jHdrk-6lyw0BNtpA7SA155AAYH8sTl7Uwx6YdMOP62dzTTUk4js8_Vlwxk5xp7XLEXw5-r0L9OX3qx-zF68AZHWHyI3_IKL7U_XZFWII2TzhZR6dNVPepu8d5hV2cHFmQxYmjt1XwVUleZQboQTxmhKe9915hIPA5SgVl4rYYRPoNmuzM2UQj-Vc0zJKuj-XTWpFynG2qwUmj523SWATo7xOH1o0G-d07y8qi5RzpshAU-m7SOsT5H62NDRSeP6GRFgWgwMhnPGOfUpFhyeMRrKFNOvbZdF3FiyPDbqt3Co4S9x9gtZmA13kziHkYHJpkvoF9Yvc8DTbFgTdWy7iWlSkHn_IIcxcvwby_6d6fSt8J2QEPryoczpN75E84iy6Mxw7wcOvesi3vXUK5ZHkDkTxDfBDtGuA"
+          SHRAMIK_FY2627_URL: "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?payload=v0-5YXVmpU91NQ9Jbk4c0c5c9vRvZ0r6SNmryYSJjN379CS6P3rf46ZugVPOMLfOSOtnPS4jHMPjYSGzPOUu_rrtNZd7GtPwI-7imr9qbJKj1vs5XzLF8-2MBcF0fvEDMeSm8VExajL98t0CH_yMkTagwXLFzsyY5RYAB_HK8yuwLzcrtf05JLMHVjOUdd8eO4PefiChLfNu_Eo6cVLa-DxMtysOSNnWhAhz3sarM1iBpU6rnf5PFuKW65UZJmfnoxHsW3GhgzA-43D-hJsaUZPDvjV_kyInV0RncuCGPTRYnmV74xZ1z9zd4azT8o3jJZD6d1XuwzSjSo22WSe6fMzfJ9w_G5Ft_l1ugBtUMrLsKN6giHsZ1CROpuLOunwbKTTOwXKKnRhslqhMST9_5Dj74hSNSPbAN1PGf3EuFTi0hUDYYIuLSsvN9VWu1UEA"
           SHRAMIK_FY2526_URL: ${{ secrets.SHRAMIK_FY2526_URL }}
         run: python scripts_local/update_shramik_niyojan.py
       - name: Commit verified Shramik data
