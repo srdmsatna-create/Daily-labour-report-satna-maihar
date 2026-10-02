@@ -1,1 +1,1 @@
-window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-02T07:31:16.443957+00:00","success":false,"message":"Labour/MR not refreshed: Official HTTP 401; Persondays not refreshed: Official HTTP 401"};
+window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-02T07:52:25.613656+00:00","success":false,"message":"Labour/MR not refreshed: Official HTTP 401; Persondays not refreshed: Official HTTP 401"};
