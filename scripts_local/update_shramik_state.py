@@ -121,22 +121,27 @@ def main():
     warnings.append('Persondays not refreshed: '+str(e))
     if not labour:raise RuntimeError('; '.join(warnings))
   finally:b.close()
+ previous=read_js(ROOT/'shramik-district-reports.js')
  if monthly is None:
   payload=read_js(ROOT/'shramik-district-reports.js')
   districts=payload['districts']
   if set(districts)!=set(targets):raise RuntimeError('Complete previous 52-district snapshot required')
   for name,d in districts.items():
    if len(d['rows'])!=1:raise RuntimeError('District summary required')
-   for field in ('todayLabour','mrIssued','ongoing','musterRollCount'):d['rows'][0][field]=labour[name].get(field)
-   d['rows'][0]['incompleteWorks']=labour[name].get('ongoing')
+   for field in ('todayLabour','mrIssued','musterRollCount'):d['rows'][0][field]=labour[name].get(field)
+   if labour[name].get('ongoing') is not None:d['rows'][0]['ongoing']=labour[name]['ongoing']
+   d['rows'][0]['incompleteWorks']=d['rows'][0].get('ongoing')
   payload.update(labourSource=LABOUR,labourDate=labour_date,updatedAt=stamp,warnings=warnings)
  else:
   districts={}
   for name,m in monthly.items():
    a=sum(m[k] for k in ('july','august','september'));r={'janpad':'जिला योग','target':targets[name],'julyAchievement':m['july'],'augustMonthlyAchievement':m['august'],'septemberMonthlyAchievement':m['september'],'julyToSeptemberAchievement':a,'octoberAchievement':m['october'],'achievement':a+m['october'],'todayLabour':None,'ongoing':None,'mrIssued':None,'incompleteWorks':None}
-   r.update(labour.get(name,{}));r['incompleteWorks']=r['ongoing']
+   r.update(labour.get(name,{}))
+   if r.get('ongoing') is None:r['ongoing']=previous.get('districts',{}).get(name,{}).get('rows',[{}])[0].get('ongoing')
+   r['incompleteWorks']=r['ongoing']
    districts[name]={'officialDate':date,'dateBasis':'portal' if match else 'fetched','period':PERIOD,'detailLevel':'district','rows':[r]}
   payload={'source':MONTHLY,'labourSource':LABOUR,'labourDate':labour_date,'snapshotDate':date,'dateBasis':'portal' if match else 'fetched','updatedAt':stamp,'warnings':warnings,'districts':districts}
+ payload['ongoingDate']=labour_date if labour and all(v.get('ongoing') is not None for v in labour.values()) else previous.get('ongoingDate',previous.get('snapshotDate'))
  write_js(ROOT/'shramik-district-reports.js','window.SHRAMIK_DISTRICT_REPORTS',payload)
  write_js(ROOT/'shramik-state-refresh-status.js','window.SHRAMIK_STATE_REFRESH_STATUS',{'checkedAt':stamp,'success':True,'districtCount':52,'persondaysSuccess':monthly is not None,'labourSuccess':bool(labour),'warnings':warnings})
  print('SUCCESS: 52-district Persondays '+('refreshed' if monthly is not None else 'previous snapshot retained')+'; labour/MR '+('refreshed' if labour else 'unavailable'),flush=True)
