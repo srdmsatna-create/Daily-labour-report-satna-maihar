@@ -64,13 +64,13 @@ async def main():
         tables = await page.locator('table').evaluate_all('(tables) => tables.map(t => [...t.rows].map(r => [...r.cells].map(c => c.innerText)))')
         await browser.close()
     rows = parse(tables)
-    today = datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
+    fetched_at = datetime.now(ZoneInfo('Asia/Kolkata'))
+    today = fetched_at.date().isoformat()
     old = json.loads(DEST.read_text()) if DEST.exists() else None
-    if old and old.get('date') == today and old.get('rows') == rows: return
     prior = {'date':old['date'],'rows':old['rows']} if old and old.get('date') != today else (old.get('previous') if old else None)
     DEST.parent.mkdir(exist_ok=True)
     tmp = DEST.with_suffix('.tmp')
-    tmp.write_text(json.dumps({'date':today,'source':SOURCE,'rows':rows,'previous':prior},ensure_ascii=False,indent=2)+'\n')
+    tmp.write_text(json.dumps({'date':today,'fetchedAt':fetched_at.isoformat(timespec='seconds'),'source':SOURCE,'rows':rows,'previous':prior},ensure_ascii=False,indent=2)+'\n')
     tmp.replace(DEST)
     print('Rejected wage updated:', today, len(rows), 'Janpads')
 
