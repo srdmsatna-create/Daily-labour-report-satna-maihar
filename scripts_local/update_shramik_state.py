@@ -7,7 +7,7 @@ from datetime import datetime,timezone
 from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parent.parent
 PERIOD='2025-26-Jul-Oct_vs_2026-27-Jul-Sep-Oct'
-MONTHLY=os.environ.get('SHRAMIK_STATE_PERSONDAYS_URL') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?lflag=eng&file1=empprov&page1=s&state_name=MADHYA+PRADESH&state_code=17&fin=2026-2027&fin_year=2026-2027&source=national&Digest=T5jPevIAyKZwnVDL7xdTaQ'
+MONTHLY=os.environ.get('SHRAMIK_STATE_PERSONDAYS_URL') or 'https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&file1=empprov&fin_year=2026-2027&page1=s&state_code=17&state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&Digest=SfOoa7y+eBupeEgyvw7OcA'
 LABOUR=os.environ.get('SHRAMIK_STATE_LABOUR_URL') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/dpc_sms_new.aspx?payload=joGRvbFKKl5r7YIviUgQH66hWG9zWVrINFh2CeOeEBSMYPI6T5ASt10ZOB2Hg9oNTDNFmaRzmn6CGYWb3L8v0aboX7pt4RgeYmk1Xz91bauUHbjLv20sW3NRajHQIMcdZA1WGdS9pMvXT5Q4tnRscwGsz2izbVwOaiQpXPoocIeqLhmvBD7qEt_6_kah9R0WWCmeORmQhxealdAthd3LzQ'
 MONTHS=('april','may','june','july','august','september','october','november','december','january','february','march')
 def norm(v):return re.sub(r'\s+',' ',str(v).strip()).upper().replace('HOSHANGABAD','NARMADAPURAM').replace('ASHOKNAGAR','ASHOK NAGAR')
