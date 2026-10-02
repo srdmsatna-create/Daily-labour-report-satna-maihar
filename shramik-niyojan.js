@@ -1,5 +1,26 @@
 (function(){
   const data=window.SHRAMIK_NIYOJAN;
+  if(!data)return;
+  // Normalize complete monthly GP snapshots from older laptop updaters.
+  const lockedTargets={"AMARPATAN":71072,"MAIHAR":82541,"MAJHGAWAN":43096,"NAGOD":72817,"RAMNAGAR":75686,"RAMPUR BAGHELAN":138970,"SATNA":84825,"UNCHAHARA":52545};
+  if(!data.baselineLocked && Array.isArray(data.gpMandaysRows)){
+    const gpRows=data.gpMandaysRows.filter(r=>!/^\d+$/.test(String(r.panchayat||'').trim()));
+    if(gpRows.length===695 && (data.rows||[]).length===8){
+      for(const r of data.rows){
+        const members=gpRows.filter(g=>g.janpad===r.janpad);
+        r.target=lockedTargets[r.janpad];
+        r.augustAchievement=members.reduce((sum,g)=>sum+Number(g.july||0)+Number(g.august||0)+Number(g.september||0),0);
+        r.septemberAchievement=members.reduce((sum,g)=>sum+Number(g.october||0),0);
+        r.julyToSeptemberAchievement=r.augustAchievement;r.octoberAchievement=r.septemberAchievement;
+        r.achievement=r.augustAchievement+r.septemberAchievement;
+        r.difference=Math.max(0,r.target-r.achievement);r.achievementPct=r.target?r.achievement*100/r.target:0;
+      }
+      data.targetTotal=data.rows.reduce((sum,r)=>sum+r.target,0);
+      data.gpMandaysRows=gpRows;data.baselineLocked=true;
+      data.engineerRows=[];data.engineerPeriodDataAvailable=false;
+    }
+  }
+
   const apps=document.querySelector('#srdmApplications .srdm-app-grid');
   if(!apps||!data)return;
   const calendarIST=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
