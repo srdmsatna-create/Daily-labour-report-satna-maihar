@@ -11,7 +11,7 @@ label.appendChild(select);tools.insertBefore(label,tools.firstChild);
 const metricLabel=document.createElement('label');metricLabel.style.cssText=label.style.cssText;metricLabel.textContent='रैंकिंग पैरामीटर';const metricSelect=document.createElement('select');metricSelect.id='snRankParameter';metricSelect.innerHTML='<option value="achievement">उपलब्धि %</option><option value="labour">आज संलग्न श्रमिक</option><option value="mr">मस्टर रोल जारी %</option>';metricLabel.appendChild(metricSelect);label.insertAdjacentElement('afterend',metricLabel);
 const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0';
 rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • सतना • सीधी • सिंगरौली</small></div>';
-section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);const basis=document.createElement('p');basis.id='snRankBasis';basis.style.cssText='margin:5px 0 10px;color:#075d46;font-weight:850';rank.insertAdjacentElement('afterend',basis);
+section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);
 const state=document.createElement('div');state.id='snStateDistrictReport';state.hidden=true;
 state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","वित्तीय वर्ष<br>2025–26 जुलाई<br>से अक्टूबर में<br>सृजित मानव<br>दिवस","वित्तीय वर्ष<br>2026–27<br>जुलाई से<br>सितम्बर तक","वित्तीय वर्ष<br>2026–27<br>अक्टूबर माह<br>में","कुल उपलब्धि","अंतर","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
 originalWrap.insertAdjacentElement('afterend',state);
@@ -43,8 +43,6 @@ function ranks(){
  const rankFor=list=>satnaScore!=null&&list.every(n=>score(all[n])!=null)?(1+list.filter(n=>score(all[n])>satnaScore).length)+' / '+list.length:'तुलना डेटा उपलब्ध नहीं';
  document.getElementById('snStateRank').textContent=rankFor(names);
  document.getElementById('snDivisionRank').textContent=rankFor(region);
- const formulas={achievement:'उपलब्धि % = कुल उपलब्धि ÷ मानव-दिवस लक्ष्य × 100',labour:'आज संलग्न श्रमिक = प्रकाशित श्रमिक संख्या',mr:'मस्टर रोल जारी % = मस्टर रोल जारी कार्य ÷ कुल प्रगतिरत कार्य × 100'};
- basis.textContent='रैंकिंग का आधार: '+formulas[metricSelect.value]+'। अधिक मान पर बेहतर स्थान; समान मान पर समान रैंक।';
 }
 function render(){
  const selected=select.value, external=!!selected;
