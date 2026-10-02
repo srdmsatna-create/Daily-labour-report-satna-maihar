@@ -28,7 +28,7 @@ cards = f'''<a class="srdm-app-card srdm-portal-card srdm-portal-planner" href="
       <span class="srdm-app-icon">💧</span><span class="srdm-app-copy"><strong>Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong><span>Official JGSA portal</span></span><span class="srdm-app-new">New</span>
     </a>
     <a class="srdm-app-card srdm-portal-card srdm-portal-rims" href="https://geoportal.mp.gov.in/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
-      {road_svg}<span class="srdm-app-copy"><strong>Road Information &amp; Management System (RIMS)</strong><span>Official RIMS geoportal</span></span>
+      {road_svg}<span class="srdm-app-copy"><strong>सुगम संपर्कता परियोजना (RIMS) प्रस्तावित सड़के</strong><span>Official RIMS geoportal</span></span>
     </a>
     <a class="srdm-app-card srdm-portal-card srdm-portal-planner-sipri" href="planner-sipri-dashboard-hi.html" style="text-decoration:none">
       {sipri_thumb}<span class="srdm-app-copy"><strong>प्लानर से SIPRI Portal पर कार्य योजना डैशबोर्ड</strong><span>उपयंत्री / क्लस्टर नामवार प्रगति</span></span><span class="srdm-app-new">New</span>
@@ -47,5 +47,5 @@ if 'SRDM_FIXED_PORTAL_CARDS_V2' not in s:
 
 index_path.write_text(s, encoding='utf-8')
 print('Launcher cards rewritten:', s != orig)
-for needle in ['Planner Portal</strong>', 'Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong>', 'Road Information &amp; Management System (RIMS)</strong>', 'प्लानर से SIPRI Portal पर कार्य योजना डैशबोर्ड</strong>']:
+for needle in ['Planner Portal</strong>', 'Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong>', 'सुगम संपर्कता परियोजना (RIMS) प्रस्तावित सड़के</strong>', 'प्लानर से SIPRI Portal पर कार्य योजना डैशबोर्ड</strong>']:
     print(needle, s.count(needle))
