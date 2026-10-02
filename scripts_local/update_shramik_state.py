@@ -81,12 +81,26 @@ def main():
   try:b=p.chromium.launch(channel='chrome',headless=True)
   except Exception:b=p.chromium.launch(headless=True)
   try:
-   page=b.new_page();monthly=parse_monthly(fetch(page,MONTHLY,True),targets)
+   context=b.new_context()
+   cookie=os.environ.get('VBGRAM_COOKIE','')
+   cookies=[]
+   for pair in cookie.split(';'):
+    if '=' in pair:
+     k,v=pair.strip().split('=',1);cookies.append({'name':k,'value':v,'domain':'vbgramgrep.dord.gov.in','path':'/'})
+   if cookies:context.add_cookies(cookies)
+   page=context.new_page()
+   monthly_tables=fetch(page,MONTHLY,True)
+   debug=ROOT/'data'/'shramik-state-debug';debug.mkdir(parents=True,exist_ok=True)
+   (debug/'monthly-tables.json').write_text(json.dumps(monthly_tables,ensure_ascii=False),encoding='utf-8')
+   monthly=parse_monthly(monthly_tables,targets)
    # A daily fetch date is distinct from a portal-provided As-on date.
    text=page.inner_text('body');match=re.search(r'As\s*on\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',text,re.I)
    stamp=datetime.now(timezone.utc).isoformat();date=match.group(1).replace('/','-') if match else datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
    warnings=[];labour={}
-   try:labour=parse_labour(fetch(page,LABOUR),targets)
+   try:
+    labour_tables=fetch(page,LABOUR)
+    (debug/'labour-tables.json').write_text(json.dumps(labour_tables,ensure_ascii=False),encoding='utf-8')
+    labour=parse_labour(labour_tables,targets)
    except Exception as e:warnings.append('Labour/MR not refreshed: '+str(e))
   finally:b.close()
  districts={}
