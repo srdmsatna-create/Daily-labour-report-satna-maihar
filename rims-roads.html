@@ -24,7 +24,6 @@ body[data-print-scope="engineer"] .report-janpad{display:none}
 <div class="box report-sa"><h2>SA से Approved सड़कें — जनपद / GP / इंजीनियरवार</h2><div class="scroll" id="saapproved"></div></div>
 <div class="box report-details"><h2>सड़कों के नाम एवं समीक्षा विवरण</h2><div class="scroll" id="details"></div><p class="note">एक नाम के अलग-अलग प्रस्ताव स्रोत के अनुसार अलग रखे गए हैं। इंजीनियर मैपिंग: जनपद + ग्राम पंचायत, 25.09.2026 मास्टर। पंचायत रिक्त होने पर “मैपिंग उपलब्ध नहीं” दिखाया गया है।</p></div></main>
 <script>
-$('printreport').onclick=()=>{document.body.dataset.printScope=$('pdfscope').value;window.print()};
 let roads=[];const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function options(id,values){const el=$(id),v=el.value;el.innerHTML='<option value="">'+(id==='block'?'सभी जनपद':'सभी इंजीनियर')+'</option>'+[...new Set(values)].sort().map(x=>'<option>'+esc(x)+'</option>').join('');if(values.includes(v))el.value=v}
 function chosen(){return roads.filter(r=>(!$('district').value||r.district===$('district').value)&&(!$('block').value||r.block===$('block').value)&&(!$('engineer').value||r.engineer===$('engineer').value)&&(!$('status').value||r.status===$('status').value)&&(! $('search').value||(r.name+' '+r.gp).toLowerCase().includes($('search').value.toLowerCase())))}
@@ -39,5 +38,6 @@ $('details').innerHTML='<table><thead><tr>'+['क्र.','जिला','जन
 document.querySelectorAll('.eng').forEach(b=>b.onclick=()=>{$('engineer').value=b.dataset.name;render();$('details').scrollIntoView({behavior:'smooth'})})}
 for(let id of ['district','block','engineer','status','search'])$(id).addEventListener(id==='search'?'input':'change',()=>{if(id==='district'||id==='block'){let a=roads.filter(r=>(!$('district').value||r.district===$('district').value));if(id==='district')options('block',a.map(r=>r.block));options('engineer',a.filter(r=>!$('block').value||r.block===$('block').value).map(r=>r.engineer))}render()});
 $('csv').onclick=()=>{let fields=['district','block','engineer','gp','name','status','remark','od'];let csv='\ufeff'+[fields,...chosen().map(r=>fields.map(f=>r[f]??''))].map(row=>row.map(v=>'"'+String(/^[=+@-]/.test(String(v))?"'"+v:v).replace(/"/g,'""')+'"').join(',')).join('\r\n');let link=document.createElement('a'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));link.href=url;link.download='RIMS_Proposed_Roads.csv';link.click();URL.revokeObjectURL(url)};
+$('printreport').onclick=()=>{document.body.dataset.printScope=$('pdfscope').value;window.print()};
 fetch('rims-roads-data.json?v=20261002').then(r=>{if(!r.ok)throw Error('डेटा उपलब्ध नहीं');return r.json()}).then(a=>{roads=a;options('block',a.map(r=>r.block));options('engineer',a.map(r=>r.engineer));render()}).catch(e=>{$('stats').textContent=e.message});
 </script></html>
