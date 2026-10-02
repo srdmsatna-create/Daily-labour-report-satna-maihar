@@ -43,6 +43,16 @@ body[data-print-scope="engineer"] .report-janpad{display:none}
 @media print{.district-kpis{padding:4px;margin-bottom:5px}.district-kpis h2{font-size:14px;padding:4px;margin-bottom:5px}.district-card-grid .stat{padding:5px;font-size:10px}.district-card-grid .stat strong{display:inline;font-size:13px}}
 
 .district-card-grid .stat{font-weight:700}.district-card-grid .stat strong{font-weight:900}.district-kpis h2{font-weight:800}
+
+body{color:#142b43}
+.satna-kpis{background:#f0f6ff;border-color:#6995c8}.satna-kpis h2{background:#cbdff7;border-color:#7fa4cf;color:#102f54}.satna-kpis .stat{background:#dceafa;border:1.5px solid #87a9ce;color:#102f54}
+.maihar-kpis{background:#f0f8f3;border-color:#6c9f82}.maihar-kpis h2{background:#cce6d5;border-color:#85b297;color:#153e29}.maihar-kpis .stat{background:#dcefe3;border:1.5px solid #8bb49a;color:#153e29}
+.combined-kpis{background:#fff8eb;border-color:#b58c43}.combined-kpis h2{background:#efd9ac;border-color:#c3a16a;color:#50340d}.combined-kpis .stat{background:#fae9c5;border:1.5px solid #c6a76d;color:#50340d}
+.district-card-grid .stat strong{color:inherit}
+.scroll{border-color:#647f9d}th{background:#dce8f5;color:#142c46;border-color:#a4b7cd}td{color:#172c42;border-color:#b8c6d7}tbody tr:nth-child(even):not(.total){background:#f0f5fa}
+.total{background:#ccdef3;color:#102f54}.pending{background:#f9e6b8;color:#513500}
+.box h2{color:#142e4a;background:#dce8f5;border-color:#91abc7}
+.status-definitions{color:#163a5d;background:#e4effc;border-color:#9eb9d8}
 </style>
 <header><a class="back" href="index.html">← मुख्य डैशबोर्ड</a><h1>सुगम संपर्कता परियोजना (RIMS) प्रस्तावित सड़के</h1><div>सतना एवं मैहर · स्रोत: उपलब्ध प्रस्तावित सड़क विवरण · 02 अक्टूबर 2026</div></header>
 <main><div class="controls"><select id="district"><option value="">दोनों जिले</option><option>Satna</option><option>Maihar</option></select><select id="block"><option value="">सभी जनपद</option></select><select id="engineer"><option value="">सभी इंजीनियर</option></select><select id="status"><option value="">सभी स्थिति</option><option value="Reviewed by SA">SA Approved (Reviewed by SA)</option><option>Rejected by SA</option><option>Pending</option><option>Approved by EE</option><option>Approved by AE</option><option>Rejected</option></select><input id="search" placeholder="सड़क / पंचायत का नाम"><select id="pdfscope" aria-label="PDF रिपोर्ट का प्रकार"><option value="all">PDF — पूरी रिपोर्ट</option><option value="janpad">PDF — Janpad / AE / State</option><option value="engineer">PDF — Sub Engineer Report</option></select><button id="printreport">Print / PDF</button><button id="csv">Excel / CSV</button></div>
