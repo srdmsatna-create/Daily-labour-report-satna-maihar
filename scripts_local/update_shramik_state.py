@@ -7,7 +7,7 @@ from datetime import datetime,timezone,timedelta
 IST=timezone(timedelta(hours=5,minutes=30))
 ROOT=Path(__file__).resolve().parent.parent
 PERIOD='2025-26-Jul-Oct_vs_2026-27-Jul-Sep-Oct'
-MONTHLY=os.environ.get('SHRAMIK_STATE_PERSONDAYS_URL') or 'https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&file1=empprov&fin_year=2026-2027&page1=s&state_code=17&state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&Digest=SfOoa7y+eBupeEgyvw7OcA'
+MONTHLY=os.environ.get('SHRAMIK_STATE_PERSONDAYS_URL') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?lflag=eng&file1=empprov&page1=s&state_name=MADHYA+PRADESH&state_code=17&fin=2026-2027&fin_year=2026-2027&source=national&Digest=T5jPevIAyKZwnVDL7xdTaQ'
 LABOUR=os.environ.get('SHRAMIK_STATE_LABOUR_URL') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/dpc_sms_new.aspx?payload=joGRvbFKKl5r7YIviUgQH66hWG9zWVrINFh2CeOeEBSMYPI6T5ASt10ZOB2Hg9oNTDNFmaRzmn6CGYWb3L8v0aboX7pt4RgeYmk1Xz91bauUHbjLv20sW3NRajHQIMcdZA1WGdS9pMvXT5Q4tnRscwGsz2izbVwOaiQpXPoocIeqLhmvBD7qEt_6_kah9R0WWCmeORmQhxealdAthd3LzQ'
 MONTHS=('april','may','june','july','august','september','october','november','december','january','february','march')
 def norm(v):return re.sub(r'\s+',' ',str(v).strip()).upper().replace('HOSHANGABAD','NARMADAPURAM').replace('ASHOKNAGAR','ASHOK NAGAR')
@@ -59,6 +59,15 @@ def parse_labour(tables,names):
  if not candidates:raise RuntimeError('52-district R6.9 labour header or rows incomplete')
  if any(x!=candidates[0] for x in candidates):raise RuntimeError('Ambiguous labour tables')
  return candidates[0]
+def validate_monthly_progress(monthly,previous):
+ total=sum(sum(r[k] for k in ('july','august','september')) for r in monthly.values())
+ if total==0:
+  raise RuntimeError('All 52 districts show zero July-September Persondays; reject unrelated or empty source')
+ old_rows=previous.get('districts',{})
+ for name,r in monthly.items():
+  prior=sum(x.get('julyToSeptemberAchievement',0) for x in old_rows.get(name,{}).get('rows',[]))
+  if prior>0 and sum(r[k] for k in ('july','august','september'))==0:
+   raise RuntimeError('Previously nonzero July-September Persondays became zero: '+name)
 GRID='''tables=>tables.map(t=>{const grid=[];Array.from(t.rows).forEach((r,ri)=>{grid[ri]??=[];let ci=0;Array.from(r.cells).forEach(c=>{while(grid[ri][ci]!==undefined)ci++;for(let dy=0;dy<c.rowSpan;dy++){grid[ri+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)grid[ri+dy][ci+dx]=c.innerText.trim()}ci+=c.colSpan})});return grid})'''
 def fetch(page,url,persondays=False):
  response=page.goto(url,wait_until='domcontentloaded',timeout=60000)
@@ -103,7 +112,9 @@ def main():
    try:
     monthly_tables=fetch(page,MONTHLY,True)
     (debug/'monthly-tables.json').write_text(json.dumps(monthly_tables,ensure_ascii=False),encoding='utf-8')
-    monthly=parse_monthly(monthly_tables,targets)
+    candidate=parse_monthly(monthly_tables,targets)
+    validate_monthly_progress(candidate,read_js(ROOT/'shramik-district-reports.js'))
+    monthly=candidate
     match=re.search(r'As\s*on\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',page.inner_text('body'),re.I)
     date=match.group(1).replace('/','-') if match else today
    except Exception as e:

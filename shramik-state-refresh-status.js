@@ -1,1 +1,1 @@
-window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-02T08:06:23.840780+00:00","success":true,"districtCount":52,"persondaysSuccess":true,"labourSuccess":true,"warnings":[]};
+window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-02T08:06:23.840780+00:00","success":true,"districtCount":52,"persondaysSuccess":false,"labourSuccess":true,"warnings":["Monthly Persondays source returned zero for all 52 districts. Previous verified 01-10-2026 achievement retained; labour separately refreshed 02-10-2026."],"persondaysDate":"01-10-2026","labourDate":"02-10-2026"};
