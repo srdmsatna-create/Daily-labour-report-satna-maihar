@@ -3,8 +3,8 @@ All rows must match the known source districts before a snapshot is replaced.
 """
 import calendar,json,os,re,sys
 from pathlib import Path
-from datetime import datetime,timezone
-from zoneinfo import ZoneInfo
+from datetime import datetime,timezone,timedelta
+IST=timezone(timedelta(hours=5,minutes=30))
 ROOT=Path(__file__).resolve().parent.parent
 PERIOD='2025-26-Jul-Oct_vs_2026-27-Jul-Sep-Oct'
 MONTHLY=os.environ.get('SHRAMIK_STATE_PERSONDAYS_URL') or 'https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&file1=empprov&fin_year=2026-2027&page1=s&state_code=17&state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&Digest=SfOoa7y+eBupeEgyvw7OcA'
@@ -90,7 +90,7 @@ def main():
    if cookies:context.add_cookies(cookies)
    page=context.new_page()
    debug=ROOT/'data'/'shramik-state-debug';debug.mkdir(parents=True,exist_ok=True)
-   stamp=datetime.now(timezone.utc).isoformat();today=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
+   stamp=datetime.now(timezone.utc).isoformat();today=datetime.now(IST).strftime('%d-%m-%Y')
    warnings=[];labour={};labour_date=None;monthly=None;match=None
    # R6.9 is independent: a monthly-report outage must not stop labour refresh.
    try:
