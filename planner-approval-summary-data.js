@@ -1,6 +1,5 @@
-window.PLANNER_APPROVAL_SUMMARY=[["Maihar","Amarpatan","Assistant Engineer - Amarpatan",3661,25,8,17,10,0],["Maihar","Maihar","Assistant Engineer - Maihar",8566,137,71,66,50,21],["Maihar","Ramnagar","Assistant Engineer - Ramnagar",5578,243,163,80,25,138],["Satna","Majhgawan","Assistant Engineer - Majhgawan",2466,212,147,65,38,109],["Satna","Nagod","Assistant Engineer - Nagod",2639,149,99,50,34,65],["Satna","Rampur baghelan","Assistant Engineer - Rampur baghelan",3186,117,25,92,90,0],["Satna","Sohawal","Assistant Engineer - Sohawal",3221,181,46,135,79,0],["Satna","Unchahara","Assistant Engineer - Unchahara",1087,37,5,32,9,0]];
-window.PLANNER_APPROVAL_TOTALS={"plannerDetail":30404,"sipri":1101,"aeApproved":564,"aePending":537,"stateReviewed":335,"statePending":229};
-
+window.PLANNER_APPROVAL_SUMMARY=[["Maihar","Amarpatan","Assistant Engineer - Amarpatan",3661,25,6,19,11,0],["Maihar","Maihar","Assistant Engineer - Maihar",8566,137,58,79,50,8],["Maihar","Ramnagar","Assistant Engineer - Ramnagar",5578,243,131,112,42,89],["Satna","Majhgawan","Assistant Engineer - Majhgawan",2466,213,163,50,38,125],["Satna","Nagod","Assistant Engineer - Nagod",2639,149,98,51,35,63],["Satna","Rampur baghelan","Assistant Engineer - Rampur baghelan",3186,117,25,92,90,0],["Satna","Sohawal","Assistant Engineer - Sohawal",3221,220,58,162,79,0],["Satna","Unchahara","Assistant Engineer - Unchahara",1087,39,5,34,9,0]];
+window.PLANNER_APPROVAL_TOTALS={"plannerDetail":30404,"sipri":1143,"aeApproved":544,"aePending":599,"stateReviewed":354,"statePending":285};
 // Layout readability override for Planner→SIPRI Sub Engineer report.
 window.addEventListener('DOMContentLoaded',()=>{
   const st=document.createElement('style');
