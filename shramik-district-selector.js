@@ -39,11 +39,13 @@ function render(){
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el)el.disabled=external;}
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
  const chosen=selected==='__ALL__'?names:[selected], all=records();
- const snapshot=window.SHRAMIK_DISTRICT_REPORTS.snapshotDate, parts=snapshot.split('-').map(Number), days=parts[1]===10?Math.max(0,31-parts[0]):0;
+ const snapshot=window.SHRAMIK_DISTRICT_REPORTS.snapshotDate;
+ const today=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(p=>[p.type,p.value]));
+ const days=Number(today.year)===2026&&Number(today.month)===10?Math.max(0,31-Number(today.day)):0;
  const metricReady=chosen.every(n=>all[n]?.rows.every(r=>r.todayLabour!=null&&r.mrIssued!=null));
- document.getElementById('snStateDate').textContent='52-जिला '+(window.SHRAMIK_DISTRICT_REPORTS.dateBasis==='fetched'?'डेटा प्राप्त करने की तारीख: ':'स्रोत डेटा दिनांक: ')+snapshot+(metricReady?'। श्रमिक एवं मस्टर रोल डेटा उपलब्ध है।':'। श्रमिक/मस्टर रोल के अनुपलब्ध आँकड़े — से दिखाए गए हैं।');
+ document.getElementById('snStateDate').textContent='52-जिला '+(window.SHRAMIK_DISTRICT_REPORTS.dateBasis==='fetched'?'डेटा प्राप्त करने की तारीख: ':'स्रोत डेटा दिनांक: ')+snapshot+(window.SHRAMIK_DISTRICT_REPORTS.labourDate?'। श्रमिक डेटा दिनांक: '+window.SHRAMIK_DISTRICT_REPORTS.labourDate:'')+(metricReady?'। श्रमिक एवं मस्टर रोल डेटा उपलब्ध है।':'। श्रमिक/मस्टर रोल के अनुपलब्ध आँकड़े — से दिखाए गए हैं।');
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
- const totals={target:0,period1:0,period2:0,achievement:0,gap:0,daily:0,incomplete:0}, tb=document.getElementById('snStateRows');
+ const totals={target:0,period1:0,period2:0,achievement:0,gap:0,daily:0,labour:0,ongoing:0,mr:0}, complete={labour:true,ongoing:true,mr:true}, tb=document.getElementById('snStateRows');
  function cells(values){return values.map((v,j)=>'<td style="'+(j===1?'text-align:left;font-weight:850;':j===10?'text-align:right;font-weight:950;color:#06452b;background:#e6f2eb;':j===11?'text-align:right;font-weight:950;color:#7f1010;background:#fbeaea;':'text-align:right;font-weight:800;')+'">'+(v==null?'<span class="sn-missing">—</span>':typeof v==='string'?esc(v):fmt(v))+'</td>').join('');}
  tb.innerHTML=chosen.map((name,i)=>{
   const d=all[name];if(!valid(d))return '<tr><td>'+ (i+1) +'</td><td>'+esc(name)+'</td><td colspan="13">समान अवधि के आँकड़े उपलब्ध नहीं हैं</td></tr>';
@@ -51,11 +53,12 @@ function render(){
   const target=sum('target'),p1=sum('julyToSeptemberAchievement'),p2=sum('octoberAchievement'),achievement=p1+p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0;
   const known=k=>d.rows.every(r=>r[k]!=null)?sum(k):null;
   const labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued'),incomplete=known('incompleteWorks');
-  for(const [k,v] of Object.entries({target,period1:p1,period2:p2,achievement,gap,daily,incomplete}))totals[k]+=v;
+  for(const [k,v] of Object.entries({target,period1:p1,period2:p2,achievement,gap,daily}))totals[k]+=v;
+  for(const [k,v] of Object.entries({labour,ongoing,mr})){if(v==null)complete[k]=false;else totals[k]+=v;}
   const values=[i+1,name,target,p1,p2,achievement,gap,days,daily,labour,(achievement*100/target).toFixed(1)+'%',labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?(mr*100/ongoing).toFixed(1)+'%':'0.0%'];
   return '<tr'+(name==='SATNA'?' style="background:#d8f3df;"':'')+'>'+cells(values)+'</tr>';
  }).join('');
- if(chosen.every(n=>valid(all[n]))){tb.innerHTML+='<tr style="background:#075d46;color:white;">'+cells(['','योग',totals.target,totals.period1,totals.period2,totals.achievement,totals.gap,days,totals.daily,null,(totals.achievement*100/totals.target).toFixed(1)+'%',null,totals.incomplete,null,null])+'</tr>';}
+ if(chosen.every(n=>valid(all[n]))){tb.innerHTML+='<tr style="background:#075d46;color:white;">'+cells(['','योग',totals.target,totals.period1,totals.period2,totals.achievement,totals.gap,days,totals.daily,complete.labour?totals.labour:null,(totals.achievement*100/totals.target).toFixed(1)+'%',complete.labour?Math.max(0,totals.daily-totals.labour):null,complete.ongoing?totals.ongoing:null,complete.mr?totals.mr:null,complete.ongoing&&complete.mr?(totals.ongoing?(totals.mr*100/totals.ongoing).toFixed(1):'0.0')+'%':null])+'</tr>';}
  ranks();
 }
 document.getElementById('snExcel').addEventListener('click',e=>{if(!select.value)return;e.preventDefault();e.stopImmediatePropagation();const table=state.querySelector('table'),lines=[...table.rows].map(r=>[...r.cells].map(c=>'"'+c.innerText.replace(/"/g,'""')+'"').join(',')).join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines],{type:'text/csv;charset=utf-8'}));a.download='Shramik_52_Districts_'+window.SHRAMIK_DISTRICT_REPORTS.snapshotDate+'.csv';a.click();URL.revokeObjectURL(a.href)},true);

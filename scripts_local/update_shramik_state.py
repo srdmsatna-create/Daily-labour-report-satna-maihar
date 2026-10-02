@@ -48,7 +48,7 @@ def parse_labour(tables,names):
   for field,pattern in fields.items():
    hits=[i for i,h in enumerate(headers) if re.search(pattern,h,re.I)]
    if len(hits)==1:cols[field]=hits[0]
-  if not {'todayLabour','mrIssued'}.issubset(cols):continue
+  if 'todayLabour' not in cols:continue
   out={}
   for row in table[first:]:
    match=[norm(c) for c in row if norm(c) in names]
@@ -56,7 +56,7 @@ def parse_labour(tables,names):
    try:out[match[0]]={k:number(row[i]) for k,i in cols.items()}
    except (ValueError,IndexError):continue
   if set(out)==set(names):candidates.append(out)
- if not candidates:raise RuntimeError('52-district R6.9 labour/MR headers or rows incomplete')
+ if not candidates:raise RuntimeError('52-district R6.9 labour header or rows incomplete')
  if any(x!=candidates[0] for x in candidates):raise RuntimeError('Ambiguous labour tables')
  return candidates[0]
 GRID='''tables=>tables.map(t=>{const grid=[];Array.from(t.rows).forEach((r,ri)=>{grid[ri]??=[];let ci=0;Array.from(r.cells).forEach(c=>{while(grid[ri][ci]!==undefined)ci++;for(let dy=0;dy<c.rowSpan;dy++){grid[ri+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)grid[ri+dy][ci+dx]=c.innerText.trim()}ci+=c.colSpan})});return grid})'''
@@ -89,29 +89,46 @@ def main():
      k,v=pair.strip().split('=',1);cookies.append({'name':k,'value':v,'domain':'vbgramgrep.dord.gov.in','path':'/'})
    if cookies:context.add_cookies(cookies)
    page=context.new_page()
-   monthly_tables=fetch(page,MONTHLY,True)
    debug=ROOT/'data'/'shramik-state-debug';debug.mkdir(parents=True,exist_ok=True)
-   (debug/'monthly-tables.json').write_text(json.dumps(monthly_tables,ensure_ascii=False),encoding='utf-8')
-   monthly=parse_monthly(monthly_tables,targets)
-   # A daily fetch date is distinct from a portal-provided As-on date.
-   text=page.inner_text('body');match=re.search(r'As\s*on\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',text,re.I)
-   stamp=datetime.now(timezone.utc).isoformat();date=match.group(1).replace('/','-') if match else datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
-   warnings=[];labour={}
+   stamp=datetime.now(timezone.utc).isoformat();today=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
+   warnings=[];labour={};labour_date=None;monthly=None;match=None
+   # R6.9 is independent: a monthly-report outage must not stop labour refresh.
    try:
     labour_tables=fetch(page,LABOUR)
     (debug/'labour-tables.json').write_text(json.dumps(labour_tables,ensure_ascii=False),encoding='utf-8')
     labour=parse_labour(labour_tables,targets)
+    labour_match=re.search(r'As\s*on\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',page.inner_text('body'),re.I)
+    labour_date=labour_match.group(1).replace('/','-') if labour_match else today
    except Exception as e:warnings.append('Labour/MR not refreshed: '+str(e))
+   try:
+    monthly_tables=fetch(page,MONTHLY,True)
+    (debug/'monthly-tables.json').write_text(json.dumps(monthly_tables,ensure_ascii=False),encoding='utf-8')
+    monthly=parse_monthly(monthly_tables,targets)
+    match=re.search(r'As\s*on\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',page.inner_text('body'),re.I)
+    date=match.group(1).replace('/','-') if match else today
+   except Exception as e:
+    warnings.append('Persondays not refreshed: '+str(e))
+    if not labour:raise RuntimeError('; '.join(warnings))
   finally:b.close()
- districts={}
- for name,m in monthly.items():
-  a=sum(m[k] for k in ('july','august','september'));r={'janpad':'जिला योग','target':targets[name],'julyAchievement':m['july'],'augustMonthlyAchievement':m['august'],'septemberMonthlyAchievement':m['september'],'julyToSeptemberAchievement':a,'octoberAchievement':m['october'],'achievement':a+m['october'],'todayLabour':None,'ongoing':None,'mrIssued':None,'incompleteWorks':None}
-  r.update(labour.get(name,{}));r['incompleteWorks']=r['ongoing']
-  districts[name]={'officialDate':date,'dateBasis':'portal' if match else 'fetched','period':PERIOD,'detailLevel':'district','rows':[r]}
- payload={'source':MONTHLY,'labourSource':LABOUR,'snapshotDate':date,'dateBasis':'portal' if match else 'fetched','updatedAt':stamp,'warnings':warnings,'districts':districts}
+ if monthly is None:
+  payload=read_js(ROOT/'shramik-district-reports.js')
+  districts=payload['districts']
+  if set(districts)!=set(targets):raise RuntimeError('Complete previous 52-district snapshot required')
+  for name,d in districts.items():
+   if len(d['rows'])!=1:raise RuntimeError('District summary required')
+   for field in ('todayLabour','mrIssued','ongoing','musterRollCount'):d['rows'][0][field]=labour[name].get(field)
+   d['rows'][0]['incompleteWorks']=labour[name].get('ongoing')
+  payload.update(labourSource=LABOUR,labourDate=labour_date,updatedAt=stamp,warnings=warnings)
+ else:
+  districts={}
+  for name,m in monthly.items():
+   a=sum(m[k] for k in ('july','august','september'));r={'janpad':'जिला योग','target':targets[name],'julyAchievement':m['july'],'augustMonthlyAchievement':m['august'],'septemberMonthlyAchievement':m['september'],'julyToSeptemberAchievement':a,'octoberAchievement':m['october'],'achievement':a+m['october'],'todayLabour':None,'ongoing':None,'mrIssued':None,'incompleteWorks':None}
+   r.update(labour.get(name,{}));r['incompleteWorks']=r['ongoing']
+   districts[name]={'officialDate':date,'dateBasis':'portal' if match else 'fetched','period':PERIOD,'detailLevel':'district','rows':[r]}
+  payload={'source':MONTHLY,'labourSource':LABOUR,'labourDate':labour_date,'snapshotDate':date,'dateBasis':'portal' if match else 'fetched','updatedAt':stamp,'warnings':warnings,'districts':districts}
  write_js(ROOT/'shramik-district-reports.js','window.SHRAMIK_DISTRICT_REPORTS',payload)
- write_js(ROOT/'shramik-state-refresh-status.js','window.SHRAMIK_STATE_REFRESH_STATUS',{'checkedAt':stamp,'success':True,'districtCount':52,'labourSuccess':bool(labour),'warnings':warnings})
- print('SUCCESS: 52-district Persondays refreshed; labour/MR '+('refreshed' if labour else 'unavailable'),flush=True)
+ write_js(ROOT/'shramik-state-refresh-status.js','window.SHRAMIK_STATE_REFRESH_STATUS',{'checkedAt':stamp,'success':True,'districtCount':52,'persondaysSuccess':monthly is not None,'labourSuccess':bool(labour),'warnings':warnings})
+ print('SUCCESS: 52-district Persondays '+('refreshed' if monthly is not None else 'previous snapshot retained')+'; labour/MR '+('refreshed' if labour else 'unavailable'),flush=True)
  for w in warnings:print(w,flush=True)
 if __name__=='__main__':
  try:main()
