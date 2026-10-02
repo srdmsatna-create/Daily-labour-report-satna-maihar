@@ -102,6 +102,25 @@
     #shramikNiyojanReport .sn-pct{min-width:0!important;padding:.8mm!important;border:1px solid currentColor!important}
     #shramikNiyojanReport .sn-pct,#shramikNiyojanReport .sn-pct.good,#shramikNiyojanReport .sn-pct.bad{color:#111!important;background:#fff!important;font-weight:950!important;border:1.2px solid #333!important;border-radius:2mm!important}
     #shramikNiyojanReport .sn-table .sn-shortage{color:#111!important;background:#f2f2f2!important;font-weight:950!important;border-left:1.5px solid #333!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(n),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(n){width:auto!important;min-width:0!important;overflow-wrap:normal!important;word-break:normal!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(1),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(1){width:2.513%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(2),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(2){width:4.02%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(3),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(3){width:6.533%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(4),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(4){width:8.04%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(5),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(5){width:7.035%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(6),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(6){width:6.533%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(7),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(7){width:6.03%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(8),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(8){width:5.528%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(9),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(9){width:6.03%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(10),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(10){width:6.03%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(11),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(11){width:3.518%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(12),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(12){width:6.03%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(13),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(13){width:5.528%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(14),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(14){width:5.025%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(15),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(15){width:4.02%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(16),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(16){width:6.03%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(17),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(17){width:6.03%!important}
+    #shramikNiyojanReport>.sn-wrap .sn-table th:nth-child(18),#shramikNiyojanReport>.sn-wrap .sn-table td:nth-child(18){width:5.528%!important}
     #shramikNiyojanReport.sn-cluster-mode .sn-head{margin-bottom:2mm!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-cards{display:grid!important;grid-template-columns:repeat(2,1fr)!important;gap:3mm!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-card{border-width:1.5px!important;border-radius:3mm!important;padding:3mm!important;box-shadow:none!important;break-inside:avoid!important;page-break-inside:avoid!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-card-head{margin-bottom:2mm!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-card-head h3{font-size:12pt!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-card-head p{font-size:8pt!important}#shramikNiyojanReport.sn-cluster-mode .sn-progress-pill{font-size:8pt!important;padding:1mm 1.5mm!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-metrics{gap:1.3mm!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-metric{padding:1.4mm!important;border-width:1px!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-metric small{font-size:7pt!important}#shramikNiyojanReport.sn-cluster-mode .sn-cluster-metric strong{font-size:10pt!important}
   }`;
   document.head.appendChild(css);
