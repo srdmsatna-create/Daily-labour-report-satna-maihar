@@ -15,6 +15,19 @@
 body[data-print-scope="janpad"] .report-engineer,body[data-print-scope="janpad"] .report-details,body[data-print-scope="janpad"] .report-sa{display:none}
 body[data-print-scope="engineer"] .report-janpad{display:none}
 }
+
+#stats{display:block}
+.district-kpis{border:2px solid #86a6ce;border-radius:9px;padding:14px;margin-bottom:16px}
+.district-kpis:last-child{margin-bottom:0}
+.district-kpis h2{margin:0 0 12px;padding:9px 12px;font-size:22px}
+.district-card-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px}
+.district-card-grid .stat{min-width:0;font-size:16px}
+.satna-kpis{background:#f5f9ff}.satna-kpis h2{background:#dceafe}
+.maihar-kpis{background:#f3faf5;border-color:#83b396}.maihar-kpis h2{background:#dcefe3}.maihar-kpis .stat{background:#e8f5ed;border-color:#b5d7c2}
+.combined-kpis{background:#fff9ef;border-color:#c3a166}.combined-kpis h2{background:#f8e8c9}.combined-kpis .stat{background:#fff1d6;border-color:#e1c58f}
+@media(max-width:1000px){.district-card-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:600px){.district-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media print{.district-card-grid{grid-template-columns:repeat(7,minmax(0,1fr))}.district-kpis{break-inside:avoid;padding:5px;margin-bottom:6px}.district-kpis h2{font-size:15px;padding:5px}.district-card-grid .stat{font-size:10px;padding:6px}.district-card-grid .stat strong{font-size:20px}}
 </style>
 <header><a class="back" href="index.html">← मुख्य डैशबोर्ड</a><h1>सुगम संपर्कता परियोजना (RIMS) प्रस्तावित सड़के</h1><div>सतना एवं मैहर · स्रोत: उपलब्ध प्रस्तावित सड़क विवरण · 02 अक्टूबर 2026</div></header>
 <main><div class="controls"><select id="district"><option value="">दोनों जिले</option><option>Satna</option><option>Maihar</option></select><select id="block"><option value="">सभी जनपद</option></select><select id="engineer"><option value="">सभी इंजीनियर</option></select><select id="status"><option value="">सभी स्थिति</option><option value="Reviewed by SA">SA Approved (Reviewed by SA)</option><option>Rejected by SA</option><option>Pending</option><option>Approved by EE</option><option>Approved by AE</option><option>Rejected</option></select><input id="search" placeholder="सड़क / पंचायत का नाम"><select id="pdfscope" aria-label="PDF रिपोर्ट का प्रकार"><option value="all">PDF — पूरी रिपोर्ट</option><option value="janpad">PDF — Janpad / AE / State</option><option value="engineer">PDF — Sub Engineer Report</option></select><button id="printreport">Print / PDF</button><button id="csv">Excel / CSV</button></div>
@@ -28,7 +41,9 @@ let roads=[];const $=id=>document.getElementById(id),esc=s=>String(s??'').replac
 function options(id,values){const el=$(id),v=el.value;el.innerHTML='<option value="">'+(id==='block'?'सभी जनपद':'सभी इंजीनियर')+'</option>'+[...new Set(values)].sort().map(x=>'<option>'+esc(x)+'</option>').join('');if(values.includes(v))el.value=v}
 function chosen(){return roads.filter(r=>(!$('district').value||r.district===$('district').value)&&(!$('block').value||r.block===$('block').value)&&(!$('engineer').value||r.engineer===$('engineer').value)&&(!$('status').value||r.status===$('status').value)&&(! $('search').value||(r.name+' '+r.gp).toLowerCase().includes($('search').value.toLowerCase())))}
 function count(a,s){return a.filter(r=>r.status===s).length}function metrics(a){return [a.length,a.filter(r=>['Approved by AE','Approved by EE','Reviewed by SA','Rejected by SA'].includes(r.status)).length,a.filter(r=>['Approved by EE','Reviewed by SA','Rejected by SA'].includes(r.status)).length,count(a,'Reviewed by SA'),a.filter(r=>r.status.startsWith('Rejected')).length,count(a,'Rejected by SA'),count(a,'Pending'),count(a,'Approved by EE'),a.filter(r=>String(r.od).toLowerCase()==='yes').length]}
-function render(){let a=chosen(),m=metrics(a);$('stats').innerHTML=[['SE सर्वे / प्रस्ताव',m[0]],['AE Approved (संचयी)',m[1]],['AE Pending',m[6]],['AE Rejected',a.filter(r=>r.status==='Rejected'&&r.remark.startsWith('Rejected by AE')).length],['SA Approved',m[3]],['SA Rejected',m[5]],['SA समीक्षा हेतु लंबित (EE Approved)',m[7]]].map(x=>'<div class="stat">'+x[0]+'<strong>'+x[1]+'</strong></div>').join('');
+function render(){let a=chosen(),m=metrics(a);
+function cards(list,title,cls){let n=metrics(list);return '<section class="district-kpis '+cls+'"><h2>'+title+'</h2><div class="district-card-grid">'+[['SE सर्वे / प्रस्ताव',n[0]],['AE Approved (संचयी)',n[1]],['AE Pending',n[6]],['AE Rejected',list.filter(r=>r.status==='Rejected'&&r.remark.startsWith('Rejected by AE')).length],['SA Approved',n[3]],['SA Rejected',n[5]],['SA समीक्षा हेतु लंबित (EE Approved)',n[7]]].map(x=>'<div class="stat">'+x[0]+'<strong>'+x[1]+'</strong></div>').join('')+'</div></section>'}
+$('stats').innerHTML=cards(a.filter(r=>r.district==='Satna'),'सतना जिला','satna-kpis')+cards(a.filter(r=>r.district==='Maihar'),'मैहर जिला','maihar-kpis')+cards(a,'दोनों जिलों का कुल — सतना + मैहर','combined-kpis');
 let heads=['SE सर्वे / प्रस्ताव','AE Approved (संचयी)','District / EE Approved (संचयी)','SA Approved','Rejected','Rejected By SA'];let html='<table><thead><tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th>'+heads.map(h=>'<th colspan="2">'+h+'</th>').join('')+'<th rowspan="2">AE Pending<br>Nos</th><th rowspan="2">SA समीक्षा हेतु लंबित<br>Nos</th><th rowspan="2">Uploaded OD Document Count</th></tr><tr>'+heads.map(()=>'<th>Nos</th><th>Km</th>').join('')+'</tr></thead><tbody>';
 function row(d,b,list,cls=''){let n=metrics(list);return '<tr class="'+cls+'"><td>'+esc(d)+'</td><td>'+esc(b)+'</td>'+n.slice(0,6).map(v=>'<td>'+v+'</td><td>—</td>').join('')+'<td class="pending">'+n[6]+'</td><td class="pending">'+n[7]+'</td><td>'+n[8]+'</td></tr>'}
 for(let d of ['Maihar','Satna']){let da=a.filter(r=>r.district===d);if(!da.length)continue;for(let b of [...new Set(da.map(r=>r.block))].sort())html+=row(d,b,da.filter(r=>r.block===b));html+=row(d,'योग',da,'total')}html+=row('सतना + मैहर','कुल योग',a,'total')+'</tbody></table>';$('summary').innerHTML=html;
