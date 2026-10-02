@@ -259,7 +259,12 @@ def main():
         previous_gp = {}
         previous_warning = ""
         try:
-            previous_blocks, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=True)
+            saved_baseline = ROOT / "shramik-fy2526-gp-targets.json"
+            if saved_baseline.exists():
+                previous_gp = json.loads(saved_baseline.read_text(encoding="utf-8"))
+                previous_blocks = {b: {m: sum(int(g.get(m, 0)) for g in values.values()) for m in ("july", "august", "september", "october")} for b, values in previous_gp.items()}
+            else:
+                previous_blocks, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=True)
         except Exception as exc:
             previous_warning = f"FY 2025-26 Sub Engineer baseline unavailable: {exc}"
         browser.close()
