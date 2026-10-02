@@ -1,0 +1,57 @@
+name: All srdmsatna tabs daily 8 AM
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/all-tabs-daily.yml"
+      - "scripts_local/update_all_tabs.py"
+  schedule:
+    - cron: '30 2 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: srdm-all-tabs-daily
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install readers
+        run: |
+          pip install playwright requests beautifulsoup4
+          python -m playwright install --with-deps chromium
+      - name: Refresh all nine report feeds independently
+        id: reports
+        continue-on-error: true
+        env:
+          VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
+          SHRAMIK_FY2627_URL: ${{ secrets.SHRAMIK_FY2627_URL }}
+          SHRAMIK_FY2526_URL: ${{ secrets.SHRAMIK_FY2526_URL }}
+          REJECTED_WAGE_SOURCE_URL: ${{ secrets.REJECTED_WAGE_SOURCE_URL }}
+        run: python scripts_local/update_all_tabs.py
+      - name: Commit successful reports and per-source status
+        if: always()
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python - <<'PY'
+          import importlib.util,subprocess
+          spec=importlib.util.spec_from_file_location('alltabs','scripts_local/update_all_tabs.py')
+          m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m)
+          files=[f for f in m.OUTPUTS if (m.ROOT/f).exists()]
+          subprocess.run(['git','add','--']+files,check=True)
+          PY
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Daily update all dashboard report feeds'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Expose source failures
+        if: steps.reports.outcome != 'success'
+        run: exit 1

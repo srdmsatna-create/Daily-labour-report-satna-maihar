@@ -5,8 +5,6 @@ on:
     paths:
       - 'scripts_local/update_shramik_state.py'
       - '.github/workflows/shramik-state-daily.yml'
-  schedule:
-    - cron: "30 2 * * *"
 permissions:
   contents: write
 concurrency:
