@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/shramik-refresh-trigger.txt'
       - 'scripts_local/update_shramik_niyojan.py'
+      - 'scripts_local/update_shramik_state.py'
       - '.github/workflows/shramik-niyojan-daily.yml'
   schedule:
     - cron: "30 2 * * *"   # 08:00 AM IST
@@ -50,6 +51,10 @@ jobs:
             if [ "$attempt" -lt 3 ]; then sleep 20; fi
           done
           exit 1
+      - name: Refresh 52 district Persondays and labour
+        id: state_refresh
+        continue-on-error: true
+        run: python scripts_local/update_shramik_state.py
       - name: Record refresh status
         if: always()
         env:
@@ -67,7 +72,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add shramik-niyojan-data.js shramik-refresh-status.js
+          git add shramik-niyojan-data.js shramik-refresh-status.js shramik-district-reports.js shramik-state-refresh-status.js
           if git diff --cached --quiet; then
             echo "No Shramik Niyojan data change."
             exit 0
@@ -77,5 +82,5 @@ jobs:
           git push origin HEAD:main
 
       - name: Report failed official refresh
-        if: steps.refresh.outcome != 'success'
+        if: steps.refresh.outcome != 'success' || steps.state_refresh.outcome != 'success'
         run: exit 1
