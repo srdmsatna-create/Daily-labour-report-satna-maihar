@@ -15,10 +15,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "shramik-niyojan-data.js"
 
-CURRENT_URL = os.environ.get(
-    "SHRAMIK_FY2627_URL",
-    "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Persondays&Digest=kG%2fjf+M7b1AUbpMqWwepqQ",
-)
+COOKIE = os.environ.get("VBGRAM_COOKIE", "").strip()
+HOME = "https://vbgramg.dord.gov.in/vbgramg/home.aspx"
+
+DEFAULT_CURRENT_URL = "https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?file1=empprov&page1=d&lflag=eng&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rbl=0&rblhpb=Persondays&Digest=kG%2fjf+M7b1AUbpMqWwepqQ"
+CURRENT_URL = os.environ.get("SHRAMIK_FY2627_URL", "").strip() or DEFAULT_CURRENT_URL
+MIS_URL = "https://vbgramgrep.dord.gov.in/VBGRAMG/MISreport.aspx"
 
 TARGETS = {
     "AMARPATAN": {"august": 19419, "september": 17907},
@@ -99,7 +101,7 @@ def parse_gp_rows(source):
         if len(cells) < 8 or not re.fullmatch(r"\d+", cells[0] or ""):
             continue
         gp = norm(cells[1])
-        if not gp or gp in {"TOTAL", "BLOCK TOTAL"}:
+        if not gp or gp in {"TOTAL", "BLOCK TOTAL"} or re.fullmatch(r"\d+", gp):
             continue
         values = month_values_after(cells, 1)
         if values:
@@ -131,10 +133,10 @@ def load_mapping():
 
 
 def previous_url():
-    explicit = os.environ.get("SHRAMIK_FY2526_URL")
+    explicit = os.environ.get("SHRAMIK_FY2526_URL", "").strip()
     if explicit:
         return explicit
-    return CURRENT_URL.replace("fin_year=2026-2027", "fin_year=2025-2026")
+    return DEFAULT_CURRENT_URL.replace("https://vbgramgrep.dord.gov.in/VBGRAMG/", "https://mnregaweb4.dord.gov.in/netnregarep/").replace("fin_year=2026-2027", "fin_year=2025-2026")
 
 
 def fetch_report(page, url, require_all_blocks=True):
@@ -142,10 +144,42 @@ def fetch_report(page, url, require_all_blocks=True):
     page.wait_for_timeout(2000)
     source = page.content()
     blocks, links = parse_block_rows(source)
+    # A stale Digest can return a landing/challenge page. Retry the same official
+    # report without Digest; the remaining query identifies State/District/FY/report.
+    if require_all_blocks and set(blocks) != set(TARGETS):
+        parts = urllib.parse.urlsplit(url)
+        qs = [(k, v) for k, v in urllib.parse.parse_qsl(parts.query, keep_blank_values=True)
+              if k.lower() != "digest"]
+        clean_url = urllib.parse.urlunsplit((parts.scheme, parts.netloc, parts.path,
+                                            urllib.parse.urlencode(qs), parts.fragment))
+        page.goto(clean_url, wait_until="domcontentloaded", timeout=90000)
+        page.wait_for_timeout(2000)
+        source = page.content()
+        blocks, links = parse_block_rows(source)
+    if require_all_blocks and set(blocks) != set(TARGETS):
+        # Payload links can be session-bound. Re-enter through the official MIS
+        # page and click the Persondays report so ASP.NET creates a fresh session.
+        try:
+            page.goto(MIS_URL, wait_until="domcontentloaded", timeout=90000)
+            page.wait_for_timeout(1500)
+            candidates = page.locator("a")
+            for i in range(min(candidates.count(), 500)):
+                a = candidates.nth(i)
+                txt = (a.inner_text() or "").strip()
+                href = a.get_attribute("href") or ""
+                if re.search(r"person\s*days|persondays|मानव", txt, re.I) or "demand_emp_demand" in href:
+                    a.click()
+                    page.wait_for_timeout(2000)
+                    source = page.content()
+                    blocks, links = parse_block_rows(source)
+                    if set(blocks) == set(TARGETS):
+                        break
+        except Exception:
+            pass
     if require_all_blocks and set(blocks) != set(TARGETS):
         raise RuntimeError(f"Persondays report parsed only {len(blocks)}/8 Janpads")
-    if require_all_blocks and sum(x["august"] + x["september"] for x in blocks.values()) <= 0:
-        raise RuntimeError("Persondays report returned zero August/September achievement")
+    if require_all_blocks and sum(x["july"] + x["august"] + x["september"] + x["october"] for x in blocks.values()) <= 0:
+        raise RuntimeError("Persondays report returned zero July-October achievement")
     gp_rows = {}
     for block, href in links.items():
         detail_url = urllib.parse.urljoin(page.url, href)
@@ -166,28 +200,30 @@ def parse_date(value):
     return date.today()
 
 
-def remaining_september_days(as_on):
+def remaining_october_days(as_on):
     d = parse_date(as_on)
-    if d < date(2026, 9, 1):
-        return 30
-    if d > date(2026, 9, 30):
+    if d < date(2026, 10, 1):
+        return 31
+    if d > date(2026, 10, 31):
         return 0
-    return max(0, 30 - d.day)
+    return max(0, 31 - d.day)
 
 
-def calc(target, august, september, days):
-    achievement = august + september
+def calc(target, july_to_september, october, days):
+    achievement = july_to_september + october
     difference = max(0, target - achievement)
     daily = math.ceil(difference / days) if days else 0
     return {
         "target": target,
-        "augustAchievement": august,
-        "septemberAchievement": september,
+        "augustAchievement": july_to_september,
+        "septemberAchievement": october,
+        "julyToSeptemberAchievement": july_to_september,
+        "octoberAchievement": october,
         "achievement": achievement,
         "difference": difference,
         "remainingDays": days,
         "dailyRequired": daily,
-        "dailyTarget125": math.ceil((difference / days) * 1.25) if days else 0,
+        "dailyTarget125": daily,
         "achievementPct": round((achievement * 100 / target), 2) if target else 0,
     }
 
@@ -201,49 +237,75 @@ def main():
         context = browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128 Safari/537.36"
         )
+        if COOKIE:
+            cookies = []
+            for pair in COOKIE.split(";"):
+                if "=" not in pair:
+                    continue
+                k, v = pair.strip().split("=", 1)
+                for domain in ("vbgramgrep.dord.gov.in", "vbgramg.dord.gov.in"):
+                    cookies.append({"name": k, "value": v, "domain": domain, "path": "/"})
+            if cookies:
+                context.add_cookies(cookies)
         page = context.new_page()
+        # Warm the official portal session before opening the deep Persondays report.
+        try:
+            page.goto(HOME, wait_until="domcontentloaded", timeout=60000)
+            page.wait_for_timeout(1500)
+        except Exception:
+            pass
         current_blocks, current_gp, official_date = fetch_report(page, CURRENT_URL)
+        previous_blocks = {}
         previous_gp = {}
         previous_warning = ""
         try:
-            _, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=False)
+            saved_baseline = ROOT / "shramik-fy2526-gp-targets.json"
+            if saved_baseline.exists():
+                previous_gp = json.loads(saved_baseline.read_text(encoding="utf-8"))
+                previous_blocks = {b: {m: sum(int(g.get(m, 0)) for g in values.values()) for m in ("july", "august", "september", "october")} for b, values in previous_gp.items()}
+            else:
+                previous_blocks, previous_gp, _ = fetch_report(page, previous_url(), require_all_blocks=True)
         except Exception as exc:
             previous_warning = f"FY 2025-26 Sub Engineer baseline unavailable: {exc}"
         browser.close()
 
-    days = remaining_september_days(official_date)
+    if set(previous_blocks) != set(TARGETS):
+        previous_warning = "FY 2025-26 GP detail unavailable; fixed verified Janpad baseline retained"
+        previous_gp = {}
+    days = remaining_october_days(official_date)
     janpad_rows = []
     for block in ORDER:
-        baseline = TARGETS[block]["august"] + TARGETS[block]["september"]
+        prev = previous_blocks.get(block, {})
+        baseline = {"AMARPATAN":71072,"MAIHAR":82541,"MAJHGAWAN":43096,"NAGOD":72817,"RAMNAGAR":75686,"RAMPUR BAGHELAN":138970,"SATNA":84825,"UNCHAHARA":52545}[block]
         cur = current_blocks[block]
         janpad_rows.append({
             "level": "janpad", "district": district(block), "janpad": block,
             "engineer": "", "cluster": "",
-            **calc(baseline, cur["august"], cur["september"], days),
+            **calc(baseline, cur["july"] + cur["august"] + cur["september"], cur["october"], days),
         })
 
     # Exact Sub Engineer rows are produced only when both FYs have GP detail.
     engineer_rows = []
     grouped = {}
     all_keys = set()
-    if previous_gp:
+    if previous_gp and all(sum(int(previous_gp.get(block, {}).get(gp, {}).get(m, 0)) for gp in previous_gp.get(block, {}) for m in ("july", "august", "september", "october")) == {"AMARPATAN":71072,"MAIHAR":82541,"MAJHGAWAN":43096,"NAGOD":72817,"RAMNAGAR":75686,"RAMPUR BAGHELAN":138970,"SATNA":84825,"UNCHAHARA":52545}[block] for block in ORDER):
         for block in ORDER:
             all_keys.update((block, gp) for gp in current_gp.get(block, {}))
             all_keys.update((block, gp) for gp in previous_gp.get(block, {}))
         for block, gp in all_keys:
             owner = mapping.get((block, gp), {"engineer": "Unmapped", "cluster": "Unmapped"})
             key = (block, owner["engineer"], owner["cluster"])
-            row = grouped.setdefault(key, {"target": 0, "august": 0, "september": 0})
+            row = grouped.setdefault(key, {"target": 0, "julyToSeptember": 0, "october": 0})
             cur = current_gp.get(block, {}).get(gp, {})
             prev = previous_gp.get(block, {}).get(gp, {})
-            row["august"] += int(cur.get("august", 0))
-            row["september"] += int(cur.get("september", 0))
-            row["target"] += int(prev.get("august", 0)) + int(prev.get("september", 0))
+            row["julyToSeptember"] += sum(int(cur.get(m, 0)) for m in ("july", "august", "september"))
+            row["october"] += int(cur.get("october", 0))
+            row["target"] += sum(int(prev.get(m, 0)) for m in ("july", "august", "september", "october"))
     for (block, engineer, cluster), values in sorted(grouped.items()):
         engineer_rows.append({
             "level": "engineer", "district": district(block), "janpad": block,
             "engineer": engineer, "cluster": cluster,
-            **calc(values["target"], values["august"], values["september"], days),
+            **calc(values["target"], values["julyToSeptember"], values["october"], days),
         })
 
     # One official monthly Persondays record per Janpad + Gram Panchayat.  Ek
@@ -269,10 +331,14 @@ def main():
         "officialDate": official_date,
         "updatedAt": datetime.now(timezone.utc).isoformat(),
         "source": CURRENT_URL,
+        "remainingOctoberDays": days,
         "remainingSeptemberDays": days,
+        "periodLabels": {"target": "वित्तीय वर्ष 2025–26 में जुलाई से अक्टूबर तक सृजित मानव दिवस", "period1": "वित्तीय वर्ष 2026–27 जुलाई से सितम्बर", "period2": "वित्तीय वर्ष 2026–27 अक्टूबर माह"},
         "targetTotal": sum(x["target"] for x in janpad_rows),
         "rows": janpad_rows,
         "engineerRows": engineer_rows,
+        "engineerPeriodDataAvailable": bool(engineer_rows),
+        "baselineLocked": True,
         "gpMandaysRows": gp_mandays_rows,
         "gpMandaysSource": CURRENT_URL,
         "warnings": [x for x in [previous_warning] if x],
@@ -289,5 +355,9 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as exc:
-        print(f"FAILED: {exc}")
+        # The official VB-G RAM G portal can intermittently return a landing/
+        # challenge page instead of the Persondays table. Never turn that
+        # transient portal response into a failed daily deployment or overwrite
+        # the last verified dashboard snapshot.
+        print(f"FAILED: official Persondays data was not refreshed: {exc}")
         sys.exit(1)
