@@ -4,7 +4,7 @@
   // Normalize complete monthly GP snapshots from older laptop updaters.
   const lockedTargets={"AMARPATAN":71072,"MAIHAR":82541,"MAJHGAWAN":43096,"NAGOD":72817,"RAMNAGAR":75686,"RAMPUR BAGHELAN":138970,"SATNA":84825,"UNCHAHARA":52545};
   if(!data.baselineLocked && Array.isArray(data.gpMandaysRows)){
-    const gpRows=data.gpMandaysRows.filter(r=>!/^\d+$/.test(String(r.panchayat||'').trim()));
+    const gpRows=data.gpMandaysRows.filter(r=>!/^\d+$/.test(String(r.panchayat||'').replace(/\s+/g,' ').trim()));
     if(gpRows.length===695 && (data.rows||[]).length===8){
       for(const r of data.rows){
         const members=gpRows.filter(g=>g.janpad===r.janpad);
@@ -112,24 +112,24 @@
   document.getElementById('srdmApplications').insertAdjacentElement('afterend',section);
   const fmt=n=>n==null?'—':Number(n||0).toLocaleString('en-IN'), esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const level=document.getElementById('snLevel'),dist=document.getElementById('snDistrict'),jan=document.getElementById('snJanpad'),eng=document.getElementById('snEngineer'),clu=document.getElementById('snCluster'),sort=document.getElementById('snSort'),body=document.getElementById('snBody'),auto=window.AUTO_REPORT||{};let exportRows=[];
-  const nrm=v=>String(v||'').replace(/\s+/g,' ').trim().toUpperCase();
+  const nrm=v=>String(v||'').replace(/\s+/g,' ').replace(/\s+/g,' ').trim().toUpperCase();
   const janpadHindi={AMARPATAN:'अमरपाटन',MAIHAR:'मैहर',MAJHGAWAN:'मझगवां',NAGOD:'नागौद',RAMNAGAR:'रामनगर','RAMPUR BAGHELAN':'रामपुर बघेलान',SATNA:'सतना',UNCHAHARA:'उचेहरा'};
   const districtHindi=v=>nrm(v)==='MAIHAR'?'मैहर':nrm(v)==='SATNA'?'सतना':v;
   const janpadName=v=>janpadHindi[nrm(v)]||v;
-  function liveMetrics(){const m=new Map();for(const r of auto.rows||[]){const j=nrm(r.janpad),e=String(r.engineer||'Unmapped').trim(),c=String(r.cluster||'Unmapped').trim(),k=[j,e,c].join('¦');if(!m.has(k))m.set(k,{janpad:j,engineer:e,cluster:c,gp:0,labour:0,ongoing:0,mrIssued:0});const z=m.get(k);z.gp+=Number(r.gps||1);z.labour+=Number(r.labour||0);z.ongoing+=Number(r.ongoing||0);z.mrIssued+=Number(r.worksMR||0)}return m}
+  function liveMetrics(){const m=new Map();for(const r of auto.rows||[]){const j=nrm(r.janpad),e=String(r.engineer||'Unmapped').replace(/\s+/g,' ').trim(),c=String(r.cluster||'Unmapped').replace(/\s+/g,' ').trim(),k=[j,e,c].join('¦');if(!m.has(k))m.set(k,{janpad:j,engineer:e,cluster:c,gp:0,labour:0,ongoing:0,mrIssued:0});const z=m.get(k);z.gp+=Number(r.gps||1);z.labour+=Number(r.labour||0);z.ongoing+=Number(r.ongoing||0);z.mrIssued+=Number(r.worksMR||0)}return m}
   const metrics=liveMetrics();
-  function recoveryMetrics(){const m=new Map(),seen=new Set();for(const r of window.ONGOING_DETAILS||[]){const code=String(r.code||'').trim(),isOngoing=String(r.status||'').toLowerCase().includes('ongoing'),isRecovery=r.recoveryDone===true||String(r.recoveryDone).toLowerCase()==='true'||Number(r.recoveryWork||0)>0||Number(r.recoveryWorkCount||0)>0;if(!isOngoing||!isRecovery||code&&seen.has(code))continue;if(code)seen.add(code);const j=nrm(r.janpad),e=String(r.engineer||'Unmapped').trim(),c=String(r.cluster||'Unmapped').trim(),k=[j,e,c].join('¦');if(!m.has(k))m.set(k,{janpad:j,engineer:e,cluster:c,recoveryWorks:0});m.get(k).recoveryWorks++}return m}
+  function recoveryMetrics(){const m=new Map(),seen=new Set();for(const r of window.ONGOING_DETAILS||[]){const code=String(r.code||'').replace(/\s+/g,' ').trim(),isOngoing=String(r.status||'').toLowerCase().includes('ongoing'),isRecovery=r.recoveryDone===true||String(r.recoveryDone).toLowerCase()==='true'||Number(r.recoveryWork||0)>0||Number(r.recoveryWorkCount||0)>0;if(!isOngoing||!isRecovery||code&&seen.has(code))continue;if(code)seen.add(code);const j=nrm(r.janpad),e=String(r.engineer||'Unmapped').replace(/\s+/g,' ').trim(),c=String(r.cluster||'Unmapped').replace(/\s+/g,' ').trim(),k=[j,e,c].join('¦');if(!m.has(k))m.set(k,{janpad:j,engineer:e,cluster:c,recoveryWorks:0});m.get(k).recoveryWorks++}return m}
   const recoveries=recoveryMetrics();
-  const recoveryCount=(janpad,engineer,cluster)=>Number((recoveries.get([nrm(janpad),String(engineer||'Unmapped').trim(),String(cluster||'Unmapped').trim()].join('¦'))||{}).recoveryWorks||0);
+  const recoveryCount=(janpad,engineer,cluster)=>Number((recoveries.get([nrm(janpad),String(engineer||'Unmapped').replace(/\s+/g,' ').trim(),String(cluster||'Unmapped').replace(/\s+/g,' ').trim()].join('¦'))||{}).recoveryWorks||0);
   function apportion(total,list,weight){const weights=list.map(x=>Math.max(0,Number(x[weight]||0))),sum=weights.reduce((a,b)=>a+b,0),baseWeights=sum?weights:list.map(x=>Math.max(1,Number(x.gp||1))),den=baseWeights.reduce((a,b)=>a+b,0)||1,raw=baseWeights.map(x=>Number(total||0)*x/den),out=raw.map(Math.floor);let left=Math.round(Number(total||0))-out.reduce((a,b)=>a+b,0);raw.map((v,i)=>({i,f:v-out[i]})).sort((a,b)=>b.f-a.f).slice(0,left).forEach(x=>out[x.i]++);return out}
   function buildEngineerRows(){
     let source=data.engineerRows||[];
     if(!source.length){
       const groups=new Map();
       for(const gp of data.gpMandaysRows||[]){
-        if(!gp.panchayat || /^\d+$/.test(String(gp.panchayat).trim()))continue;
-        const key=[nrm(gp.janpad),String(gp.engineer||'Unmapped').trim(),String(gp.cluster||'Unmapped').trim()].join('¦');
-        if(!groups.has(key))groups.set(key,{level:'engineer',district:gp.district,janpad:nrm(gp.janpad),engineer:String(gp.engineer||'Unmapped').trim(),cluster:String(gp.cluster||'Unmapped').trim(),target:null,augustAchievement:0,septemberAchievement:0,achievement:0,difference:null,remainingDays:Number(data.remainingOctoberDays??data.remainingSeptemberDays??0),dailyRequired:null,dailyTarget125:null,achievementPct:null,baselineAvailable:false});
+        if(!gp.panchayat || /^\d+$/.test(String(gp.panchayat).replace(/\s+/g,' ').trim()))continue;
+        const key=[nrm(gp.janpad),String(gp.engineer||'Unmapped').replace(/\s+/g,' ').trim(),String(gp.cluster||'Unmapped').replace(/\s+/g,' ').trim()].join('¦');
+        if(!groups.has(key))groups.set(key,{level:'engineer',district:gp.district,janpad:nrm(gp.janpad),engineer:String(gp.engineer||'Unmapped').replace(/\s+/g,' ').trim(),cluster:String(gp.cluster||'Unmapped').replace(/\s+/g,' ').trim(),target:null,augustAchievement:0,septemberAchievement:0,achievement:0,difference:null,remainingDays:Number(data.remainingOctoberDays??data.remainingSeptemberDays??0),dailyRequired:null,dailyTarget125:null,achievementPct:null,baselineAvailable:false});
         const r=groups.get(key);
         r.augustAchievement+=Number(gp.july||0)+Number(gp.august||0)+Number(gp.september||0);
         r.septemberAchievement+=Number(gp.october||0);
@@ -137,7 +137,7 @@
       }
       source=[...groups.values()];
     }
-    return source.map(r=>{const q=metrics.get([nrm(r.janpad),String(r.engineer||'').trim(),String(r.cluster||'').trim()].join('¦'))||{},recoveryWorks=recoveryCount(r.janpad,r.engineer,r.cluster),ongoing=Number(q.ongoing||0);return {...r,todayLabour:Number(q.labour||0),ongoing,mrIssued:Number(q.mrIssued||0),recoveryWorks,postRecoveryOngoing:Math.max(0,ongoing-recoveryWorks)}});
+    return source.map(r=>{const q=metrics.get([nrm(r.janpad),String(r.engineer||'').replace(/\s+/g,' ').trim(),String(r.cluster||'').replace(/\s+/g,' ').trim()].join('¦'))||{},recoveryWorks=recoveryCount(r.janpad,r.engineer,r.cluster),ongoing=Number(q.ongoing||0);return {...r,todayLabour:Number(q.labour||0),ongoing,mrIssued:Number(q.mrIssued||0),recoveryWorks,postRecoveryOngoing:Math.max(0,ongoing-recoveryWorks)}});
   }
   const engineerRows=buildEngineerRows();
   const officialMap=new Map((auto.official||[]).map(r=>[nrm(r.janpad),r]));
