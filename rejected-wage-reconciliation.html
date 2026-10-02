@@ -149,7 +149,8 @@ const DATA=HIST.map(r=>({...r,district:DIST[r.janpad]})).concat([
 {fy:'2026-27',janpad:'SATNA',total:524,totalAmount:1010755,pending:59,pendingAmount:99583,muster:42,fto:21,success:0,bankPending:465,reasons:{'Duplicate Beneficiary':25,'Special/Numeric Characters in Address':12,'Payee Data Validation Failed':8,'Sanction Order Number Missing/Invalid':7,'Address Field Invalid':7}},
 {fy:'2026-27',janpad:'UNCHAHARA',total:481,totalAmount:1065317,pending:79,pendingAmount:193774,muster:65,fto:6,success:0,bankPending:402,reasons:{'Duplicate Beneficiary':78,'Invalid Bank Identifier':1}}
 ].map(r=>({...r,district:DIST[r.janpad]})));
-const BASELINE=DATA.filter(r=>r.fy==='2026-27').map(r=>({...r}));
+// Fixed 22.09.2026 baseline: never replace it with refreshed or previous snapshots.
+const BASELINE=Object.freeze(DATA.filter(r=>r.fy==='2026-27').map(r=>Object.freeze({...r})));
 let previousSnapshot=null, refreshDate=null;
 const nf=new Intl.NumberFormat('en-IN'),sum=(a,k)=>a.reduce((s,r)=>s+Number(r[k]||0),0),d=document.getElementById('district'),j=document.getElementById('janpad'),f=document.getElementById('fy');
 function fillJ(){const old=j.value;j.innerHTML='<option value="ALL">सभी Janpad</option>';[...new Set(DATA.filter(r=>d.value==='ALL'||r.district===d.value).map(r=>r.janpad))].sort().forEach(x=>j.add(new Option(x,x)));if([...j.options].some(o=>o.value===old))j.value=old}
