@@ -68,6 +68,14 @@ def validate_monthly_progress(monthly,previous):
   prior=sum(x.get('julyToSeptemberAchievement',0) for x in old_rows.get(name,{}).get('rows',[]))
   if prior>0 and sum(r[k] for k in ('july','august','september'))==0:
    raise RuntimeError('Previously nonzero July-September Persondays became zero: '+name)
+def merge_labour(row,fresh):
+ # Preserve verified fields when an otherwise valid source omits their headers.
+ for field in ('todayLabour','mrIssued','musterRollCount','ongoing'):
+  if fresh.get(field) is not None:row[field]=fresh[field]
+ total,active=fresh.get('totalGP'),fresh.get('labourGP')
+ if total is not None and active is not None and 0<=active<=total:
+  row.update(totalGP=total,labourGP=active)
+ return row
 GRID='''tables=>tables.map(t=>{const grid=[];Array.from(t.rows).forEach((r,ri)=>{grid[ri]??=[];let ci=0;Array.from(r.cells).forEach(c=>{while(grid[ri][ci]!==undefined)ci++;for(let dy=0;dy<c.rowSpan;dy++){grid[ri+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)grid[ri+dy][ci+dx]=c.innerText.trim()}ci+=c.colSpan})});return grid})'''
 def fetch(page,url,persondays=False):
  response=page.goto(url,wait_until='domcontentloaded',timeout=60000)
@@ -128,7 +136,7 @@ def main():
   if set(districts)!=set(targets):raise RuntimeError('Complete previous 52-district snapshot required')
   for name,d in districts.items():
    if len(d['rows'])!=1:raise RuntimeError('District summary required')
-   for field in ('todayLabour','mrIssued','musterRollCount','totalGP','labourGP'):d['rows'][0][field]=labour[name].get(field)
+   merge_labour(d['rows'][0],labour[name])
    if labour[name].get('ongoing') is not None:d['rows'][0]['ongoing']=labour[name]['ongoing']
    d['rows'][0]['incompleteWorks']=d['rows'][0].get('ongoing')
   payload.update(labourSource=LABOUR,labourDate=labour_date,updatedAt=stamp,warnings=warnings)
@@ -136,14 +144,19 @@ def main():
   districts={}
   for name,m in monthly.items():
    a=sum(m[k] for k in ('july','august','september'));r={'janpad':'जिला योग','target':targets[name],'julyAchievement':m['july'],'augustMonthlyAchievement':m['august'],'septemberMonthlyAchievement':m['september'],'julyToSeptemberAchievement':a,'octoberAchievement':m['october'],'achievement':a+m['october'],'todayLabour':None,'ongoing':None,'mrIssued':None,'incompleteWorks':None}
-   r.update(labour.get(name,{}))
+   old=previous.get('districts',{}).get(name,{}).get('rows',[{}])[0]
+   for field in ('todayLabour','mrIssued','musterRollCount','totalGP','labourGP','ongoing'):
+    if old.get(field) is not None:r[field]=old[field]
+   merge_labour(r,labour.get(name,{}))
    if r.get('ongoing') is None:r['ongoing']=previous.get('districts',{}).get(name,{}).get('rows',[{}])[0].get('ongoing')
    r['incompleteWorks']=r['ongoing']
    districts[name]={'officialDate':date,'dateBasis':'portal' if match else 'fetched','period':PERIOD,'detailLevel':'district','rows':[r]}
   payload={'source':MONTHLY,'labourSource':LABOUR,'labourDate':labour_date,'snapshotDate':date,'dateBasis':'portal' if match else 'fetched','updatedAt':stamp,'warnings':warnings,'districts':districts}
+ gp_success=bool(labour) and all(v.get('totalGP') is not None and v.get('labourGP') is not None and 0<=v['labourGP']<=v['totalGP'] for v in labour.values())
+ if not gp_success:warnings.append('GP counts not refreshed: complete valid totalGP/labourGP headers required; previous verified GP values retained')
  payload['ongoingDate']=labour_date if labour and all(v.get('ongoing') is not None for v in labour.values()) else previous.get('ongoingDate',previous.get('snapshotDate'))
  write_js(ROOT/'shramik-district-reports.js','window.SHRAMIK_DISTRICT_REPORTS',payload)
- write_js(ROOT/'shramik-state-refresh-status.js','window.SHRAMIK_STATE_REFRESH_STATUS',{'checkedAt':stamp,'success':True,'districtCount':52,'persondaysSuccess':monthly is not None,'labourSuccess':bool(labour),'warnings':warnings})
+ write_js(ROOT/'shramik-state-refresh-status.js','window.SHRAMIK_STATE_REFRESH_STATUS',{'checkedAt':stamp,'success':True,'districtCount':52,'persondaysSuccess':monthly is not None,'labourSuccess':bool(labour),'gpSuccess':gp_success,'warnings':warnings})
  print('SUCCESS: 52-district Persondays '+('refreshed' if monthly is not None else 'previous snapshot retained')+'; labour/MR '+('refreshed' if labour else 'unavailable'),flush=True)
  for w in warnings:print(w,flush=True)
 if __name__=='__main__':
