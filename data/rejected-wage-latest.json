@@ -1,6 +1,6 @@
 {
   "date": "2026-10-03",
-  "fetchedAt": "2026-10-03T15:44:18+05:30",
+  "fetchedAt": "2026-10-03T22:11:00+05:30",
   "combined": true,
   "sources": [
     {
@@ -16,13 +16,19 @@
           "totalAmount": 1193076,
           "pending": 12,
           "pendingAmount": 31059,
-          "muster": null,
-          "fto": null,
+          "muster": 4,
+          "fto": 3,
           "success": 0,
           "successAmount": 0,
           "bankPending": 524,
           "bankPendingAmount": 1162017,
-          "reasons": {}
+          "reasons": {
+            "Duplicate Benificiary": 2,
+            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 1,
+            "Payee Data Validation Failed.": 1
+          },
+          "detailCount": 4,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=XnigXdosDQjobsT-AlU8mGn74AHSbDP79bGNXmSatSzRDXORB8rvjtPWkSSBFHSqi0ZKvG0CkeAsLlURAEaNMT5S0Q8vtLIYF5VmLDHviH7ShOMvrmQvl65Y03WkKCWu42sSO0rH3OecZ4pwMaceZFNOzmAbyaKJJ08LiMjy0sBdcXvWjJRMq-SMlnQF98J74r51HKgR9KMNYOfG0-K_Q2OLvx_CL5CUTrEUP9pkIBjFpyR8ZzrH6Krh7c_tgxEvq-jVfANljM0WAS-nDuAlQ9BRHRlbZ0hqyNN-unavcheHT66rg9FWPWdr_i5tJuI8"
         },
         {
           "fy": "2026-27",
@@ -32,13 +38,19 @@
           "totalAmount": 2671723,
           "pending": 8,
           "pendingAmount": 18293,
-          "muster": null,
-          "fto": null,
+          "muster": 8,
+          "fto": 8,
           "success": 0,
           "successAmount": 0,
           "bankPending": 1049,
           "bankPendingAmount": 2653430,
-          "reasons": {}
+          "reasons": {
+            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 2,
+            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 4,
+            "Special characters and numeric values found in the address field.": 2
+          },
+          "detailCount": 8,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ewe_WLVWhmvEWMKybO8bf16TJ9MZAhWmhQyW_xbiOr7aL41MqY49dkeh10rWD07SfyHWZ45bz3VMMVTyQggNpiKPubTxu-iQNh4Mw09OVZHNTG-V2w1XdI2hr2SCbiOOB7ikjS6lRtQlbU4gIc41VBsvLtw-Kjh18CbrPK9AMzV1TytojaKg07cYO-vVb7d9uGJLoRdtjolmUg9DiblY6di74A0RYdXj6PYThlmtIw2qdoRTnjxa--cP48nF8OsWsbm-OMRw14nYkIV68YwZuO_wOVRJwPeB7ny5HahWbchvTwWCI8TjO5YrQYJXeRcf"
         },
         {
           "fy": "2026-27",
@@ -48,13 +60,21 @@
           "totalAmount": 1270091,
           "pending": 278,
           "pendingAmount": 684605,
-          "muster": null,
-          "fto": null,
+          "muster": 166,
+          "fto": 36,
           "success": 0,
           "successAmount": 0,
           "bankPending": 222,
           "bankPendingAmount": 585486,
-          "reasons": {}
+          "reasons": {
+            "Duplicate Benificiary": 202,
+            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 16,
+            "Special characters and numeric values found in the address field.": 22,
+            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 15,
+            "Payee Data Validation Failed.": 23
+          },
+          "detailCount": 278,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ZNjYxmxBw5DYdavPwmQKPyskSnGeTD_U_DOHIa84TBmXltq0PCXsSTqHSjalj6vqxCqqIx-6-GkEeqlmd3PdGVHd3AM_in9gdflZBUH6TQDBzy2dRxRqBZOo6NrKd_-PxTEQyQ-NFEhAxL3fL0CSrASd1h0yswd-qU61imf5xJkaw_nzu1Z7waa-dhHprnzgM8hg_21I7Rz-be0D3z7aFEKY9CZN4ruXYQVgMMPtWxahe4zOKKAz4XNvscHI7FHCcxA2k18CWAGfEHoYLEiNlPEpOWwnbQIF9Ru0CPMy20mtDR6yUzlBsyOX1QIm5U3q"
         },
         {
           "fy": "2026-27",
@@ -64,13 +84,22 @@
           "totalAmount": 3513380,
           "pending": 43,
           "pendingAmount": 78545,
-          "muster": null,
-          "fto": null,
+          "muster": 40,
+          "fto": 26,
           "success": 73,
           "successAmount": 179294,
           "bankPending": 1640,
           "bankPendingAmount": 3255541,
-          "reasons": {}
+          "reasons": {
+            "Payee Data Validation Failed.": 9,
+            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 4,
+            "Special characters and numeric values found in the address field.": 4,
+            "Duplicate Benificiary": 21,
+            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 3,
+            "Objected by DDO": 2
+          },
+          "detailCount": 43,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=Q3zFWXQcWUGVjZ1e3nzKJw7SySDbb3O25IpFGZca4-Iw7hicaEShmWg9Bohewzey1SP0rAQmFhm9Z8zdp8pzRpRhne2gFtLV3djqBZL3Fxxv2pWtR3Y7sPrBWzAqx9rHauV4E3JPbwJMDvV1bU3K1DHntH-mwbJThvhk5BjfjYtOD2qBrVoa8twFs5xASyMen2y_dJQlIKy70FhRRIlZDyGGDFVkxAPunRZ16sOVfsh1kZd2svIEDVIcvCsL3zRZAMQM6Vih7ioMNBeLlQIOUHDOh8hEUWIe6tpGbcdMM-A"
         },
         {
           "fy": "2026-27",
@@ -80,13 +109,18 @@
           "totalAmount": 744210,
           "pending": 65,
           "pendingAmount": 112819,
-          "muster": null,
-          "fto": null,
+          "muster": 29,
+          "fto": 3,
           "success": 0,
           "successAmount": 0,
           "bankPending": 336,
           "bankPendingAmount": 631391,
-          "reasons": {}
+          "reasons": {
+            "Payee Data Validation Failed.": 18,
+            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 14
+          },
+          "detailCount": 32,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=jnRPlkbN_owRj15efRecOOIMnFHm9rObLlMHiFI8rJtISApaSx3l8vLZzM93cOLuvtznPJeDM3Tk4rFqVXTHoEttTDfoZCtyEyc99vasJV0H-ecdIyCuYQxRajeKufAGqIecg809cXqJq_5eeKMhixRS9Qiee6ONHvckOtN-Cblj9ZWpVfOBYVGUR8q8ueEpP52_9t_Pd_RZ0Zd_M-6kVA1nNSbnQ8DBdFSIrTuPrcDE0Btq08Kq-Fwjzz8Zq2rwCXWev8jPW7NJ1wp72Cm3yz70YQ5oh9llY4OuumrDhAKr3hpyWmIFAoo1f4amB6Mr"
         },
         {
           "fy": "2026-27",
@@ -96,13 +130,21 @@
           "totalAmount": 1611503,
           "pending": 148,
           "pendingAmount": 412626,
-          "muster": null,
-          "fto": null,
+          "muster": 110,
+          "fto": 26,
           "success": 0,
           "successAmount": 0,
           "bankPending": 460,
           "bankPendingAmount": 1198877,
-          "reasons": {}
+          "reasons": {
+            "Payee Data Validation Failed.": 12,
+            "Duplicate Benificiary": 111,
+            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 11,
+            "Special characters and numeric values found in the address field.": 4,
+            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 3
+          },
+          "detailCount": 141,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=fgC61bMexqAbr8hguIuoCX4qxdVeDHEw_EzaNf1pmF9W8SZSA2_HxzBDC0sms7SKSaAM2rcfdejGi2JTd3XMU2WT0cHN_gEZu0Cn-POiCtdlkpA2oiQr7CMsrBjS2aHPRPZLr0pS8kY2ZobwxIKI9U4T0jQWzpv_zXvkdfiPubDqRCxPt2O0BrIqkwB5tEfD4f8PNBNiF3B1i7tv6m7ynjeNHJLv-JaTpBRSG4cs4m18j8lU4L6tLqKdrlLpQFjywkbzLCcByT2sdkag2pqIPuJvStHxcRL_ADOL1lPHDunCGGO00FGX4RRxDuTcuDsQ"
         },
         {
           "fy": "2026-27",
@@ -112,13 +154,21 @@
           "totalAmount": 1015744,
           "pending": 59,
           "pendingAmount": 103483,
-          "muster": null,
-          "fto": null,
+          "muster": 42,
+          "fto": 22,
           "success": 0,
           "successAmount": 0,
           "bankPending": 468,
           "bankPendingAmount": 912261,
-          "reasons": {}
+          "reasons": {
+            "Special characters and numeric values found in the address field.": 12,
+            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 7,
+            "Duplicate Benificiary": 25,
+            "Payee Data Validation Failed.": 8,
+            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 7
+          },
+          "detailCount": 59,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=F30eD-plugSJNuzOqP6uoLYVGMhEdgwE4tskAsxEFp1txSpGAI5-YQQt3jt3GqbFjwS-_MFwsD6q_npDMo5vxFiMMSuzHIIi-h3wm6NhlPijReaTpIbzuqTm3KSx_F9e-hJpfCYcmiQCo-13su-n4xn27MvidNztYbie6mAgcfBL_5NaXiWB4dlA4pgEkR1iutbogfp7Kg1TBBFVZYPfmgq_a_Rx5zapvDacyKm1pS9L7aYm6jrr5LePuHxEef4Io7_tHe6UT5i9eobOFcLjLhJ5117wP858g0cw4wZLJf8"
         },
         {
           "fy": "2026-27",
@@ -128,13 +178,17 @@
           "totalAmount": 1118971,
           "pending": 22,
           "pendingAmount": 49154,
-          "muster": null,
-          "fto": null,
+          "muster": 10,
+          "fto": 1,
           "success": 0,
           "successAmount": 0,
           "bankPending": 482,
           "bankPendingAmount": 1069817,
-          "reasons": {}
+          "reasons": {
+            "Duplicate Benificiary": 22
+          },
+          "detailCount": 22,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=A3VEAC7tLliI9l-tmZjd8E-BZ83w1LIEnDcn3mzwmlhoXShA8O3OLL3A8XdIslImfCWsdsUPvYOhbIXO76gi21VMeJOVIT-C6kqyqq5OkQ9HaEor80VjnXOqOxNnjt7i_H0PC-SUd6D8wqhiBxJdeYKlm0d2qNko-UEi1cH-8xD3jyZfg-lD7BQbFGyQ6RdZ-z4u2yqLO5DeDofITHJHRKCko8xvpWdjfjkaJ8cEdVvJgIpqcACn3YNJYaDPXT-572qV-cLsZff51wicARZrB2VTFN4MLLQlc0rE12N6usnMbft-5or-GoFsJiqkf0_A"
         }
       ]
     },
@@ -151,13 +205,14 @@
           "totalAmount": 6003,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 0,
           "successAmount": 0,
           "bankPending": 2,
           "bankPendingAmount": 6003,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         },
         {
           "fy": "2026-27",
@@ -167,13 +222,14 @@
           "totalAmount": 27641,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 0,
           "successAmount": 0,
           "bankPending": 21,
           "bankPendingAmount": 27641,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         },
         {
           "fy": "2026-27",
@@ -183,13 +239,19 @@
           "totalAmount": 108826,
           "pending": 16,
           "pendingAmount": 46447,
-          "muster": null,
-          "fto": null,
+          "muster": 16,
+          "fto": 10,
           "success": 1,
           "successAmount": 261,
           "bankPending": 25,
           "bankPendingAmount": 62118,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 10,
+            "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 5,
+            "Aadhaar Number not Mapped to Account Number": 1
+          },
+          "detailCount": 16,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=4bmOdXaIV36fr_E3QSWU1scmeJfqnVFJ4Or2ummPeKWb2k12Z7imM_f0PnwAEnR6KYFR5D0Ry5s8c6T-QsXCnk9aVbfOp-FALGMX5kXyeRcECfKIJ04zu6TiwY_4mL-nGml4OrUbtMl4qnQw2ESjZDmauRAkhH_PxT_ss3Ww_SHfO-XmOY_VrIQWdNbKMt7dQi-GycXpdpwHtNgTRPVQbFs_s0U_Q_1JEzdG0ujY5k8RY0TFNlNxZ4T2CDjoPz4stghHk6w-l1961DHgBmkTLr7DvzKQf-GFzqnuwIJ5ENhimd0oUBiJe-vW1iX7yJc2"
         },
         {
           "fy": "2026-27",
@@ -199,13 +261,17 @@
           "totalAmount": 14742,
           "pending": 7,
           "pendingAmount": 13698,
-          "muster": null,
-          "fto": null,
+          "muster": 7,
+          "fto": 7,
           "success": 0,
           "successAmount": 0,
           "bankPending": 1,
           "bankPendingAmount": 1044,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 7
+          },
+          "detailCount": 7,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=SqwrXO34xvM_LjX5ubNsFmSHtWUJ1Q2ofJCeBuVmMox2B1QMtRekJQngJlDHKgzHYIwT4VaTw-ahC8PKCawhLaTdSTM71OkkwKtTek2gE5-RweG3-mVhlMrpFhX5W_Hp5agcv7qpLkvRcyYn-UdwqdiN9UksptMeWVC0nQ69nHZgu1QkB6wAUr2LLfiRlvixHFH9P8hb-r_AXqd54KNyPlKMDnGzltNXEf3hVWllcCcfKjSbLV9Y8lKFtX34p_WW7OAaDaJlOrg4jm8t8uMW0xSoIdjKtOlrkyexByG7-6s"
         },
         {
           "fy": "2026-27",
@@ -215,13 +281,14 @@
           "totalAmount": 1827,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 0,
           "successAmount": 0,
           "bankPending": 1,
           "bankPendingAmount": 1827,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         },
         {
           "fy": "2026-27",
@@ -231,13 +298,18 @@
           "totalAmount": 30996,
           "pending": 10,
           "pendingAmount": 30996,
-          "muster": null,
-          "fto": null,
+          "muster": 10,
+          "fto": 9,
           "success": 0,
           "successAmount": 0,
           "bankPending": 0,
           "bankPendingAmount": 0,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 9,
+            "A/c Blocked or Frozen": 1
+          },
+          "detailCount": 10,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=-yoNQe8o5fuRjVn7Ajl7KsG3RwIC4DKTicURGwFqYePk0zjxorlEyXdFe6i6EUNJ1h768waGyiigd_27Hxqfit2fn87orSSkZYcXXY9_gClJqak7wqeTCqIPP9ktI6Tea2rjCkGxM1FiqTRKbLVtph8-fSFe0Zub_QfO0hwdPrPXw6tkc3sh89Q17ec7kQgWt5uNsNBPDf4szFoIKHCUvRGBBgECCdjcxo0o_5mL6JlW8pyN0NO0Miv8DzRNY93klLp98qNuyIHE1xWE7cfAUUxrydqqsD4hFrCJm1ACoiIS932yAKNVk5P9KPu4tD4-"
         },
         {
           "fy": "2026-27",
@@ -247,13 +319,18 @@
           "totalAmount": 30747,
           "pending": 15,
           "pendingAmount": 29292,
-          "muster": null,
-          "fto": null,
+          "muster": 15,
+          "fto": 11,
           "success": 0,
           "successAmount": 0,
           "bankPending": 1,
           "bankPendingAmount": 1455,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 14,
+            "Aadhaar Number not Mapped to Account Number": 1
+          },
+          "detailCount": 15,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=9pM96YE6Bcdj4I_iVzYJM_kfR-pYviazxc7HTFj3nosLHAtqIpI726TH0ThTY3XWzBaeoNmcHsB5cTMVn46hw8UYCx482-XKferU6RfBxNffBH4rk45x0q1ywk_COtn6m0nO41wNFHL_tihX-F8Au0URNQ0AfLP1J6-UkN5EdTKRnzaIzhFeFk6Yk1Aqw_DZHLYWpWx7pR8733Lr3Np_s17GsYq1lYnvPGXXy0d6_vvFoBSrB1o3R5vhK4-meO7hskN1_BeZyxIdjpYSF2MYL_VK0f-koETAzSduNOkw0j4"
         },
         {
           "fy": "2026-27",
@@ -263,13 +340,14 @@
           "totalAmount": 19575,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 1,
           "successAmount": 3393,
           "bankPending": 10,
           "bankPendingAmount": 16182,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         }
       ]
     },
@@ -286,13 +364,14 @@
           "totalAmount": 404117,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 97,
           "successAmount": 262133,
           "bankPending": 51,
           "bankPendingAmount": 141984,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         },
         {
           "fy": "2025-26",
@@ -302,13 +381,14 @@
           "totalAmount": 595894,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 223,
           "successAmount": 448472,
           "bankPending": 73,
           "bankPendingAmount": 147422,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         },
         {
           "fy": "2025-26",
@@ -318,13 +398,22 @@
           "totalAmount": 1887948,
           "pending": 45,
           "pendingAmount": 116478,
-          "muster": null,
-          "fto": null,
+          "muster": 43,
+          "fto": 32,
           "success": 800,
           "successAmount": 1541064,
           "bankPending": 88,
           "bankPendingAmount": 230406,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 14,
+            "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 20,
+            "No Such Account": 5,
+            "Participant not mapped to the product": 4,
+            "Account closed": 1,
+            "Document Pending for Account Holder turning Major": 1
+          },
+          "detailCount": 45,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=SbCaDsP42S2ifyCNtS9CKtDhK8fQGiV-C3h2G9DB9B1pONLZ8LTGMKQPblxzHEWt3wAd1DeCMc2DGCJwYESYhVW2eBShp0aTs7KWhXk3VMbzWqRGoX5iCPMDlRVwAkWpqfjc4wmRYsHQH0spq48qinoG0raMRnjs6gnDPWs-pPe7_7TciNY-euMIxx-xXlyzLqhXCCWDwaBL7diQVlADEyNIAm-57TdTLxW-76t_1gHl72E17eBWfPSNTy5Fk6cA9maefxfDc6nIzPfK0ss5tirExGS0zNhlI6kHJMmLywgHhT-8TeLEQ1qKfN5Ccf0A"
         },
         {
           "fy": "2025-26",
@@ -334,13 +423,22 @@
           "totalAmount": 420451,
           "pending": 29,
           "pendingAmount": 43162,
-          "muster": null,
-          "fto": null,
+          "muster": 28,
+          "fto": 24,
           "success": 176,
           "successAmount": 264441,
           "bankPending": 66,
           "bankPendingAmount": 112848,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 18,
+            "No Such Account": 2,
+            "Account closed": 1,
+            "Participant not mapped to the product": 6,
+            "A/c Blocked or Frozen": 1,
+            "Aadhaar Number not Mapped to Account Number": 1
+          },
+          "detailCount": 29,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=BR_sjbZE5g0XNwPImBtIWpQrZs1v5u4CfafMQD0w_hPXsyJSf5A2Okbx5bdf5b9FDQ5jVC8jAZnDHua4PPxHeoSGK3-nOO_SqAVRxMr_IIJCA7PpRxZjMER2XynTLPIcomaoVIJV_LeRQhFa395g7UO-z3L7qzAlM9RnylWhqp_HBJWxvWNuG-ZISvjwWRWghpaYklclUuVRvYjX7PvnMrR-68LB_IPPynqll7_s_s0GonLPBpj_lbE40jfFyc4ATF_NppqVBwFr5OkvACO0di4CAxvdUBvmvjBBW9G3QKY"
         },
         {
           "fy": "2025-26",
@@ -350,13 +448,17 @@
           "totalAmount": 247968,
           "pending": 1,
           "pendingAmount": 1827,
-          "muster": null,
-          "fto": null,
+          "muster": 1,
+          "fto": 1,
           "success": 152,
           "successAmount": 246141,
           "bankPending": 0,
           "bankPendingAmount": 0,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
+          },
+          "detailCount": 1,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=TySdulWaK9CGP9EUfGIs9kUS2E6EQeBldE0QnDhjWDVuMJDutK8p_atR7gpGtAw4wyUDdSk__GPSumr0w6Zgvg1evuISRYfcnGG84t5R3EoLCtPOm-8_Xo3FXEmk4wrJY5o0XTx5J9s1IsWZIWnykioga6U67kwzX7EAAv6GEgPM90Ymn9mBj_KRseAH8hDdPNYwohCnfq3JRogo4x6HbSp_FcKtSAVfHYCDqJeB9sz6pB8nTjsok_kMMzGeaUvbQIJFi_wNYADlOaIZo-8-dEYrtr6ZZcjUe3-pkUlGRKxEfhhqOLe9JkHtUWictvzd"
         },
         {
           "fy": "2025-26",
@@ -366,13 +468,21 @@
           "totalAmount": 736446,
           "pending": 73,
           "pendingAmount": 142584,
-          "muster": null,
-          "fto": null,
+          "muster": 57,
+          "fto": 33,
           "success": 237,
           "successAmount": 587859,
           "bankPending": 3,
           "bankPendingAmount": 6003,
-          "reasons": {}
+          "reasons": {
+            "Account closed": 5,
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 30,
+            "No Such Account": 4,
+            "Participant not mapped to the product": 32,
+            "Unclaimed/DEAF accounts": 2
+          },
+          "detailCount": 73,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=qxI4h7HBtB6FZJnpxwjRddDu0ndo0ghO1t4VGkqAiVII1uJZi56bLdKDmsosXjuqlC730cyh9k7W4kXpEf-tRxS7WHSg3TFuYRa8wnXqiRdyqnzyOzD687_BWHB1UYzvdeWHZyrW0qFsMTWdE0OMIWLGinMqWPcoUs8HNNJDhdbYrbi0sDv8HKp8zyMjn33yiwKk4s4fKMxcAmPqEuc4hLExSKfm0ml4c1cP8QbqvBBSZwoNkKt9syD0Hy4Wasmd1g3ygjGn3Vre4ow5pNwThQPDsV-ha53HkapFJxASFyBPsNSNfCzn1MwbvHXrEYvb"
         },
         {
           "fy": "2025-26",
@@ -382,13 +492,22 @@
           "totalAmount": 426122,
           "pending": 29,
           "pendingAmount": 57426,
-          "muster": null,
-          "fto": null,
+          "muster": 27,
+          "fto": 24,
           "success": 136,
           "successAmount": 367652,
           "bankPending": 1,
           "bankPendingAmount": 1044,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 1,
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 18,
+            "Participant not mapped to the product": 1,
+            "No Such Account": 5,
+            "Aadhaar Number not Mapped to Account Number": 2,
+            "A/c Blocked or Frozen": 2
+          },
+          "detailCount": 29,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=98rzo_wIq-UzSy-IN53GwFdQbAeE2sGnet_gzxPDKorinPMusSzrY36Zzy7hpLZGzpsAdaj_m6Dd6TraZdKQghJRmrVLtS4fyrnX_hJSZoieu_ry3vVlC1YW2-6miO-svdnys2gw2GZ-qy9RUDCjFYKyCDgz5XVLIIkegw5ENlUIc0NcrCC3Q8LfvenHQ4Frhztqhtmzz4WaKcwQ1Od1O5yeWX-aJImo-PnRq9dBpdc3Hg1Wz-k3AwxTKZdEVduf9X9FasV4F9MG6xKYDL092PHC1lJRpLbEi1eAdc7HV4c"
         },
         {
           "fy": "2025-26",
@@ -398,13 +517,14 @@
           "totalAmount": 281019,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 129,
           "successAmount": 237913,
           "bankPending": 28,
           "bankPendingAmount": 43106,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         }
       ]
     },
@@ -421,13 +541,17 @@
           "totalAmount": 95073,
           "pending": 1,
           "pendingAmount": 3402,
-          "muster": null,
-          "fto": null,
+          "muster": 1,
+          "fto": 1,
           "success": 82,
           "successAmount": 85666,
           "bankPending": 7,
           "bankPendingAmount": 6005,
-          "reasons": {}
+          "reasons": {
+            "Account Holder Expired": 1
+          },
+          "detailCount": 1,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=LAMekmMxu1jydvRsA4W1R0a9KenQK9L8eQeu4Beu8GmGQ4DYNJVZ4HulAOnae0UDskFkBhEdMJhxgx8zDURw5xbOnriVjKagykg6r8PHbxX-24MfRcsI3-HLzF_FIR9uNFxLkRK5PzQEC9OSRb60-5gOyJR5HcUpEtWrWS4QozJuydFoidb113MDYWf3v_cjb3k1I9PpD06YnZyzVyvry5yhnuctzx5yx131IUIW3Z4hxRIAVLwPYXKX84L5dChouSw2YvTEQxsxpBrp3sfrpB0vnjP5O90cJa67awqdvZSSSXbSD02eDD0K3v_pJfa2"
         },
         {
           "fy": "2024-25",
@@ -437,13 +561,14 @@
           "totalAmount": 639434,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 535,
           "successAmount": 605116,
           "bankPending": 29,
           "bankPendingAmount": 34318,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         },
         {
           "fy": "2024-25",
@@ -453,13 +578,22 @@
           "totalAmount": 3409316,
           "pending": 25,
           "pendingAmount": 38645,
-          "muster": null,
-          "fto": null,
+          "muster": 23,
+          "fto": 9,
           "success": 1824,
           "successAmount": 3308053,
           "bankPending": 36,
           "bankPendingAmount": 62618,
-          "reasons": {}
+          "reasons": {
+            "No Such Account": 17,
+            "invalid Bank Identifier": 1,
+            "Account closed": 4,
+            "A/c Blocked or Frozen": 1,
+            "Aadhaar Number not Mapped to Account Number": 1,
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
+          },
+          "detailCount": 25,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=U9OI2wPa21nm3eZPEgSLjybTFlIQm3IUSWIL5BXzJLUDF-5gRnDR22oUfRJz6EC2LsiPFO5e0UjONp4VVBZMCGZ0-azgQcgtefWigKgrELXkZsZizopjIfa2CKIpXWR1UFpeislMBPrlYqBnSoBRHizuhkRdjWRz558Qg_5Ck8QqFy35Xg7zc2D14GagnAeNAiC6jTU2N7cJfH8fLnq7zTqUUm3utIY3ckpPzoC82XNLtjhyIKyixlzkrNTb46-saqaXYhfbGQOxM7dpKNfSJ3K_fZj2mBuSWErC1XzhWzs7wBs9cWlQsHBf0nnpephO"
         },
         {
           "fy": "2024-25",
@@ -469,13 +603,20 @@
           "totalAmount": 750996,
           "pending": 11,
           "pendingAmount": 16450,
-          "muster": null,
-          "fto": null,
+          "muster": 11,
+          "fto": 8,
           "success": 547,
           "successAmount": 707959,
           "bankPending": 21,
           "bankPendingAmount": 26587,
-          "reasons": {}
+          "reasons": {
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 3,
+            "No Such Account": 3,
+            "Account closed": 3,
+            "invalid Bank Identifier": 2
+          },
+          "detailCount": 11,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=RwXU9YwuIZ1niiUiYVECEb7BjPOztRrdtmSFSAzJactwK_Rrx3ZKIv5jHQENetFbPfISBPM6WK_DtpPvBxGCgD0ku_4B-QNVImOuA6OZJ7jNLr49kxKcwG8F9UKXUXNeeDh_sJVNBJn4hmkp5yExtuCN8HkOmejUEAnrwdrJP2dF58Nc59rbgUcPPl9IhtW41cDfB4iepRpetDsTtKGrTiJEU-J4WgLyAi_FUdvXA59jifLgA9pfvv6FKoquysApIEYmV14UZU3p1T4Y5MLHnBeaR5KtZZ9m31gpA4V-OoQ"
         },
         {
           "fy": "2024-25",
@@ -485,13 +626,14 @@
           "totalAmount": 362905,
           "pending": 0,
           "pendingAmount": 0,
-          "muster": null,
-          "fto": null,
+          "muster": 0,
+          "fto": 0,
           "success": 310,
           "successAmount": 362905,
           "bankPending": 0,
           "bankPendingAmount": 0,
-          "reasons": {}
+          "reasons": {},
+          "detailCount": 0
         },
         {
           "fy": "2024-25",
@@ -501,13 +643,18 @@
           "totalAmount": 525610,
           "pending": 9,
           "pendingAmount": 19440,
-          "muster": null,
-          "fto": null,
+          "muster": 9,
+          "fto": 8,
           "success": 362,
           "successAmount": 491508,
           "bankPending": 9,
           "bankPendingAmount": 14662,
-          "reasons": {}
+          "reasons": {
+            "No Such Account": 6,
+            "Account closed": 3
+          },
+          "detailCount": 9,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=LqRJIeYYWq_OMhJRqlv1rh0r0gWPue-6Yaq3yem_xtjcoH0FW_jVulp6370ws1ydZrBtjIZpoPVuxwuXeqspJXtllksO3zd7Mn2vP84TPj7EbKsOCAImKqdUHsmcRZfGVHmjgL0lPGAa69xVBIU2td6_1AhiWN8jmkke6WNctURCPywSoEDvG7hMfeCz6idL4oKjBx6dLUpN6mwJsOyYLdW9TkNOFNdRrpR5S-sDTGjwvnrN4tRq0cOfMbqznMfFCNomb0bLaBchnsx1WMiFnCwEjO6Mc9q4Pj_YmE2lBv05GNKPK9A7Zr9O1PzOt_a3"
         },
         {
           "fy": "2024-25",
@@ -517,13 +664,17 @@
           "totalAmount": 337241,
           "pending": 1,
           "pendingAmount": 486,
-          "muster": null,
-          "fto": null,
+          "muster": 1,
+          "fto": 1,
           "success": 206,
           "successAmount": 226409,
           "bankPending": 117,
           "bankPendingAmount": 110346,
-          "reasons": {}
+          "reasons": {
+            "Account closed": 1
+          },
+          "detailCount": 1,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=CP1OQInn7AdEI05bKgK3_JKYmLF4wSw_PXNQHx242XYT3E470SMZwVix1xnHMLqgAPUoGsB1awh9xMvyUSF3ebimbSbjy4GjRW4TtssmStPxXxdt2z1AlsnVsIGITEfxDci4W-uTH4_yiV4Z_AH956El3qBXDV7XcK7gSw1SJA_suF-oXRLlI-8pJtu06gowsNEwxxO2aANP6yXEaiY9jBuokw7xIHzen_3qXcWTRuzXJ8GkITsGtr-5S_k5XVhKceT5Cp96Ot1qqlzMyopDjiiuWOEGlxS6YHBQl8utVqo"
         },
         {
           "fy": "2024-25",
@@ -533,13 +684,19 @@
           "totalAmount": 372583,
           "pending": 5,
           "pendingAmount": 6790,
-          "muster": null,
-          "fto": null,
+          "muster": 5,
+          "fto": 4,
           "success": 266,
           "successAmount": 353643,
           "bankPending": 4,
           "bankPendingAmount": 12150,
-          "reasons": {}
+          "reasons": {
+            "Account closed": 3,
+            "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1,
+            "No Such Account": 1
+          },
+          "detailCount": 5,
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=yc7iZ2Eoh2Nzl_Pwnuvz9KyNtPk5myHfwX45YwnouWbjmmOBLKNUpcfMEkGEdhKP_l_ZcZau58S4ja2a3UrA325M-K6xVyOQgZhZIJ6lV8gZGZ9aeE4F_uCLMxcmnl97Eii5biHC44mnmJAWLrR6Pj9U5AZkJRxFNruiI7LxeKygcW_mY5v-x7V-SH9Tz-PABW7gTw16t3hn_c1040cRUAeregf4Nzd5FUcatnXIM8NIe6mIFza2D9tvplHYE1AnPdx16_AebhCdLO-yuq1XwRfM9I5HD26LdLne86ZZusaSOOBDH-VUsigshE1R2YnM"
         }
       ]
     }
@@ -553,13 +710,17 @@
       "totalAmount": 95073,
       "pending": 1,
       "pendingAmount": 3402,
-      "muster": null,
-      "fto": null,
+      "muster": 1,
+      "fto": 1,
       "success": 82,
       "successAmount": 85666,
       "bankPending": 7,
       "bankPendingAmount": 6005,
-      "reasons": {},
+      "reasons": {
+        "Account Holder Expired": 1
+      },
+      "detailCount": 1,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=LAMekmMxu1jydvRsA4W1R0a9KenQK9L8eQeu4Beu8GmGQ4DYNJVZ4HulAOnae0UDskFkBhEdMJhxgx8zDURw5xbOnriVjKagykg6r8PHbxX-24MfRcsI3-HLzF_FIR9uNFxLkRK5PzQEC9OSRb60-5gOyJR5HcUpEtWrWS4QozJuydFoidb113MDYWf3v_cjb3k1I9PpD06YnZyzVyvry5yhnuctzx5yx131IUIW3Z4hxRIAVLwPYXKX84L5dChouSw2YvTEQxsxpBrp3sfrpB0vnjP5O90cJa67awqdvZSSSXbSD02eDD0K3v_pJfa2",
       "scheme": "MGNREGA"
     },
     {
@@ -570,13 +731,14 @@
       "totalAmount": 639434,
       "pending": 0,
       "pendingAmount": 0,
-      "muster": null,
-      "fto": null,
+      "muster": 0,
+      "fto": 0,
       "success": 535,
       "successAmount": 605116,
       "bankPending": 29,
       "bankPendingAmount": 34318,
       "reasons": {},
+      "detailCount": 0,
       "scheme": "MGNREGA"
     },
     {
@@ -587,13 +749,22 @@
       "totalAmount": 3409316,
       "pending": 25,
       "pendingAmount": 38645,
-      "muster": null,
-      "fto": null,
+      "muster": 23,
+      "fto": 9,
       "success": 1824,
       "successAmount": 3308053,
       "bankPending": 36,
       "bankPendingAmount": 62618,
-      "reasons": {},
+      "reasons": {
+        "No Such Account": 17,
+        "invalid Bank Identifier": 1,
+        "Account closed": 4,
+        "A/c Blocked or Frozen": 1,
+        "Aadhaar Number not Mapped to Account Number": 1,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
+      },
+      "detailCount": 25,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=U9OI2wPa21nm3eZPEgSLjybTFlIQm3IUSWIL5BXzJLUDF-5gRnDR22oUfRJz6EC2LsiPFO5e0UjONp4VVBZMCGZ0-azgQcgtefWigKgrELXkZsZizopjIfa2CKIpXWR1UFpeislMBPrlYqBnSoBRHizuhkRdjWRz558Qg_5Ck8QqFy35Xg7zc2D14GagnAeNAiC6jTU2N7cJfH8fLnq7zTqUUm3utIY3ckpPzoC82XNLtjhyIKyixlzkrNTb46-saqaXYhfbGQOxM7dpKNfSJ3K_fZj2mBuSWErC1XzhWzs7wBs9cWlQsHBf0nnpephO",
       "scheme": "MGNREGA"
     },
     {
@@ -604,13 +775,20 @@
       "totalAmount": 750996,
       "pending": 11,
       "pendingAmount": 16450,
-      "muster": null,
-      "fto": null,
+      "muster": 11,
+      "fto": 8,
       "success": 547,
       "successAmount": 707959,
       "bankPending": 21,
       "bankPendingAmount": 26587,
-      "reasons": {},
+      "reasons": {
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 3,
+        "No Such Account": 3,
+        "Account closed": 3,
+        "invalid Bank Identifier": 2
+      },
+      "detailCount": 11,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=RwXU9YwuIZ1niiUiYVECEb7BjPOztRrdtmSFSAzJactwK_Rrx3ZKIv5jHQENetFbPfISBPM6WK_DtpPvBxGCgD0ku_4B-QNVImOuA6OZJ7jNLr49kxKcwG8F9UKXUXNeeDh_sJVNBJn4hmkp5yExtuCN8HkOmejUEAnrwdrJP2dF58Nc59rbgUcPPl9IhtW41cDfB4iepRpetDsTtKGrTiJEU-J4WgLyAi_FUdvXA59jifLgA9pfvv6FKoquysApIEYmV14UZU3p1T4Y5MLHnBeaR5KtZZ9m31gpA4V-OoQ",
       "scheme": "MGNREGA"
     },
     {
@@ -621,13 +799,14 @@
       "totalAmount": 362905,
       "pending": 0,
       "pendingAmount": 0,
-      "muster": null,
-      "fto": null,
+      "muster": 0,
+      "fto": 0,
       "success": 310,
       "successAmount": 362905,
       "bankPending": 0,
       "bankPendingAmount": 0,
       "reasons": {},
+      "detailCount": 0,
       "scheme": "MGNREGA"
     },
     {
@@ -638,13 +817,18 @@
       "totalAmount": 525610,
       "pending": 9,
       "pendingAmount": 19440,
-      "muster": null,
-      "fto": null,
+      "muster": 9,
+      "fto": 8,
       "success": 362,
       "successAmount": 491508,
       "bankPending": 9,
       "bankPendingAmount": 14662,
-      "reasons": {},
+      "reasons": {
+        "No Such Account": 6,
+        "Account closed": 3
+      },
+      "detailCount": 9,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=LqRJIeYYWq_OMhJRqlv1rh0r0gWPue-6Yaq3yem_xtjcoH0FW_jVulp6370ws1ydZrBtjIZpoPVuxwuXeqspJXtllksO3zd7Mn2vP84TPj7EbKsOCAImKqdUHsmcRZfGVHmjgL0lPGAa69xVBIU2td6_1AhiWN8jmkke6WNctURCPywSoEDvG7hMfeCz6idL4oKjBx6dLUpN6mwJsOyYLdW9TkNOFNdRrpR5S-sDTGjwvnrN4tRq0cOfMbqznMfFCNomb0bLaBchnsx1WMiFnCwEjO6Mc9q4Pj_YmE2lBv05GNKPK9A7Zr9O1PzOt_a3",
       "scheme": "MGNREGA"
     },
     {
@@ -655,13 +839,17 @@
       "totalAmount": 337241,
       "pending": 1,
       "pendingAmount": 486,
-      "muster": null,
-      "fto": null,
+      "muster": 1,
+      "fto": 1,
       "success": 206,
       "successAmount": 226409,
       "bankPending": 117,
       "bankPendingAmount": 110346,
-      "reasons": {},
+      "reasons": {
+        "Account closed": 1
+      },
+      "detailCount": 1,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=CP1OQInn7AdEI05bKgK3_JKYmLF4wSw_PXNQHx242XYT3E470SMZwVix1xnHMLqgAPUoGsB1awh9xMvyUSF3ebimbSbjy4GjRW4TtssmStPxXxdt2z1AlsnVsIGITEfxDci4W-uTH4_yiV4Z_AH956El3qBXDV7XcK7gSw1SJA_suF-oXRLlI-8pJtu06gowsNEwxxO2aANP6yXEaiY9jBuokw7xIHzen_3qXcWTRuzXJ8GkITsGtr-5S_k5XVhKceT5Cp96Ot1qqlzMyopDjiiuWOEGlxS6YHBQl8utVqo",
       "scheme": "MGNREGA"
     },
     {
@@ -672,13 +860,19 @@
       "totalAmount": 372583,
       "pending": 5,
       "pendingAmount": 6790,
-      "muster": null,
-      "fto": null,
+      "muster": 5,
+      "fto": 4,
       "success": 266,
       "successAmount": 353643,
       "bankPending": 4,
       "bankPendingAmount": 12150,
-      "reasons": {},
+      "reasons": {
+        "Account closed": 3,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1,
+        "No Such Account": 1
+      },
+      "detailCount": 5,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=yc7iZ2Eoh2Nzl_Pwnuvz9KyNtPk5myHfwX45YwnouWbjmmOBLKNUpcfMEkGEdhKP_l_ZcZau58S4ja2a3UrA325M-K6xVyOQgZhZIJ6lV8gZGZ9aeE4F_uCLMxcmnl97Eii5biHC44mnmJAWLrR6Pj9U5AZkJRxFNruiI7LxeKygcW_mY5v-x7V-SH9Tz-PABW7gTw16t3hn_c1040cRUAeregf4Nzd5FUcatnXIM8NIe6mIFza2D9tvplHYE1AnPdx16_AebhCdLO-yuq1XwRfM9I5HD26LdLne86ZZusaSOOBDH-VUsigshE1R2YnM",
       "scheme": "MGNREGA"
     },
     {
@@ -689,13 +883,14 @@
       "totalAmount": 404117,
       "pending": 0,
       "pendingAmount": 0,
-      "muster": null,
-      "fto": null,
+      "muster": 0,
+      "fto": 0,
       "success": 97,
       "successAmount": 262133,
       "bankPending": 51,
       "bankPendingAmount": 141984,
       "reasons": {},
+      "detailCount": 0,
       "scheme": "MGNREGA"
     },
     {
@@ -706,13 +901,14 @@
       "totalAmount": 595894,
       "pending": 0,
       "pendingAmount": 0,
-      "muster": null,
-      "fto": null,
+      "muster": 0,
+      "fto": 0,
       "success": 223,
       "successAmount": 448472,
       "bankPending": 73,
       "bankPendingAmount": 147422,
       "reasons": {},
+      "detailCount": 0,
       "scheme": "MGNREGA"
     },
     {
@@ -723,13 +919,22 @@
       "totalAmount": 1887948,
       "pending": 45,
       "pendingAmount": 116478,
-      "muster": null,
-      "fto": null,
+      "muster": 43,
+      "fto": 32,
       "success": 800,
       "successAmount": 1541064,
       "bankPending": 88,
       "bankPendingAmount": 230406,
-      "reasons": {},
+      "reasons": {
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 14,
+        "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 20,
+        "No Such Account": 5,
+        "Participant not mapped to the product": 4,
+        "Account closed": 1,
+        "Document Pending for Account Holder turning Major": 1
+      },
+      "detailCount": 45,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=SbCaDsP42S2ifyCNtS9CKtDhK8fQGiV-C3h2G9DB9B1pONLZ8LTGMKQPblxzHEWt3wAd1DeCMc2DGCJwYESYhVW2eBShp0aTs7KWhXk3VMbzWqRGoX5iCPMDlRVwAkWpqfjc4wmRYsHQH0spq48qinoG0raMRnjs6gnDPWs-pPe7_7TciNY-euMIxx-xXlyzLqhXCCWDwaBL7diQVlADEyNIAm-57TdTLxW-76t_1gHl72E17eBWfPSNTy5Fk6cA9maefxfDc6nIzPfK0ss5tirExGS0zNhlI6kHJMmLywgHhT-8TeLEQ1qKfN5Ccf0A",
       "scheme": "MGNREGA"
     },
     {
@@ -740,13 +945,22 @@
       "totalAmount": 420451,
       "pending": 29,
       "pendingAmount": 43162,
-      "muster": null,
-      "fto": null,
+      "muster": 28,
+      "fto": 24,
       "success": 176,
       "successAmount": 264441,
       "bankPending": 66,
       "bankPendingAmount": 112848,
-      "reasons": {},
+      "reasons": {
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 18,
+        "No Such Account": 2,
+        "Account closed": 1,
+        "Participant not mapped to the product": 6,
+        "A/c Blocked or Frozen": 1,
+        "Aadhaar Number not Mapped to Account Number": 1
+      },
+      "detailCount": 29,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=BR_sjbZE5g0XNwPImBtIWpQrZs1v5u4CfafMQD0w_hPXsyJSf5A2Okbx5bdf5b9FDQ5jVC8jAZnDHua4PPxHeoSGK3-nOO_SqAVRxMr_IIJCA7PpRxZjMER2XynTLPIcomaoVIJV_LeRQhFa395g7UO-z3L7qzAlM9RnylWhqp_HBJWxvWNuG-ZISvjwWRWghpaYklclUuVRvYjX7PvnMrR-68LB_IPPynqll7_s_s0GonLPBpj_lbE40jfFyc4ATF_NppqVBwFr5OkvACO0di4CAxvdUBvmvjBBW9G3QKY",
       "scheme": "MGNREGA"
     },
     {
@@ -757,13 +971,17 @@
       "totalAmount": 247968,
       "pending": 1,
       "pendingAmount": 1827,
-      "muster": null,
-      "fto": null,
+      "muster": 1,
+      "fto": 1,
       "success": 152,
       "successAmount": 246141,
       "bankPending": 0,
       "bankPendingAmount": 0,
-      "reasons": {},
+      "reasons": {
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
+      },
+      "detailCount": 1,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=TySdulWaK9CGP9EUfGIs9kUS2E6EQeBldE0QnDhjWDVuMJDutK8p_atR7gpGtAw4wyUDdSk__GPSumr0w6Zgvg1evuISRYfcnGG84t5R3EoLCtPOm-8_Xo3FXEmk4wrJY5o0XTx5J9s1IsWZIWnykioga6U67kwzX7EAAv6GEgPM90Ymn9mBj_KRseAH8hDdPNYwohCnfq3JRogo4x6HbSp_FcKtSAVfHYCDqJeB9sz6pB8nTjsok_kMMzGeaUvbQIJFi_wNYADlOaIZo-8-dEYrtr6ZZcjUe3-pkUlGRKxEfhhqOLe9JkHtUWictvzd",
       "scheme": "MGNREGA"
     },
     {
@@ -774,13 +992,21 @@
       "totalAmount": 736446,
       "pending": 73,
       "pendingAmount": 142584,
-      "muster": null,
-      "fto": null,
+      "muster": 57,
+      "fto": 33,
       "success": 237,
       "successAmount": 587859,
       "bankPending": 3,
       "bankPendingAmount": 6003,
-      "reasons": {},
+      "reasons": {
+        "Account closed": 5,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 30,
+        "No Such Account": 4,
+        "Participant not mapped to the product": 32,
+        "Unclaimed/DEAF accounts": 2
+      },
+      "detailCount": 73,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=qxI4h7HBtB6FZJnpxwjRddDu0ndo0ghO1t4VGkqAiVII1uJZi56bLdKDmsosXjuqlC730cyh9k7W4kXpEf-tRxS7WHSg3TFuYRa8wnXqiRdyqnzyOzD687_BWHB1UYzvdeWHZyrW0qFsMTWdE0OMIWLGinMqWPcoUs8HNNJDhdbYrbi0sDv8HKp8zyMjn33yiwKk4s4fKMxcAmPqEuc4hLExSKfm0ml4c1cP8QbqvBBSZwoNkKt9syD0Hy4Wasmd1g3ygjGn3Vre4ow5pNwThQPDsV-ha53HkapFJxASFyBPsNSNfCzn1MwbvHXrEYvb",
       "scheme": "MGNREGA"
     },
     {
@@ -791,13 +1017,22 @@
       "totalAmount": 426122,
       "pending": 29,
       "pendingAmount": 57426,
-      "muster": null,
-      "fto": null,
+      "muster": 27,
+      "fto": 24,
       "success": 136,
       "successAmount": 367652,
       "bankPending": 1,
       "bankPendingAmount": 1044,
-      "reasons": {},
+      "reasons": {
+        "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 1,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 18,
+        "Participant not mapped to the product": 1,
+        "No Such Account": 5,
+        "Aadhaar Number not Mapped to Account Number": 2,
+        "A/c Blocked or Frozen": 2
+      },
+      "detailCount": 29,
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=98rzo_wIq-UzSy-IN53GwFdQbAeE2sGnet_gzxPDKorinPMusSzrY36Zzy7hpLZGzpsAdaj_m6Dd6TraZdKQghJRmrVLtS4fyrnX_hJSZoieu_ry3vVlC1YW2-6miO-svdnys2gw2GZ-qy9RUDCjFYKyCDgz5XVLIIkegw5ENlUIc0NcrCC3Q8LfvenHQ4Frhztqhtmzz4WaKcwQ1Od1O5yeWX-aJImo-PnRq9dBpdc3Hg1Wz-k3AwxTKZdEVduf9X9FasV4F9MG6xKYDL092PHC1lJRpLbEi1eAdc7HV4c",
       "scheme": "MGNREGA"
     },
     {
@@ -808,13 +1043,14 @@
       "totalAmount": 281019,
       "pending": 0,
       "pendingAmount": 0,
-      "muster": null,
-      "fto": null,
+      "muster": 0,
+      "fto": 0,
       "success": 129,
       "successAmount": 237913,
       "bankPending": 28,
       "bankPendingAmount": 43106,
       "reasons": {},
+      "detailCount": 0,
       "scheme": "MGNREGA"
     },
     {
@@ -825,13 +1061,19 @@
       "totalAmount": 1199079,
       "pending": 12,
       "pendingAmount": 31059,
-      "muster": null,
-      "fto": null,
+      "muster": 4,
+      "fto": 3,
       "success": 0,
       "successAmount": 0,
       "bankPending": 526,
       "bankPendingAmount": 1168020,
-      "reasons": {},
+      "reasons": {
+        "Duplicate Benificiary": 2,
+        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 1,
+        "Payee Data Validation Failed.": 1
+      },
+      "detailCount": 4,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=XnigXdosDQjobsT-AlU8mGn74AHSbDP79bGNXmSatSzRDXORB8rvjtPWkSSBFHSqi0ZKvG0CkeAsLlURAEaNMT5S0Q8vtLIYF5VmLDHviH7ShOMvrmQvl65Y03WkKCWu42sSO0rH3OecZ4pwMaceZFNOzmAbyaKJJ08LiMjy0sBdcXvWjJRMq-SMlnQF98J74r51HKgR9KMNYOfG0-K_Q2OLvx_CL5CUTrEUP9pkIBjFpyR8ZzrH6Krh7c_tgxEvq-jVfANljM0WAS-nDuAlQ9BRHRlbZ0hqyNN-unavcheHT66rg9FWPWdr_i5tJuI8",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -842,13 +1084,19 @@
       "totalAmount": 2699364,
       "pending": 8,
       "pendingAmount": 18293,
-      "muster": null,
-      "fto": null,
+      "muster": 8,
+      "fto": 8,
       "success": 0,
       "successAmount": 0,
       "bankPending": 1070,
       "bankPendingAmount": 2681071,
-      "reasons": {},
+      "reasons": {
+        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 2,
+        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 4,
+        "Special characters and numeric values found in the address field.": 2
+      },
+      "detailCount": 8,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ewe_WLVWhmvEWMKybO8bf16TJ9MZAhWmhQyW_xbiOr7aL41MqY49dkeh10rWD07SfyHWZ45bz3VMMVTyQggNpiKPubTxu-iQNh4Mw09OVZHNTG-V2w1XdI2hr2SCbiOOB7ikjS6lRtQlbU4gIc41VBsvLtw-Kjh18CbrPK9AMzV1TytojaKg07cYO-vVb7d9uGJLoRdtjolmUg9DiblY6di74A0RYdXj6PYThlmtIw2qdoRTnjxa--cP48nF8OsWsbm-OMRw14nYkIV68YwZuO_wOVRJwPeB7ny5HahWbchvTwWCI8TjO5YrQYJXeRcf",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -859,13 +1107,24 @@
       "totalAmount": 1378917,
       "pending": 294,
       "pendingAmount": 731052,
-      "muster": null,
-      "fto": null,
+      "muster": 182,
+      "fto": 46,
       "success": 1,
       "successAmount": 261,
       "bankPending": 247,
       "bankPendingAmount": 647604,
-      "reasons": {},
+      "reasons": {
+        "Duplicate Benificiary": 202,
+        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 16,
+        "Special characters and numeric values found in the address field.": 22,
+        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 15,
+        "Payee Data Validation Failed.": 23,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 10,
+        "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 5,
+        "Aadhaar Number not Mapped to Account Number": 1
+      },
+      "detailCount": 294,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ZNjYxmxBw5DYdavPwmQKPyskSnGeTD_U_DOHIa84TBmXltq0PCXsSTqHSjalj6vqxCqqIx-6-GkEeqlmd3PdGVHd3AM_in9gdflZBUH6TQDBzy2dRxRqBZOo6NrKd_-PxTEQyQ-NFEhAxL3fL0CSrASd1h0yswd-qU61imf5xJkaw_nzu1Z7waa-dhHprnzgM8hg_21I7Rz-be0D3z7aFEKY9CZN4ruXYQVgMMPtWxahe4zOKKAz4XNvscHI7FHCcxA2k18CWAGfEHoYLEiNlPEpOWwnbQIF9Ru0CPMy20mtDR6yUzlBsyOX1QIm5U3q",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -876,13 +1135,23 @@
       "totalAmount": 3528122,
       "pending": 50,
       "pendingAmount": 92243,
-      "muster": null,
-      "fto": null,
+      "muster": 47,
+      "fto": 33,
       "success": 73,
       "successAmount": 179294,
       "bankPending": 1641,
       "bankPendingAmount": 3256585,
-      "reasons": {},
+      "reasons": {
+        "Payee Data Validation Failed.": 9,
+        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 4,
+        "Special characters and numeric values found in the address field.": 4,
+        "Duplicate Benificiary": 21,
+        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 3,
+        "Objected by DDO": 2,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 7
+      },
+      "detailCount": 50,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=Q3zFWXQcWUGVjZ1e3nzKJw7SySDbb3O25IpFGZca4-Iw7hicaEShmWg9Bohewzey1SP0rAQmFhm9Z8zdp8pzRpRhne2gFtLV3djqBZL3Fxxv2pWtR3Y7sPrBWzAqx9rHauV4E3JPbwJMDvV1bU3K1DHntH-mwbJThvhk5BjfjYtOD2qBrVoa8twFs5xASyMen2y_dJQlIKy70FhRRIlZDyGGDFVkxAPunRZ16sOVfsh1kZd2svIEDVIcvCsL3zRZAMQM6Vih7ioMNBeLlQIOUHDOh8hEUWIe6tpGbcdMM-A",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -893,13 +1162,18 @@
       "totalAmount": 746037,
       "pending": 65,
       "pendingAmount": 112819,
-      "muster": null,
-      "fto": null,
+      "muster": 29,
+      "fto": 3,
       "success": 0,
       "successAmount": 0,
       "bankPending": 337,
       "bankPendingAmount": 633218,
-      "reasons": {},
+      "reasons": {
+        "Payee Data Validation Failed.": 18,
+        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 14
+      },
+      "detailCount": 32,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=jnRPlkbN_owRj15efRecOOIMnFHm9rObLlMHiFI8rJtISApaSx3l8vLZzM93cOLuvtznPJeDM3Tk4rFqVXTHoEttTDfoZCtyEyc99vasJV0H-ecdIyCuYQxRajeKufAGqIecg809cXqJq_5eeKMhixRS9Qiee6ONHvckOtN-Cblj9ZWpVfOBYVGUR8q8ueEpP52_9t_Pd_RZ0Zd_M-6kVA1nNSbnQ8DBdFSIrTuPrcDE0Btq08Kq-Fwjzz8Zq2rwCXWev8jPW7NJ1wp72Cm3yz70YQ5oh9llY4OuumrDhAKr3hpyWmIFAoo1f4amB6Mr",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -910,13 +1184,23 @@
       "totalAmount": 1642499,
       "pending": 158,
       "pendingAmount": 443622,
-      "muster": null,
-      "fto": null,
+      "muster": 120,
+      "fto": 35,
       "success": 0,
       "successAmount": 0,
       "bankPending": 460,
       "bankPendingAmount": 1198877,
-      "reasons": {},
+      "reasons": {
+        "Payee Data Validation Failed.": 12,
+        "Duplicate Benificiary": 111,
+        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 11,
+        "Special characters and numeric values found in the address field.": 4,
+        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 3,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 9,
+        "A/c Blocked or Frozen": 1
+      },
+      "detailCount": 151,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=fgC61bMexqAbr8hguIuoCX4qxdVeDHEw_EzaNf1pmF9W8SZSA2_HxzBDC0sms7SKSaAM2rcfdejGi2JTd3XMU2WT0cHN_gEZu0Cn-POiCtdlkpA2oiQr7CMsrBjS2aHPRPZLr0pS8kY2ZobwxIKI9U4T0jQWzpv_zXvkdfiPubDqRCxPt2O0BrIqkwB5tEfD4f8PNBNiF3B1i7tv6m7ynjeNHJLv-JaTpBRSG4cs4m18j8lU4L6tLqKdrlLpQFjywkbzLCcByT2sdkag2pqIPuJvStHxcRL_ADOL1lPHDunCGGO00FGX4RRxDuTcuDsQ",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -927,13 +1211,23 @@
       "totalAmount": 1046491,
       "pending": 74,
       "pendingAmount": 132775,
-      "muster": null,
-      "fto": null,
+      "muster": 57,
+      "fto": 33,
       "success": 0,
       "successAmount": 0,
       "bankPending": 469,
       "bankPendingAmount": 913716,
-      "reasons": {},
+      "reasons": {
+        "Special characters and numeric values found in the address field.": 12,
+        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 7,
+        "Duplicate Benificiary": 25,
+        "Payee Data Validation Failed.": 8,
+        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 7,
+        "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 14,
+        "Aadhaar Number not Mapped to Account Number": 1
+      },
+      "detailCount": 74,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=F30eD-plugSJNuzOqP6uoLYVGMhEdgwE4tskAsxEFp1txSpGAI5-YQQt3jt3GqbFjwS-_MFwsD6q_npDMo5vxFiMMSuzHIIi-h3wm6NhlPijReaTpIbzuqTm3KSx_F9e-hJpfCYcmiQCo-13su-n4xn27MvidNztYbie6mAgcfBL_5NaXiWB4dlA4pgEkR1iutbogfp7Kg1TBBFVZYPfmgq_a_Rx5zapvDacyKm1pS9L7aYm6jrr5LePuHxEef4Io7_tHe6UT5i9eobOFcLjLhJ5117wP858g0cw4wZLJf8",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -944,13 +1238,17 @@
       "totalAmount": 1138546,
       "pending": 22,
       "pendingAmount": 49154,
-      "muster": null,
-      "fto": null,
+      "muster": 10,
+      "fto": 1,
       "success": 1,
       "successAmount": 3393,
       "bankPending": 492,
       "bankPendingAmount": 1085999,
-      "reasons": {},
+      "reasons": {
+        "Duplicate Benificiary": 22
+      },
+      "detailCount": 22,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=A3VEAC7tLliI9l-tmZjd8E-BZ83w1LIEnDcn3mzwmlhoXShA8O3OLL3A8XdIslImfCWsdsUPvYOhbIXO76gi21VMeJOVIT-C6kqyqq5OkQ9HaEor80VjnXOqOxNnjt7i_H0PC-SUd6D8wqhiBxJdeYKlm0d2qNko-UEi1cH-8xD3jyZfg-lD7BQbFGyQ6RdZ-z4u2yqLO5DeDofITHJHRKCko8xvpWdjfjkaJ8cEdVvJgIpqcACn3YNJYaDPXT-572qV-cLsZff51wicARZrB2VTFN4MLLQlc0rE12N6usnMbft-5or-GoFsJiqkf0_A",
       "scheme": "MGNREGA + VBGRAMG"
     }
   ],
