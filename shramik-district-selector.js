@@ -104,5 +104,20 @@ function render(){
  ranks();
 }
 document.getElementById('snExcel').addEventListener('click',e=>{if(!select.value)return;e.preventDefault();e.stopImmediatePropagation();const table=state.querySelector('table'),lines=[...table.rows].map(r=>[...r.cells].map(c=>'"'+c.innerText.replace(/"/g,'""')+'"').join(',')).join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines],{type:'text/csv;charset=utf-8'}));a.download='Shramik_52_Districts_'+window.SHRAMIK_DISTRICT_REPORTS.snapshotDate+'.csv';a.click();URL.revokeObjectURL(a.href)},true);
+
+const singlePrint=document.createElement('button');
+singlePrint.type='button';singlePrint.textContent='एक पेज Print / PDF';singlePrint.style.cssText='padding:8px 12px;background:#075d46;color:white;border:0;border-radius:6px;font-weight:800';
+tools.appendChild(singlePrint);
+singlePrint.addEventListener('click',()=>{
+ if(!select.value){window.print();return;}
+ const frame=document.createElement('iframe');frame.style.cssText='position:fixed;width:1px;height:1px;left:-10000px;top:0;border:0';document.body.appendChild(frame);
+ const doc=frame.contentDocument;
+ const title=document.getElementById('snStateTitle').textContent;
+ const date=document.getElementById('snStateDate').textContent;
+ doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:A4 portrait;margin:5mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#102e3b}h2{font-size:10pt;margin:0 0 2mm}p{font-size:6pt;margin:0 0 2mm}table{border-collapse:collapse;table-layout:fixed;width:100%;font-variant-numeric:tabular-nums}thead{display:table-header-group}tr{break-inside:avoid;height:3.7mm}th,td{border:.15mm solid #66877c!important;font-size:5pt!important;line-height:1.08!important;padding:.4mm .2mm!important;min-width:0!important;width:auto!important;height:auto!important;max-width:none!important;white-space:normal!important;overflow-wrap:anywhere}th{background:#075d46!important;color:white!important;font-weight:bold}th:first-child,td:first-child{width:3%!important}th:nth-child(2),td:nth-child(2){width:10%!important}td:nth-child(n+3){white-space:nowrap!important}span,button{font:inherit!important;padding:0!important;border:0!important;background:transparent!important;color:inherit!important;min-width:0!important}button{display:block;width:100%}.sn-sort-arrow{display:none}tbody tr:last-child td{background:#dcece5!important;color:#102e3b!important;font-weight:bold}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body><h2>'+esc(title)+'</h2><p>'+esc(date)+'</p>'+state.querySelector('table').outerHTML+'</body></html>');doc.close();
+ frame.contentWindow.focus();setTimeout(()=>frame.contentWindow.print(),300);
+ frame.contentWindow.onafterprint=()=>setTimeout(()=>frame.remove(),1000);
+});
+
 metricSelect.addEventListener('change',ranks);select.addEventListener('change',render);render();
 })();
