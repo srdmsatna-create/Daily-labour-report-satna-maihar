@@ -8,7 +8,7 @@ IST=timezone(timedelta(hours=5,minutes=30))
 ROOT=Path(__file__).resolve().parent.parent
 PERIOD='2025-26-Jul-Oct_vs_2026-27-Jul-Sep-Oct'
 MONTHLY=os.environ.get('SHRAMIK_STATE_PERSONDAYS_URL') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?lflag=eng&file1=empprov&page1=s&state_name=MADHYA+PRADESH&state_code=17&fin=2026-2027&fin_year=2026-2027&source=national&Digest=T5jPevIAyKZwnVDL7xdTaQ'
-LABOUR=os.environ.get('SHRAMIK_STATE_LABOUR_URL') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/dpc_sms_new.aspx?payload=joGRvbFKKl5r7YIviUgQH66hWG9zWVrINFh2CeOeEBSMYPI6T5ASt10ZOB2Hg9oNTDNFmaRzmn6CGYWb3L8v0aboX7pt4RgeYmk1Xz91bauUHbjLv20sW3NRajHQIMcdZA1WGdS9pMvXT5Q4tnRscwGsz2izbVwOaiQpXPoocIeqLhmvBD7qEt_6_kah9R0WWCmeORmQhxealdAthd3LzQ'
+LABOUR=os.environ.get('SHRAMIK_STATE_LABOUR_URL') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/dpc_sms_new.aspx?payload=pjXZ1SaedD2l9B9KBeJqaVN_RZ3A4xihd5AKgmnsi85zIicpn5VAaJjaVi1eyMSA4Rlaxhzi-y8Nxu99z2MmCuw0B7eyqCRquSyQRCwScdayNxCiEkbk4W8l6QZhleaZxwCujblVHncKsfyQwBtvAUbxByEFyryl_xK6THoQe42vJTXALX5P42nO1Z3TPDar7HRzJswuZMYsV3EdFAU1Ww'
 MONTHS=('april','may','june','july','august','september','october','november','december','january','february','march')
 def norm(v):return re.sub(r'\s+',' ',str(v).strip()).upper().replace('HOSHANGABAD','NARMADAPURAM').replace('ASHOKNAGAR','ASHOK NAGAR')
 def number(v):
@@ -37,7 +37,7 @@ def parse_monthly(tables,names):
  return candidates[0]
 def parse_labour(tables,names):
  # Header-based matching avoids treating No. of Muster Rolls as MR-issued works.
- fields={'todayLabour':r'maximum.*(?:labour|labor).*engagement|today.*(?:labour|labor)', 'mrIssued':r'works.*(?:mr|muster).*issued', 'musterRollCount':r'(?:no\.?|number).*muster.*roll', 'ongoing':r'total.*(?:ongoing|progress).*works|total.*works.*(?:ongoing|progress)'}
+ fields={'totalGP':r'(?:total|no\.?\s*of|number\s*of)\s*(?:gram\s*panchayats?|gps)\b', 'labourGP':r'(?:gps|gram\s*panchayats?).*(?:labour|labor).*(?:engag|employ)|(?:labour|labor).*(?:engag|employ).*(?:gps|gram\s*panchayats?)', 'todayLabour':r'maximum.*(?:labour|labor).*engagement|today.*(?:labour|labor)', 'mrIssued':r'works.*(?:mr|muster).*issued', 'musterRollCount':r'(?:no\.?|number).*muster.*roll', 'ongoing':r'total.*(?:ongoing|progress).*works|total.*works.*(?:ongoing|progress)'}
  candidates=[]
  for table in tables:
   first=next((i for i,row in enumerate(table) if any(norm(c) in names for c in row)),None)
@@ -128,7 +128,7 @@ def main():
   if set(districts)!=set(targets):raise RuntimeError('Complete previous 52-district snapshot required')
   for name,d in districts.items():
    if len(d['rows'])!=1:raise RuntimeError('District summary required')
-   for field in ('todayLabour','mrIssued','musterRollCount'):d['rows'][0][field]=labour[name].get(field)
+   for field in ('todayLabour','mrIssued','musterRollCount','totalGP','labourGP'):d['rows'][0][field]=labour[name].get(field)
    if labour[name].get('ongoing') is not None:d['rows'][0]['ongoing']=labour[name]['ongoing']
    d['rows'][0]['incompleteWorks']=d['rows'][0].get('ongoing')
   payload.update(labourSource=LABOUR,labourDate=labour_date,updatedAt=stamp,warnings=warnings)
