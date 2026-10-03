@@ -94,7 +94,7 @@ async def main():
     prior = ({'date':old['date'],'rows':old['rows']} if old and old.get('combined') and old.get('date') != today else old.get('previous') if old and old.get('combined') else None)
     DEST.parent.mkdir(exist_ok=True)
     tmp = DEST.with_suffix('.tmp')
-    tmp.write_text(json.dumps({'date':today,'fetchedAt':now.isoformat(timespec='seconds'),'combined':True,'sources':snapshots,'rows':rows,'previous':prior},ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+    tmp.write_text(json.dumps({'date':today,'fetchedAt':now.isoformat(timespec='seconds'),'combined':True,'sources':snapshots,'rows':rows,'previous':prior},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     tmp.replace(DEST)
     print('SUCCESS: 24 Janpad/FY rows; FY 2026-27 = MGNREGA + VBGRAMG. All four sources validated.',flush=True)
 
