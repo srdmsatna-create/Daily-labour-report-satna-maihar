@@ -1,1 +1,1 @@
-window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-03T05:45:16.205145+00:00","success":true,"districtCount":52,"persondaysSuccess":true,"labourSuccess":true,"gpSuccess":false,"warnings":["GP counts not refreshed: complete valid totalGP/labourGP headers required; previous verified GP values retained"]};
+window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-03T05:54:11.977791+00:00","success":false,"message":"Labour/MR not refreshed: Official HTTP 401; Persondays not refreshed: Official HTTP 401"};
