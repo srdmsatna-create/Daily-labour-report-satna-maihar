@@ -64,10 +64,10 @@ def parse_details(tables):
             if ri is None: continue
             reasons, musters, ftos, seen = {}, set(), set(), set()
             for row in table[hi+1:]:
-                if len(row) <= ri or not re.fullmatch(r'\\d+', row[0].strip()): continue
+                if len(row) <= ri or not re.fullmatch(r'\d+', row[0].strip()): continue
                 identity = tuple(row)
                 if identity in seen: continue
-                reason = re.sub(r'\\s+', ' ', row[ri]).strip()
+                reason = re.sub(r'\s+', ' ', row[ri]).strip()
                 if not reason: continue
                 seen.add(identity)
                 reasons[reason] = reasons.get(reason, 0) + 1
