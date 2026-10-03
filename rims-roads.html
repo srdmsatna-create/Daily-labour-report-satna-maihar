@@ -95,7 +95,7 @@ main{width:100%;max-width:none;padding:0}
 
 </style>
 <header><a class="back" href="index.html">← मुख्य डैशबोर्ड</a><h1>सुगम संपर्कता परियोजना (RIMS) प्रस्तावित सड़के</h1><div>सतना एवं मैहर · स्रोत: उपलब्ध प्रस्तावित सड़क विवरण · 02 अक्टूबर 2026</div></header>
-<main><div class="controls"><select id="district"><option value="">दोनों जिले</option><option>Satna</option><option>Maihar</option></select><select id="block"><option value="">सभी जनपद</option></select><select id="engineer"><option value="">सभी इंजीनियर</option></select><select id="status"><option value="">सभी स्थिति</option><option value="Reviewed by SA">SA Approved (Reviewed by SA)</option><option>Rejected by SA</option><option>Pending</option><option>Approved by EE</option><option>Approved by AE</option><option>Rejected</option></select><input id="search" placeholder="सड़क / पंचायत का नाम"><select id="pdfscope" aria-label="PDF रिपोर्ट का प्रकार"><option value="all">PDF — पूरी रिपोर्ट</option><option value="janpad">PDF — Janpad / AE / State</option><option value="engineer">PDF — Sub Engineer Report</option></select><button id="printreport">Print / PDF</button><button id="csv">Excel / CSV</button></div>
+<main><div class="controls"><select id="district"><option value="">दोनों जिले</option><option>Satna</option><option>Maihar</option></select><select id="block"><option value="">सभी जनपद</option></select><select id="engineer"><option value="">सभी इंजीनियर</option></select><select id="status"><option value="">सभी स्थिति</option><option value="Reviewed by SA">SA Approved (Reviewed by SA)</option><option>Rejected by SA</option><option>Pending</option><option>Approved by EE</option><option>Approved by AE</option><option>Rejected</option></select><input id="search" placeholder="सड़क / पंचायत का नाम"><select id="pdfscope" aria-label="PDF रिपोर्ट का प्रकार"><option value="janpad">PDF — एक पेज जनपद सारांश</option><option value="sa">PDF — State Approved सड़कें</option><option value="all">PDF — पूरी रिपोर्ट</option><option value="engineer">PDF — Sub Engineer Report</option></select><button id="printreport">Print / PDF</button><button id="printsa">State Approved — Print / PDF</button><button id="csv">Excel / CSV</button></div>
 <div class="box stats report-kpis" id="stats"></div>
 <div class="box report-janpad"><h2>जनपदवार SE सर्वे, AE अनुमोदन एवं SA समीक्षा</h2><div class="scroll" id="summary"></div><p class="note status-definitions">SE सर्वे / प्रस्ताव = स्रोत में दर्ज सभी प्रस्ताव। AE Approved (संचयी) = Approved by AE + Approved by EE + Reviewed by SA + Rejected by SA; उच्च चरण तक पहुँचे प्रस्ताव AE से अनुमोदित माने गए हैं। District / EE Approved (संचयी) में EE तथा दोनों SA स्थितियाँ शामिल हैं। AE Pending = स्रोत की Pending स्थिति। SA Approved = Reviewed by SA और Remark: Approved। SA समीक्षा हेतु लंबित = Approved by EE। Rejected में AE और SA दोनों की अस्वीकृति है; Rejected By SA उसका भाग है।</p></div>
 <div class="box report-engineer"><h2>इंजीनियरवार सारांश — नाम पर क्लिक करके सड़क सूची देखें</h2><div class="scroll" id="engineers"></div></div>
@@ -118,6 +118,40 @@ $('details').innerHTML='<table><thead><tr>'+['क्र.','जिला','जन
 document.querySelectorAll('.eng').forEach(b=>b.onclick=()=>{$('engineer').value=b.dataset.name;render();$('details').scrollIntoView({behavior:'smooth'})})}
 for(let id of ['district','block','engineer','status','search'])$(id).addEventListener(id==='search'?'input':'change',()=>{if(id==='district'||id==='block'){let a=roads.filter(r=>(!$('district').value||r.district===$('district').value));if(id==='district')options('block',a.map(r=>r.block));options('engineer',a.filter(r=>!$('block').value||r.block===$('block').value).map(r=>r.engineer))}render()});
 $('csv').onclick=()=>{let fields=['district','block','engineer','gp','name','status','remark','od'];let csv='\ufeff'+[fields,...chosen().map(r=>fields.map(f=>r[f]??''))].map(row=>row.map(v=>'"'+String(/^[=+@-]/.test(String(v))?"'"+v:v).replace(/"/g,'""')+'"').join(',')).join('\r\n');let link=document.createElement('a'),url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));link.href=url;link.download='RIMS_Proposed_Roads.csv';link.click();URL.revokeObjectURL(url)};
-$('printreport').onclick=()=>{document.body.dataset.printScope=$('pdfscope').value;window.print()};
+
+function printIsolated(scope){
+const frame=document.createElement('iframe');frame.style.cssText='position:fixed;left:-10000px;width:1120px;height:800px;border:0';document.body.appendChild(frame);
+const heading=document.querySelector('header').cloneNode(true);heading.querySelector('.back')?.remove();
+const sections=scope==='sa'?[document.querySelector('.report-sa')]:[document.querySelector('.report-kpis'),document.querySelector('.report-janpad')];
+const css=document.querySelector('style').textContent;
+const fit=`
+@page{size:A4 landscape;margin:7mm}
+html,body{margin:0;background:white;width:100%;font-family:Arial,"Nirmala UI",sans-serif}
+header{padding:0;margin:0 0 3mm;background:white;color:#173453}
+h1{font-size:16pt;margin:0 0 2mm}header div{font-size:9pt}
+main{padding:0;width:100%;max-width:none}
+.box{padding:2mm;margin-bottom:2mm;box-shadow:none;break-inside:auto}
+.box h2{font-size:11pt;padding:1mm;margin:0 0 1mm}
+.scroll{overflow:visible;border-radius:0}
+table,.report-janpad table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
+th,td,.report-janpad th,.report-janpad td,.report-janpad td.name{font-size:9pt!important;line-height:1.15!important;padding:1.2mm .6mm!important;min-width:0!important;overflow-wrap:anywhere}
+thead{display:table-header-group}tr{break-inside:avoid}
+.district-kpis{padding:1mm;margin-bottom:1.5mm;break-inside:avoid}
+.district-kpis h2{font-size:10pt;padding:.5mm;margin-bottom:1mm}
+.district-card-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:1mm}
+.district-card-grid .stat{font-size:8pt;padding:1mm;min-width:0;line-height:1.15}
+.district-card-grid .stat strong{display:inline;font-size:10pt}
+.status-definitions{font-size:8pt;line-height:1.25;padding:1mm 2mm;margin:2mm 0 0}
+.report-sa td.name{font-size:10pt!important;line-height:1.3!important;text-align:left}
+.report-sa th:nth-child(6){width:43%}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+`;
+const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html lang="hi"><meta charset="utf-8"><title>'+ (scope==='sa'?'State Approved सड़कें':'जनपद सारांश')+'</title><style>'+css+'\n'+fit+'</style><body>'+heading.outerHTML+'<main>'+sections.map(s=>s.outerHTML).join('')+'</main></body></html>');doc.close();
+frame.contentWindow.onafterprint=()=>frame.remove();
+Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},300));
+}
+$('printreport').onclick=()=>{const scope=$('pdfscope').value;if(scope==='janpad'||scope==='sa')printIsolated(scope);else{document.body.dataset.printScope=scope;window.print()}};
+$('printsa').onclick=()=>printIsolated('sa');
+
 fetch('rims-roads-data.json?v=20261002').then(r=>{if(!r.ok)throw Error('डेटा उपलब्ध नहीं');return r.json()}).then(a=>{roads=a;options('block',a.map(r=>r.block));options('engineer',a.map(r=>r.engineer));render()}).catch(e=>{$('stats').textContent=e.message});
 </script></html>
