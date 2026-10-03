@@ -37,7 +37,7 @@ def parse_monthly(tables,names):
  return candidates[0]
 def parse_labour(tables,names):
  # Header-based matching avoids treating No. of Muster Rolls as MR-issued works.
- fields={'totalGP':r'(?:total|no\.?\s*of|number\s*of)\s*(?:gram\s*panchayats?|gps)\b', 'labourGP':r'(?:gps|gram\s*panchayats?).*(?:labour|labor).*(?:engag|employ)|(?:labour|labor).*(?:engag|employ).*(?:gps|gram\s*panchayats?)', 'todayLabour':r'maximum.*(?:labour|labor).*engagement|today.*(?:labour|labor)', 'mrIssued':r'works.*(?:mr|muster).*issued', 'musterRollCount':r'(?:no\.?|number).*muster.*roll', 'ongoing':r'total.*(?:ongoing|progress).*works|total.*works.*(?:ongoing|progress)'}
+ fields={'totalGP':r'(?:total|no\.?\s*of|number\s*of)\s*(?:gram\s*panchayats?|gps)\b', 'workingGP':r'(?:gps|gram\s*panchayats?).*works\s*in\s*progress', 'todayLabour':r'maximum.*(?:labour|labor).*engagement|today.*(?:labour|labor)', 'mrIssued':r'works.*(?:mr|muster).*issued', 'musterRollCount':r'(?:no\.?|number).*muster.*roll', 'ongoing':r'total.*(?:ongoing|progress).*works|total.*works.*(?:ongoing|progress)'}
  candidates=[]
  for table in tables:
   first=next((i for i,row in enumerate(table) if any(norm(c) in names for c in row)),None)
@@ -72,12 +72,12 @@ def merge_labour(row,fresh):
  # Preserve verified fields when an otherwise valid source omits their headers.
  for field in ('todayLabour','mrIssued','musterRollCount','ongoing'):
   if fresh.get(field) is not None:row[field]=fresh[field]
- total,active=fresh.get('totalGP'),fresh.get('labourGP')
+ total,active=fresh.get('totalGP'),fresh.get('workingGP')
  if total is not None and total>0:
   row['totalGP']=total
-  if row.get('labourGP') is not None and row['labourGP']>total:row.pop('labourGP',None)
+  if row.get('workingGP') is not None and row['workingGP']>total:row.pop('workingGP',None)
  if total is not None and active is not None and 0<=active<=total:
-  row['labourGP']=active
+  row['workingGP']=active
  return row
 GRID='''tables=>tables.map(t=>{const grid=[];Array.from(t.rows).forEach((r,ri)=>{grid[ri]??=[];let ci=0;Array.from(r.cells).forEach(c=>{while(grid[ri][ci]!==undefined)ci++;for(let dy=0;dy<c.rowSpan;dy++){grid[ri+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)grid[ri+dy][ci+dx]=c.innerText.trim()}ci+=c.colSpan})});return grid})'''
 def fetch(page,url,persondays=False):
@@ -148,15 +148,15 @@ def main():
   for name,m in monthly.items():
    a=sum(m[k] for k in ('july','august','september'));r={'janpad':'जिला योग','target':targets[name],'julyAchievement':m['july'],'augustMonthlyAchievement':m['august'],'septemberMonthlyAchievement':m['september'],'julyToSeptemberAchievement':a,'octoberAchievement':m['october'],'achievement':a+m['october'],'todayLabour':None,'ongoing':None,'mrIssued':None,'incompleteWorks':None}
    old=previous.get('districts',{}).get(name,{}).get('rows',[{}])[0]
-   for field in ('todayLabour','mrIssued','musterRollCount','totalGP','labourGP','ongoing'):
+   for field in ('todayLabour','mrIssued','musterRollCount','totalGP','workingGP','ongoing'):
     if old.get(field) is not None:r[field]=old[field]
    merge_labour(r,labour.get(name,{}))
    if r.get('ongoing') is None:r['ongoing']=previous.get('districts',{}).get(name,{}).get('rows',[{}])[0].get('ongoing')
    r['incompleteWorks']=r['ongoing']
    districts[name]={'officialDate':date,'dateBasis':'portal' if match else 'fetched','period':PERIOD,'detailLevel':'district','rows':[r]}
   payload={'source':MONTHLY,'labourSource':LABOUR,'labourDate':labour_date,'snapshotDate':date,'dateBasis':'portal' if match else 'fetched','updatedAt':stamp,'warnings':warnings,'districts':districts}
- gp_success=bool(labour) and all(v.get('totalGP') is not None and v.get('labourGP') is not None and 0<=v['labourGP']<=v['totalGP'] for v in labour.values())
- if not gp_success:warnings.append('GP counts not refreshed: complete valid totalGP/labourGP headers required; previous verified GP values retained')
+ gp_success=bool(labour) and all(v.get('totalGP') is not None and v.get('workingGP') is not None and 0<=v['workingGP']<=v['totalGP'] for v in labour.values())
+ if not gp_success:warnings.append('GP counts not refreshed: complete valid totalGP/workingGP headers required; previous verified GP values retained')
  payload['ongoingDate']=labour_date if labour and all(v.get('ongoing') is not None for v in labour.values()) else previous.get('ongoingDate',previous.get('snapshotDate'))
  write_js(ROOT/'shramik-district-reports.js','window.SHRAMIK_DISTRICT_REPORTS',payload)
  write_js(ROOT/'shramik-state-refresh-status.js','window.SHRAMIK_STATE_REFRESH_STATUS',{'checkedAt':stamp,'success':True,'districtCount':52,'persondaysSuccess':monthly is not None,'labourSuccess':bool(labour),'gpSuccess':gp_success,'warnings':warnings})
