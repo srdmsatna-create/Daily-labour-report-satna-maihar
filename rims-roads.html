@@ -93,6 +93,22 @@ main{width:100%;max-width:none;padding:0}
 .report-janpad th:nth-child(11),.report-janpad td:nth-child(11){color:#37516a}
 @media print{.report-janpad table{min-width:0}.report-janpad th,.report-janpad td,.report-janpad td.name{font-size:9pt!important;padding:2mm 1mm!important}}
 
+
+/* Fit State-approved roads and reserve space for road names */
+.report-sa .scroll{width:100%;overflow-x:auto}
+.report-sa table{width:100%;min-width:0;table-layout:fixed}
+.report-sa th,.report-sa td{min-width:0;padding:8px 5px;white-space:normal;overflow-wrap:anywhere;vertical-align:middle;border:1px solid #7894b1}
+.report-sa th{font-size:16px;line-height:1.35}
+.report-sa td,.report-sa td.name{font-size:18px;line-height:1.45}
+.report-sa td.name{text-align:left;min-width:0}
+.report-sa th:nth-child(1),.report-sa td:nth-child(1){width:6%}
+.report-sa th:nth-child(2),.report-sa td:nth-child(2){width:11%}
+.report-sa th:nth-child(3),.report-sa td:nth-child(3){width:13%}
+.report-sa th:nth-child(4),.report-sa td:nth-child(4){width:18%}
+.report-sa th:nth-child(5),.report-sa td:nth-child(5){width:9%;font-weight:800;color:#17623b}
+.report-sa th:nth-child(6),.report-sa td:nth-child(6){width:43%}
+@media print{.report-sa table{width:100%;min-width:0}.report-sa th,.report-sa td{font-size:9pt!important}.report-sa td.name{font-size:10pt!important}}
+
 </style>
 <header><a class="back" href="index.html">← मुख्य डैशबोर्ड</a><h1>सुगम संपर्कता परियोजना (RIMS) प्रस्तावित सड़के</h1><div>सतना एवं मैहर · स्रोत: उपलब्ध प्रस्तावित सड़क विवरण · 02 अक्टूबर 2026</div></header>
 <main><div class="controls"><select id="district"><option value="">दोनों जिले</option><option>Satna</option><option>Maihar</option></select><select id="block"><option value="">सभी जनपद</option></select><select id="engineer"><option value="">सभी इंजीनियर</option></select><select id="status"><option value="">सभी स्थिति</option><option value="Reviewed by SA">SA Approved (Reviewed by SA)</option><option>Rejected by SA</option><option>Pending</option><option>Approved by EE</option><option>Approved by AE</option><option>Rejected</option></select><input id="search" placeholder="सड़क / पंचायत का नाम"><select id="pdfscope" aria-label="PDF रिपोर्ट का प्रकार"><option value="janpad">PDF — एक पेज जनपद सारांश</option><option value="sa">PDF — State Approved सड़कें</option><option value="all">PDF — पूरी रिपोर्ट</option><option value="engineer">PDF — Sub Engineer Report</option></select><button id="printreport">Print / PDF</button><button id="printsa">State Approved — Print / PDF</button><button id="csv">Excel / CSV</button></div>
