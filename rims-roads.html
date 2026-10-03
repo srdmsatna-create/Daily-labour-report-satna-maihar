@@ -55,6 +55,28 @@ body{color:#142b43}
 .status-definitions{color:#163a5d;background:#e4effc;border-color:#9eb9d8}
 
 .status-definitions{font-weight:700;color:#123451}
+
+/* Balanced boxed Janpad report */
+main{max-width:1600px;padding:14px}
+.report-janpad{padding:12px;border:2px solid #58799c}
+.report-janpad .scroll{width:100%;border:2px solid #486c91;border-radius:4px;overflow-x:auto}
+.report-janpad table{width:100%;table-layout:fixed;border-collapse:collapse;border:1.5px solid #486c91}
+.report-janpad th,.report-janpad td{border:1.5px solid #7894b1!important;padding:8px 5px;vertical-align:middle}
+.report-janpad th{font-size:14px;line-height:1.35;white-space:normal;overflow-wrap:break-word;font-weight:800}
+.report-janpad td{font-size:17px;line-height:1.25;font-weight:700;min-width:0}
+.report-janpad td.name{min-width:0;font-size:16px}
+.report-janpad tr.total td{background:#c5d9ef;font-weight:900;border-top:2px solid #486c91!important}
+.report-janpad th:nth-child(1),.report-janpad td:nth-child(1){width:7%}.report-janpad th:nth-child(2),.report-janpad td:nth-child(2){width:11%}.report-janpad th:nth-child(3),.report-janpad td:nth-child(3){width:7%}.report-janpad th:nth-child(4),.report-janpad td:nth-child(4){width:10%}.report-janpad th:nth-child(5),.report-janpad td:nth-child(5){width:13%}.report-janpad th:nth-child(6),.report-janpad td:nth-child(6){width:7%}.report-janpad th:nth-child(7),.report-janpad td:nth-child(7){width:6%}.report-janpad th:nth-child(8),.report-janpad td:nth-child(8){width:8%}.report-janpad th:nth-child(9),.report-janpad td:nth-child(9){width:7%}.report-janpad th:nth-child(10),.report-janpad td:nth-child(10){width:10%}.report-janpad th:nth-child(11),.report-janpad td:nth-child(11){width:14%}@media print{
+@page{size:A4 landscape;margin:7mm}
+main{width:100%;max-width:none;padding:0}
+.report-janpad{padding:5px;border:1px solid #486c91;break-inside:avoid}
+.report-janpad .scroll{overflow:visible;border:1px solid #486c91}
+.report-janpad table{width:100%;table-layout:fixed}
+.report-janpad th,.report-janpad td{font-size:9pt!important;line-height:1.2!important;padding:2mm 1mm!important;border:.25mm solid #607c99!important;min-width:0!important}
+.report-janpad thead{display:table-header-group}
+.report-janpad tr{break-inside:avoid}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 <header><a class="back" href="index.html">← मुख्य डैशबोर्ड</a><h1>सुगम संपर्कता परियोजना (RIMS) प्रस्तावित सड़के</h1><div>सतना एवं मैहर · स्रोत: उपलब्ध प्रस्तावित सड़क विवरण · 02 अक्टूबर 2026</div></header>
 <main><div class="controls"><select id="district"><option value="">दोनों जिले</option><option>Satna</option><option>Maihar</option></select><select id="block"><option value="">सभी जनपद</option></select><select id="engineer"><option value="">सभी इंजीनियर</option></select><select id="status"><option value="">सभी स्थिति</option><option value="Reviewed by SA">SA Approved (Reviewed by SA)</option><option>Rejected by SA</option><option>Pending</option><option>Approved by EE</option><option>Approved by AE</option><option>Rejected</option></select><input id="search" placeholder="सड़क / पंचायत का नाम"><select id="pdfscope" aria-label="PDF रिपोर्ट का प्रकार"><option value="all">PDF — पूरी रिपोर्ट</option><option value="janpad">PDF — Janpad / AE / State</option><option value="engineer">PDF — Sub Engineer Report</option></select><button id="printreport">Print / PDF</button><button id="csv">Excel / CSV</button></div>
