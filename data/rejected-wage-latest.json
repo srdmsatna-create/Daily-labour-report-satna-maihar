@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-02",
+  "date": "2026-10-03",
   "source": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_trans_track.aspx?lflag=eng&page=d&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rdbutton=0&Digest=bxHEcyU8JyvdJ3rs8H7x9g",
   "rows": [
     {
@@ -8,14 +8,14 @@
       "district": "MAIHAR",
       "total": 536,
       "totalAmount": 1193076,
-      "pending": 25,
-      "pendingAmount": 59217,
+      "pending": 12,
+      "pendingAmount": 31059,
       "muster": null,
       "fto": null,
       "success": 0,
       "successAmount": 0,
-      "bankPending": 511,
-      "bankPendingAmount": 1133859,
+      "bankPending": 524,
+      "bankPendingAmount": 1162017,
       "reasons": {}
     },
     {
@@ -56,14 +56,14 @@
       "district": "SATNA",
       "total": 1756,
       "totalAmount": 3513380,
-      "pending": 49,
-      "pendingAmount": 98645,
+      "pending": 43,
+      "pendingAmount": 78545,
       "muster": null,
       "fto": null,
       "success": 73,
       "successAmount": 179294,
-      "bankPending": 1634,
-      "bankPendingAmount": 3235441,
+      "bankPending": 1640,
+      "bankPendingAmount": 3255541,
       "reasons": {}
     },
     {
@@ -72,14 +72,14 @@
       "district": "MAIHAR",
       "total": 401,
       "totalAmount": 744210,
-      "pending": 68,
-      "pendingAmount": 118300,
+      "pending": 65,
+      "pendingAmount": 112819,
       "muster": null,
       "fto": null,
       "success": 0,
       "successAmount": 0,
-      "bankPending": 333,
-      "bankPendingAmount": 625910,
+      "bankPending": 336,
+      "bankPendingAmount": 631391,
       "reasons": {}
     },
     {
