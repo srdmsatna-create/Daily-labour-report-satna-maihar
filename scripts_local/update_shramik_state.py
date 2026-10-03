@@ -46,7 +46,7 @@ def parse_labour(tables,names):
   headers=[' '.join(dict.fromkeys(row[i] for row in table[:first] if i<len(row) and row[i])) for i in range(width)]
   cols={}
   for field,pattern in fields.items():
-   hits=[i for i,h in enumerate(headers) if re.search(pattern,h,re.I)]
+   hits=[i for i,h in enumerate(headers) if re.search(pattern,h,re.I) and not (field=='totalGP' and re.search(r'works|progress|labour|labor|engag|employ',h,re.I))]
    if len(hits)==1:cols[field]=hits[0]
   if 'todayLabour' not in cols:continue
   out={}
@@ -73,8 +73,11 @@ def merge_labour(row,fresh):
  for field in ('todayLabour','mrIssued','musterRollCount','ongoing'):
   if fresh.get(field) is not None:row[field]=fresh[field]
  total,active=fresh.get('totalGP'),fresh.get('labourGP')
+ if total is not None and total>0:
+  row['totalGP']=total
+  if row.get('labourGP') is not None and row['labourGP']>total:row.pop('labourGP',None)
  if total is not None and active is not None and 0<=active<=total:
-  row.update(totalGP=total,labourGP=active)
+  row['labourGP']=active
  return row
 GRID='''tables=>tables.map(t=>{const grid=[];Array.from(t.rows).forEach((r,ri)=>{grid[ri]??=[];let ci=0;Array.from(r.cells).forEach(c=>{while(grid[ri][ci]!==undefined)ci++;for(let dy=0;dy<c.rowSpan;dy++){grid[ri+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)grid[ri+dy][ci+dx]=c.innerText.trim()}ci+=c.colSpan})});return grid})'''
 def fetch(page,url,persondays=False):
