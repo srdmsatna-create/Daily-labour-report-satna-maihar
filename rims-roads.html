@@ -191,5 +191,5 @@ Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.f
 $('printreport').onclick=()=>{const scope=$('pdfscope').value;if(scope==='janpad'||scope==='sa')printIsolated(scope);else{document.body.dataset.printScope=scope;window.print()}};
 $('printsa').onclick=()=>printIsolated('sa');
 
-fetch('rims-roads-data.json?v=20261002').then(r=>{if(!r.ok)throw Error('डेटा उपलब्ध नहीं');return r.json()}).then(a=>{roads=a;options('block',a.map(r=>r.block));options('engineer',a.map(r=>r.engineer));render()}).catch(e=>{$('stats').textContent=e.message});
+fetch('rims-roads-data.json?v=20261003-singhpur').then(r=>{if(!r.ok)throw Error('डेटा उपलब्ध नहीं');return r.json()}).then(a=>{roads=a;options('block',a.map(r=>r.block));options('engineer',a.map(r=>r.engineer));render()}).catch(e=>{$('stats').textContent=e.message});
 </script></html>
