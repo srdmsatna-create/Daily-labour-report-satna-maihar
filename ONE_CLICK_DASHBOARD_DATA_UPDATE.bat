@@ -104,6 +104,18 @@ if exist "scripts_local\update_shramik_niyojan.py" (
 )
 
 echo.
+echo Updating 52 district Persondays, Labour and Muster Roll reports...
+if exist "scripts_local\update_shramik_state.py" (
+    %PYTHON_CMD% "scripts_local\update_shramik_state.py"
+    if errorlevel 1 (
+        echo WARNING: 52 district refresh failed; previous verified data retained.
+        set "STATE_REFRESH_FAILED=1"
+    )
+) else (
+    echo WARNING: scripts_local\update_shramik_state.py missing; 52 districts NOT refreshed.
+    set "STATE_REFRESH_FAILED=1"
+)
+
 echo [5/9] Updating Yuktdhara and VB-G RAM G statistics...
 if exist "scripts_local\update_yuktdhara_monitoring.py" (
     %PYTHON_CMD% "scripts_local\update_yuktdhara_monitoring.py" --update-only
@@ -201,7 +213,7 @@ if errorlevel 1 (
     exit /b 1
 )
 set /a SRDM_PUBLISH_COUNT=0
-for %%F in (auto-data.js auto-status.js data\fetch-status.json data\official-summary.csv muster-emb-data.js shramik-niyojan-data.js vbg-block-stats.js yuktdhara-data.js yuktdhara-official-data.js) do (
+for %%F in (auto-data.js auto-status.js data\fetch-status.json data\official-summary.csv muster-emb-data.js shramik-niyojan-data.js vbg-block-stats.js yuktdhara-data.js yuktdhara-official-data.js shramik-district-reports.js shramik-state-refresh-status.js shramik-refresh-status.js) do (
     if exist "%REPO%\%%F" (
         for %%D in ("%SRDM_PUBLISH_WT%\%%F") do if not exist "%%~dpD" mkdir "%%~dpD"
         copy /y "%REPO%\%%F" "%SRDM_PUBLISH_WT%\%%F" >nul
@@ -238,7 +250,8 @@ exit /b 1
 echo.
 echo [9/9] COMPLETE
 echo ============================================================
-echo SUCCESS - DASHBOARD DATA UPDATED
+echo PUBLISH COMPLETE - check each report source status above.
+if defined STATE_REFRESH_FAILED echo WARNING: 52 district data NOT refreshed; previous verified values retained.
 for /f "tokens=1-3 delims=/ " %%a in ('date /t') do set TODAY=%%a-%%b-%%c
 echo.
 echo Wait 1-3 minutes for GitHub Pages deployment.
