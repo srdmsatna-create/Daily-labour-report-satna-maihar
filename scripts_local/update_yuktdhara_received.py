@@ -113,7 +113,7 @@ def collect():
         except Exception:browser=p.chromium.launch(headless=True)
         try:
             context=browser.new_context();page=context.new_page()
-            def fetch(url):
+            def fetch(url, timeout=timeout):
                 if urlparse(url).hostname!='vbgramgrep.dord.gov.in':raise RuntimeError('Unexpected official link host')
                 response=page.goto(url,wait_until='domcontentloaded',timeout=60000)
                 if response and response.status>=400:raise RuntimeError('Official HTTP '+str(response.status))
@@ -144,19 +144,26 @@ def collect():
                     except Exception as e:errors.append(str(e))
                 if b not in details:raise RuntimeError(b+': '+'; '.join(errors))
             work_debug=[]
+            pending=sum(gp['worksReceived']>0 for gp_rows in details.values() for gp in gp_rows)
+            done=0
+            print('Fetching work types for '+str(pending)+' receiving GPs...',flush=True)
             for block_name,gp_rows in details.items():
                 for gp in gp_rows:
                     if not gp['worksReceived']:continue
+                    done+=1
+                    print('Work details ['+str(done)+'/'+str(pending)+'] '+block_name+' / '+gp['gp'],flush=True)
                     for url in gp.get('detailLinks',[]):
                         if not url.startswith('https://vbgramgrep.dord.gov.in/'):continue
                         try:
-                            tables=fetch(url)
+                            tables=fetch(url, timeout=20000)
                             work_debug.append({'block':block_name,'gp':gp['gp'],'worksReceived':gp['worksReceived'],'tables':tables})
                             (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
                             gp['workTypes']=work_types(tables,gp['worksReceived'])
+                            print('  Verified '+str(gp['worksReceived'])+' work types.',flush=True)
                             break
                         except Exception as e:
                             gp['typeMessage']=str(e)
+                            print('  Work detail unavailable: '+str(e)[:160],flush=True)
                             if not any(v['block']==block_name and v['gp']==gp['gp'] for v in work_debug):
                                 work_debug.append({'block':block_name,'gp':gp['gp'],'worksReceived':gp['worksReceived'],'error':str(e)})
                             (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
