@@ -17,6 +17,12 @@ function draw(){
  const sourceRows=source&&Array.isArray(source.rows)?source.rows:[];
  const gpKey=r=>normJanpad(r.janpad)+'¦'+clean(r.panchayat).toUpperCase().replace(/[^A-Z0-9\u0900-\u097f]/g,'');
  const officialWorkCounts=new Map(sourceRows.map(r=>[gpKey(r),r]));
+ const ongoingByGP=new Map(),seenOngoingCodes=new Set();
+ for(const work of ongoingDetails){
+  if(!work.code||seenOngoingCodes.has(work.code))continue;
+  seenOngoingCodes.add(work.code);
+  const k=gpKey(work);ongoingByGP.set(k,(ongoingByGP.get(k)||0)+1);
+ }
  const groups=new Map(),seen=new Set();
  for(const r of data){
  const key=normJanpad(r.janpad)+'¦'+clean(r.panchayat).toUpperCase();
@@ -24,8 +30,8 @@ function draw(){
  const j=normJanpad(r.janpad);
  const engineer=clean(r.engineer)||'नाम उपलब्ध नहीं',sector=clean(r.cluster)||'सेक्टर उपलब्ध नहीं';
  const groupKey=[j,engineer,sector].join('¦');
- if(!groups.has(groupKey))groups.set(groupKey,{janpad:j,engineer,sector,total:0,counts:bands.map(()=>0),missing:0,workCounts:workTypes.map(()=>0),workMissing:workTypes.map(()=>false)});
- const g=groups.get(groupKey);g.total++;
+ if(!groups.has(groupKey))groups.set(groupKey,{janpad:j,engineer,sector,total:0,ongoing:0,workingGP:0,counts:bands.map(()=>0),missing:0,workCounts:workTypes.map(()=>0),workMissing:workTypes.map(()=>false)});
+ const g=groups.get(groupKey);g.total++;g.ongoing+=ongoingByGP.get(gpKey(r))||0;
  const workRow=officialWorkCounts.get(gpKey(r));
  workTypes.forEach((type,i)=>{
  const raw=workRow?.issuedWorks;
@@ -35,22 +41,22 @@ function draw(){
  });
  const n=r.labour===null||r.labour===undefined||clean(r.labour)===''?NaN:Number(r.labour);
  const bi=Number.isInteger(n)&&n>=0?bands.findIndex(b=>n>=b[0]&&n<=b[1]):-1;
- if(bi<0)g.missing++;else g.counts[bi]++;
+ if(bi<0)g.missing++;else {g.counts[bi]++;if(n>0)g.workingGP++;}
  }
  const summary=[...groups.values()].sort((a,b)=>a.janpad.localeCompare(b.janpad,'hi')||a.engineer.localeCompare(b.engineer,'hi')||a.sector.localeCompare(b.sector,'hi'));
  const hasMissing=summary.some(g=>g.missing>0);
- const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes];
+ const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत','कुल प्रगतिरत कार्य','श्रमिक संलग्न GPs',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes];
  let table='<table style="width:100%;border-collapse:collapse"><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
- const cells=g=>[g.total,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>'<td style="font-weight:800;text-align:center">'+(g.workMissing[i]?'—':fmt(g.workCounts[i]))+'</td>').join('');
+ const cells=g=>[g.total,g.ongoing,g.workingGP,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>'<td style="font-weight:800;text-align:center">'+(g.workMissing[i]?'—':fmt(g.workCounts[i]))+'</td>').join('');
  const janpads=[...new Set(summary.map(g=>g.janpad))];
  for(const janpad of janpads){
  const entries=summary.filter(g=>g.janpad===janpad);
  table+=entries.map(g=>'<tr>'+[g.janpad,g.engineer,g.sector].map(v=>'<td style="font-weight:800">'+esc(v)+'</td>').join('')+cells(g)+'</tr>').join('');
- const subtotal={total:entries.reduce((s,g)=>s+g.total,0),counts:bands.map((b,i)=>entries.reduce((s,g)=>s+g.counts[i],0)),missing:entries.reduce((s,g)=>s+g.missing,0),workCounts:workTypes.map((t,i)=>entries.reduce((s,g)=>s+g.workCounts[i],0)),workMissing:workTypes.map((t,i)=>entries.some(g=>g.workMissing[i]))};
+ const subtotal={total:entries.reduce((s,g)=>s+g.total,0),ongoing:entries.reduce((s,g)=>s+g.ongoing,0),workingGP:entries.reduce((s,g)=>s+g.workingGP,0),counts:bands.map((b,i)=>entries.reduce((s,g)=>s+g.counts[i],0)),missing:entries.reduce((s,g)=>s+g.missing,0),workCounts:workTypes.map((t,i)=>entries.reduce((s,g)=>s+g.workCounts[i],0)),workMissing:workTypes.map((t,i)=>entries.some(g=>g.workMissing[i]))};
  table+='<tr style="background:#dbeafe;font-weight:800"><td colspan="3">'+esc(janpad)+' — जनपद कुल</td>'+cells(subtotal)+'</tr>';
  }
  if(!summary.length)table+='<tr><td colspan="'+headers.length+'">चयन के लिए ग्राम पंचायत डेटा उपलब्ध नहीं है।</td></tr>';
- table+='<tr style="background:#e5f0fa;font-weight:800"><td colspan="3">कुल</td>'+[summary.reduce((s,g)=>s+g.total,0),...bands.map((b,i)=>summary.reduce((s,g)=>s+g.counts[i],0)),...(hasMissing?[summary.reduce((s,g)=>s+g.missing,0)]:[])].map(v=>'<td style="text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((t,i)=>'<td style="text-align:center">'+(summary.some(g=>g.workMissing[i])?'—':fmt(summary.reduce((s,g)=>s+g.workCounts[i],0)))+'</td>').join('')+'</tr></tbody></table>';
+ table+='<tr style="background:#e5f0fa;font-weight:800"><td colspan="3">कुल</td>'+[summary.reduce((s,g)=>s+g.total,0),summary.reduce((s,g)=>s+g.ongoing,0),summary.reduce((s,g)=>s+g.workingGP,0),...bands.map((b,i)=>summary.reduce((s,g)=>s+g.counts[i],0)),...(hasMissing?[summary.reduce((s,g)=>s+g.missing,0)]:[])].map(v=>'<td style="text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((t,i)=>'<td style="text-align:center">'+(summary.some(g=>g.workMissing[i])?'—':fmt(summary.reduce((s,g)=>s+g.workCounts[i],0)))+'</td>').join('')+'</tr></tbody></table>';
  const workSummary=new Map();
  const mapGP=new Map(data.map(r=>[gpKey(r),r]));
  const make=r=>{
