@@ -65,33 +65,7 @@ function draw(){
 
  const grand={total:summary.reduce((s,g)=>s+g.total,0),workingGP:summary.reduce((s,g)=>s+g.workingGP,0),ongoing:summary.reduce((s,g)=>s+g.ongoing,0),issuedTotal:summary.reduce((s,g)=>s+g.issuedTotal,0),issuedMissing:summary.some(g=>g.issuedMissing),counts:bands.map((b,i)=>summary.reduce((s,g)=>s+g.counts[i],0)),missing:summary.reduce((s,g)=>s+g.missing,0),ongoingCounts:workTypes.map((t,i)=>summary.reduce((s,g)=>s+g.ongoingCounts[i],0)),workCounts:workTypes.map((t,i)=>summary.reduce((s,g)=>s+g.workCounts[i],0)),workMissing:workTypes.map((t,i)=>summary.some(g=>g.workMissing[i]))};
  table+='<tr style="background:#e5f0fa;font-weight:800"><td colspan="2">कुल</td>'+cells(grand)+'</tr></tbody></table>';
- const workSummary=new Map();
- const mapGP=new Map(data.map(r=>[gpKey(r),r]));
- const make=r=>{
- const master=mapGP.get(gpKey(r));if(!master)return null;
- const category=mergedCategory(r.finalCategory||r.category||'Other Works');
- const k=[normJanpad(master.janpad),clean(master.engineer),clean(master.cluster),category].join('¦');
- if(!workSummary.has(k))workSummary.set(k,{janpad:normJanpad(master.janpad),engineer:master.engineer,sector:master.cluster,category,ongoing:0,issued:0,labour:0,labourMissing:false});
- return workSummary.get(k);
- };
- const seenOngoing=new Set();
- for(const r of ongoingDetails){
- if(seenOngoing.has(r.code)||!r.code)continue;seenOngoing.add(r.code);
- const g=make(r);if(g)g.ongoing++;
- }
- const issued=live&&Array.isArray(live.works)?live.works:null,seenIssued=new Set();
- if(issued)for(const r of issued){
- if(seenIssued.has(r.code)||!r.code)continue;seenIssued.add(r.code);
- const g=make(r);if(!g)continue;g.issued++;
- if(r.labour===null||r.labour===undefined||r.labour===''||!Number.isFinite(Number(r.labour)))g.labourMissing=true;else g.labour+=Number(r.labour);
- }
- const summaryWorks=[...workSummary.values()].sort((a,b)=>a.janpad.localeCompare(b.janpad)||String(a.engineer).localeCompare(String(b.engineer),'hi')||String(a.sector).localeCompare(String(b.sector))||a.category.localeCompare(b.category));
- const workHeaders=['जनपद','उपयंत्री का नाम/सेक्टर का नाम','कार्य की श्रेणी','कुल प्रगतिरत कार्य','आज MR जारी वाले कार्य','संलग्न श्रमिक'];
- let workTable='<h3>उपयंत्री/सेक्टरवार कार्य-श्रेणीवार — प्रगतिरत कार्य, MR जारी कार्य एवं संलग्न श्रमिक</h3><p style="text-align:right;font-weight:800"><strong>दिनांक: '+esc(date)+'</strong></p><table style="width:100%;border-collapse:collapse"><thead><tr>'+workHeaders.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
- workTable+=summaryWorks.map(g=>'<tr>'+[g.janpad,g.engineer+' / '+g.sector,g.category].map(x=>'<td>'+esc(x)+'</td>').join('')+'<td>'+fmt(g.ongoing)+'</td><td>'+(issued?fmt(g.issued):'—')+'</td><td>'+(issued&&!g.labourMissing?fmt(g.labour):'—')+'</td></tr>').join('');
- workTable+='<tr style="background:#dbeafe;font-weight:800"><td colspan="3">कुल</td><td>'+fmt(summaryWorks.reduce((s,g)=>s+g.ongoing,0))+'</td><td>'+(issued?fmt(summaryWorks.reduce((s,g)=>s+g.issued,0)):'—')+'</td><td>'+(issued&&!summaryWorks.some(g=>g.labourMissing)?fmt(summaryWorks.reduce((s,g)=>s+g.labour,0)):'—')+'</td></tr></tbody></table>';
- const ongoingDates=[...new Set(ongoingDetails.map(r=>r.sourceDate).filter(Boolean))];
- workTable='<p>प्रगतिरत कार्य मास्टर की तिथि: '+esc(ongoingDates.join(', ')||'तिथि उपलब्ध नहीं')+' • MR/श्रमिक स्रोत: '+esc(live?.date||'अभी उपलब्ध नहीं')+'</p>'+workTable;
+ const workTable='';
  const note='कार्य-प्रकार के प्रत्येक कॉलम में: मस्टर रोल जारी कार्यों की कुल संख्या / कुल प्रगतिरत कार्य • जनपद, उपयंत्री एवं क्लस्टर के ऊपर दिए फ़िल्टर लागू हैं।';
  box.innerHTML='<style>#gpLabourMusterModule table{font-size:14px;table-layout:auto}#gpLabourMusterModule th{white-space:normal!important;overflow-wrap:break-word;min-width:65px;max-width:140px;line-height:1.3}#gpLabourMusterModule th,#gpLabourMusterModule td{border:1px solid #7894ac;padding:7px}#gpLabourMusterModule table:first-of-type th:nth-child(3),#gpLabourMusterModule table:first-of-type td:nth-child(3){width:90px!important;min-width:90px!important;max-width:90px!important;white-space:normal!important;overflow-wrap:anywhere;padding:3px!important;text-align:center;font-size:14px;line-height:1.3}#gpLabourMusterModule th:nth-child(2),#gpLabourMusterModule td:nth-child(2){white-space:nowrap;width:1%;min-width:220px;text-align:left}#gpLabourMusterModule th{background:#14588c;color:white}#gpLabourMusterModule tbody tr:nth-child(even){background:#f0f6fb}@media print{#gpLabourMusterModule{display:none}}</style><h2 style="margin:0 0 8px">'+title+'</h2><p style="text-align:right;font-weight:800;margin:4px 0 10px"><strong>दिनांक: '+esc(date)+'</strong></p><p>'+esc(note)+'</p><p style="color:#9a3412">ग्राम पंचायत के उपलब्ध स्रोत आँकड़े दिखाए गए हैं; जनपद के अद्यतन कुल से इनका अंतर हो सकता है। कॉलम 6 से प्राप्त MR जारी वाले कार्यों की कार्य प्रकारवार संख्या दिखाई जाएगी। सत्यापित कार्य सूची उपलब्ध न होने पर — दिखाया गया है। CC Road और Gravel Road, Rural Connectivity के अंतर्गत हैं।</p><button type="button" id="gpLabourMusterPrint" style="padding:9px 15px;background:#14588c;color:white;border:0;border-radius:7px;font-weight:800">इस मॉड्यूल का प्रिंट / PDF</button><div style="overflow:auto;margin-top:12px">'+table+workTable+'</div>';
  document.getElementById('gpLabourMusterPrint').onclick=()=>{
