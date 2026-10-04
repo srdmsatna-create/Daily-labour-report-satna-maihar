@@ -36,6 +36,9 @@ def gp_counts(tables, expected_gp, expected_works):
             if len(gps)!=1 or len(works)!=1:continue
             gi,wi=gps[0],works[0]; out={}; totals=[]
             for row in table[hi+1:]:
+                # Official tables have a second header row numbered 1,2,3,... .
+                # It is column numbering, not a GP named "2" with three works.
+                if all(c['text'].strip()==str(i+1) for i,c in enumerate(row)):continue
                 if max(gi,wi)>=len(row):continue
                 name=row[gi]['text'].strip()
                 if re.search(r'\btotal\b',name,re.I):
