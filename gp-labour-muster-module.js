@@ -10,7 +10,7 @@ function draw(){
  const data=sortRows(sourceData,'labour',['janpad','panchayat']);
  const date=live?.date||autoMeta?.sourceDates?.RepDay||extractDate(reportTitle)||'तिथि उपलब्ध नहीं';
  const bands=[[0,0,'शून्य'],[1,1,'01'],[2,2,'02'],[3,3,'03'],[4,4,'04'],[5,5,'05'],[6,10,'06 से 10'],[11,20,'11 से 20'],[21,30,'21 से 30'],[31,50,'31 से 50'],[51,100,'51 से 100'],[101,Infinity,'100 से अधिक']];
- const workTypes=[...new Set([...(live?.workCategories||[]).map(mergedCategory),...ongoingDetails.map(r=>mergedCategory(r.finalCategory||'Other Works'))])].sort((a,b)=>a.localeCompare(b,'en'));
+ const workTypes=[...new Set(['Amrit Sarovar',...(live?.workCategories||[]).map(mergedCategory),...ongoingDetails.map(r=>mergedCategory(r.finalCategory||'Other Works'))])].sort((a,b)=>a.localeCompare(b,'en'));
  if(!workTypes.length)workTypes.push('PMAY-G','Cement Concrete','Gravel Road','Play Field','Farm Pond','Watershed Related Works','Water conservation & recharge','Ek Bagiya','Gap Filling in Plantation','Other Works');
  // Count issued-MR works from column 6 drill-down by work type; do not use muster roll totals.
  const source=window.GP_WORK_TYPE_MUSTER_REPORT;
@@ -45,9 +45,9 @@ function draw(){
  }
  const summary=[...groups.values()].sort((a,b)=>a.janpad.localeCompare(b.janpad,'hi')||a.engineer.localeCompare(b.engineer,'hi')||a.sector.localeCompare(b.sector,'hi'));
  const hasMissing=summary.some(g=>g.missing>0);
- const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत','कुल प्रगतिरत कार्य','श्रमिक संलग्न GPs',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes];
+ const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत','श्रमिक संलग्न GPs',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes.flatMap(t=>t==='Amrit Sarovar'?['कुल प्रगतिरत कार्य',t]:[t])];
  let table='<table style="width:100%;border-collapse:collapse"><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
- const cells=g=>[g.total,g.ongoing,g.workingGP,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>'<td style="font-weight:800;text-align:center">'+(g.workMissing[i]?'—':fmt(g.workCounts[i]))+'</td>').join('');
+ const cells=g=>[g.total,g.workingGP,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>(type==='Amrit Sarovar'?'<td style="font-weight:800;text-align:center">'+fmt(g.ongoing)+'</td>':'')+'<td style="font-weight:800;text-align:center">'+(g.workMissing[i]?'—':fmt(g.workCounts[i]))+'</td>').join('');
  const janpads=[...new Set(summary.map(g=>g.janpad))];
  for(const janpad of janpads){
  const entries=summary.filter(g=>g.janpad===janpad);
@@ -56,7 +56,7 @@ function draw(){
  table+='<tr style="background:#dbeafe;font-weight:800"><td colspan="3">'+esc(janpad)+' — जनपद कुल</td>'+cells(subtotal)+'</tr>';
  }
  if(!summary.length)table+='<tr><td colspan="'+headers.length+'">चयन के लिए ग्राम पंचायत डेटा उपलब्ध नहीं है।</td></tr>';
- table+='<tr style="background:#e5f0fa;font-weight:800"><td colspan="3">कुल</td>'+[summary.reduce((s,g)=>s+g.total,0),summary.reduce((s,g)=>s+g.ongoing,0),summary.reduce((s,g)=>s+g.workingGP,0),...bands.map((b,i)=>summary.reduce((s,g)=>s+g.counts[i],0)),...(hasMissing?[summary.reduce((s,g)=>s+g.missing,0)]:[])].map(v=>'<td style="text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((t,i)=>'<td style="text-align:center">'+(summary.some(g=>g.workMissing[i])?'—':fmt(summary.reduce((s,g)=>s+g.workCounts[i],0)))+'</td>').join('')+'</tr></tbody></table>';
+ table+='<tr style="background:#e5f0fa;font-weight:800"><td colspan="3">कुल</td>'+[summary.reduce((s,g)=>s+g.total,0),summary.reduce((s,g)=>s+g.workingGP,0),...bands.map((b,i)=>summary.reduce((s,g)=>s+g.counts[i],0)),...(hasMissing?[summary.reduce((s,g)=>s+g.missing,0)]:[])].map(v=>'<td style="text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((t,i)=>(t==='Amrit Sarovar'?'<td style="text-align:center">'+fmt(summary.reduce((s,g)=>s+g.ongoing,0))+'</td>':'')+'<td style="text-align:center">'+(summary.some(g=>g.workMissing[i])?'—':fmt(summary.reduce((s,g)=>s+g.workCounts[i],0)))+'</td>').join('')+'</tr></tbody></table>';
  const workSummary=new Map();
  const mapGP=new Map(data.map(r=>[gpKey(r),r]));
  const make=r=>{
