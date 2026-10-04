@@ -60,7 +60,7 @@ function draw(){
  const gap=Math.max(0,ongoing-mr);
  const cls=ongoing>0&&mr===0?'mr-none':gap>0?'mr-gap':'mr-ok';
  const hint=ongoing>0&&mr===0?'MR जारी नहीं':gap>0?'MR रहित: '+fmt(gap):'';
- return '<span class="'+cls+'" title="'+esc(hint||'MR जारी कार्य / कुल प्रगतिरत कार्य')+'">'+value+(hint?'<small style="display:block;font-size:10px;line-height:1.2">'+hint+'</small>':'')+'</span>';
+ return '<span class="'+cls+'" title="'+esc(hint||'MR जारी कार्य / कुल प्रगतिरत कार्य')+'">'+value+'</span>';
  };
  const cells=g=>[g.total,g.workingGP,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>(type==='Amrit Sarovar'?'<td style="font-weight:800;text-align:center;white-space:nowrap;color:#15803d;background:#ecfdf5;font-weight:900">'+(g.issuedMissing?'—':fmt(g.issuedTotal))+' / '+fmt(g.ongoing)+'</td>':'')+'<td style="font-weight:800;text-align:center">'+pair(g,i)+'</td>').join('');
  const janpads=[...new Set(summary.map(g=>g.janpad))];
