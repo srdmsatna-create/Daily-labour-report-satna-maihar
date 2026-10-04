@@ -1,5 +1,5 @@
 (function(){
-const title='जनपद / उपयंत्री / सेक्टरवार — संलग्न श्रमिक संख्या का वर्गवार सारांश';
+const title='Daily Status of VB-G RAM G Based on e-Muster';
 let box;
 function draw(){
  if(!box){box=document.createElement('section');box.id='gpLabourMusterModule';box.style.cssText='margin:16px 0;padding:16px;border:2px solid #14588c;border-radius:12px;background:#fff;color:#102b46';document.getElementById('reportTable').parentElement.insertAdjacentElement('afterend',box);}
