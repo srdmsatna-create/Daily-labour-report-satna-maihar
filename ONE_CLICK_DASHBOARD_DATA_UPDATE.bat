@@ -126,6 +126,13 @@ if exist "scripts_local\update_satna_block_statistics.py" (
     if errorlevel 1 echo WARNING: Block statistics fetch failed; previous valid data preserved.
 )
 
+echo.
+echo Updating GP labour and work-category e-Muster report...
+if exist "scripts_local\update_gp_emuster.py" (
+    %PYTHON_CMD% "scripts_local\update_gp_emuster.py" --url "https://vbgramgrep.dord.gov.in/VBGRAMG/dpc_sms_new.aspx?payload=eF3dNGMR7xWiC7cbh_8oTeSuYj9sLPRpM2Qz-IDD_z-ILP-u7C_QNNmuLYIXVz0ap3f0MlYgKjYZXCIhgs6kJ8kuns9vSb9GT5x5eh3KR8ylabbjE4evwn5cuK03ZioNlyPKuge6h8tLqyX5lJeQO8S87NW5IUg4p8vd606CR95HI-WnD2hAbR7CtOm-6o_hsR3_ZJ5dt4USgeXs4gjw-DvDTHlEGf4j80-KWw4f2IVOWIC1RkCLuBsWX-DCzQGGRfRJGerdnJnuB-jHVh6bCjwnjzhBZhJpuXwUzs-vYjdRmOtloSn5XVQ3EqPVODk_TdZBNSbDwldOO20oTo_19L4IhUrxv5My72RX6T8W31w"
+    if errorlevel 1 echo WARNING: GP e-Muster fetch failed; previous verified data retained.
+)
+
 REM ------------------------------------------------------------
 REM 6. Rebuild dashboard data if merge/build scripts exist
 REM ------------------------------------------------------------
@@ -213,7 +220,7 @@ if errorlevel 1 (
     exit /b 1
 )
 set /a SRDM_PUBLISH_COUNT=0
-for %%F in (auto-data.js auto-status.js data\fetch-status.json data\official-summary.csv muster-emb-data.js shramik-niyojan-data.js vbg-block-stats.js yuktdhara-data.js yuktdhara-official-data.js shramik-district-reports.js shramik-state-refresh-status.js shramik-refresh-status.js) do (
+for %%F in (gp-emuster-data.js auto-data.js auto-status.js data\fetch-status.json data\official-summary.csv muster-emb-data.js shramik-niyojan-data.js vbg-block-stats.js yuktdhara-data.js yuktdhara-official-data.js shramik-district-reports.js shramik-state-refresh-status.js shramik-refresh-status.js) do (
     if exist "%REPO%\%%F" (
         for %%D in ("%SRDM_PUBLISH_WT%\%%F") do if not exist "%%~dpD" mkdir "%%~dpD"
         copy /y "%REPO%\%%F" "%SRDM_PUBLISH_WT%\%%F" >nul
