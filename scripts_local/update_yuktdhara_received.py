@@ -31,7 +31,7 @@ def gp_counts(tables, expected_gp, expected_works):
     for table in tables:
         for hi, header in enumerate(table):
             names=[re.sub(r'\s+',' ',c['text']).lower() for c in header]
-            gps=[i for i,s in enumerate(names) if re.fullmatch(r'(?:gram\s*)?panchayat(?:\s*name)?|gp\s*name',s)]
+            gps=[i for i,s in enumerate(names) if re.fullmatch(r'(?:gram\s*)?panchayats?(?:\s*name)?|gp\s*name',s)]
             works=[i for i,s in enumerate(names) if re.search(r'(?:works?\s+received|received\s+(?:from\s+(?:yd|yuktdhara)|works?))',s) and not re.search(r'gp|panchayat',s)]
             if len(gps)!=1 or len(works)!=1:continue
             gi,wi=gps[0],works[0]; out={}; totals=[]
@@ -93,19 +93,30 @@ def collect():
                 if response and response.status>=400:raise RuntimeError('Official HTTP '+str(response.status))
                 return page.locator('table').evaluate_all(GRID)
             top=fetch(summary['source']);links={}
+            debug=ROOT/'data'/'yuktdhara-received-debug';debug.mkdir(parents=True,exist_ok=True)
+            (debug/'block-tables.json').write_text(json.dumps(top,ensure_ascii=False),encoding='utf-8')
             for table in top:
                 for row in table:
                     if len(row)<5:continue
                     b=jan(row[1]['text'])
                     if b in {jan(x['block']) for x in blocks}:
-                        urls=row[3]['links']
-                        if urls:links[b]=urls[0]
+                        # The portal can link the block name rather than the GP count.
+                        urls=list(dict.fromkeys(u for i in (1,3,4) for u in row[i]['links']))
+                        if urls:links[b]=urls
             details={}
             for block in blocks:
                 b=jan(block['block'])
                 if block['gpReceived']==0 and block['worksReceived']==0:details[b]=[];continue
                 if b not in links:raise RuntimeError('GP drill-down link missing: '+b)
-                details[b]=gp_counts(fetch(links[b]),block['gpReceived'],block['worksReceived'])
+                errors=[]
+                for url in links[b]:
+                    try:
+                        tables=fetch(url)
+                        (debug/(b+'-tables.json')).write_text(json.dumps(tables,ensure_ascii=False),encoding='utf-8')
+                        details[b]=gp_counts(tables,block['gpReceived'],block['worksReceived'])
+                        break
+                    except Exception as e:errors.append(str(e))
+                if b not in details:raise RuntimeError(b+': '+'; '.join(errors))
             rows=aggregate(blocks,details,mapping)
         finally:browser.close()
     return {'success':True,'updatedAt':datetime.now(timezone.utc).isoformat(),'officialDate':summary.get('officialDate'),'blocks':blocks,'rows':rows,'source':summary['source']}
