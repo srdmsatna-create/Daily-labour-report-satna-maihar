@@ -1,4 +1,5 @@
 (function(){
+const mergedCategory=t=>['IAY Houses','PMAY G','PMAY-G'].includes(String(t).trim())?'PMAY-G':t;
 const title='ग्राम पंचायतवार संलग्न श्रमिक एवं मस्टर रोल जारी कार्यों के प्रकार';
 let box;
 function draw(){
@@ -9,7 +10,7 @@ function draw(){
  const data=sortRows(sourceData,'labour',['janpad','panchayat']);
  const date=live?.date||autoMeta?.sourceDates?.RepDay||extractDate(reportTitle)||'तिथि उपलब्ध नहीं';
  const bands=[[0,0,'शून्य'],[1,1,'01'],[2,2,'02'],[3,3,'03'],[4,4,'04'],[5,5,'05'],[6,10,'06 से 10'],[11,20,'11 से 20'],[21,30,'21 से 30'],[31,50,'31 से 50'],[51,100,'51 से 100'],[101,Infinity,'100 से अधिक']];
- const workTypes=[...new Set([...(live?.workCategories||[]),...ongoingDetails.map(r=>r.finalCategory||'Other Works')])].sort((a,b)=>a.localeCompare(b,'en'));
+ const workTypes=[...new Set([...(live?.workCategories||[]).map(mergedCategory),...ongoingDetails.map(r=>mergedCategory(r.finalCategory||'Other Works'))])].sort((a,b)=>a.localeCompare(b,'en'));
  if(!workTypes.length)workTypes.push('PMAY-G','Cement Concrete','Gravel Road','Play Field','Farm Pond','Watershed Related Works','Water conservation & recharge','Ek Bagiya','Gap Filling in Plantation','Other Works');
  // Count issued-MR works from column 6 drill-down by work type; do not use muster roll totals.
  const source=window.GP_WORK_TYPE_MUSTER_REPORT;
@@ -27,7 +28,8 @@ function draw(){
  const g=groups.get(groupKey);g.total++;
  const workRow=officialWorkCounts.get(gpKey(r));
  workTypes.forEach((type,i)=>{
- const v=workRow?.issuedWorks?.[type];
+ const raw=workRow?.issuedWorks;
+ const v=type==='PMAY-G'&&raw?['PMAY-G','PMAY G','IAY Houses'].reduce((sum,k)=>sum+Number(raw[k]??0),0):raw?.[type];
  if(v===null||v===undefined||v===''||!Number.isInteger(Number(v))||Number(v)<0)g.workMissing[i]=true;
  else g.workCounts[i]+=Number(v);
  });
@@ -53,7 +55,7 @@ function draw(){
  const mapGP=new Map(data.map(r=>[gpKey(r),r]));
  const make=r=>{
  const master=mapGP.get(gpKey(r));if(!master)return null;
- const category=r.finalCategory||r.category||'Other Works';
+ const category=mergedCategory(r.finalCategory||r.category||'Other Works');
  const k=[normJanpad(master.janpad),clean(master.engineer),clean(master.cluster),category].join('¦');
  if(!workSummary.has(k))workSummary.set(k,{janpad:normJanpad(master.janpad),engineer:master.engineer,sector:master.cluster,category,ongoing:0,issued:0,labour:0,labourMissing:false});
  return workSummary.get(k);
