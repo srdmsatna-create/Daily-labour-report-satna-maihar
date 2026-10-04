@@ -8,7 +8,7 @@ function draw(){
  const date=autoMeta?.sourceDates?.RepDay||extractDate(reportTitle)||'तिथि उपलब्ध नहीं';
  const bands=[[0,0,'शून्य'],[1,1,'01'],[2,2,'02'],[3,3,'03'],[4,4,'04'],[5,5,'05'],[6,10,'06 से 10'],[11,20,'11 से 20'],[21,30,'21 से 30'],[31,50,'31 से 50'],[51,100,'51 से 100'],[101,Infinity,'100 से अधिक']];
  const workTypes=['PMAY-G','CC Road','Gravel Road','Play Ground','Water Structure','Ek Bagiya','Other Plantation','Other Works'];
- // Work-type muster counts require their own official source; GP totals cannot be apportioned.
+ // Count issued-MR works from column 6 drill-down by work type; do not use muster roll totals.
  const source=window.GP_WORK_TYPE_MUSTER_REPORT;
  const sourceRows=source&&Array.isArray(source.rows)?source.rows:[];
  const gpKey=r=>normJanpad(r.janpad)+'¦'+clean(r.panchayat).toUpperCase();
@@ -24,7 +24,7 @@ function draw(){
  const g=groups.get(groupKey);g.total++;
  const workRow=officialWorkCounts.get(gpKey(r));
  workTypes.forEach((type,i)=>{
- const v=workRow?.musterRolls?.[type];
+ const v=workRow?.issuedWorks?.[type];
  if(v===null||v===undefined||v===''||!Number.isInteger(Number(v))||Number(v)<0)g.workMissing[i]=true;
  else g.workCounts[i]+=Number(v);
  });
@@ -34,7 +34,7 @@ function draw(){
  }
  const summary=[...groups.values()].sort((a,b)=>a.janpad.localeCompare(b.janpad,'hi')||a.engineer.localeCompare(b.engineer,'hi')||a.sector.localeCompare(b.sector,'hi'));
  const hasMissing=summary.some(g=>g.missing>0);
- const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes.map(t=>t+' — जारी MR')];
+ const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes.map(t=>t+' — MR जारी वाले कार्य')];
  let table='<table style="width:100%;border-collapse:collapse"><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
  const cells=g=>[g.total,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>'<td style="font-weight:800;text-align:center">'+(g.workMissing[i]?'—':fmt(g.workCounts[i]))+'</td>').join('');
  const janpads=[...new Set(summary.map(g=>g.janpad))];
@@ -47,7 +47,7 @@ function draw(){
  if(!summary.length)table+='<tr><td colspan="'+headers.length+'">चयन के लिए ग्राम पंचायत डेटा उपलब्ध नहीं है।</td></tr>';
  table+='<tr style="background:#e5f0fa;font-weight:800"><td colspan="3">कुल</td>'+[summary.reduce((s,g)=>s+g.total,0),...bands.map((b,i)=>summary.reduce((s,g)=>s+g.counts[i],0)),...(hasMissing?[summary.reduce((s,g)=>s+g.missing,0)]:[])].map(v=>'<td style="text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((t,i)=>'<td style="text-align:center">'+(summary.some(g=>g.workMissing[i])?'—':fmt(summary.reduce((s,g)=>s+g.workCounts[i],0)))+'</td>').join('')+'</tr></tbody></table>';
  const note='GP स्रोत की तिथि: '+date+' • जनपद, उपयंत्री एवं क्लस्टर के ऊपर दिए फ़िल्टर लागू हैं।';
- box.innerHTML='<style>#gpLabourMusterModule th,#gpLabourMusterModule td{border:1px solid #7894ac;padding:7px}#gpLabourMusterModule th{background:#14588c;color:white}#gpLabourMusterModule tbody tr:nth-child(even){background:#f0f6fb}@media print{#gpLabourMusterModule{display:none}}</style><h2 style="margin:0 0 8px">'+title+'</h2><p>'+esc(note)+'</p><p style="color:#9a3412">ग्राम पंचायत के उपलब्ध स्रोत आँकड़े दिखाए गए हैं; जनपद के अद्यतन कुल से इनका अंतर हो सकता है। कार्य प्रकारवार जारी MR का सत्यापित स्रोत उपलब्ध न होने पर — दिखाया गया है। CC Road और Gravel Road, Rural Connectivity के अंतर्गत हैं।</p><button type="button" id="gpLabourMusterPrint" style="padding:9px 15px;background:#14588c;color:white;border:0;border-radius:7px;font-weight:800">इस मॉड्यूल का प्रिंट / PDF</button><div style="overflow:auto;margin-top:12px">'+table+'</div>';
+ box.innerHTML='<style>#gpLabourMusterModule th,#gpLabourMusterModule td{border:1px solid #7894ac;padding:7px}#gpLabourMusterModule th{background:#14588c;color:white}#gpLabourMusterModule tbody tr:nth-child(even){background:#f0f6fb}@media print{#gpLabourMusterModule{display:none}}</style><h2 style="margin:0 0 8px">'+title+'</h2><p>'+esc(note)+'</p><p style="color:#9a3412">ग्राम पंचायत के उपलब्ध स्रोत आँकड़े दिखाए गए हैं; जनपद के अद्यतन कुल से इनका अंतर हो सकता है। कॉलम 6 से प्राप्त MR जारी वाले कार्यों की कार्य प्रकारवार संख्या दिखाई जाएगी। सत्यापित कार्य सूची उपलब्ध न होने पर — दिखाया गया है। CC Road और Gravel Road, Rural Connectivity के अंतर्गत हैं।</p><button type="button" id="gpLabourMusterPrint" style="padding:9px 15px;background:#14588c;color:white;border:0;border-radius:7px;font-weight:800">इस मॉड्यूल का प्रिंट / PDF</button><div style="overflow:auto;margin-top:12px">'+table+'</div>';
  document.getElementById('gpLabourMusterPrint').onclick=()=>{
  const w=window.open('','_blank');if(!w){alert('प्रिंट के लिए popup अनुमति दें।');return;}
  w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>@page{size:A4 landscape;margin:8mm}body{font-family:Arial,sans-serif;color:#111}table{width:100%;border-collapse:collapse;font-size:9px}th,td{border:1px solid #333;padding:4px}th{background:#e5f0fa}thead{display:table-header-group}tr{break-inside:avoid}h2{font-size:18px}</style></head><body><h2>'+title+'</h2><p>'+esc(note)+'</p>'+table+'</body></html>');
