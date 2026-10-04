@@ -143,15 +143,23 @@ def collect():
                         break
                     except Exception as e:errors.append(str(e))
                 if b not in details:raise RuntimeError(b+': '+'; '.join(errors))
-            for gp_rows in details.values():
+            work_debug=[]
+            for block_name,gp_rows in details.items():
                 for gp in gp_rows:
                     if not gp['worksReceived']:continue
                     for url in gp.get('detailLinks',[]):
                         if not url.startswith('https://vbgramgrep.dord.gov.in/'):continue
                         try:
-                            gp['workTypes']=work_types(fetch(url),gp['worksReceived'])
+                            tables=fetch(url)
+                            work_debug.append({'block':block_name,'gp':gp['gp'],'worksReceived':gp['worksReceived'],'tables':tables})
+                            (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
+                            gp['workTypes']=work_types(tables,gp['worksReceived'])
                             break
-                        except Exception as e:gp['typeMessage']=str(e)
+                        except Exception as e:
+                            gp['typeMessage']=str(e)
+                            if not any(v['block']==block_name and v['gp']==gp['gp'] for v in work_debug):
+                                work_debug.append({'block':block_name,'gp':gp['gp'],'worksReceived':gp['worksReceived'],'error':str(e)})
+                            (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
             rows=aggregate(blocks,details,mapping)
         finally:browser.close()
     return {'success':True,'updatedAt':datetime.now(timezone.utc).isoformat(),'officialDate':summary.get('officialDate'),'blocks':blocks,'rows':rows,'source':summary['source']}
