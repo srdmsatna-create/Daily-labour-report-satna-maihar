@@ -1,5 +1,5 @@
 (function(){
-const title='ग्राम पंचायतवार संलग्न श्रमिक एवं मस्टर रोल संख्या';
+const title='ग्राम पंचायतवार संलग्न श्रमिक एवं मस्टर रोल जारी कार्यों के प्रकार';
 let box;
 function draw(){
  if(!box){box=document.createElement('section');box.id='gpLabourMusterModule';box.style.cssText='margin:16px 0;padding:16px;border:2px solid #14588c;border-radius:12px;background:#fff;color:#102b46';document.getElementById('reportTable').parentElement.insertAdjacentElement('afterend',box);}
@@ -37,7 +37,7 @@ function draw(){
  }
  const summary=[...groups.values()].sort((a,b)=>a.janpad.localeCompare(b.janpad,'hi')||a.engineer.localeCompare(b.engineer,'hi')||a.sector.localeCompare(b.sector,'hi'));
  const hasMissing=summary.some(g=>g.missing>0);
- const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes.map(t=>t+' — MR जारी वाले कार्य')];
+ const headers=['जनपद का नाम','उपयंत्री का नाम','सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes];
  let table='<table style="width:100%;border-collapse:collapse"><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
  const cells=g=>[g.total,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>'<td style="font-weight:800;text-align:center">'+(g.workMissing[i]?'—':fmt(g.workCounts[i]))+'</td>').join('');
  const janpads=[...new Set(summary.map(g=>g.janpad))];
@@ -84,4 +84,17 @@ function draw(){
  w.onload=()=>w.print();w.document.close();};
 }
 const old=render;render=function(){const result=old.apply(this,arguments);draw();return result;};draw();
+
+// Load the verified data independently: the legacy page loader sits inside print HTML.
+fetch('gp-emuster-data.js?live='+Date.now(),{cache:'no-store'})
+ .then(r=>{if(!r.ok)throw new Error('GP data HTTP '+r.status);return r.text();})
+ .then(text=>{
+  const match=text.match(/^\s*window\.GP_WORK_TYPE_MUSTER_REPORT\s*=\s*([\s\S]*?)\s*;?\s*$/);
+  if(!match)throw new Error('Unexpected GP data format');
+  const parsed=JSON.parse(match[1]);
+  if(!Array.isArray(parsed.rows)||parsed.rows.length!==695||!Array.isArray(parsed.works))throw new Error('Incomplete GP data');
+  window.GP_WORK_TYPE_MUSTER_REPORT=parsed;
+  draw();
+ }).catch(error=>{console.error('GP report load failed',error);if(box){const p=document.createElement('p');p.style.color='#b91c1c';p.textContent='कार्य प्रकार डेटा लोड नहीं हुआ: '+error.message;box.prepend(p);}});
+
 })();
