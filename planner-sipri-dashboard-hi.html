@@ -284,7 +284,7 @@ if(/Soak Pit|Recharge Pit|Plantation|Construction of Cement Concrete Road/i.test
 return 'outside';
 }
 function permissionLabel(label){return {allowed:'अनुमत्य',outside:'गैर अनुमत्य',pending:'सत्यापन लंबित'}[workPermission(label)]}
-function permissionBadge(label){return '<span class="permission-'+workPermission(label)+'">'+permissionBadge(label)+'</span>'}
+function permissionBadge(label){return '<span class="permission-'+workPermission(label)+'">'+permissionLabel(label)+'</span>'}
 function permissionCounts(counts){const v={allowed:0,outside:0,pending:0};for(const [label,n] of Object.entries(counts))v[workPermission(label)]+=Number(n);return '<span class="permission-allowed">अनुमत्य कार्य संख्या ('+v.allowed+')</span> · <span class="permission-outside">गैर अनुमत्य कार्य संख्या ('+v.outside+')</span> · <span class="permission-pending">सत्यापन लंबित ('+v.pending+')</span>'}
 
 function renderEngineer(){
