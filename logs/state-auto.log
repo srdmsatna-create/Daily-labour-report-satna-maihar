@@ -1,0 +1,65 @@
+
+START 2026-10-03T11:13:44.774234
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD 274eca2)
+Updating files:  61% (241/394)Updating files:  62% (245/394)Updating files:  63% (249/394)Updating files:  64% (253/394)Updating files:  65% (257/394)Updating files:  66% (261/394)Updating files:  67% (264/394)Updating files:  68% (268/394)Updating files:  69% (272/394)Updating files:  70% (276/394)Updating files:  71% (280/394)Updating files:  72% (284/394)Updating files:  73% (288/394)Updating files:  74% (292/394)Updating files:  75% (296/394)Updating files:  76% (300/394)Updating files:  77% (304/394)Updating files:  78% (308/394)Updating files:  79% (312/394)Updating files:  80% (316/394)Updating files:  81% (320/394)Updating files:  82% (324/394)Updating files:  82% (325/394)Updating files:  83% (328/394)Updating files:  84% (331/394)Updating files:  85% (335/394)Updating files:  86% (339/394)Updating files:  87% (343/394)Updating files:  88% (347/394)Updating files:  89% (351/394)Updating files:  90% (355/394)Updating files:  91% (359/394)Updating files:  92% (363/394)Updating files:  93% (367/394)Updating files:  94% (371/394)Updating files:  95% (375/394)Updating files:  96% (379/394)Updating files:  97% (383/394)Updating files:  98% (387/394)Updating files:  99% (391/394)Updating files: 100% (394/394)Updating files: 100% (394/394), done.
+HEAD is now at 274eca2 Daily 52 district Shramik refresh
+SUCCESS: 52-district Persondays refreshed; labour/MR refreshed
+GP counts not refreshed: complete valid totalGP/labourGP headers required; previous verified GP values retained
+[detached HEAD 20f6d34] Refresh 52 district data and source status
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   274eca2..20f6d34  HEAD -> main
+Published state data/status.
+END 2026-10-03T11:14:04.701887
+
+START 2026-10-03T11:15:09.363076
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+ * branch            main       -> FETCH_HEAD
+Preparing worktree (detached HEAD 20f6d34)
+Updating files:  61% (241/394)Updating files:  62% (245/394)Updating files:  63% (249/394)Updating files:  64% (253/394)Updating files:  65% (257/394)Updating files:  65% (259/394)Updating files:  66% (261/394)Updating files:  67% (264/394)Updating files:  68% (268/394)Updating files:  69% (272/394)Updating files:  70% (276/394)Updating files:  71% (280/394)Updating files:  72% (284/394)Updating files:  73% (288/394)Updating files:  74% (292/394)Updating files:  75% (296/394)Updating files:  76% (300/394)Updating files:  77% (304/394)Updating files:  78% (308/394)Updating files:  79% (312/394)Updating files:  80% (316/394)Updating files:  81% (320/394)Updating files:  82% (324/394)Updating files:  83% (328/394)Updating files:  84% (331/394)Updating files:  85% (335/394)Updating files:  86% (339/394)Updating files:  87% (343/394)Updating files:  88% (347/394)Updating files:  89% (351/394)Updating files:  90% (355/394)Updating files:  91% (359/394)Updating files:  92% (363/394)Updating files:  93% (367/394)Updating files:  94% (371/394)Updating files:  95% (375/394)Updating files:  96% (379/394)Updating files:  97% (383/394)Updating files:  98% (387/394)Updating files:  99% (391/394)Updating files: 100% (394/394)Updating files: 100% (394/394), done.
+HEAD is now at 20f6d34 Refresh 52 district data and source status
+SUCCESS: 52-district Persondays refreshed; labour/MR refreshed
+GP counts not refreshed: complete valid totalGP/labourGP headers required; previous verified GP values retained
+[detached HEAD c331060] Refresh 52 district data and source status
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   20f6d34..c331060  HEAD -> main
+Published state data/status.
+END 2026-10-03T11:15:40.811209
+
+START 2026-10-03T11:25:32.241665
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+ * branch            main       -> FETCH_HEAD
+   c331060..17d6a28  main       -> origin/main
+Preparing worktree (detached HEAD 17d6a28)
+Updating files:  55% (217/394)Updating files:  56% (221/394)Updating files:  57% (225/394)Updating files:  58% (229/394)Updating files:  59% (233/394)Updating files:  60% (237/394)Updating files:  61% (241/394)Updating files:  62% (245/394)Updating files:  63% (249/394)Updating files:  64% (253/394)Updating files:  64% (255/394)Updating files:  65% (257/394)Updating files:  66% (261/394)Updating files:  67% (264/394)Updating files:  68% (268/394)Updating files:  68% (269/394)Updating files:  69% (272/394)Updating files:  70% (276/394)Updating files:  71% (280/394)Updating files:  72% (284/394)Updating files:  73% (288/394)Updating files:  74% (292/394)Updating files:  75% (296/394)Updating files:  76% (300/394)Updating files:  77% (304/394)Updating files:  78% (308/394)Updating files:  79% (312/394)Updating files:  80% (316/394)Updating files:  81% (320/394)Updating files:  82% (324/394)Updating files:  83% (328/394)Updating files:  84% (331/394)Updating files:  85% (335/394)Updating files:  86% (339/394)Updating files:  87% (343/394)Updating files:  88% (347/394)Updating files:  89% (351/394)Updating files:  90% (355/394)Updating files:  91% (359/394)Updating files:  92% (363/394)Updating files:  93% (367/394)Updating files:  94% (371/394)Updating files:  95% (375/394)Updating files:  96% (379/394)Updating files:  97% (383/394)Updating files:  98% (387/394)Updating files:  99% (391/394)Updating files: 100% (394/394)Updating files: 100% (394/394), done.
+HEAD is now at 17d6a28 Display working and without-progress GP counts accurately
+SUCCESS: 52-district Persondays refreshed; labour/MR refreshed
+[detached HEAD b18a59e] Refresh 52 district data and source status
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+ ! [rejected]        HEAD -> main (fetch first)
+error: failed to push some refs to 'https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git'
+hint: Updates were rejected because the remote contains work that you do not
+hint: have locally. This is usually caused by another repository pushing to
+hint: the same ref. If you want to integrate the remote changes, use
+hint: 'git pull' before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+ERROR: Command '['git', 'push', 'origin', 'HEAD:main']' returned non-zero exit status 1.
+
+START 2026-10-03T11:30:06.323384
+From https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar
+ * branch            main       -> FETCH_HEAD
+   17d6a28..2cba6c0  main       -> origin/main
+Preparing worktree (detached HEAD 2cba6c0)
+Updating files:  60% (240/394)Updating files:  61% (241/394)Updating files:  62% (245/394)Updating files:  63% (249/394)Updating files:  64% (253/394)Updating files:  65% (257/394)Updating files:  65% (259/394)Updating files:  66% (261/394)Updating files:  67% (264/394)Updating files:  68% (268/394)Updating files:  69% (272/394)Updating files:  70% (276/394)Updating files:  71% (280/394)Updating files:  72% (284/394)Updating files:  73% (288/394)Updating files:  74% (292/394)Updating files:  75% (296/394)Updating files:  76% (300/394)Updating files:  77% (304/394)Updating files:  78% (308/394)Updating files:  79% (312/394)Updating files:  80% (316/394)Updating files:  81% (320/394)Updating files:  82% (324/394)Updating files:  83% (328/394)Updating files:  84% (331/394)Updating files:  85% (335/394)Updating files:  86% (339/394)Updating files:  87% (343/394)Updating files:  88% (347/394)Updating files:  89% (351/394)Updating files:  90% (355/394)Updating files:  91% (359/394)Updating files:  91% (361/394)Updating files:  92% (363/394)Updating files:  93% (367/394)Updating files:  94% (371/394)Updating files:  95% (375/394)Updating files:  96% (379/394)Updating files:  97% (383/394)Updating files:  98% (387/394)Updating files:  99% (391/394)Updating files: 100% (394/394)Updating files: 100% (394/394), done.
+HEAD is now at 2cba6c0 Retain official state source tables in logs before temporary checkout cleanup
+SUCCESS: 52-district Persondays refreshed; labour/MR refreshed
+[detached HEAD 2a2d706] Refresh 52 district data and source status
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+To https://github.com/srdmsatna-create/Daily-labour-report-satna-maihar.git
+   2cba6c0..2a2d706  HEAD -> main
+Published state data/status.
+END 2026-10-03T11:30:30.536524
