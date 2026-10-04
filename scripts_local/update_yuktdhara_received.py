@@ -48,7 +48,7 @@ def gp_counts(tables, expected_gp, expected_works):
                 except ValueError:continue
                 key=norm(name)
                 if key in out:raise RuntimeError('Duplicate GP in received-work source: '+name)
-                out[key]={'gp':name,'worksReceived':count}
+                out[key]={'gp':name,'worksReceived':count,'detailLinks':row[wi].get('links',[])}
             if sum(x['worksReceived'] for x in out.values())!=expected_works:continue
             if sum(x['worksReceived']>0 for x in out.values())!=expected_gp:continue
             if any(t!=expected_works for t in totals):continue
@@ -56,6 +56,26 @@ def gp_counts(tables, expected_gp, expected_works):
     if not candidates:raise RuntimeError('GP detail missing or does not reconcile with official block totals')
     if any(c!=candidates[0] for c in candidates):raise RuntimeError('Ambiguous GP received-work tables')
     return list(candidates[0].values())
+
+def work_types(tables, expected):
+    candidates=[]
+    for table in tables:
+        for hi, header in enumerate(table):
+            names=[re.sub(r'\s+',' ',c['text']).lower() for c in header]
+            cols=[i for i,s in enumerate(names) if re.fullmatch(r'(?:type of work|work type|work category|category of work|कार्य का प्रकार|कार्य प्रकार)',s)]
+            if len(cols)!=1:continue
+            ti=cols[0]; counts=defaultdict(int)
+            for row in table[hi+1:]:
+                if all(c['text'].strip()==str(i+1) for i,c in enumerate(row)):continue
+                if ti>=len(row) or any(re.fullmatch(r'(?:grand )?total',c['text'].strip(),re.I) for c in row):continue
+                try:number(row[0]['text'])
+                except ValueError:continue
+                value=row[ti]['text'].strip()
+                if value:counts[value]+=1
+            if sum(counts.values())==expected:candidates.append(dict(counts))
+    if not candidates or any(x!=candidates[0] for x in candidates):
+        raise RuntimeError('Work types missing or do not reconcile with received works')
+    return candidates[0]
 
 def aggregate(blocks, details, mapping):
     master={}
@@ -65,7 +85,7 @@ def aggregate(blocks, details, mapping):
         if not engineer or engineer.lower()=='unmapped':continue
         if k in master and master[k]!=engineer:raise RuntimeError('Conflicting GP engineer mapping: '+str(k))
         master[k]=engineer
-    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0})
+    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0,'workTypes':{},'typesComplete':True})
     for block in blocks:
         b=jan(block['block']); rows=details[b]
         if sum(r['worksReceived'] for r in rows)!=block['worksReceived'] or sum(r['worksReceived']>0 for r in rows)!=block['gpReceived']:
@@ -75,6 +95,9 @@ def aggregate(blocks, details, mapping):
             k=(b,norm(r['gp']))
             if k not in master:raise RuntimeError('Received GP has no exact engineer mapping: '+str(k))
             a=sums[(b,master[k])];a['gpReceived']+=1;a['worksReceived']+=r['worksReceived']
+            if 'workTypes' not in r:a['typesComplete']=False
+            else:
+                for label,count in r['workTypes'].items():a['workTypes'][label]=a['workTypes'].get(label,0)+count
     # Explicit validated zeros for engineers with no receiving GP.
     for (b,g),e in master.items():sums[(b,e)]
     return [{'janpad':b,'engineer':e,**v} for (b,e),v in sorted(sums.items())]
@@ -120,6 +143,15 @@ def collect():
                         break
                     except Exception as e:errors.append(str(e))
                 if b not in details:raise RuntimeError(b+': '+'; '.join(errors))
+            for gp_rows in details.values():
+                for gp in gp_rows:
+                    if not gp['worksReceived']:continue
+                    for url in gp.get('detailLinks',[]):
+                        if not url.startswith('https://vbgramgrep.dord.gov.in/'):continue
+                        try:
+                            gp['workTypes']=work_types(fetch(url),gp['worksReceived'])
+                            break
+                        except Exception as e:gp['typeMessage']=str(e)
             rows=aggregate(blocks,details,mapping)
         finally:browser.close()
     return {'success':True,'updatedAt':datetime.now(timezone.utc).isoformat(),'officialDate':summary.get('officialDate'),'blocks':blocks,'rows':rows,'source':summary['source']}
