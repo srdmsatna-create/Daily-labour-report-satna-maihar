@@ -1,1 +1,1 @@
-window.YUKTDHARA_RECEIVED={"rows":[],"blocks":[],"success":false,"message":"GP drill-down link missing: AMARPATAN","checkedAt":"2026-10-04T05:44:27.997198+00:00"};
+window.YUKTDHARA_RECEIVED={"rows":[],"blocks":[],"success":false,"message":"AMARPATAN: GP detail missing or does not reconcile with official block totals","checkedAt":"2026-10-04T05:54:54.825554+00:00"};
