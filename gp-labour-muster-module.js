@@ -1,5 +1,5 @@
 (function(){
-const title='Daily Status of VB-G RAM G Based on e-Muster';
+const title='ग्राम पंचायतवार संलग्न श्रमिक एवं मस्टर रोल संख्या';
 let box;
 function draw(){
  if(!box){box=document.createElement('section');box.id='gpLabourMusterModule';box.style.cssText='margin:16px 0;padding:16px;border:2px solid #14588c;border-radius:12px;background:#fff;color:#102b46';document.getElementById('reportTable').parentElement.insertAdjacentElement('afterend',box);}
