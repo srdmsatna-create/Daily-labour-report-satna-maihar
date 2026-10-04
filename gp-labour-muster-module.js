@@ -50,10 +50,10 @@ function draw(){
  }
  const summary=[...groups.values()].sort((a,b)=>a.janpad.localeCompare(b.janpad,'hi')||a.engineer.localeCompare(b.engineer,'hi')||a.sector.localeCompare(b.sector,'hi'));
  const hasMissing=summary.some(g=>g.missing>0);
- const headers=['जनपद का नाम','उपयंत्री का नाम/सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत','श्रमिक संलग्न GPs',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes.flatMap(t=>t==='Amrit Sarovar'?['कुल प्रगतिरत कार्य','मस्टर रोल जारी कार्यों की कुल संख्या',t]:[t])];
+ const headers=['जनपद का नाम','उपयंत्री का नाम/सेक्टर का नाम','कुल प्रभार की ग्राम पंचायत','श्रमिक संलग्न GPs',...bands.map(b=>b[2]+' श्रमिक वाली GPs'),...(hasMissing?['श्रमिक डेटा अनुपलब्ध GPs']:[]),...workTypes.flatMap(t=>t==='Amrit Sarovar'?['मस्टर रोल जारी कार्यों की कुल संख्या / कुल प्रगतिरत कार्य',t]:[t])];
  let table='<table style="width:100%;border-collapse:collapse"><thead><tr>'+headers.map((x,i)=>'<th'+(i===2?' style="width:90px;min-width:90px;max-width:90px;white-space:normal"':'')+'>'+(i===2?'कुल प्रभार की<br>ग्राम पंचायत':esc(x))+'</th>').join('')+'</tr></thead><tbody>';
  const pair=(g,i)=>(g.workMissing[i]?'—':fmt(g.workCounts[i]))+' / '+fmt(g.ongoingCounts[i]);
- const cells=g=>[g.total,g.workingGP,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>(type==='Amrit Sarovar'?'<td style="font-weight:800;text-align:center">'+fmt(g.ongoing)+'</td><td style="font-weight:800;text-align:center">'+(g.issuedMissing?'—':fmt(g.issuedTotal))+'</td>':'')+'<td style="font-weight:800;text-align:center">'+pair(g,i)+'</td>').join('');
+ const cells=g=>[g.total,g.workingGP,...g.counts,...(hasMissing?[g.missing]:[])].map(v=>'<td style="font-weight:800;text-align:center">'+fmt(v)+'</td>').join('')+workTypes.map((type,i)=>(type==='Amrit Sarovar'?'<td style="font-weight:800;text-align:center;white-space:nowrap">'+(g.issuedMissing?'—':fmt(g.issuedTotal))+' / '+fmt(g.ongoing)+'</td>':'')+'<td style="font-weight:800;text-align:center">'+pair(g,i)+'</td>').join('');
  const janpads=[...new Set(summary.map(g=>g.janpad))];
  for(const janpad of janpads){
  const entries=summary.filter(g=>g.janpad===janpad);
