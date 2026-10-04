@@ -62,7 +62,7 @@ def work_types(tables, expected):
     for table in tables:
         for hi, header in enumerate(table):
             names=[re.sub(r'\s+',' ',c['text']).lower() for c in header]
-            cols=[i for i,s in enumerate(names) if re.fullmatch(r'(?:type of work|work type|work category|category of work|कार्य का प्रकार|कार्य प्रकार)',s)]
+            cols=[i for i,s in enumerate(names) if re.fullmatch(r'(?:permissible work|type of work|work type|work category|category of work|कार्य का प्रकार|कार्य प्रकार)',s)]
             if len(cols)!=1:continue
             ti=cols[0]; counts=defaultdict(int)
             for row in table[hi+1:]:
