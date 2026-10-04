@@ -26,7 +26,7 @@ def number(value):
 # Flatten spans and retain links at their original column positions.
 GRID = '''tables=>tables.map(t=>{const g=[];Array.from(t.rows).filter(r=>r.closest('table')===t).forEach((r,y)=>{g[y]??=[];let x=0;Array.from(r.cells).forEach(c=>{while(g[y][x]!==undefined)x++;const v={text:c.innerText.trim(),links:Array.from(c.querySelectorAll('a[href]')).map(a=>a.href)};for(let dy=0;dy<c.rowSpan;dy++){g[y+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)g[y+dy][x+dx]=v}x+=c.colSpan})});return g})'''
 
-def gp_counts(tables, expected_gp, expected_works):
+def gp_counts(tables, expected_gp, expected_works, expected_created=None):
     candidates=[]
     for table in tables:
         for hi, header in enumerate(table):
@@ -35,6 +35,8 @@ def gp_counts(tables, expected_gp, expected_works):
             works=[i for i,s in enumerate(names) if re.search(r'(?:works?\s+received|received\s+(?:from\s+(?:yd|yuktdhara)|works?))',s) and not re.search(r'gp|panchayat',s)]
             if len(gps)!=1 or len(works)!=1:continue
             gi,wi=gps[0],works[0]; out={}; totals=[]
+            created=[i for i,s in enumerate(names) if 'works created' in s and ('vb-g' in s or 'vb g' in s)]
+            ci=created[0] if len(created)==1 else None
             for row in table[hi+1:]:
                 # Official tables have a second header row numbered 1,2,3,... .
                 # It is column numbering, not a GP named "2" with three works.
@@ -49,9 +51,14 @@ def gp_counts(tables, expected_gp, expected_works):
                 key=norm(name)
                 if key in out:raise RuntimeError('Duplicate GP in received-work source: '+name)
                 out[key]={'gp':name,'worksReceived':count,'detailLinks':row[wi].get('links',[])}
+                if ci is not None:
+                    value=number(row[ci]['text'])
+                    if value>count:raise RuntimeError('Created works exceed received GP works: '+name)
+                    out[key]['worksCreated']=value
             if sum(x['worksReceived'] for x in out.values())!=expected_works:continue
             if sum(x['worksReceived']>0 for x in out.values())!=expected_gp:continue
             if any(t!=expected_works for t in totals):continue
+            if expected_created is not None and (ci is None or sum(x.get('worksCreated',0) for x in out.values())!=expected_created):continue
             candidates.append(out)
     if not candidates:raise RuntimeError('GP detail missing or does not reconcile with official block totals')
     if any(c!=candidates[0] for c in candidates):raise RuntimeError('Ambiguous GP received-work tables')
@@ -85,16 +92,18 @@ def aggregate(blocks, details, mapping):
         if not engineer or engineer.lower()=='unmapped':continue
         if k in master and master[k]!=engineer:raise RuntimeError('Conflicting GP engineer mapping: '+str(k))
         master[k]=engineer
-    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0,'workTypes':{},'typesComplete':True})
+    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0,'workTypes':{},'typesComplete':True,'worksCreated':0})
     for block in blocks:
         b=jan(block['block']); rows=details[b]
         if sum(r['worksReceived'] for r in rows)!=block['worksReceived'] or sum(r['worksReceived']>0 for r in rows)!=block['gpReceived']:
             raise RuntimeError('Block/GP totals mismatch: '+b)
+        if sum(r.get('worksCreated',0) for r in rows)!=block['worksCreated']:
+            raise RuntimeError('Created work GP/block totals mismatch: '+b)
         for r in rows:
             if not r['worksReceived']:continue
             k=(b,norm(r['gp']))
             if k not in master:raise RuntimeError('Received GP has no exact engineer mapping: '+str(k))
-            a=sums[(b,master[k])];a['gpReceived']+=1;a['worksReceived']+=r['worksReceived']
+            a=sums[(b,master[k])];a['gpReceived']+=1;a['worksReceived']+=r['worksReceived'];a['worksCreated']+=r['worksCreated']
             if 'workTypes' not in r:a['typesComplete']=False
             else:
                 for label,count in r['workTypes'].items():a['workTypes'][label]=a['workTypes'].get(label,0)+count
@@ -139,7 +148,7 @@ def collect():
                     try:
                         tables=fetch(url)
                         (debug/(b+'-tables.json')).write_text(json.dumps(tables,ensure_ascii=False),encoding='utf-8')
-                        details[b]=gp_counts(tables,block['gpReceived'],block['worksReceived'])
+                        details[b]=gp_counts(tables,block['gpReceived'],block['worksReceived'],block['worksCreated'])
                         break
                     except Exception as e:errors.append(str(e))
                 if b not in details:raise RuntimeError(b+': '+'; '.join(errors))
