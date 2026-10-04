@@ -334,7 +334,7 @@ function renderWorkCategories(){
 const data=window.YUKTDHARA_RECEIVED||{},normalize=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097F]/g,''),jn=v=>normalize(v)==='SATNA'?'SOHAWAL':normalize(v)==='RAMPORBAGHELAN'?'RAMPURBAGHELAN':normalize(v);
 const labels={"Repair & Maintenance of Cement Concrete Road for Community":"सामुदायिक CC सड़क मरम्मत एवं रखरखाव","Construction of Cement Concrete Road for Community":"सामुदायिक CC सड़क निर्माण","Construction of NADEP Compost Pit for Community":"सामुदायिक नाडेप कम्पोस्ट पिट","Construction of Soak Pit for Community":"सामुदायिक सोक पिट","Construction of Recharge Pit for Community":"सामुदायिक रिचार्ज पिट","Rejuvenation of Pond for Community":"सामुदायिक तालाब जीर्णोद्धार"};
 const eligible=filtered().map(x=>({x,row:(data.rows||[]).find(v=>jn(v.janpad)===jn(x[1])&&normalize(v.engineer)===normalize(x[2]))}));
-const permission=$('workPermissionFilter').value;const select=$('workCategoryFilter'),old=select.value,categories=[...new Set(eligible.flatMap(v=>Object.keys(v.row?.typesComplete?v.row.workTypes||{}:{})))].sort((a,b)=>(labels[a]||a).localeCompare(labels[b]||b,'hi'));
+const permission=['allowed','outside','pending'].includes($('workPermissionFilter').value)?$('workPermissionFilter').value:'ALL';const select=$('workCategoryFilter'),old=select.value,categories=[...new Set(eligible.flatMap(v=>Object.keys(v.row?.typesComplete?v.row.workTypes||{}:{}).filter(k=>permission==='ALL'||workPermission(k)===permission)))].sort((a,b)=>(labels[a]||a).localeCompare(labels[b]||b,'hi'));
 select.innerHTML='<option value="ALL">सभी कार्य श्रेणियाँ</option>'+categories.map(k=>'<option value="'+esc(k)+'">'+esc(labels[k]||k)+'</option>').join('');select.value=categories.includes(old)?old:'ALL';
 let html='',total=0;const totals={},categoryTotals={},visibleTypes={};
 for(const {x,row} of eligible){
@@ -361,7 +361,7 @@ summary+='<tr><td>'+esc(labels[category]||category)+'</td><td>'+permissionBadge(
 summary+='<tr class="total"><td colspan="2">कुल — चयनित फ़िल्टर</td>'+pivotJanpads.map(j=>'<td class="num">'+numberLink(totals[j]||0,j,'ALL')+'</td>').join('')+'<td class="num">'+numberLink(total,'ALL','ALL')+'</td></tr>';
 $('workCategorySummaryBody').innerHTML=summary;$('workPermissionTotals').innerHTML=permissionCounts(visibleTypes);
 $('workCategorySummaryBody').onclick=event=>{const link=event.target.closest('a[data-category]');if(!link)return;event.preventDefault();$('janpad').value=link.dataset.janpad;updateCascade();render();$('workCategoryFilter').value=link.dataset.category;renderWorkCategories();$('workCategoryBody').scrollIntoView({behavior:'smooth',block:'start'});};
-$('workCategoryBody').innerHTML=html;select.onchange=renderWorkCategories;$('workPermissionFilter').onchange=renderWorkCategories;
+$('workCategoryBody').innerHTML=html;select.onchange=renderWorkCategories;$('workPermissionFilter').onchange=()=>{$('workCategoryFilter').value='ALL';renderWorkCategories();};
 }
 
 function render(){renderKPI();renderOfficial();renderEngineer();renderWorkCategories();sortVisibleProgress()}
