@@ -82,7 +82,7 @@ function draw(){
  }
  const summaryWorks=[...workSummary.values()].sort((a,b)=>a.janpad.localeCompare(b.janpad)||String(a.engineer).localeCompare(String(b.engineer),'hi')||String(a.sector).localeCompare(String(b.sector))||a.category.localeCompare(b.category));
  const workHeaders=['जनपद','उपयंत्री का नाम/सेक्टर का नाम','कार्य की श्रेणी','कुल प्रगतिरत कार्य','आज MR जारी वाले कार्य','संलग्न श्रमिक'];
- let workTable='<h3>कार्य श्रेणीवार — प्रगतिरत कार्य, MR जारी कार्य एवं संलग्न श्रमिक</h3><table style="width:100%;border-collapse:collapse"><thead><tr>'+workHeaders.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
+ let workTable='<h3>उपयंत्री/सेक्टरवार कार्य-श्रेणीवार — प्रगतिरत कार्य, MR जारी कार्य एवं संलग्न श्रमिक</h3><p><strong>दिनांक: '+esc(date)+'</strong></p><table style="width:100%;border-collapse:collapse"><thead><tr>'+workHeaders.map(x=>'<th>'+esc(x)+'</th>').join('')+'</tr></thead><tbody>';
  workTable+=summaryWorks.map(g=>'<tr>'+[g.janpad,g.engineer+' / '+g.sector,g.category].map(x=>'<td>'+esc(x)+'</td>').join('')+'<td>'+fmt(g.ongoing)+'</td><td>'+(issued?fmt(g.issued):'—')+'</td><td>'+(issued&&!g.labourMissing?fmt(g.labour):'—')+'</td></tr>').join('');
  workTable+='<tr style="background:#dbeafe;font-weight:800"><td colspan="3">कुल</td><td>'+fmt(summaryWorks.reduce((s,g)=>s+g.ongoing,0))+'</td><td>'+(issued?fmt(summaryWorks.reduce((s,g)=>s+g.issued,0)):'—')+'</td><td>'+(issued&&!summaryWorks.some(g=>g.labourMissing)?fmt(summaryWorks.reduce((s,g)=>s+g.labour,0)):'—')+'</td></tr></tbody></table>';
  const ongoingDates=[...new Set(ongoingDetails.map(r=>r.sourceDate).filter(Boolean))];
