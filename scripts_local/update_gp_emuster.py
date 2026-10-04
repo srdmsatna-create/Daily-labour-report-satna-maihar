@@ -125,6 +125,8 @@ def main():
             return page.evaluate(GRID)
         try:
             top=fetch(args.url);dump('main',top);blocks=blocks_from(top)
+            date_match=re.search(r'(?:report\s*)?last\s*updated(?:\s*on)?\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',page.locator('body').inner_text(),re.I)
+            source_date=date_match.group(1).replace('/','-') if date_match else 'तिथि उपलब्ध नहीं'
             for b,summary in blocks.items():
                 print('Janpad: '+b,flush=True)
                 errors=[];gps=None
@@ -149,13 +151,15 @@ def main():
                     for work in works:
                         work['category']=categories.get(work['code']) or final_category(work['name'],work['type'],'2026-2027')
                         counts[work['category']]=counts.get(work['category'],0)+1;work['janpad']=b
+                    if all(w['labour'] is not None for w in works) and sum(w['labour'] for w in works)!=gp['labour']:
+                        raise ValueError('Work labour total differs from official GP labour: '+b+'/'+gp['panchayat'])
                     entry['issuedWorks']=counts;output.append(entry);all_works.extend(works)
                     print('  '+gp['panchayat']+': '+str(len(works))+' works verified',flush=True)
         finally:browser.close()
     expected=sum(x['works'] for x in blocks.values())
     if len(output)!=695 or len({(r['janpad'],key(r['panchayat'])) for r in output})!=695:raise ValueError('695 unique GPs required')
     if len(all_works)!=expected or len({w['code'] for w in all_works})!=expected:raise ValueError('Work list total/unique codes mismatch')
-    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':datetime.now().strftime('%d-%m-%Y'),'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
+    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':source_date,'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
     path=ROOT/'gp-emuster-data.js';temp=path.with_suffix('.tmp')
     temp.write_text('window.GP_WORK_TYPE_MUSTER_REPORT = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
     print('SUCCESS: 695 GP, '+str(expected)+' unique MR-issued works, all master work categories. '+str(path),flush=True)
