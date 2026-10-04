@@ -7,7 +7,7 @@ function draw(){
  const data=sortRows(filteredRows(),'labour',['janpad','panchayat']);
  const date=autoMeta?.sourceDates?.RepDay||extractDate(reportTitle)||'तिथि उपलब्ध नहीं';
  const bands=[[0,0,'शून्य'],[1,1,'01'],[2,2,'02'],[3,3,'03'],[4,4,'04'],[5,5,'05'],[6,10,'06 से 10'],[11,20,'11 से 20'],[21,30,'21 से 30'],[31,50,'31 से 50'],[51,100,'51 से 100'],[101,Infinity,'100 से अधिक']];
- const workTypes=['PMAY-G','CC Road','Gravel Road','Play Ground','Water Structure','Ek Bagiya','Other Plantation','Other Works'];
+ const workTypes=['PMAY-G','CC Road','Gravel Road','Play Ground','Khet Talab','Dug Pond','Old Water Bodies','Water Structure','Ek Bagiya','Other Plantation','Other Works'];
  // Count issued-MR works from column 6 drill-down by work type; do not use muster roll totals.
  const source=window.GP_WORK_TYPE_MUSTER_REPORT;
  const sourceRows=source&&Array.isArray(source.rows)?source.rows:[];
