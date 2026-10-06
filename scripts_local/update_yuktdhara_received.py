@@ -122,9 +122,9 @@ def collect():
         except Exception:browser=p.chromium.launch(headless=True)
         try:
             context=browser.new_context();page=context.new_page()
-            def fetch(url, timeout=timeout):
+            def fetch(url, timeout=60000):
                 if urlparse(url).hostname!='vbgramgrep.dord.gov.in':raise RuntimeError('Unexpected official link host')
-                response=page.goto(url,wait_until='domcontentloaded',timeout=60000)
+                response=page.goto(url,wait_until='domcontentloaded',timeout=timeout)
                 if response and response.status>=400:raise RuntimeError('Official HTTP '+str(response.status))
                 return page.locator('table').evaluate_all(GRID)
             top=fetch(summary['source']);links={}
