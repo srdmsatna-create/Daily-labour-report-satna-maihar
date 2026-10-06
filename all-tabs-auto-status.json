@@ -1,0 +1,77 @@
+{
+  "checkedAt": "2026-10-05T09:23:57.577325+00:00",
+  "schedule": "08:00 Asia/Kolkata",
+  "reports": {
+    "daily_labour": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts_local/local_auto_update.py']' returned non-zero exit status 1.",
+      "files": [
+        "auto-data.js",
+        "auto-status.js",
+        "data/official-summary.csv",
+        "data/fetch-status.json"
+      ]
+    },
+    "shramik_59": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts_local/update_shramik_niyojan.py']' returned non-zero exit status 1.",
+      "files": [
+        "shramik-niyojan-data.js"
+      ]
+    },
+    "shramik_52": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts_local/update_shramik_state.py']' returned non-zero exit status 1.",
+      "files": [
+        "shramik-district-reports.js",
+        "shramik-state-refresh-status.js"
+      ]
+    },
+    "muster_emb": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts_local/update_muster_emb_monitoring.py', '--update-only']' returned non-zero exit status 1.",
+      "files": [
+        "muster-emb-data.js"
+      ]
+    },
+    "yuktdhara": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--update-only']' returned non-zero exit status 1.",
+      "files": [
+        "yuktdhara-data.js",
+        "yuktdhara-official-data.js"
+      ]
+    },
+    "block_statistics": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts_local/update_satna_block_statistics.py']' returned non-zero exit status 1.",
+      "files": [
+        "vbg-block-stats.js"
+      ]
+    },
+    "mis_612": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
+      "files": [
+        "data/Ongoing_Works_dynamic_work_details_latest.csv",
+        "data/mis-6.12-status.json",
+        "ongoing-details.js"
+      ]
+    },
+    "planner": {
+      "success": false,
+      "message": "Planner GP totals incomplete or do not reconcile",
+      "files": [
+        "planner-portal-data.js"
+      ]
+    },
+    "rejected_wage": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.16/x64/bin/python', '-u', 'scripts/update_rejected_wage.py']' returned non-zero exit status 1.",
+      "files": [
+        "data/rejected-wage-latest.json"
+      ]
+    }
+  },
+  "success": false
+}

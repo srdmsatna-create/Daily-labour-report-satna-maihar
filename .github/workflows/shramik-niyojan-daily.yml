@@ -1,0 +1,79 @@
+name: Shramik Niyojan Daily Update
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/shramik-refresh-trigger.txt'
+      - 'scripts_local/update_shramik_niyojan.py'
+      - '.github/workflows/shramik-niyojan-daily.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: shramik-niyojan-daily
+  cancel-in-progress: false
+
+jobs:
+  update-shramik:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Playwright
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Update Shramik Niyojan
+        id: refresh
+        continue-on-error: true
+        env:
+          VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
+          SHRAMIK_FY2627_URL: ${{ secrets.SHRAMIK_FY2627_URL }}
+          SHRAMIK_FY2526_URL: ${{ secrets.SHRAMIK_FY2526_URL }}
+        run: |
+          for attempt in 1 2 3; do
+            if python scripts_local/update_shramik_niyojan.py; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then sleep 20; fi
+          done
+          exit 1
+      - name: Record refresh status
+        if: always()
+        env:
+          REFRESH_OUTCOME: ${{ steps.refresh.outcome }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from datetime import datetime, timezone
+          from pathlib import Path
+          state = {"checkedAt": datetime.now(timezone.utc).isoformat(), "success": os.environ.get("REFRESH_OUTCOME") == "success"}
+          state["message"] = "Official Persondays refresh succeeded" if state["success"] else "Official Persondays refresh failed; last verified data retained"
+          Path("shramik-refresh-status.js").write_text("window.SHRAMIK_REFRESH_STATUS=" + json.dumps(state) + ";\n")
+          PY
+      - name: Commit verified Shramik data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shramik-niyojan-data.js shramik-refresh-status.js
+          if git diff --cached --quiet; then
+            echo "No Shramik Niyojan data change."
+            exit 0
+          fi
+          git commit -m "Daily Shramik Niyojan update $(date -u +'%Y-%m-%d')"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Report failed official refresh
+        if: steps.refresh.outcome != 'success'
+        run: exit 1

@@ -83,6 +83,12 @@ if not exist "scripts\merge_official_summary.py" (
 %PY% "scripts\merge_official_summary.py"
 if errorlevel 1 exit /b 24
 
+echo Refreshing Shramik Niyojan and 52 district reports...
+%PY% "scripts_local\update_shramik_niyojan.py"
+if errorlevel 1 echo WARNING: Local Persondays fetch failed; existing report retained.
+%PY% "scripts_local\update_shramik_state.py"
+if errorlevel 1 echo WARNING: 52 district fetch failed; existing report retained.
+
 echo [4/6] Verify generated files
 if not exist "data\official-summary.csv" exit /b 25
 if not exist "data\fetch-status.json" exit /b 26
@@ -90,7 +96,7 @@ if not exist "auto-data.js" exit /b 27
 if not exist "auto-status.js" exit /b 28
 
 echo [5/6] Commit verified data/status only
-git add "data\official-summary.csv" "data\fetch-status.json" "auto-data.js" "auto-status.js"
+git add "data\official-summary.csv" "data\fetch-status.json" "auto-data.js" "auto-status.js" "shramik-niyojan-data.js" "shramik-district-reports.js" "shramik-state-refresh-status.js"
 
 git diff --cached --quiet
 if not errorlevel 1 (

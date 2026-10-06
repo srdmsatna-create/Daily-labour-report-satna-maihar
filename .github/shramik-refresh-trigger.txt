@@ -1,0 +1,10 @@
+Trigger Shramik Niyojan refresh after portal-safe fix: 2026-10-01
+retry-session-aware-persondays
+fix-october-days-and-live-mandays-2026-10-01
+force-real-fetch-diagnostic-2026-10-01
+blank-secret-fallback-fixed-publish
+retry-without-stale-digest
+refresh-current-official-report
+payload-persondays-refresh
+latest-payload-refresh
+mis-session-fallback

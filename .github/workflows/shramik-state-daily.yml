@@ -1,0 +1,54 @@
+name: 52 District Shramik Daily Update
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'scripts_local/update_shramik_state.py'
+      - '.github/workflows/shramik-state-daily.yml'
+permissions:
+  contents: write
+concurrency:
+  group: shramik-state-daily
+  cancel-in-progress: false
+jobs:
+  state-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install official report reader
+        run: |
+          pip install playwright
+          python -m playwright install --with-deps chromium
+      - name: Fetch verified 52 district data
+        id: refresh
+        continue-on-error: true
+        env:
+          VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
+        run: python scripts_local/update_shramik_state.py
+      - name: Retain report diagnostic tables
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shramik-state-source-tables
+          path: data/shramik-state-debug/
+          if-no-files-found: ignore
+          retention-days: 3
+      - name: Publish verified data and refresh status
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add shramik-district-reports.js shramik-state-refresh-status.js
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Daily 52 district Shramik refresh"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Require successful Persondays refresh
+        if: steps.refresh.outcome != 'success'
+        run: exit 1

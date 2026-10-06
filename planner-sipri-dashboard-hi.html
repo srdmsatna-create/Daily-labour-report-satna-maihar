@@ -20,7 +20,233 @@
   text-align:center!important;
   vertical-align:middle!important;
 }
-</style></head><body><header><div class="head"><div><h1>प्लानर से SIPRI Portal पर कार्य योजना डैशबोर्ड</h1><div class="sub">New Work • Sub Engineer • AE Approval • State Review • FY 2026-27</div></div><a class="back" href="./">← SRDM Applications</a></div></header><main><div class="note"><b>Report Date:</b> 25-09-2026 <span style="color:#4b617c;font-size:13px">(Planner Portal 25-09 snapshot; SIPRI Excel 20-09)</span></div><div class="kpis"><div class="kpi"><small>Planner Portal में लिए गए नवीन कार्य</small><strong id="kPlanner">32,994</strong></div><div class="kpi"><small>SIPRI में योजनाबद्ध</small><strong id="kSipri">1,065</strong></div><div class="kpi"><small>SIPRI हेतु लंबित</small><strong id="kPending">31,929</strong></div><div class="kpi"><small>योजना प्रतिशत</small><strong id="kPct">3.2%</strong></div></div><div class="tools"><select id="district"><option value="ALL">सभी District</option></select><select id="janpad"><option value="ALL">सभी जनपद</option></select><select id="engineer"><option value="ALL">सभी उपयंत्री</option></select><select id="progressSort"><option value="default">Progress % — Default</option><option value="asc">Progress % — Lowest to Highest</option><option value="desc">Progress % — Highest to Lowest</option></select><select id="printScope" class="print-choice"><option value="all">PDF — पूरी रिपोर्ट</option><option value="official">PDF — Janpad / AE / State</option><option value="engineer">PDF — Sub Engineer Report</option></select><button id="csv">सारांश CSV डाउनलोड करें</button><button class="pdf-btn" onclick="printSelected()">PDF / Print</button></div><section class="box" id="officialSection"><h2>Official Planner Portal • Janpad-wise New Work / AE / State Progress</h2><div class="section-note">Yuktdhara R33.1 (FY 2026–27), 25-09-2026 के कॉलम 3–6। स्रोत के “SATNA” ब्लॉक को यहाँ “Sohawal” जनपद के रूप में दिखाया गया है।</div><div class="wrap" style="max-height:none"><table class="official-merged"><thead><tr><th>District</th><th>Janpad</th><th class="num">Planner Portal में लिए गए नवीन कार्य</th><th class="num">SIPRI में योजनाबद्ध</th><th class="num">SIPRI हेतु लंबित</th><th class="num progress-heading">प्रगति %</th><th class="num">AE Approved</th><th class="num">AE Pending</th><th class="num">State<br>Reviewed/<br>Approved</th><th class="num">State<br>Pending</th><th class="num">Yuktdhara GP</th><th class="num">कार्य प्राप्त GP</th><th class="num">Yuktdhara से प्राप्त कार्य</th><th class="num">VB‑G RAM G में बने कार्य</th></tr></thead><tbody id="officialBody"></tbody></table></div></section><section class="box" id="engineerSection"><h2>Janpad / Sub Engineer-wise Planner से SIPRI प्रगति (25-09-2026)</h2><div class="section-note">25-09 Excel की 695 पंचायतें 20-09 के 695-GP engineer crosswalk से मिलाई गई हैं। Pratap Pur → अखिलेश सोनी; Badera Kala → सत्यनारायण मिश्रा; Rampur Baghelan का Bela → श्रीमती अन्नपूर्णा सिंह (संबंधित 12-12 GP सेक्टर स्तर पर सुधारे गए, 25-09)। पूरी सूची GP • सेक्टर • उपयंत्री मास्टर में उपलब्ध है। इस तालिका का Planner कुल Excel में 30,404 है; ऊपर Planner Portal का सत्यापित आँकड़ा 32,994 अलग स्रोत से है।</div><div class="wrap"><table class="engineer-summary"><thead><tr><th>District</th><th>Janpad</th><th>Sub Engineer</th><th class="num">Excel में Planner कार्य</th><th class="num">SIPRI में योजनाबद्ध</th><th class="num">SIPRI हेतु लंबित</th><th class="num progress-heading">प्रगति %</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section></main><script src="planner-engineer-summary-data.js?v=20260925d"></script><script src="planner-approval-summary-data.js?v=20260925"></script><script>const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const ER=window.PLANNER_ENGINEER_SUMMARY||[],OFF=window.PLANNER_OFFICIAL||{total:32994,blocks:{Amarpatan:4061,Maihar:9466,Majhgawan:2790,Nagod:2774,Ramnagar:5898,'Rampur baghelan':3365,Sohawal:3498,Unchahara:1142}},AR=window.PLANNER_APPROVAL_SUMMARY||[];const YUKT={Amarpatan:[75,0,0,0],Maihar:[115,0,0,0],Majhgawan:[96,0,0,0],Nagod:[94,2,2,0],Ramnagar:[55,0,0,0],'Rampur baghelan':[97,50,61,0],Sohawal:[93,44,56,0],Unchahara:[70,0,0,0]};function districtOf(j){return ['Amarpatan','Maihar','Ramnagar'].includes(j)?'Maihar':'Satna'}function fill(id,vals,label){const el=$(id),old=el.value;el.innerHTML=`<option value="ALL">${label}</option>`+[...new Set(vals)].filter(Boolean).sort((a,b)=>a.localeCompare(b,'hi')).map(v=>`<option>${esc(v)}</option>`).join('');if([...el.options].some(o=>o.value===old))el.value=old}function filtered(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value;return ER.filter(x=>(d==='ALL'||x[0]===d)&&(j==='ALL'||x[1]===j)&&(e==='ALL'||x[2]===e))}function updateCascade(){const d=$('district').value;fill('janpad',ER.filter(x=>d==='ALL'||x[0]===d).map(x=>x[1]),'सभी जनपद');const j=$('janpad').value;fill('engineer',ER.filter(x=>(d==='ALL'||x[0]===d)&&(j==='ALL'||x[1]===j)).map(x=>x[2]),'सभी उपयंत्री')}function approvalForJanpad(b){return AR.find(x=>String(x[1]).toLowerCase()===String(b).toLowerCase())||null}function renderOfficial(){
+.engineer-summary{min-width:1700px!important;max-width:none!important;table-layout:auto!important}.engineer-summary th,.engineer-summary td{width:auto!important}.official-merged{min-width:1800px}
+/* Compact boxed report with distinct district totals */
+main{max-width:1800px;padding:0 14px}
+.box{border:2px solid #809bb7;border-radius:8px}
+.wrap{border:2px solid #58799c;border-radius:4px;max-height:75vh}
+.official-merged,.engineer-summary{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important}
+.official-merged th,.official-merged td,.engineer-summary th,.engineer-summary td{min-width:0!important;max-width:none!important;white-space:normal!important;overflow-wrap:anywhere;border:1.5px solid #7894b1!important;padding:7px 4px!important;line-height:1.3}
+.official-merged th,.engineer-summary th{font-size:14px!important}
+.official-merged td,.engineer-summary td{font-size:17px!important}
+.official-merged td.num,.engineer-summary td.num{font-size:19px!important;text-align:center}
+.official-merged .progress-badge,.engineer-summary .progress-badge{width:43px;height:43px;font-size:14px}
+.official-merged .district-satna td{background:#d6e7ff!important;border-top:2px solid #32629b!important}
+.official-merged .district-maihar td{background:#d9efdf!important;border-top:2px solid #397d53!important}
+.official-merged .grand-total td,.engineer-summary .total td{background:#ffe6b5!important;border-top:3px solid #a87525!important}
+.official-merged .district-satna td:first-child{color:#123f78!important}
+.official-merged .district-maihar td:first-child{color:#175b35!important}
+.official-merged .grand-total td:first-child{color:#704000!important}
+.official-merged th:nth-child(1){width:6%!important}
+.official-merged th:nth-child(2){width:10%!important}
+.official-merged th:nth-child(3){width:9%!important}
+.official-merged th:nth-child(4){width:7%!important}
+.official-merged th:nth-child(5){width:7%!important}
+.official-merged th:nth-child(6){width:6%!important}
+.official-merged th:nth-child(7){width:6%!important}
+.official-merged th:nth-child(8){width:6%!important}
+.official-merged th:nth-child(9){width:7%!important}
+.official-merged th:nth-child(10){width:6%!important}
+.official-merged th:nth-child(11){width:6%!important}
+.official-merged th:nth-child(12){width:5%!important}
+.official-merged th:nth-child(13){width:7%!important}
+.official-merged th:nth-child(14){width:6%!important}
+.official-merged th:nth-child(15){width:6%!important}
+.engineer-summary th:nth-child(1){width:6%!important}
+.engineer-summary th:nth-child(2){width:10%!important}
+.engineer-summary th:nth-child(3){width:17%!important}
+.engineer-summary th:nth-child(4){width:8%!important}
+.engineer-summary th:nth-child(5){width:8%!important}
+.engineer-summary th:nth-child(6){width:8%!important}
+.engineer-summary th:nth-child(7){width:6%!important}
+.engineer-summary th:nth-child(8){width:6%!important}
+.engineer-summary th:nth-child(9){width:8%!important}
+.engineer-summary th:nth-child(10){width:9%!important}
+.engineer-summary th:nth-child(11){width:7%!important}
+.engineer-summary th:nth-child(12){width:7%!important}
+
+.official-merged td:nth-child(3),.engineer-summary td:nth-child(4){color:#2453a0}
+.official-merged td:nth-child(4),.official-merged td:nth-child(7),.engineer-summary td:nth-child(5){color:#17623b}
+.official-merged td:nth-child(5),.official-merged td:nth-child(8),.official-merged td:nth-child(10),.engineer-summary td:nth-child(6){color:#a32132}
+.official-merged td:nth-child(9),.engineer-summary td:nth-child(3){color:#56329a}
+.official-merged td:nth-child(n+11),.engineer-summary td:nth-child(n+8){color:#00616b}
+@media(max-width:1000px){.official-merged{min-width:1150px!important}.engineer-summary{min-width:1050px!important}}
+@media print{
+main{max-width:none;padding:0}.wrap{overflow:visible;max-height:none}
+.official-merged,.engineer-summary{min-width:0!important;width:100%!important}
+.official-merged th,.official-merged td,.engineer-summary th,.engineer-summary td{font-size:8pt!important;padding:1mm .5mm!important}
+.official-merged td.num,.engineer-summary td.num{font-size:9pt!important}
+.engineer-summary{border:1px solid #58799c}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* Highlight progress percentages in rectangular boxes */
+.official-merged .progress-badge,.engineer-summary .progress-badge,.progress-badge{
+display:inline-flex!important;align-items:center;justify-content:center;
+width:auto!important;min-width:52px!important;height:auto!important;min-height:36px!important;
+padding:6px 5px!important;border-radius:5px!important;border:2px solid #1768b5!important;
+background:#fff0ad!important;color:#123f78!important;font-size:17px!important;
+font-weight:900!important;line-height:1.15!important;box-shadow:0 2px 4px #18304a20}
+.official-merged .grand-total .progress-badge,.engineer-summary .total .progress-badge{background:#ffd77a!important;border-color:#9c711e!important;color:#704000!important}
+@media print{.official-merged .progress-badge,.engineer-summary .progress-badge,.progress-badge{min-width:0!important;min-height:0!important;width:auto!important;height:auto!important;font-size:9pt!important;line-height:1.15!important;padding:1mm .5mm!important;border-radius:1mm!important;box-shadow:none!important}}
+
+/* Readable engineer headings and aligned total columns */
+.engineer-summary th{font-size:14px!important;line-height:1.4!important;overflow-wrap:normal!important;word-break:normal!important;text-align:center!important;padding:9px 4px!important}
+.engineer-summary td{overflow-wrap:break-word!important;word-break:normal!important}
+.engineer-summary th:nth-child(12){font-size:13px!important}
+.engineer-summary .janpad-total td{background:#e2edf8!important;border-top:2px solid #58799c!important;font-weight:900!important;color:#173f75!important}
+.engineer-summary .janpad-total td:nth-child(2){text-align:left!important}
+.engineer-summary .janpad-total td:nth-child(3){color:#2453a0!important}
+.engineer-summary .janpad-total td:nth-child(4){color:#17623b!important}
+.engineer-summary .janpad-total td:nth-child(5){color:#a32132!important}
+.engineer-summary th:nth-child(1){width:6%!important}
+.engineer-summary th:nth-child(2){width:10%!important}
+.engineer-summary th:nth-child(3){width:18%!important}
+.engineer-summary th:nth-child(4){width:8%!important}
+.engineer-summary th:nth-child(5){width:7%!important}
+.engineer-summary th:nth-child(6){width:7%!important}
+.engineer-summary th:nth-child(7){width:6%!important}
+.engineer-summary th:nth-child(8){width:6%!important}
+.engineer-summary th:nth-child(9){width:7%!important}
+.engineer-summary th:nth-child(10){width:9%!important}
+.engineer-summary th:nth-child(11){width:7%!important}
+.engineer-summary th:nth-child(12){width:9%!important}
+@media print{.engineer-summary th{font-size:8pt!important;line-height:1.25!important}.engineer-summary th:nth-child(12){font-size:8pt!important}}
+
+/* Final engineer layout: column widths come from the colgroup */
+#engineerSection{padding:12px;border:2px solid #486c91;background:#fff}
+#engineerSection .wrap{max-height:none;overflow:auto;border:2px solid #486c91}
+#engineerSection table.engineer-summary{min-width:1250px!important;width:100%!important;table-layout:fixed!important}
+#engineerSection .engineer-summary th,#engineerSection .engineer-summary td{width:auto!important;min-width:0!important;max-width:none!important;border:1.5px solid #6786a5!important;vertical-align:middle;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;padding:9px 6px!important}
+#engineerSection .engineer-summary th{position:static;background:#d6e7f8;font-size:15px!important;line-height:1.4!important;color:#173f75!important;text-align:center!important}
+#engineerSection .engineer-summary td{font-size:18px!important;line-height:1.4!important}
+#engineerSection .engineer-summary td.num{text-align:center;font-size:20px!important;font-weight:800}
+#engineerSection .engineer-summary td:nth-child(3) b{display:block;padding:5px 7px;background:#f0eafa;border:1px solid #c4b4df;border-radius:4px;color:#56329a}
+#engineerSection .engineer-summary .janpad-total td{background:#d9e9f8!important;color:#173f75!important;font-weight:900}
+#engineerSection .engineer-summary .total td{background:#ffe6b5!important;color:#704000!important;font-weight:900}
+#engineerSection .engineer-summary .progress-badge{min-width:0!important;max-width:100%;padding:5px!important;font-size:17px!important}
+@media print{
+#engineerSection{padding:2mm;border:1px solid #486c91}
+#engineerSection .wrap{overflow:visible;max-height:none}
+#engineerSection table.engineer-summary{min-width:0!important;width:100%!important}
+#engineerSection .engineer-summary th,#engineerSection .engineer-summary td{font-size:8pt!important;padding:1mm .5mm!important;border:.3mm solid #263746!important}
+#engineerSection .engineer-summary td.num{font-size:9pt!important}
+#engineerSection .engineer-summary td:nth-child(3) b{padding:0;background:transparent;border:0}
+#engineerSection .engineer-summary .progress-badge{font-size:9pt!important;padding:.5mm!important}
+}
+
+/* Prevent engineer headers from spilling across cell borders */
+#engineerSection table.engineer-summary{min-width:1100px!important}
+#engineerSection .engineer-summary th{font-size:14px!important;line-height:1.45!important;padding:10px 5px!important;overflow-wrap:break-word!important}
+#engineerSection .engineer-summary th:nth-child(10),#engineerSection .engineer-summary th:nth-child(11),#engineerSection .engineer-summary th:nth-child(12){font-size:13px!important}
+#engineerSection .engineer-summary td:nth-child(1),#engineerSection .engineer-summary td:nth-child(2){font-size:16px!important}
+@media print{#engineerSection table.engineer-summary{min-width:0!important}#engineerSection .engineer-summary th,#engineerSection .engineer-summary th:nth-child(n+10){font-size:8pt!important;padding:1mm .5mm!important}}
+
+/* Consistent page margins and unbroken district names */
+main{width:100%;max-width:1800px;margin:16px auto;padding-left:24px!important;padding-right:24px!important}
+#engineerSection{margin-left:0;margin-right:0;padding:12px}
+#engineerSection .wrap{width:100%;margin:0}
+#engineerSection .engineer-summary tbody tr:not(.total) td:first-child{white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;padding-left:7px!important;padding-right:7px!important;font-size:16px!important}
+#engineerSection .engineer-summary col:first-child{width:7%!important}
+#engineerSection .engineer-summary col:nth-child(3){width:17%!important}
+@media(max-width:600px){main{padding-left:10px!important;padding-right:10px!important}#engineerSection{padding:7px}}
+@media print{main{width:100%;margin:0;padding-left:0!important;padding-right:0!important}#engineerSection .engineer-summary tbody tr:not(.total) td:first-child{font-size:8pt!important;padding-left:.5mm!important;padding-right:.5mm!important}}
+
+/* Compact rows and keep every numeric value on one line */
+#officialSection .official-merged td,#engineerSection .engineer-summary td{
+padding:4px 5px!important;line-height:1.2!important;height:auto!important;vertical-align:middle}
+#officialSection .official-merged td.num,#engineerSection .engineer-summary td.num{
+white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;font-size:18px!important}
+#engineerSection .engineer-summary td:nth-child(3) b{padding:2px 5px!important;line-height:1.2!important}
+#officialSection .progress-badge,#engineerSection .engineer-summary .progress-badge{
+min-height:26px!important;height:auto!important;min-width:0!important;padding:3px 5px!important;line-height:1.1!important;font-size:16px!important;box-shadow:none!important}
+#officialSection .official-merged .district-total td,#officialSection .official-merged .grand-total td,
+#engineerSection .engineer-summary .janpad-total td,#engineerSection .engineer-summary .total td{
+padding-top:5px!important;padding-bottom:5px!important;line-height:1.2!important}
+#engineerSection .engineer-summary .total td.num{font-size:18px!important}
+#engineerSection .engineer-summary .total td:first-child{white-space:normal!important}
+#officialSection .official-merged th,#engineerSection .engineer-summary th{padding-top:6px!important;padding-bottom:6px!important}
+@media print{
+#officialSection .official-merged td,#engineerSection .engineer-summary td{padding:1mm .5mm!important;line-height:1.15!important}
+#officialSection .official-merged td.num,#engineerSection .engineer-summary td.num,#engineerSection .engineer-summary .total td.num{font-size:9pt!important}
+#officialSection .progress-badge,#engineerSection .engineer-summary .progress-badge{font-size:9pt!important;min-height:0!important;padding:.5mm!important}
+}
+
+/* Keep Janpad names together instead of doubling row height */
+#engineerSection .engineer-summary col:nth-child(2){width:14%!important}
+#engineerSection .engineer-summary col:nth-child(3){width:13%!important}
+#engineerSection table.engineer-summary{min-width:1250px!important}
+#engineerSection .engineer-summary tbody tr:not(.total) td:nth-child(2){white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;font-size:15px!important;line-height:1.2!important}
+#officialSection .official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(2){white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important;font-size:15px!important}
+@media print{
+#engineerSection table.engineer-summary{min-width:0!important}
+#engineerSection .engineer-summary tbody tr:not(.total) td:nth-child(2),#officialSection .official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(2){font-size:8pt!important}
+}
+
+/* Do not create a mostly empty first sheet for the engineer-only report */
+@media print{
+body.print-engineer #engineerSection{break-before:auto!important;page-break-before:auto!important;break-inside:auto!important;page-break-inside:auto!important;margin-top:2mm!important}
+body.print-engineer #engineerSection .wrap{break-inside:auto!important;page-break-inside:auto!important;overflow:visible!important;max-height:none!important}
+body.print-engineer #engineerSection table{break-inside:auto!important;page-break-inside:auto!important}
+body.print-engineer #engineerSection thead{display:table-header-group!important}
+body.print-engineer #engineerSection tr{break-inside:avoid!important;page-break-inside:avoid!important}
+body.print-engineer main{margin:0!important;padding:0!important}
+}
+
+/* Keep complete sub-engineer names on one line. */
+#engineerSection .engineer-summary td:nth-child(3) b{font-size:16px!important;padding:3px 4px!important}
+#engineerSection table.engineer-summary{min-width:1450px!important}
+#engineerSection .engineer-summary col:first-child{width:6%!important}
+#engineerSection .engineer-summary col:nth-child(3){width:22%!important}
+#engineerSection .engineer-summary td:nth-child(3),#engineerSection .engineer-summary td:nth-child(3) b{white-space:nowrap!important;overflow-wrap:normal!important;word-break:normal!important}
+@media print{#engineerSection table.engineer-summary{min-width:0!important}#engineerSection .engineer-summary td:nth-child(3) b{font-size:8pt!important}}
+/* Allow source status text and work categories to fit their cells. */
+#engineerSection .engineer-summary td:last-child{white-space:normal!important;font-size:13px!important;overflow-wrap:break-word!important}
+#engineerSection .engineer-summary td:nth-child(10){font-size:13px!important;line-height:1.4!important}
+/* Compact work type counts in the final engineer column. */
+#engineerSection .engineer-summary td:last-child{font-size:13px!important;white-space:normal!important;line-height:1.4!important}
+/* Category headings across the right, clickable numeric counts below. */
+#workCategorySummaryTable{width:max-content;min-width:100%;table-layout:auto}
+#workCategorySummaryTable th{min-width:135px;max-width:210px;white-space:normal;text-align:center;vertical-align:middle}
+#workCategorySummaryTable td.num{text-align:center;font-size:19px;font-weight:800}
+#workCategorySummaryTable a{color:#0755a1;text-decoration:underline;display:inline-block;padding:5px 9px}
+/* Balanced engineer report with wider work descriptions and narrow page margins. */
+main{max-width:1900px!important;padding-left:8px!important;padding-right:8px!important;margin:10px auto!important}
+#engineerSection{padding:7px!important}
+#engineerSection .engineer-summary col:nth-child(3){width:17%!important}
+#engineerSection .engineer-summary col:last-child{width:22%!important}
+#engineerSection .engineer-summary td:nth-child(3),#engineerSection .engineer-summary td:nth-child(3) b{padding-left:3px!important;padding-right:3px!important}
+#engineerSection .engineer-summary td:last-child{padding:6px 8px!important;font-size:14px!important;line-height:1.45!important}
+@media print{main{padding:0!important;margin:0!important}#engineerSection .engineer-summary td:last-child{font-size:8pt!important;padding:1mm!important}}
+/* Compact janpad columns with larger readable text and counts. */
+#workCategorySummaryTable{width:100%!important;min-width:1160px!important;table-layout:fixed!important}
+#workCategorySummaryTable th,#workCategorySummaryTable td{min-width:0!important;max-width:none!important;padding:5px 4px!important;line-height:1.25!important;font-size:17px!important}
+#workCategorySummaryTable th:first-child,#workCategorySummaryTable td:first-child{width:25%!important;overflow-wrap:break-word}
+#workCategorySummaryTable th:nth-child(2),#workCategorySummaryTable td:nth-child(2){width:10%!important;font-size:16px!important}
+#workCategorySummaryTable th:nth-child(n+3){white-space:normal!important;overflow-wrap:break-word}
+#workCategorySummaryTable td.num{font-size:22px!important;font-weight:900!important}
+#workCategorySummaryTable a{padding:2px 4px!important}
+#workCategorySummaryTable th small{font-size:13px!important}
+@media print{#workCategorySummaryTable{min-width:0!important}#workCategorySummaryTable th,#workCategorySummaryTable td{font-size:8pt!important}#workCategorySummaryTable td.num{font-size:10pt!important}}
+
+/* Full-width reports with dark boxed table cells. */
+@media screen{
+main{width:100%!important;max-width:none!important;margin:8px 0!important;padding-left:2px!important;padding-right:2px!important}
+.box,#engineerSection,#workCategorySection{padding-left:3px!important;padding-right:3px!important}
+}
+main table{border-collapse:collapse!important;border:2px solid #263746!important}
+main table th,main table td,#engineerSection .engineer-summary th,#engineerSection .engineer-summary td{border:1.5px solid #263746!important}
+main table tr.total td,main table tr.janpad-total td,main table tr.grand-total td,main table tr.district-total td{border-top:2px solid #172938!important;border-bottom:2px solid #172938!important}
+
+
+/* Balanced category detail columns. */
+#workCategoryDetailTable{width:100%!important;table-layout:fixed!important;min-width:900px!important}
+#workCategoryDetailTable th,#workCategoryDetailTable td{padding:7px 8px!important;font-size:17px!important;line-height:1.3!important;overflow-wrap:break-word}
+#workCategoryDetailTable td.num,#workCategoryDetailTable th.num{text-align:center!important;font-size:20px!important;font-weight:900!important}
+
+.permission-allowed{color:#116530!important;font-weight:800}.permission-outside{color:#b42318!important;font-weight:800}.permission-pending{color:#a64b00!important;font-weight:800}
+#workPermissionFilter{font-size:16px;color:#173453}
+</style></head><body><header><div class="head"><div><h1>प्लानर से SIPRI Portal पर कार्य योजना डैशबोर्ड</h1><div class="sub">New Work • Sub Engineer • AE Approval • State Review • FY 2026-27</div></div><a class="back" href="./">← SRDM Applications</a></div></header><main><div class="note"><b>Report Date:</b> 25-09-2026 <span style="color:#4b617c;font-size:13px">(Planner Portal 25-09-2026 स्थिर; SIPRI / Yuktdhara डेटा अपडेट 02-10-2026)</span></div><div class="kpis"><div class="kpi"><small>Planner Portal में लिए गए नवीन कार्य</small><strong id="kPlanner">32,994</strong></div><div class="kpi"><small>SIPRI में योजनाबद्ध</small><strong id="kSipri">1,143</strong></div><div class="kpi"><small>SIPRI हेतु लंबित</small><strong id="kPending">31,851</strong></div><div class="kpi"><small>योजना प्रतिशत</small><strong id="kPct">3.5%</strong></div></div><div class="tools"><select id="district"><option value="ALL">सभी District</option></select><select id="janpad"><option value="ALL">सभी जनपद</option></select><select id="engineer"><option value="ALL">सभी उपयंत्री</option></select><select id="progressSort"><option value="default">प्रगति % — सामान्य क्रम</option><option value="asc">Ascending — कम से अधिक ↑</option><option value="desc">Descending — अधिक से कम ↓</option></select><button type="button" id="sortAscending">प्रगति % ↑ Ascending</button><button type="button" id="sortDescending">प्रगति % ↓ Descending</button><select id="printScope" class="print-choice"><option value="all">PDF — पूरी रिपोर्ट</option><option value="official">PDF — Janpad / AE / State</option><option value="engineer">PDF — Sub Engineer Report</option><option value="categorySummary">PDF — जनपदवार कार्य-प्रकार सारांश</option><option value="category">PDF — कार्य श्रेणी विवरण</option></select><button id="csv">सारांश CSV डाउनलोड करें</button><button class="pdf-btn" onclick="printSelected()">PDF / Print</button></div><section class="box" id="officialSection"><h2>Official Planner Portal • Janpad-wise New Work / AE / State Progress</h2><div class="section-note">Yuktdhara R33.1 (FY 2026–27), 25-09-2026 के कॉलम 3–6। स्रोत के “SATNA” ब्लॉक को यहाँ “Sohawal” जनपद के रूप में दिखाया गया है। Yuktdhara GP / प्राप्त कार्य / VB‑G RAM G कार्य के आँकड़े 02-10-2026 के दिए गए आधिकारिक स्क्रीनशॉट से अपडेट हैं।</div><div class="wrap" style="max-height:none"><table class="official-merged"><thead><tr><th>District</th><th>Janpad</th><th class="num">Planner Portal में लिए गए नवीन कार्य</th><th class="num">SIPRI में योजनाबद्ध</th><th class="num">SIPRI हेतु लंबित</th><th class="num progress-heading">प्रगति %</th><th class="num">AE Approved</th><th class="num">AE Pending</th><th class="num">State<br>Reviewed/<br>Approved</th><th class="num">State<br>Pending</th><th class="num">Yuktdhara GP</th><th class="num">कार्य प्राप्त GP</th><th class="num">Yuktdhara से प्राप्त कार्य</th><th class="num">VB‑G RAM G में बने कार्य</th><th class="num">AE द्वारा जारी TS संख्या</th></tr></thead><tbody id="officialBody"></tbody></table></div></section><section class="box" id="engineerSection"><h2>Janpad / Sub Engineer-wise Planner से SIPRI प्रगति (रिपोर्ट दिनांक <span id="engineerReportDate">04-10-2026</span>)</h2><div id="yuktdharaReceivedStatus" class="section-note"></div><div class="wrap"><table class="engineer-summary"><colgroup><col style="width:6%"><col style="width:10%"><col style="width:17%"><col style="width:8%"><col style="width:7%"><col style="width:7%"><col style="width:5%"><col style="width:5%"><col style="width:6%"><col style="width:7%"><col style="width:22%"></colgroup><thead><tr><th>जिला</th><th>जनपद</th><th>उपयंत्री</th><th class="num">Planner कार्य<br>(Excel)</th><th class="num">SIPRI में<br>योजनाबद्ध</th><th class="num">SIPRI हेतु<br>लंबित</th><th class="num progress-heading">प्रगति %</th><th class="num">कार्य प्राप्त<br>GP</th><th class="num">युक्तधारा से<br>प्राप्त कार्य</th><th class="num">VB-G RAM G<br>में बने कार्य</th><th>कार्य का प्रकार</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section><div class="note">कार्य के प्रकार युक्तधारा के कार्य विवरण से प्राप्त होने और प्राप्त कार्यों की संख्या से मिलान के बाद दिखेंगे। विवरण लंबित या सत्यापन लंबित का अर्थ शून्य नहीं है।</div><section class="box" id="workCategorySection"><h2>युक्तधारा — कार्य की श्रेणी और संख्या</h2><div class="tools"><select id="workPermissionFilter" aria-label="कार्य का वर्गीकरण"><option value="ALL">सभी — अनुमत्य / गैर अनुमत्य / सत्यापन लंबित</option><option value="allowed">अनुमत्य कार्य</option><option value="outside">गैर अनुमत्य कार्य</option><option value="pending">सत्यापन लंबित कार्य</option></select><select id="workCategoryFilter" aria-label="कार्य की श्रेणी"><option value="ALL">सभी कार्य श्रेणियाँ</option></select></div><div class="section-note">जिला, जनपद और उपयंत्री के ऊपर दिए गए फ़िल्टर यहाँ भी लागू हैं।</div><div class="section-note">वर्गीकरण आधार: आपके दिए गए वर्तमान 10 अनुमत कार्य। बोरवेल/हैंडपंप के पास सोक/रिचार्ज पिट, निर्दिष्ट पौधरोपण परियोजना और सुगम संपर्कता सड़क की शर्त सामान्य कार्य-नाम से प्रमाणित नहीं होने पर सत्यापन लंबित है। गैर अनुमत्य का अर्थ इस सूची से मिलान नहीं है।</div><div id="workPermissionTotals" class="note"></div><h3>युक्तधारा पोर्टल से VBG RAM G में प्रदर्शित जनपदवार कार्य-प्रकार सारांश</h3><div class="wrap"><table id="workCategorySummaryTable"><thead id="workCategorySummaryHead"></thead><tbody id="workCategorySummaryBody"></tbody></table></div><h3>उपयंत्रीवार विवरण</h3><div class="wrap"><table id="workCategoryDetailTable"><colgroup><col style="width:8%"><col style="width:13%"><col style="width:20%"><col style="width:51%"><col style="width:8%"></colgroup><thead><tr><th>जिला</th><th>जनपद</th><th>उपयंत्री</th><th>कार्य की श्रेणी</th><th class="num">कार्य संख्या</th></tr></thead><tbody id="workCategoryBody"></tbody></table></div></section></main><script src="yuktdhara-received-data.js"></script><script src="planner-engineer-summary-data.js?v=20261002"></script><script src="planner-approval-summary-data.js?v=20261002"></script><script>const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const ER=window.PLANNER_ENGINEER_SUMMARY||[],OFF=window.PLANNER_OFFICIAL||{total:32994,blocks:{Amarpatan:4061,Maihar:9466,Majhgawan:2790,Nagod:2774,Ramnagar:5898,'Rampur baghelan':3365,Sohawal:3498,Unchahara:1142}},AR=window.PLANNER_APPROVAL_SUMMARY||[];const YUKT={"Amarpatan":[75,10,11,0],"Maihar":[115,34,43,0],"Majhgawan":[96,14,31,2],"Nagod":[94,14,27,1],"Ramnagar":[55,26,34,0],"Rampur baghelan":[97,50,62,1],"Sohawal":[93,45,57,3],"Unchahara":[70,7,10,0]};function districtOf(j){return ['Amarpatan','Maihar','Ramnagar'].includes(j)?'Maihar':'Satna'}function fill(id,vals,label){const el=$(id),old=el.value;el.innerHTML=`<option value="ALL">${label}</option>`+[...new Set(vals)].filter(Boolean).sort((a,b)=>a.localeCompare(b,'hi')).map(v=>`<option>${esc(v)}</option>`).join('');if([...el.options].some(o=>o.value===old))el.value=old}function filtered(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value;return ER.filter(x=>(d==='ALL'||x[0]===d)&&(j==='ALL'||x[1]===j)&&(e==='ALL'||x[2]===e))}function updateCascade(){const d=$('district').value;fill('janpad',ER.filter(x=>d==='ALL'||x[0]===d).map(x=>x[1]),'सभी जनपद');const j=$('janpad').value;fill('engineer',ER.filter(x=>(d==='ALL'||x[0]===d)&&(j==='ALL'||x[1]===j)).map(x=>x[2]),'सभी उपयंत्री')}function approvalForJanpad(b){return AR.find(x=>String(x[1]).toLowerCase()===String(b).toLowerCase())||null}function renderOfficial(){
   const d=$('district').value,j=$('janpad').value,sort=$('progressSort').value;
   const districtGroups=[
     {name:'Maihar',blocks:['Amarpatan','Maihar','Ramnagar']},
@@ -44,14 +270,44 @@
       gt.p+=x.p;gt.s+=x.s;gt.ae+=x.ae;gt.aep+=x.aep;gt.sr+=x.sr;gt.sp+=x.sp;
       const y=YUKT[x.b]||[0,0,0,0];
       y.forEach((v,i)=>{dt.y[i]+=v;gt.y[i]+=v});
-      h+=`<tr><td>${g.name}</td><td><b>${esc(x.b)}</b></td><td class="num good">${x.p.toLocaleString('en-IN')}</td><td class="num">${x.s.toLocaleString('en-IN')}</td><td class="num bad">${x.pd.toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${x.pc.toFixed(1)}%</span></td><td class="num good">${x.ae.toLocaleString('en-IN')}</td><td class="num bad">${x.aep.toLocaleString('en-IN')}</td><td class="num good">${x.sr.toLocaleString('en-IN')}</td><td class="num bad">${x.sp.toLocaleString('en-IN')}</td>${y.map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}</tr>`;
+      h+=`<tr><td>${g.name}</td><td><b>${esc(x.b)}</b></td><td class="num good">${x.p.toLocaleString('en-IN')}</td><td class="num">${x.s.toLocaleString('en-IN')}</td><td class="num bad">${x.pd.toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${x.pc.toFixed(1)}%</span></td><td class="num good">${x.ae.toLocaleString('en-IN')}</td><td class="num bad">${x.aep.toLocaleString('en-IN')}</td><td class="num good">${x.sr.toLocaleString('en-IN')}</td><td class="num bad">${x.sp.toLocaleString('en-IN')}</td>${y.map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num">—</td></tr>`;
     }
-    h+=`<tr class="district-total"><td colspan="2">${g.name.toUpperCase()} DISTRICT TOTAL</td><td class="num">${dt.p.toLocaleString('en-IN')}</td><td class="num">${dt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,dt.p-dt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${dt.p?(100*dt.s/dt.p).toFixed(1):'0.0'}%</span></td><td class="num">${dt.ae.toLocaleString('en-IN')}</td><td class="num">${dt.aep.toLocaleString('en-IN')}</td><td class="num">${dt.sr.toLocaleString('en-IN')}</td><td class="num">${dt.sp.toLocaleString('en-IN')}</td>${dt.y.map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}</tr>`;
+    h+=`<tr class="district-total district-${g.name.toLowerCase()}"><td colspan="2">${g.name.toUpperCase()} DISTRICT TOTAL</td><td class="num">${dt.p.toLocaleString('en-IN')}</td><td class="num">${dt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,dt.p-dt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${dt.p?(100*dt.s/dt.p).toFixed(1):'0.0'}%</span></td><td class="num">${dt.ae.toLocaleString('en-IN')}</td><td class="num">${dt.aep.toLocaleString('en-IN')}</td><td class="num">${dt.sr.toLocaleString('en-IN')}</td><td class="num">${dt.sp.toLocaleString('en-IN')}</td>${dt.y.map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num">—</td></tr>`;
   }
   const grandLabel=(d==='ALL'&&j==='ALL')?'कुल (MAIHAR + SATNA)':'कुल';
-  h+=`<tr class="grand-total"><td colspan="2">${grandLabel}</td><td class="num">${gt.p.toLocaleString('en-IN')}</td><td class="num">${gt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,gt.p-gt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${gt.p?(100*gt.s/gt.p).toFixed(1):'0.0'}%</span></td><td class="num">${gt.ae.toLocaleString('en-IN')}</td><td class="num">${gt.aep.toLocaleString('en-IN')}</td><td class="num">${gt.sr.toLocaleString('en-IN')}</td><td class="num">${gt.sp.toLocaleString('en-IN')}</td>${gt.y.map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}</tr>`;
+  h+=`<tr class="grand-total"><td colspan="2">${grandLabel}</td><td class="num">${gt.p.toLocaleString('en-IN')}</td><td class="num">${gt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,gt.p-gt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${gt.p?(100*gt.s/gt.p).toFixed(1):'0.0'}%</span></td><td class="num">${gt.ae.toLocaleString('en-IN')}</td><td class="num">${gt.aep.toLocaleString('en-IN')}</td><td class="num">${gt.sr.toLocaleString('en-IN')}</td><td class="num">${gt.sp.toLocaleString('en-IN')}</td>${gt.y.map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num">—</td></tr>`;
   $('officialBody').innerHTML=h;
-}function renderEngineer(){const r=filtered();let h='',gp=0,gs=0;for(const j of [...new Set(r.map(x=>x[1]))]){const jr=r.filter(x=>x[1]===j);let jp=0,js=0;for(const x of jr){jp+=x[3];js+=x[4];const pd=Math.max(0,x[3]-x[4]),pc=x[3]?100*x[4]/x[3]:0;h+=`<tr><td>${x[0]}</td><td>${x[1]}</td><td><b>${esc(x[2])}</b></td><td class="num good">${x[3].toLocaleString('en-IN')}</td><td class="num">${x[4].toLocaleString('en-IN')}</td><td class="num bad">${pd.toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${pc.toFixed(1)}%</span></td></tr>`}h+=`<tr class="janpad-total"><td>${districtOf(j)}</td><td colspan="2">${j} — Janpad Total</td><td class="num">${jp.toLocaleString('en-IN')}</td><td class="num">${js.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,jp-js).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${jp?(100*js/jp).toFixed(1):'0.0'}%</span></td></tr>`;gp+=jp;gs+=js}h+=`<tr class="total"><td colspan="3">Grand Total</td><td class="num">${gp.toLocaleString('en-IN')}</td><td class="num">${gs.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,gp-gs).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${gp?(100*gs/gp).toFixed(1):'0.0'}%</span></td></tr>`;$('engineerBody').innerHTML=h}function renderKPI(){const d=$('district').value,j=$('janpad').value,s=AR.filter(x=>(d==='ALL'||districtOf(x[1])===d)&&(j==='ALL'||x[1]===j)).reduce((n,x)=>n+Number(x[4]||0),0),p=j!=='ALL'?Number(OFF.blocks[j]||0):d!=='ALL'?Object.entries(OFF.blocks).reduce((a,[b,v])=>a+(districtOf(b)===d?Number(v):0),0):Number(OFF.total||32994);$('kPlanner').textContent=p.toLocaleString('en-IN');$('kSipri').textContent=s.toLocaleString('en-IN');$('kPending').textContent=Math.max(0,p-s).toLocaleString('en-IN');$('kPct').textContent=(p?100*s/p:0).toFixed(1)+'%'}const WK13={Amarpatan:[25,8,10],Maihar:[137,69,50],Majhgawan:[182,130,38],Nagod:[149,133,5],Ramnagar:[243,163,25],'Rampur baghelan':[117,86,29],Sohawal:[168,69,49],Unchahara:[37,15,0]};
+}
+function workPermission(label){
+if(/Construction of (?:Roof Top Rain Water Harvesting Structure|Boulder Check Dam|Goat Shelter|Sand-Filled Groundwater Recharge in Borewell) for (?:Community|Individual|Groups)/i.test(label))return 'allowed';
+if(/Soak Pit|Recharge Pit|Plantation|Construction of Cement Concrete Road/i.test(label))return 'pending';
+return 'outside';
+}
+function permissionLabel(label){return {allowed:'अनुमत्य',outside:'गैर अनुमत्य',pending:'सत्यापन लंबित'}[workPermission(label)]}
+function permissionBadge(label){return '<span class="permission-'+workPermission(label)+'">'+permissionLabel(label)+'</span>'}
+function permissionCounts(counts){const v={allowed:0,outside:0,pending:0};for(const [label,n] of Object.entries(counts))v[workPermission(label)]+=Number(n);return '<span class="permission-allowed">अनुमत्य कार्य संख्या ('+v.allowed+')</span> · <span class="permission-outside">गैर अनुमत्य कार्य संख्या ('+v.outside+')</span> · <span class="permission-pending">सत्यापन लंबित ('+v.pending+')</span>'}
+
+function renderEngineer(){
+const r=filtered(), fmt=n=>Number(n).toLocaleString('en-IN');
+let h='',gp=0,gs=0,ge=0;
+const received=window.YUKTDHARA_RECEIVED||{},receivedRows=received.rows||[],normal=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097F]/g,''),jn=v=>normal(v)==='SATNA'?'SOHAWAL':normal(v)==='RAMPORBAGHELAN'?'RAMPURBAGHELAN':normal(v);
+const receivedFor=x=>receivedRows.find(v=>jn(v.janpad)===jn(x[1])&&normal(v.engineer)===normal(x[2]));
+const receivedCells=xs=>{const found=xs.map(receivedFor);return found.length&&found.every(Boolean)?'<td class="num">'+fmt(found.reduce((n,v)=>n+v.gpReceived,0))+'</td><td class="num">'+fmt(found.reduce((n,v)=>n+v.worksReceived,0))+'</td>':'<td class="num">—</td><td class="num">—</td>'};
+const typeLabels={"Repair & Maintenance of Cement Concrete Road for Community":"CC Road Repair","Construction of Cement Concrete Road for Community":"CC Road","Construction of NADEP Compost Pit for Community":"NADEP","Construction of Soak Pit for Community":"Soak Pit","Construction of Recharge Pit for Community":"Recharge Pit","Rejuvenation of Pond for Community":"Pond Renovation","Construction of Roof Top Rain Water Harvesting Structure for Community":"Roof Rainwater Harvesting","Repair & Maintenance of Culvert for Community":"Culvert Repair","Construction of Play Ground for Government School for Community":"School Playground","Construction of NADEP Compost pit for Individual":"NADEP (Individual)","Construction of Crematorium for Community":"Crematorium","Construction of Kitchen Shed for Government School for Community":"Kitchen Shed","Construction of Goat Shelter for Community":"Goat Shelter","Construction of Compound Wall for Government School for Community":"School Boundary Wall","Construction of Vermi Compost Structure for Community":"Vermi Compost","Construction of NADEP Compost Pit for Groups":"NADEP (Group)","Construction of Soak Pit for Individual":"Soak Pit (Individual)","Construction of Cattle Shelter for Community":"Cattle Shelter","Construction of Irrigation Well for Individual":"Irrigation Well (Individual)","Construction of Irrigation Well for Groups":"Irrigation Well (Group)","Construction of Culvert for Community":"Culvert","Construction of Boulder Check Dam for Individual":"Boulder Check Dam (Individual)","Construction of Masonry Check Dam for Community":"Masonry Check Dam","Construction of Fishery Pond for Community":"Fishery Pond","Construction of Compost Pit for Community":"Compost Pit","Construction of Masonry Check Dam for Individual":"Masonry Check Dam (Individual)","Avenue Plantation for Community":"Avenue Plantation","Construction of Sand-Filled Groundwater Recharge in Borewell for Community":"Borewell Recharge","Plantation in Institutions for Community":"Institution Plantation","Construction of Recharge Pit for Individual":"Recharge Pit (Individual)","Construction of Percolation Tank for Community":"Percolation Tank","Construction of Farm Pond for Individual":"Farm Pond (Individual)","Block Plantation of Sericulture Trees in fields for Community":"Sericulture Plantation"};
+const createdCell=xs=>{const found=xs.map(receivedFor);const values=found.map((v,i)=>{if(Number.isInteger(v?.worksCreated))return v.worksCreated;const b=(received.blocks||[]).find(b=>jn(b.block)===jn(xs[i][1]));return b?.worksCreated===0&&v?0:null});return '<td class="num">'+(values.length&&values.every(v=>v!==null)?fmt(values.reduce((a,n)=>a+n,0)):'—')+'</td>'};
+const typeCell=(xs,summary=false)=>{const found=xs.map(receivedFor);if(!found.length||!found.every(v=>v&&v.typesComplete===true))return '<td>विवरण लंबित</td>';const counts={};for(const v of found)for(const [label,n] of Object.entries(v.workTypes||{}))counts[label]=(counts[label]||0)+n;if(summary)return '<td><a href="#workCategorySection">सारांश</a><br><small>'+permissionCounts(counts)+'</small></td>';return '<td>'+Object.entries(counts).map(([label,n])=>'<span title="'+esc(label)+'">'+esc(typeLabels[label]||label)+'-'+fmt(n)+' ['+permissionBadge(label)+']</span>').join(', ')+(Object.keys(counts).length?'<br><small>'+permissionCounts(counts)+'</small>':'—')+'</td>'};
+const extras=x=>receivedCells([x])+createdCell([x])+typeCell([x]);
+const status=document.getElementById('yuktdharaReceivedStatus');if(status)status.textContent=received.rows?.length?'युक्तधारा GP-wise डेटा: '+(received.officialDate||received.updatedAt||'')+(received.success?'':' · नवीनतम डाउनलोड असफल; पिछला डेटा'):'युक्तधारा GP-wise डेटा: डाउनलोड की प्रतीक्षा';
+const totalExtras=(jr,j)=>receivedCells(jr)+createdCell(jr)+typeCell(jr,true);
+for(const j of [...new Set(r.map(x=>x[1]))]){
+const jr=r.filter(x=>x[1]===j);const order=$('progressSort').value;if(order==='asc'||order==='desc'){const progress=x=>x[3]?100*x[4]/x[3]:0;jr.sort((a,b)=>(order==='asc'?1:-1)*(progress(a)-progress(b))||String(a[2]).localeCompare(String(b[2]),'hi'));}let jp=0,js=0;
+for(const x of jr){jp+=x[3];js+=x[4];const pd=Math.max(0,x[3]-x[4]),pc=x[3]?100*x[4]/x[3]:0;
+h+=`<tr><td>${x[0]}</td><td>${x[1]}</td><td><b>${esc(x[2])}</b></td><td class="num good">${fmt(x[3])}</td><td class="num">${fmt(x[4])}</td><td class="num bad">${fmt(pd)}</td><td class="progress-cell"><span class="progress-badge">${pc.toFixed(1)}%</span></td>${extras(x)}</tr>`;}
+h+=`<tr class="janpad-total"><td>${districtOf(j)}</td><td colspan="2">${j} — Janpad Total</td><td class="num">${fmt(jp)}</td><td class="num">${fmt(js)}</td><td class="num">${fmt(Math.max(0,jp-js))}</td><td class="progress-cell"><span class="progress-badge">${jp?(100*js/jp).toFixed(1):'0.0'}%</span></td>${totalExtras(jr,j)}</tr>`;gp+=jp;gs+=js;}
+const jy=[...new Set(r.map(x=>x[1]))], yt=[1,2,3].map(i=>jy.reduce((n,j)=>n+(YUKT[j]?.[i]||0),0));
+h+=`<tr class="total"><td colspan="3">Grand Total</td><td class="num">${fmt(gp)}</td><td class="num">${fmt(gs)}</td><td class="num">${fmt(Math.max(0,gp-gs))}</td><td class="progress-cell"><span class="progress-badge">${gp?(100*gs/gp).toFixed(1):'0.0'}%</span></td>${receivedCells(r)+createdCell(r)+typeCell(r,true)}</tr>`;
+$('engineerBody').innerHTML=h;
+}function renderKPI(){const d=$('district').value,j=$('janpad').value,s=AR.filter(x=>(d==='ALL'||districtOf(x[1])===d)&&(j==='ALL'||x[1]===j)).reduce((n,x)=>n+Number(x[4]||0),0),p=j!=='ALL'?Number(OFF.blocks[j]||0):d!=='ALL'?Object.entries(OFF.blocks).reduce((a,[b,v])=>a+(districtOf(b)===d?Number(v):0),0):Number(OFF.total||32994);$('kPlanner').textContent=p.toLocaleString('en-IN');$('kSipri').textContent=s.toLocaleString('en-IN');$('kPending').textContent=Math.max(0,p-s).toLocaleString('en-IN');$('kPct').textContent=(p?100*s/p:0).toFixed(1)+'%'}const WK13={Amarpatan:[25,8,10],Maihar:[137,69,50],Majhgawan:[182,130,38],Nagod:[149,133,5],Ramnagar:[243,163,25],'Rampur baghelan':[117,86,29],Sohawal:[168,69,49],Unchahara:[37,15,0]};
 function renderWeekly(){
  const d=$('district').value,j=$('janpad').value,fmt=n=>Number(n).toLocaleString('en-IN');
  const list=AR.filter(x=>(d==='ALL'||districtOf(x[1])===d)&&(j==='ALL'||x[1]===j));
@@ -59,9 +315,90 @@ function renderWeekly(){
  let h='';
  for(const r of list){const old=WK13[r[1]]||[0,0,0],now=[Number(r[4]||0),Number(r[5]||0),Number(r[7]||0)];
    for(let i=0;i<3;i++){sums[i*2]+=old[i];sums[i*2+1]+=now[i]}
-   h+=`<tr><td>${districtOf(r[1])}</td><td><b>${esc(r[1])}</b></td>${old.map((v,i)=>`<td class="num">${fmt(v)}</td><td class="num good">${fmt(now[i])}</td><td class="weekly-progress-cell"><span class="weekly-badge ${now[i]===v?'is-zero':'is-positive'}">${now[i]-v>=0?'+':''}${fmt(now[i]-v)}</span></td>`).join('')}</tr>`;
+   h+=`<tr><td>${districtOf(r[1])}</td><td><b>${esc(r[1])}</b></td>${old.map((v,i)=>`<td class="num">${fmt(v)}</td><td class="num good">${fmt(now[i])}</td><td class="weekly-progress-cell"><span class="weekly-badge ${now[i]===v?'is-zero':'is-positive'}">${now[i]-v>=0?'+':''}${fmt(now[i]-v)}</span></td>`).join('')}<td class="num">—</td></tr>`;
  }
- h+=`<tr class="total"><td colspan="2">कुल</td>${[0,1,2].map(i=>`<td class="num">${fmt(sums[i*2])}</td><td class="num">${fmt(sums[i*2+1])}</td><td class="weekly-progress-cell"><span class="weekly-badge ${sums[i*2+1]===sums[i*2]?'is-zero':'is-positive'}">${sums[i*2+1]-sums[i*2]>=0?'+':''}${fmt(sums[i*2+1]-sums[i*2])}</span></td>`).join('')}</tr>`;
+ h+=`<tr class="total"><td colspan="2">कुल</td>${[0,1,2].map(i=>`<td class="num">${fmt(sums[i*2])}</td><td class="num">${fmt(sums[i*2+1])}</td><td class="weekly-progress-cell"><span class="weekly-badge ${sums[i*2+1]===sums[i*2]?'is-zero':'is-positive'}">${sums[i*2+1]-sums[i*2]>=0?'+':''}${fmt(sums[i*2+1]-sums[i*2])}</span></td>`).join('')}<td class="num">—</td></tr>`;
  $('weeklyBody').innerHTML=h;
 }
-function render(){renderKPI();renderOfficial();renderEngineer()}function printSelected(){document.body.classList.remove('print-official','print-engineer');const v=$('printScope').value;if(v==='official')document.body.classList.add('print-official');if(v==='engineer')document.body.classList.add('print-engineer');window.print();setTimeout(()=>document.body.classList.remove('print-official','print-engineer'),500)}function init(){fill('district',ER.map(x=>x[0]),'सभी District');updateCascade();render();$('district').onchange=()=>{updateCascade();render()};$('janpad').onchange=()=>{updateCascade();render()};$('engineer').onchange=render;$('progressSort').onchange=renderOfficial;$('csv').onclick=()=>{const r=filtered(),lines=[['District','Janpad','Sub Engineer','Planner Excel Work','SIPRI Planned','SIPRI Pending','Progress %'],...r.map(x=>[x[0],x[1],x[2],x[3],x[4],Math.max(0,x[3]-x[4]),x[3]?(100*x[4]/x[3]).toFixed(2):'0.00'])].map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([lines],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='Planner_SIPRI_SubEngineer_Summary_25-09-2026.csv';a.click();URL.revokeObjectURL(u)}}init();</script></body></html>
+function sortVisibleProgress(){
+const order=$('progressSort').value;if(order!=='asc'&&order!=='desc')return;
+for(const [id,col] of [['officialBody',5],['engineerBody',6]]){
+const body=$(id),rows=[...body.rows],totals=rows.filter(r=>r.matches('.district-total,.grand-total,.janpad-total,.total')),data=rows.filter(r=>!totals.includes(r));
+const value=r=>parseFloat(r.cells[col]?.textContent)||0;
+data.sort((a,b)=>(order==='asc'?1:-1)*(value(a)-value(b)));
+body.replaceChildren(...data,...totals);
+}
+}
+
+function renderWorkCategories(){
+const data=window.YUKTDHARA_RECEIVED||{},normalize=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097F]/g,''),jn=v=>normalize(v)==='SATNA'?'SOHAWAL':normalize(v)==='RAMPORBAGHELAN'?'RAMPURBAGHELAN':normalize(v);
+const labels={"Repair & Maintenance of Cement Concrete Road for Community":"सामुदायिक CC सड़क मरम्मत एवं रखरखाव","Construction of Cement Concrete Road for Community":"सामुदायिक CC सड़क निर्माण","Construction of NADEP Compost Pit for Community":"सामुदायिक नाडेप कम्पोस्ट पिट","Construction of Soak Pit for Community":"सामुदायिक सोक पिट","Construction of Recharge Pit for Community":"सामुदायिक रिचार्ज पिट","Rejuvenation of Pond for Community":"सामुदायिक तालाब जीर्णोद्धार"};
+const eligible=filtered().map(x=>({x,row:(data.rows||[]).find(v=>jn(v.janpad)===jn(x[1])&&normalize(v.engineer)===normalize(x[2]))}));
+const permission=['allowed','outside','pending'].includes($('workPermissionFilter').value)?$('workPermissionFilter').value:'ALL';const select=$('workCategoryFilter'),old=select.value,categories=[...new Set(eligible.flatMap(v=>Object.keys(v.row?.typesComplete?v.row.workTypes||{}:{}).filter(k=>permission==='ALL'||workPermission(k)===permission)))].sort((a,b)=>(labels[a]||a).localeCompare(labels[b]||b,'hi'));
+select.innerHTML='<option value="ALL">सभी कार्य श्रेणियाँ</option>'+categories.map(k=>'<option value="'+esc(k)+'">'+esc(labels[k]||k)+'</option>').join('');select.value=categories.includes(old)?old:'ALL';
+let html='',total=0;const totals={},categoryTotals={},visibleTypes={};
+for(const {x,row} of eligible){
+if(row?.typesComplete!==true)continue;
+for(const [category,count] of Object.entries(row.workTypes||{})){
+if(select.value!=='ALL'&&select.value!==category)continue;
+if(permission!=='ALL'&&workPermission(category)!==permission)continue;
+if(!Number.isInteger(count)||count<=0)continue;
+html+='<tr><td>'+esc(x[0])+'</td><td>'+esc(x[1])+'</td><td>'+esc(x[2])+'</td><td>'+esc(labels[category]||category)+' <small>['+permissionBadge(category)+']</small></td><td class="num">'+count.toLocaleString('en-IN')+'</td></tr>';
+visibleTypes[category]=(visibleTypes[category]||0)+count;
+total+=count;totals[x[1]]=(totals[x[1]]||0)+count;
+categoryTotals[x[1]]??={};categoryTotals[x[1]][category]=(categoryTotals[x[1]][category]||0)+count;
+}}
+for(const [janpad,count] of Object.entries(totals))html+='<tr class="janpad-total"><td>'+esc(districtOf(janpad))+'</td><td>'+esc(janpad)+'</td><td colspan="2">जनपद कुल — चयनित श्रेणी</td><td class="num">'+count.toLocaleString('en-IN')+'</td></tr>';
+html+='<tr class="total"><td colspan="4">'+(total?'कुल — चयनित श्रेणी':'चयनित फ़िल्टर में सत्यापित कार्य उपलब्ध नहीं')+'</td><td class="num">'+total.toLocaleString('en-IN')+'</td></tr>';
+const pivotCategories=[...new Set(Object.values(categoryTotals).flatMap(v=>Object.keys(v)))],pivotJanpads=Object.keys(categoryTotals);
+$('workCategorySummaryHead').innerHTML='<tr><th>कार्य का प्रकार</th><th>वर्गीकरण</th>'+pivotJanpads.map(j=>'<th>'+esc(j)+'<br><small>'+esc(districtOf(j))+'</small></th>').join('')+'<th>कुल</th></tr>';
+const numberLink=(n,janpad,category)=>n?'<a href="#workCategoryBody" data-janpad="'+esc(janpad)+'" data-category="'+esc(category)+'">'+n.toLocaleString('en-IN')+'</a>':'0';
+let summary='';
+for(const category of pivotCategories){
+const rowTotal=pivotJanpads.reduce((n,j)=>n+(categoryTotals[j][category]||0),0);
+summary+='<tr><td>'+esc(labels[category]||category)+'</td><td>'+permissionBadge(category)+'</td>'+pivotJanpads.map(j=>'<td class="num">'+numberLink(categoryTotals[j][category]||0,j,category)+'</td>').join('')+'<td class="num">'+numberLink(rowTotal,'ALL',category)+'</td></tr>';
+}
+summary+='<tr class="total"><td colspan="2">कुल — चयनित फ़िल्टर</td>'+pivotJanpads.map(j=>'<td class="num">'+numberLink(totals[j]||0,j,'ALL')+'</td>').join('')+'<td class="num">'+numberLink(total,'ALL','ALL')+'</td></tr>';
+$('workCategorySummaryBody').innerHTML=summary;$('workPermissionTotals').innerHTML=permissionCounts(visibleTypes);
+$('workCategorySummaryBody').onclick=event=>{const link=event.target.closest('a[data-category]');if(!link)return;event.preventDefault();$('janpad').value=link.dataset.janpad;updateCascade();render();$('workCategoryFilter').value=link.dataset.category;renderWorkCategories();$('workCategoryBody').scrollIntoView({behavior:'smooth',block:'start'});};
+$('workCategoryBody').innerHTML=html;select.onchange=renderWorkCategories;$('workPermissionFilter').onchange=()=>{$('workCategoryFilter').value='ALL';renderWorkCategories();};
+}
+
+function render(){renderKPI();renderOfficial();renderEngineer();renderWorkCategories();sortVisibleProgress()}
+function printSelected(){
+const scope=$('printScope').value;
+const sections=scope==='categorySummary'?[$('workCategorySection')]:scope==='category'?[$('workCategorySection')]:scope==='engineer'?[$('engineerSection')]:scope==='official'?[$('officialSection')]:[$('officialSection'),$('engineerSection'),$('workCategorySection')];
+const frame=document.createElement('iframe');frame.style.cssText='position:fixed;left:-10000px;top:0;width:1120px;height:800px;border:0';document.body.appendChild(frame);
+const css=`
+
+.permission-allowed{color:#116530!important;font-weight:800}.permission-outside{color:#b42318!important;font-weight:800}.permission-pending{color:#a64b00!important;font-weight:800}
+#workPermissionFilter{font-size:16px;color:#173453}
+
+@page{size:A4 landscape;margin:7mm}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;width:100%;font-family:Arial,"Nirmala UI",sans-serif;color:#173453;background:white}
+h1{font-size:14pt;margin:0 0 2mm}p{font-size:9pt;margin:0 0 3mm}
+section{margin:0;padding:0;border:0;break-inside:auto}
+section+section{break-before:page}
+h2{font-size:11pt;padding:2mm;margin:0 0 2mm;background:#d6e7f8;border:1px solid #6786a5}
+table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}
+th,td{border:.25mm solid #6786a5;padding:1mm .5mm;line-height:1.2;vertical-align:middle;font-size:8pt;overflow-wrap:break-word}
+th{background:#d6e7f8;font-weight:800;text-align:center}
+td.num{text-align:center;white-space:nowrap;font-size:9pt;font-weight:700}
+thead{display:table-header-group}tbody{display:table-row-group}tr{break-inside:avoid}
+tbody tr:nth-child(even){background:#f4f8fc}
+td b{color:#56329a}
+.progress-cell{text-align:center;white-space:nowrap}
+.progress-badge{display:inline-block;border:1px solid #1768b5;border-radius:1mm;padding:.5mm;background:#fff0ad;color:#123f78;font-weight:900}
+.janpad-total td,.district-total td{background:#d6e7ff;font-weight:900}
+.district-maihar td{background:#d9efdf}
+.total td,.grand-total td{background:#ffe6b5;font-weight:900}
+.good{color:#17623b}.bad{color:#a32132}
+`;
+const heading=document.querySelector('header h1').textContent;
+const content=sections.flatMap(s=>[...s.querySelectorAll('table')].filter(t=>scope!=='categorySummary'||t.id==='workCategorySummaryTable').map(t=>{const title=t.id==='workCategorySummaryTable'?'युक्तधारा — जनपदवार कार्य-प्रकार सारांश':t.id==='workCategoryDetailTable'?'युक्तधारा — उपयंत्रीवार कार्य-प्रकार विवरण':s.querySelector('h2').textContent;return '<section><h2>'+esc(title)+'</h2>'+t.outerHTML+'</section>'})).join('');
+const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html lang="hi"><meta charset="utf-8"><title>'+esc(heading)+'</title><style>'+css+'</style><body><h1>'+esc(heading)+'</h1><p>जिला: '+esc($('district').selectedOptions[0].text)+' · जनपद: '+esc($('janpad').selectedOptions[0].text)+'</p>'+content+'</body></html>');doc.close();
+frame.contentWindow.onafterprint=()=>frame.remove();
+Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},300));
+}
+function init(){document.getElementById('engineerReportDate').textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date()).replaceAll('/','-');fill('district',ER.map(x=>x[0]),'सभी District');updateCascade();render();$('district').onchange=()=>{updateCascade();render()};$('janpad').onchange=()=>{updateCascade();render()};$('engineer').onchange=render;$('progressSort').onchange=render;$('sortAscending').onclick=()=>{$('progressSort').value='asc';render()};$('sortDescending').onclick=()=>{$('progressSort').value='desc';render()};$('csv').onclick=()=>{const r=filtered(),lines=[['District','Janpad','Sub Engineer','Planner Excel Work','SIPRI Planned','SIPRI Pending','Progress %'],...r.map(x=>[x[0],x[1],x[2],x[3],x[4],Math.max(0,x[3]-x[4]),x[3]?(100*x[4]/x[3]).toFixed(2):'0.00'])].map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([lines],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='Planner_SIPRI_SubEngineer_Summary_25-09-2026.csv';a.click();URL.revokeObjectURL(u)}}init();</script></body></html>

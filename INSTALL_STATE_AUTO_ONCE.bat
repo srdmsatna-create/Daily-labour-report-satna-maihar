@@ -21,9 +21,9 @@ if errorlevel 1 goto :fail
 if errorlevel 1 goto :fail
 %STATE_PY% -m playwright install chromium
 if errorlevel 1 goto :fail
-powershell -NoProfile -Command "$a=New-ScheduledTaskAction -Execute $env:STATE_PY -Argument ('\"'+$env:STATE_REPO+'\scripts_local\run_state_auto.py\"') -WorkingDirectory $env:STATE_REPO; $t=@((New-ScheduledTaskTrigger -Daily -At '08:00'),(New-ScheduledTaskTrigger -AtLogOn),(New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(5) -RepetitionInterval (New-TimeSpan -Hours 1))); $s=New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 20); $p=New-ScheduledTaskPrincipal -UserId ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited; Register-ScheduledTask -TaskName 'SRDM_52_DISTRICTS_AUTO' -Action $a -Trigger $t -Settings $s -Principal $p -Force | Out-Null"
+powershell -NoProfile -Command "$a=New-ScheduledTaskAction -Execute $env:STATE_PY -Argument ('\"'+$env:STATE_REPO+'\scripts_local\run_state_auto.py\"') -WorkingDirectory $env:STATE_REPO; $t=@((New-ScheduledTaskTrigger -Daily -At '08:00'),(New-ScheduledTaskTrigger -AtLogOn)); $s=New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 20); $p=New-ScheduledTaskPrincipal -UserId ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited; Register-ScheduledTask -TaskName 'SRDM_52_DISTRICTS_AUTO' -Action $a -Trigger $t -Settings $s -Principal $p -Force | Out-Null"
 if errorlevel 1 goto :fail
-echo Automatic task installed: 8 AM, logon and hourly retry while logged in.
+echo Automatic task installed: 8 AM and Windows logon only; no hourly retry.
 echo Running first update now...
 %STATE_PY% scripts_local\run_state_auto.py
 if errorlevel 1 (

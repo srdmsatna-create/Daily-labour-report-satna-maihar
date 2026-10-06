@@ -23,6 +23,10 @@ echo [4/8] Updating live Persondays and Shramik Niyojan...
 python scripts_local\update_shramik_niyojan.py
 if errorlevel 1 goto :faildata
 
+echo Updating 52 district Persondays, Labour and Muster Roll reports...
+python scripts_local\update_shramik_state.py
+if errorlevel 1 goto :faildata
+
 echo [5/8] Updating Yuktdhara and Bhuvan Planning reports...
 python scripts_local\update_yuktdhara_monitoring.py
 if errorlevel 1 goto :faildata
@@ -36,7 +40,7 @@ python scripts_local\update_mis_612_work_details.py
 if errorlevel 1 goto :faildata
 
 echo [8/8] Publishing verified report files...
-git add auto-data.js auto-status.js data\official-summary.csv data\fetch-status.json data\Ongoing_Works_dynamic_work_details_latest.csv data\mis-6.12-status.json ongoing-details.js muster-emb-data.js shramik-niyojan-data.js yuktdhara-data.js yuktdhara-official-data.js vbg-block-stats.js index.html app.js scripts\update_ongoing_csv.py scripts_local\update_mis_612_work_details.py scripts_local\update_shramik_niyojan.py run_daily_update.bat
+git add auto-data.js auto-status.js data\official-summary.csv data\fetch-status.json data\Ongoing_Works_dynamic_work_details_latest.csv data\mis-6.12-status.json ongoing-details.js muster-emb-data.js shramik-niyojan-data.js shramik-district-reports.js shramik-state-refresh-status.js shramik-refresh-status.js yuktdhara-data.js yuktdhara-official-data.js vbg-block-stats.js index.html app.js scripts\update_ongoing_csv.py scripts_local\update_mis_612_work_details.py scripts_local\update_shramik_niyojan.py run_daily_update.bat
 git diff --cached --quiet
 if not errorlevel 1 goto :success
 git commit -m "Auto update all dashboard reports"

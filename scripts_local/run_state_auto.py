@@ -1,5 +1,5 @@
 """Refresh and publish state data from an isolated checkout; never alter user work."""
-import json, os, subprocess, sys, tempfile
+import json, os, shutil, subprocess, sys, tempfile
 from pathlib import Path
 from datetime import datetime
 ROOT=Path(__file__).resolve().parents[1]
@@ -49,6 +49,14 @@ def main():
   except Exception as exc:
    print('ERROR: '+str(exc),flush=True);return 1
   finally:
-   if work:command(['git','worktree','remove','--force',str(work)],check=False)
+   if work:
+    try:
+     debug=work/'data'/'shramik-state-debug'
+     if debug.exists():
+      saved=LOGS/'shramik-state-debug';saved.mkdir(parents=True,exist_ok=True)
+      for source in debug.glob('*.json'):shutil.copy2(source,saved/source.name)
+      print('Source tables saved: '+str(saved),flush=True)
+    except Exception as exc:print('WARNING: Could not retain source tables: '+str(exc),flush=True)
+    command(['git','worktree','remove','--force',str(work)],check=False)
    sys.stdout,sys.stderr=oldout,olderr
 if __name__=='__main__':sys.exit(main())
