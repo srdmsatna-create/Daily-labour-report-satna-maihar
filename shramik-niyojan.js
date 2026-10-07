@@ -191,16 +191,15 @@
   function progressKey(r){const achievement=Number(r.achievementPct||0),required=Number(r.dailyTarget125||0),today=Number(r.todayLabour||0),dailyPct=required?today*100/required:100;if(achievement>=75&&dailyPct>=100)return 'good';if(achievement<50||dailyPct<50)return 'poor';return 'improve'}
   function progressLabel(r){return progressKey(r)==='good'?'अच्छी प्रगति':progressKey(r)==='poor'?'खराब प्रगति':'सुधार आवश्यक'}
   function drawClusterCards(){const holder=document.getElementById('snClusterCards');if(!holder)return;let rows=engineerRows.filter(r=>(dist.value==='ALL'||r.district===dist.value)&&(jan.value==='ALL'||r.janpad===jan.value)&&(eng.value==='ALL'||r.engineer===eng.value)&&(clu.value==='ALL'||r.cluster===clu.value));rows=rows.map(r=>{const daily=Number(r.dailyTarget125||0),today=Number(r.todayLabour||0),mr=Number(r.ongoing||0)?Number(r.mrIssued||0)*100/Number(r.ongoing):100,dailyPct=daily?today*100/daily:100;return {...r,_severity:dailyPct<50||mr<25?2:dailyPct<75||mr<50?1:0,_shortage:Math.max(0,daily-today)}}).sort((a,b)=>b._severity-a._severity||b._shortage-a._shortage||String(a.engineer).localeCompare(String(b.engineer),'hi'));holder.innerHTML=rows.length?rows.map(clusterCard).join(''):'<div class="sn-cluster-empty">चयनित filter में उपयंत्री-क्लस्टर data उपलब्ध नहीं है।</div>'}
-  // GP columns use the GP-wise ongoing-work snapshot, never muster-roll activity.
+  // Match the official Screen-2 GP-with-progress column.
   function reportGPStats(r){
+    if(r.gpParts){const parts=r.gpParts.map(reportGPStats);return [0,1].map(i=>parts.every(x=>x[i]!=null)?parts.reduce((a,x)=>a+x[i],0):null);}
+    const official=officialMap.get(nrm(r.janpad));
+    if(!r.engineer&&!r.cluster){const t=official?.totalGP,a=official?.musterGP;return [t!=null?Number(t):null,a!=null&&t!=null&&Number(a)>=0&&Number(a)<=Number(t)?Number(a):null];}
     const entries=(auto.rows||[]).filter(x=>nrm(x.janpad)===nrm(r.janpad)&&(!r.engineer||String(x.engineer||'').trim()===String(r.engineer).trim())&&(!r.cluster||String(x.cluster||'').trim()===String(r.cluster).trim()));
-    if(r.gpParts){const parts=r.gpParts.map(reportGPStats);return parts.every(x=>x[0]!=null)?[parts.reduce((a,x)=>a+x[0],0),parts.reduce((a,x)=>a+x[1],0)]:[null,null];}
-    if(!entries.length||entries.some(x=>x.ongoing==null))return [null,null];
-    const unique=new Map(entries.map(x=>[nrm(x.panchayat||x.gp),x]));
-    if(unique.has(''))return [null,null];
-    const total=unique.size,official=officialMap.get(nrm(r.janpad));
-    if(!r.engineer&&!r.cluster&&official?.totalGP!=null&&total!==Number(official.totalGP))return [Number(official.totalGP),null];
-    return [total,[...unique.values()].filter(x=>Number(x.ongoing)>0).length];
+    if(!entries.length||entries.some(x=>x.gps==null||x.gpsProgress==null))return [null,null];
+    const total=entries.reduce((a,x)=>a+Number(x.gps),0),active=entries.reduce((a,x)=>a+Number(x.gpsProgress),0);
+    return [total,active>=0&&active<=total?active:null];
   }
   function reportGPCells(r){const [total,active]=reportGPStats(r),missing=total==null||active==null?null:total-active;return `<td>${fmt(total)}</td><td>${fmt(active)}</td><td>${fmt(missing)}</td><td style="color:#a31313;background:#fff0ee;font-weight:900">${missing==null||!total?'—':(missing*100/total).toFixed(2)+'%'}</td>`;}
   function row(r,rank,cls=''){const mrPct=Number(r.ongoing||0)?Number(r.mrIssued||0)*100/Number(r.ongoing):0,shortage=r.dailyTarget125==null?null:Math.max(0,Number(r.dailyTarget125)-Number(r.todayLabour||0));return `<tr class="${cls}"><td>${rank||''}</td><td>${esc(districtHindi(r.district))}</td><td>${esc(janpadName(r.janpad))}</td><td>${esc(r.engineer||'—')}</td><td>${esc(r.cluster||'—')}</td>${reportGPCells(r)}<td>${fmt(r.target)}</td><td>${fmt(r.augustAchievement)}</td><td>${fmt(r.septemberAchievement)}</td><td>${fmt(r.achievement)}</td><td>${fmt(r.difference)}</td><td>${fmt(r.remainingDays)}</td><td>${fmt(r.dailyTarget125)}</td><td>${fmt(r.todayLabour)}</td><td><span class="sn-pct ${pctClass(r.achievementPct)}">${r.achievementPct==null?'—':Number(r.achievementPct).toFixed(1)+'%'}</span></td><td class="sn-shortage">${fmt(shortage)}</td><td>${fmt(r.ongoing)}</td><td>${fmt(r.mrIssued)}</td><td>${mrPct.toFixed(1)}%</td></tr>`}
