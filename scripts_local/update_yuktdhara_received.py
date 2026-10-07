@@ -1,5 +1,5 @@
 """Fetch official received-work GP counts; never substitute Bhuvan planning counts."""
-import json, re, sys
+import json, re, sys, time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -28,6 +28,7 @@ GRID = '''tables=>tables.map(t=>{const g=[];Array.from(t.rows).filter(r=>r.close
 
 def gp_counts(tables, expected_gp, expected_works, expected_created=None):
     candidates=[]
+    diagnostics=[]
     for table in tables:
         for hi, header in enumerate(table):
             names=[re.sub(r'\s+',' ',c['text']).lower() for c in header]
@@ -55,12 +56,16 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None):
                     value=number(row[ci]['text'])
                     if value>count:raise RuntimeError('Created works exceed received GP works: '+name)
                     out[key]['worksCreated']=value
-            if sum(x['worksReceived'] for x in out.values())!=expected_works:continue
+            actual_works=sum(x['worksReceived'] for x in out.values())
+            actual_gp=sum(x['worksReceived']>0 for x in out.values())
+            actual_created=sum(x.get('worksCreated',0) for x in out.values())
+            diagnostics.append('received GPs '+str(actual_gp)+'/'+str(expected_gp)+', received works '+str(actual_works)+'/'+str(expected_works)+', created works '+str(actual_created)+'/'+str(expected_created)+', created column '+str(ci is not None))
+            if actual_works!=expected_works:continue
             if sum(x['worksReceived']>0 for x in out.values())!=expected_gp:continue
             if any(t!=expected_works for t in totals):continue
             if expected_created is not None and (ci is None or sum(x.get('worksCreated',0) for x in out.values())!=expected_created):continue
             candidates.append(out)
-    if not candidates:raise RuntimeError('GP detail missing or does not reconcile with official block totals')
+    if not candidates:raise RuntimeError('GP detail does not reconcile: '+('; '.join(diagnostics) if diagnostics else 'received-work GP headers not found'))
     if any(c!=candidates[0] for c in candidates):raise RuntimeError('Ambiguous GP received-work tables')
     return list(candidates[0].values())
 
@@ -144,13 +149,20 @@ def collect():
                 if block['gpReceived']==0 and block['worksReceived']==0:details[b]=[];continue
                 if b not in links:raise RuntimeError('GP drill-down link missing: '+b)
                 errors=[]
-                for url in links[b]:
-                    try:
-                        tables=fetch(url)
-                        (debug/(b+'-tables.json')).write_text(json.dumps(tables,ensure_ascii=False),encoding='utf-8')
-                        details[b]=gp_counts(tables,block['gpReceived'],block['worksReceived'],block['worksCreated'])
-                        break
-                    except Exception as e:errors.append(str(e))
+                for attempt in range(1,4):
+                    for link_index,url in enumerate(links[b]):
+                        try:
+                            tables=fetch(url)
+                            (debug/(b+'-attempt-'+str(attempt)+'-link-'+str(link_index)+'.json')).write_text(json.dumps(tables,ensure_ascii=False),encoding='utf-8')
+                            (debug/(b+'-tables.json')).write_text(json.dumps(tables,ensure_ascii=False),encoding='utf-8')
+                            details[b]=gp_counts(tables,block['gpReceived'],block['worksReceived'],block['worksCreated'])
+                            break
+                        except Exception as e:
+                            message=b+' attempt '+str(attempt)+': '+str(e)
+                            errors.append(message)
+                            print(message,flush=True)
+                    if b in details:break
+                    if attempt<3:time.sleep(2*attempt)
                 if b not in details:raise RuntimeError(b+': '+'; '.join(errors))
             work_debug=[]
             pending=sum(gp['worksReceived']>0 for gp_rows in details.values() for gp in gp_rows)
