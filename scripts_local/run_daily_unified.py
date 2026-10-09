@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import zipfile
 from datetime import datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -46,6 +47,15 @@ def main():
             failure_root = Path(os.environ.get('SRDM_DAILY_REPO') or ROOT)
             failure = failure_root / 'daily-update-last-failure.json'
             failure.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
+            bundle = failure_root / 'daily-update-diagnostics.zip'
+            with zipfile.ZipFile(bundle, 'w', zipfile.ZIP_DEFLATED) as archive:
+                archive.write(failure, failure.name)
+                debug = stage / 'data/gp-emuster-debug'
+                if debug.exists():
+                    for item in sorted(debug.glob('*')):
+                        if item.is_file():
+                            archive.write(item, 'gp-emuster-debug/' + item.name)
+            print('Current-run diagnostics saved: ' + str(bundle), flush=True)
             raise RuntimeError('Full daily refresh incomplete. Live reports unchanged; diagnostics: ' + str(failure))
         files = [f for f in feeds.OUTPUTS if (stage / f).exists()]
         if not args.publish:

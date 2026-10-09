@@ -123,7 +123,7 @@ def paged_works(page, fetch, url, expected, gp):
             if r['code'] in out and out[r['code']]!=r:raise ValueError('Conflicting work across pages '+r['code'])
             out[r['code']]=r
         if len(out)==expected:return list(out.values())
-        if len(out)>expected:raise ValueError('Work pages exceed official GP total')
+        if len(out)>expected:raise ValueError(f'{gp}: received {len(out)} unique works; official GP total {expected}; page {current_page}')
         controls=page.locator('a,button').evaluate_all("""els=>els.map((e,i)=>({i,text:(e.innerText||e.getAttribute('aria-label')||e.title||'').trim(),href:e.getAttribute('href')||'',cls:e.className||'',disabled:e.disabled||e.getAttribute('aria-disabled')==='true'||!!e.closest('.disabled')}))""")
         eligible=[c for c in controls if not c['disabled'] and (re.search(r'Page\$\d+',c['href']) or re.fullmatch(r'Next(?:\s*(?:Page|[>»]))?|[>»›]',c['text'],re.I) or ('next' in c['cls'].lower() and c['text']))]
         eligible.sort(key=lambda c:(0 if re.search(r'next|[>»›]',c['text'],re.I) else 1,int(re.search(r'Page\$(\d+)',c['href']).group(1)) if re.search(r'Page\$(\d+)',c['href']) else 0))
@@ -211,6 +211,7 @@ def main():
                                 dump(b+'-'+key(gp['panchayat'])+'-works',page.evaluate(GRID));verified=True;break
                             except Exception as e:errors.append(str(e))
                         if not verified:
+                            dump('failed-gp-summary',{'janpad':b,'gp':gp,'officialBlock':summary,'errors':errors})
                             dump(b+'-'+key(gp['panchayat'])+'-works',page.evaluate(GRID))
                             (debug/(b+'-'+key(gp['panchayat'])+'-works.html')).write_text(page.content(),encoding='utf-8')
                             raise ValueError(b+'/'+gp['panchayat']+': '+'; '.join(errors))
