@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-import csv, html, io, json, re, shutil, sys, urllib.parse, urllib.request
+import csv, html, io, json, re, shutil, sys, time, urllib.parse, urllib.request
+import requests
 from datetime import datetime, timezone
 from vbgram_access import open_url
 from pathlib import Path
@@ -30,9 +31,30 @@ def num(v):
     try: return int(float(re.sub(r"[^0-9.-]", "", v.replace(",", "")) or 0))
     except Exception: return 0
 
+BHUVAN_SESSION = requests.Session()
+BHUVAN_SESSION.headers.update({'User-Agent':'Mozilla/5.0','Cache-Control':'no-cache'})
+
 def get_text(url):
-    req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Cache-Control":"no-cache"})
-    return open_url(req,timeout=120).read().decode("utf-8","ignore")
+    if urllib.parse.urlparse(url).hostname != 'bhuvan-app2.nrsc.gov.in':
+        raise RuntimeError('Unexpected Bhuvan report host; request stopped')
+    # One persistent session carries normal portal cookies into CSV downloads.
+    # Retry transient connection/read failures, never authentication denials.
+    for attempt in range(1, 4):
+        try:
+            response=BHUVAN_SESSION.get(url,timeout=(15,90))
+            if response.status_code in (502,503,504) and attempt<3:
+                print('Bhuvan temporary HTTP '+str(response.status_code)+'; retry '+str(attempt),flush=True)
+                time.sleep(attempt)
+                continue
+            response.raise_for_status()
+            response.encoding='utf-8'
+            return response.text
+        except (requests.Timeout,requests.ConnectionError) as error:
+            print('Bhuvan connection attempt '+str(attempt)+'/3 failed: '+type(error).__name__,flush=True)
+            if attempt==3:
+                raise RuntimeError('Bhuvan source did not respond after 3 attempts; GP data not published') from None
+            time.sleep(attempt)
+    raise RuntimeError('Bhuvan source unavailable')
 
 def parse_bhuvan_gp_rows(source):
     out=[]
@@ -100,6 +122,8 @@ def read_auto_mapping():
 
 def fetch_bhuvan_detail():
     query=urllib.parse.urlencode({"level":"district","state":"17","district":"1712","back":"/planner_v3/yuktdhara_dashboard/public_dashboard/index.php?state=17&district=1712&go=1"})
+    print('Connecting to Bhuvan district dashboard...',flush=True)
+    home=get_text(BHUVAN_INDEX)
     lists={}
     for name,page in BHUVAN_LISTS.items():
         print('Fetching Bhuvan GP list: '+name,flush=True)
@@ -107,7 +131,6 @@ def fetch_bhuvan_detail():
         print('Bhuvan '+name+': '+str(len(lists[name]))+' rows received',flush=True)
     if len(lists["master"]) < 690:
         raise RuntimeError(f"Bhuvan master GP list incomplete: {len(lists['master'])}")
-    home=get_text(BHUVAN_INDEX)
     dm=re.search(r"Data\s+last\s+updated\s*:\s*([^<]+)",home,re.I)
     as_of=clean(dm.group(1)) if dm else datetime.now().strftime("%d-%m-%Y")
     old={(norm_janpad(x.get("janpad")),norm_key(x.get("gp"))):x for x in read_existing_mapping()}
