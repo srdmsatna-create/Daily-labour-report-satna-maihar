@@ -77,10 +77,11 @@ def gps_from(tables, expected):
             if len(out)==expected['gps'] and sum(g['labour'] for g in out.values())==expected['labour'] and sum(g['worksMR'] for g in out.values())==expected['works']:candidates.append(list(out.values()))
     if not candidates:raise ValueError('GP table missing/incomplete or GP/labour/work totals do not match '+expected['janpad'])
     result=candidates[0]
-    if any(g['gpsProgress'] is None or g['gpsProgress'] not in (0,1) for g in result):
-        raise ValueError('Official GP progress column unavailable; old labour flags cannot be reused')
-    if sum(g['gpsProgress'] for g in result)!=expected['progressGP']:
-        raise ValueError('GP progress total differs from official Janpad summary')
+    progress_verified=all(g['gpsProgress'] in (0,1) for g in result) and sum(g['gpsProgress'] or 0 for g in result)==expected['progressGP']
+    for gp in result:
+        gp['gpProgressVerified']=progress_verified
+        if not progress_verified:
+            gp['gpsProgress']=None
     return result
 
 def works_from(tables, expected, gp=None):
@@ -165,7 +166,7 @@ def main():
     expected=sum(x['works'] for x in blocks.values())
     if len(output)!=695 or len({(r['janpad'],key(r['panchayat'])) for r in output})!=695:raise ValueError('695 unique GPs required')
     if len(all_works)!=expected or len({w['code'] for w in all_works})!=expected:raise ValueError('Work list total/unique codes mismatch')
-    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':source_date,'gpProgressVerified':True,'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
+    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
     path=ROOT/'gp-emuster-data.js';temp=path.with_suffix('.tmp')
     temp.write_text('window.GP_WORK_TYPE_MUSTER_REPORT = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
     print('SUCCESS: 695 GP, '+str(expected)+' unique MR-issued works, all master work categories. '+str(path),flush=True)
