@@ -7,7 +7,7 @@ function draw(){
  box.hidden=view!=='official';if(box.hidden)return;
  const live=window.GP_WORK_TYPE_MUSTER_REPORT;
  const today=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date()).replaceAll('/','-');
- const actual=new Map();for(const r of live?.rows||[]){const j=normJanpad(r.janpad);if(!actual.has(j))actual.set(j,{labour:0,works:0,gps:0});const a=actual.get(j);a.labour+=Number(r.labour);a.works+=Number(r.worksMR);a.gps++;}
+ const actual=new Map();for(const r of live?.rows||[]){const j=normJanpad(r.janpad);if(!actual.has(j))actual.set(j,{labour:0,works:0,gps:0});const a=actual.get(j);a.labour+=Number(r.labour);a.works+=Number(r.summaryWorksMR??r.worksMR);a.gps++;}
  const mismatch=(official||[]).filter(r=>{const a=actual.get(normJanpad(r.janpad));return !a||a.labour!==Number(r.labourAll)||a.works!==Number(r.mrAll)||a.gps!==Number(r.totalGP);});
  if(!live||live.date!==today||mismatch.length){box.innerHTML='<h2>'+title+'</h2><p style="color:#b91c1c;font-weight:800">GP / कार्य-प्रकार डेटा का आज की जनपद रिपोर्ट से मिलान लंबित है। GP डेटा की तिथि: '+esc(live?.date||'अनुपलब्ध')+'। '+esc(mismatch.map(r=>normJanpad(r.janpad)).join(', '))+'। अपडेट BAT चलाएँ।</p>';return;}
  const sourceData=live&&Array.isArray(live.rows)?filterRows(live.rows):filteredRows();
