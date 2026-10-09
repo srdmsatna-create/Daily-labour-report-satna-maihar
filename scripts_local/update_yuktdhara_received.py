@@ -116,6 +116,24 @@ def aggregate(blocks, details, mapping):
     for (b,g),e in master.items():sums[(b,e)]
     return [{'janpad':b,'engineer':e,**v} for (b,e),v in sorted(sums.items())]
 
+
+def block_counts(tables, previous):
+    expected={jan(b['block']):b for b in previous}
+    found={}
+    fields=('gp','gpReceived','worksReceived','worksCreated','yetToStart','ongoing','completed')
+    for table in tables:
+        for row in table:
+            if len(row)<9 or jan(row[1]['text']) not in expected:continue
+            key=jan(row[1]['text'])
+            try:values=[number(row[i]['text']) for i in range(2,9)]
+            except ValueError:continue
+            record={'block':expected[key]['block'],**dict(zip(fields,values))}
+            if record['gp']!=expected[key]['gp']:raise RuntimeError('Official GP master changed: '+key)
+            if key in found and found[key]!=record:raise RuntimeError('Conflicting official block rows: '+key)
+            found[key]=record
+    if set(found)!=set(expected):raise RuntimeError('Eight current official Yuktdhara parent rows required')
+    return [found[jan(b['block'])] for b in previous]
+
 def collect():
     from playwright.sync_api import sync_playwright
     summary=read_js(ROOT/'yuktdhara-official-data.js')
@@ -133,6 +151,12 @@ def collect():
                 if response and response.status>=400:raise RuntimeError('Official HTTP '+str(response.status))
                 return page.locator('table').evaluate_all(GRID)
             top=fetch(summary['source']);links={}
+            blocks=block_counts(top,blocks)
+            date_node=page.locator('#ContentPlaceHolder1_Shedule_updated_date')
+            if date_node.count():summary['officialDate']=date_node.inner_text().strip()
+            summary['rows']=blocks
+            summary['updatedAt']=datetime.now(timezone.utc).isoformat()
+            print('Using current browser-session Yuktdhara parent totals for all 8 blocks',flush=True)
             debug=ROOT/'data'/'yuktdhara-received-debug';debug.mkdir(parents=True,exist_ok=True)
             (debug/'block-tables.json').write_text(json.dumps(top,ensure_ascii=False),encoding='utf-8')
             for table in top:
@@ -190,6 +214,7 @@ def collect():
                             (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
             rows=aggregate(blocks,details,mapping)
         finally:browser.close()
+    (ROOT/'yuktdhara-official-data.js').write_text('window.YUKTDHARA_REPORT='+json.dumps(summary,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
     return {'success':True,'updatedAt':datetime.now(timezone.utc).isoformat(),'officialDate':summary.get('officialDate'),'blocks':blocks,'rows':rows,'source':summary['source']}
 
 def main():
