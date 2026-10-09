@@ -108,9 +108,33 @@ def works_from(tables, expected, gp=None):
                 item['labour']=count(r[li]['text']) if li is not None else None
                 if code in out and out[code]!=item:raise ValueError('Conflicting duplicate work code '+code)
                 out[code]=item
-            if len(out)==expected:candidates.append(list(out.values()))
+            if out and (expected is None or len(out)==expected):candidates.append(list(out.values()))
     if not candidates:raise ValueError('Work detail incomplete: expected '+str(expected)+' unique codes; pagination/export may be required')
     return candidates[0]
+
+def paged_works(page, fetch, url, expected, gp):
+    tables=fetch(url);out={};visited=set();current_page=1
+    for _ in range(1000):
+        rows=works_from(tables,None,gp)
+        signature=tuple(sorted(r['code'] for r in rows))
+        if signature in visited:break
+        visited.add(signature)
+        for r in rows:
+            if r['code'] in out and out[r['code']]!=r:raise ValueError('Conflicting work across pages '+r['code'])
+            out[r['code']]=r
+        if len(out)==expected:return list(out.values())
+        if len(out)>expected:raise ValueError('Work pages exceed official GP total')
+        controls=page.locator('a,button').evaluate_all("""els=>els.map((e,i)=>({i,text:(e.innerText||e.getAttribute('aria-label')||e.title||'').trim(),href:e.getAttribute('href')||'',cls:e.className||'',disabled:e.disabled||e.getAttribute('aria-disabled')==='true'||!!e.closest('.disabled')}))""")
+        eligible=[c for c in controls if not c['disabled'] and (re.search(r'Page\$\d+',c['href']) or re.fullmatch(r'Next(?:\s*(?:Page|[>»]))?|[>»›]',c['text'],re.I) or ('next' in c['cls'].lower() and c['text']))]
+        eligible.sort(key=lambda c:(0 if re.search(r'next|[>»›]',c['text'],re.I) else 1,int(re.search(r'Page\$(\d+)',c['href']).group(1)) if re.search(r'Page\$(\d+)',c['href']) else 0))
+        target=next((c for c in eligible if not re.search(r'Page\$(\d+)',c['href']) or int(re.search(r'Page\$(\d+)',c['href']).group(1))>current_page),None)
+        if target is None:break
+        number=re.search(r'Page\$(\d+)',target['href'])
+        current_page=int(number.group(1)) if number else current_page+1
+        page.locator('a,button').nth(target['i']).click()
+        page.wait_for_load_state('networkidle',timeout=60000)
+        tables=page.evaluate(GRID)
+    raise ValueError(f'Work list incomplete: received {len(out)}/{expected} unique works; no further readable page')
 
 def main():
     a=argparse.ArgumentParser();a.add_argument('--url',required=True);a.add_argument('--headed',action='store_true');a.add_argument('--gp-only',action='store_true');args=a.parse_args()
@@ -142,6 +166,7 @@ def main():
             response=page.goto(url,wait_until='domcontentloaded',timeout=90000)
             if response and response.status>=400:raise ValueError('Official HTTP '+str(response.status))
             page.locator('table').first.wait_for(timeout=30000)
+            page.wait_for_load_state('networkidle',timeout=60000)
             return page.evaluate(GRID)
         try:
             top=fetch(args.url)
@@ -182,10 +207,13 @@ def main():
                         errors=[];verified=False
                         for url in gp['workLinks']:
                             try:
-                                tables=fetch(url);dump(b+'-'+key(gp['panchayat'])+'-works',tables)
-                                works=works_from(tables,gp['worksMR'],gp['panchayat']);verified=True;break
+                                works=paged_works(page,fetch,url,gp['worksMR'],gp['panchayat'])
+                                dump(b+'-'+key(gp['panchayat'])+'-works',page.evaluate(GRID));verified=True;break
                             except Exception as e:errors.append(str(e))
-                        if not verified:raise ValueError(b+'/'+gp['panchayat']+': '+'; '.join(errors))
+                        if not verified:
+                            dump(b+'-'+key(gp['panchayat'])+'-works',page.evaluate(GRID))
+                            (debug/(b+'-'+key(gp['panchayat'])+'-works.html')).write_text(page.content(),encoding='utf-8')
+                            raise ValueError(b+'/'+gp['panchayat']+': '+'; '.join(errors))
                     for work in works:
                         work['category']=categories.get(work['code']) or final_category(work['name'],work['type'],'2026-2027')
                         counts[work['category']]=counts.get(work['category'],0)+1;work['janpad']=b
