@@ -44,7 +44,7 @@ if not errorlevel 1 goto browser_ready
 if errorlevel 1 goto failed
 :browser_ready
 echo Refreshing all reports. Details: daily-all-reports.log
-%SRDM_DAILY_PY% -u "%SRDM_DAILY_BOOT%\scripts_local\run_daily_unified.py" --publish >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
+powershell.exe -NoProfile -Command "& $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish 2>&1 | Tee-Object -FilePath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Append; exit $LASTEXITCODE"
 if errorlevel 1 goto failed
 git worktree remove "%SRDM_DAILY_BOOT%"
 echo SUCCESS: Complete verified reports published together.
