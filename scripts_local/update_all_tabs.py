@@ -1,5 +1,5 @@
 """Refresh each dashboard data feed independently; roll back failed partial writes."""
-import json,os,subprocess,sys,runpy
+import csv,json,os,subprocess,sys,runpy
 from pathlib import Path
 from datetime import datetime,timezone
 from zoneinfo import ZoneInfo
@@ -64,6 +64,30 @@ def validate_shramik(root):
  rows=gp.get('rows',[]);keys={(norm(r['janpad']),norm(r['panchayat'])) for r in rows}
  monthly={(norm(r['janpad']),norm(r['panchayat'])) for r in sn['gpMandaysRows']}
  if len(rows)!=695 or len(keys)!=695 or keys!=monthly:raise ValueError('695 unique GP details must match monthly GP master')
+ # Use the actual official parent rows read in the GP browser session.
+ # The category reader runs earlier in a separate session; its ALL values
+ # must not be combined with another parent/GP snapshot.
+ parents={norm(r['janpad']):r for r in gp.get('blocks',[])}
+ expected={'AMARPATAN':75,'MAIHAR':115,'MAJHGAWAN':96,'NAGOD':94,'RAMNAGAR':55,'RAMPUR BAGHELAN':97,'SATNA':93,'UNCHAHARA':70}
+ if len(gp.get('blocks',[]))!=8 or set(parents)!=set(expected):raise ValueError('All 8 unique official GP parent rows required')
+ for j,p in parents.items():
+  rr=[r for r in rows if norm(r['janpad'])==j]
+  actual=(len(rr),sum(r['gpsProgress'] for r in rr),sum(r['labour'] for r in rr),sum(r['worksMR'] for r in rr))
+  if p['gps']!=expected[j] or actual!=(p['gps'],p['progressGP'],p['labour'],p['works']):raise ValueError('GP details do not match their official parent: '+j)
+  if not {'noEkyc','mrs'}<=p.keys():raise ValueError('Official ALL parent columns incomplete: '+j)
+ path=root/'data/official-summary.csv'
+ with path.open(encoding='utf-8-sig',newline='') as f:
+  reader=csv.DictReader(f);fields=reader.fieldnames;summary=list(reader)
+ if len(summary)!=8 or {norm(r['janpad']) for r in summary}!=set(expected):raise ValueError('Official category summary incomplete')
+ for r in summary:
+  p=parents[norm(r['janpad'])]
+  for k,v in {'totalGP':p['gps'],'musterGP':p['progressGP'],'dysfunctionalGP':p['gps']-p['progressGP'],'labourAll':p['labour'],'mrAll':p['works'],'noEkyc':p['noEkyc'],'mrs':p['mrs']}.items():r[k]=v
+ with path.open('w',encoding='utf-8-sig',newline='') as f:
+  writer=csv.DictWriter(f,fieldnames=fields);writer.writeheader();writer.writerows(summary)
+ subprocess.run([sys.executable,'scripts/merge_official_summary.py'],cwd=root,check=True)
+ auto=data(root/'auto-data.js')
+ auto.setdefault('meta',{})['dailyParentFetchedAt']=gp['fetchedAt']
+ auto['meta']['dailyParentSource']=gp['source']
  official={norm(r['janpad']):r for r in auto['official']}
  if len(official)!=8:raise ValueError('8 official Janpads required')
  for j,o in official.items():

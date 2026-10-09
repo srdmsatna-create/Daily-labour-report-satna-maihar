@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
 def load(name):
@@ -10,6 +11,31 @@ def load(name):
  mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
 
 class DailyTests(unittest.TestCase):
+ def test_shramik_uses_verified_official_parent_snapshot(self):
+  m=load('update_all_tabs')
+  counts={'AMARPATAN':75,'MAIHAR':115,'MAJHGAWAN':96,'NAGOD':94,'RAMNAGAR':55,'RAMPUR BAGHELAN':97,'SATNA':93,'UNCHAHARA':70}
+  rows=[{'janpad':j,'panchayat':str(i),'gpsProgress':int(i>0),'labour':1,'worksMR':1} for j,n in counts.items() for i in range(n)]
+  parents=[{'janpad':j,'gps':n,'progressGP':n-1,'labour':n,'works':n,'noEkyc':0,'mrs':n} for j,n in counts.items()]
+  today=m.datetime.now(m.ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
+  gp={'date':today,'gpProgressVerified':True,'rows':rows,'blocks':parents,'fetchedAt':'verified GP session','source':m.GP_URL}
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp);(root/'data').mkdir();(root/'scripts').mkdir()
+   shutil.copy(ROOT/'scripts/merge_official_summary.py',root/'scripts/merge_official_summary.py')
+   shutil.copy(ROOT/'data/official-summary.csv',root/'data/official-summary.csv')
+   def write(name,value):
+    p=root/name;p.write_text((('window.AUTO_REPORT=' if name=='auto-data.js' else 'window.DATA=')+json.dumps(value)+';' if p.suffix=='.js' else json.dumps(value)),encoding='utf-8')
+   write('auto-data.js',{'official':[],'rows':[]})
+   write('shramik-gp-progress-data.js',gp)
+   write('shramik-niyojan-data.js',{'officialDate':today,'engineerRows':[{'target':621552 if i==0 else 0} for i in range(59)],'gpMandaysRows':rows})
+   write('shramik-district-reports.js',{'snapshotDate':today,'districts':{str(i):{} for i in range(52)}})
+   write('shramik-state-refresh-status.js',{k:True for k in ('success','persondaysSuccess','labourSuccess','gpSuccess')})
+   m.validate_shramik(root)
+   official={r['janpad']:r for r in m.data(root/'auto-data.js')['official']}
+   self.assertEqual((official['AMARPATAN']['totalGP'],official['AMARPATAN']['musterGP']),(75,74))
+   before=(root/'auto-data.js').read_bytes()
+   gp['blocks'][0]['progressGP']=67;write('shramik-gp-progress-data.js',gp)
+   with self.assertRaises(ValueError):m.validate_shramik(root)
+   self.assertEqual((root/'auto-data.js').read_bytes(),before)
  def test_official_parser_preserves_empty_columns_and_ignores_layout(self):
   m=load('local_auto_update')
   html='<table><tr><td><table><tr><td>1</td><td>AMARPATAN</td><td>75</td><td>74</td><td>280</td><td>184</td><td></td><td>190</td></tr></table></td></tr></table>'

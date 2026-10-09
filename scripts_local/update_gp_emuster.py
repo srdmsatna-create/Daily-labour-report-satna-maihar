@@ -44,6 +44,8 @@ def blocks_from(tables):
             try:gp,progress,labour,works=count(row[2]['text']),count(row[3]['text']),count(row[4]['text']),count(row[5]['text'])
             except ValueError:continue
             item={'janpad':b,'gps':gp,'progressGP':progress,'labour':labour,'works':works,'links':row[1]['links'],'workLinks':row[5]['links']}
+            if len(row)>=8:
+                item['noEkyc']=count(row[6]['text']);item['mrs']=count(row[7]['text'])
             if b in found and found[b]!=item:raise ValueError('Ambiguous block rows: '+b)
             found[b]=item
     if set(found)!=BLOCKS:raise ValueError('Expected 8 Janpad hyperlinks; found '+str(list(found)))
