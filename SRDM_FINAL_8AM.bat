@@ -44,14 +44,14 @@ if not errorlevel 1 goto browser_ready
 if errorlevel 1 goto failed
 :browser_ready
 echo Refreshing all reports. Details: daily-all-reports.log
-powershell.exe -NoProfile -Command "& $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish 2>&1 | Tee-Object -FilePath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Append; exit $LASTEXITCODE"
+powershell.exe -NoProfile -Command "& $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish --publish-verified 2>&1 | Tee-Object -FilePath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Append; exit $LASTEXITCODE"
 if errorlevel 1 goto failed
 git worktree remove "%SRDM_DAILY_BOOT%"
 echo SUCCESS: Complete verified reports published together.
 if /i not "%~1"=="--scheduled" pause
 exit /b 0
 :failed
-echo FAILED: Complete update did not finish. Existing live reports are preserved.
+echo INCOMPLETE: Check the log. Verified groups may be published; failed groups retain their previous dates.
 if exist "%SRDM_DAILY_REPO%\daily-all-reports.log" powershell.exe -NoProfile -Command "Get-Content -LiteralPath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Tail 35"
 if /i not "%~1"=="--scheduled" pause
 exit /b 1
