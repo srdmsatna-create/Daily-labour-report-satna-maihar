@@ -13,8 +13,8 @@ def load(name):
 class DailyTests(unittest.TestCase):
  def test_work_pagination_collects_39_and_rejects_incomplete_pages(self):
   m=load('update_gp_emuster');cell=lambda t:{'text':t,'links':[]}
-  header=list(map(cell,['Work Code','Work Name','Work Category','Work Type']))
-  allrows=[list(map(cell,[f'1712008013/IF/{100000+i}','PMAY house','Individuals','PMAY-G'])) for i in range(39)]
+  header=list(map(cell,['Panchayat','Work Code','Work Name','Work Category','Work Type']))
+  allrows=[list(map(cell,['TEST',f'1712008013/IF/{100000+i}','PMAY house','Individuals','PMAY-G'])) for i in range(39)]
   class Page:
    def __init__(self):self.index=0;self.pages=[[[header]+allrows[i:i+8]] for i in range(0,39,8)]
    def locator(self,*args):return self
@@ -25,6 +25,7 @@ class DailyTests(unittest.TestCase):
    def evaluate(self,*args):return self.pages[self.index]
   p=Page();works=m.paged_works(p,lambda url:p.pages[0],'source',39,'TEST')
   self.assertEqual(len(works),39);self.assertEqual(p.index,4)
+  p=Page();self.assertEqual(len(m.paged_works(p,lambda url:p.pages[0],'source',36,'TEST')),39)
   p=Page();p.pages=p.pages[:1]
   with self.assertRaises(ValueError):m.paged_works(p,lambda url:p.pages[0],'source',39,'TEST')
  def test_work_detail_with_category_and_type_columns(self):
