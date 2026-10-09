@@ -15,6 +15,7 @@ For the three category reports, the script reads:
 """
 
 import csv
+import os
 import json
 import re
 import sys
@@ -35,6 +36,7 @@ JANPAD_ORDER = [
     "AMARPATAN", "MAIHAR", "MAJHGAWAN", "NAGOD",
     "RAMNAGAR", "RAMPUR BAGHELAN", "SATNA", "UNCHAHARA"
 ]
+REPORT_URL = os.environ.get('VBGRAM_DAILY_REPORT_URL','').strip() or REPORT_URL
 
 INDIVIDUAL_CATEGORY = "Works on Individuals Land (Category IV)"
 PMAY_STATUS = "Constr of PMAY-G House for Individuals"
@@ -162,13 +164,20 @@ def fetch_reports():
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        page = browser.new_page(
+        context = browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
                 "Chrome/128.0.0.0 Safari/537.36"
             )
         )
+        cookies=[]
+        for pair in os.environ.get('VBGRAM_COOKIE','').split(';'):
+            if '=' in pair:
+                k,v=pair.strip().split('=',1)
+                cookies.append({'name':k,'value':v,'domain':'vbgramgrep.dord.gov.in','path':'/'})
+        if cookies:context.add_cookies(cookies)
+        page=context.new_page()
         page.goto(REPORT_URL, wait_until="networkidle", timeout=60000)
         page.wait_for_timeout(1500)
 

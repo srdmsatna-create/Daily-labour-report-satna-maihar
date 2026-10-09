@@ -108,7 +108,7 @@ def works_from(tables, expected, gp=None):
     return candidates[0]
 
 def main():
-    a=argparse.ArgumentParser();a.add_argument('--url',required=True);a.add_argument('--headed',action='store_true');args=a.parse_args()
+    a=argparse.ArgumentParser();a.add_argument('--url',required=True);a.add_argument('--headed',action='store_true');a.add_argument('--gp-only',action='store_true');args=a.parse_args()
     from playwright.sync_api import sync_playwright
     master=read_js(ROOT/'auto-data.js')['rows']
     ongoing=read_js(ROOT/'ongoing-details.js')
@@ -123,7 +123,15 @@ def main():
     with sync_playwright() as p:
         try:browser=p.chromium.launch(channel='chrome',headless=not args.headed)
         except Exception:browser=p.chromium.launch(headless=not args.headed)
-        ctx=browser.new_context();page=ctx.new_page()
+        ctx=browser.new_context()
+        cookie=os.environ.get('VBGRAM_COOKIE','')
+        cookies=[]
+        for pair in cookie.split(';'):
+            if '=' in pair:
+                k,v=pair.strip().split('=',1)
+                cookies.append({'name':k,'value':v,'domain':'vbgramgrep.dord.gov.in','path':'/'})
+        if cookies:ctx.add_cookies(cookies)
+        page=ctx.new_page()
         def fetch(url):
             if urlparse(url).hostname!='vbgramgrep.dord.gov.in':raise ValueError('Unexpected source host')
             response=page.goto(url,wait_until='domcontentloaded',timeout=90000)
@@ -146,6 +154,9 @@ def main():
                     mk=(b,key(gp['panchayat']))
                     if mk not in mapping:raise ValueError('GP engineer mapping missing: '+str(mk))
                     entry=mapping[mk].copy();entry.update({k:v for k,v in gp.items() if k!='workLinks'});entry['janpad']=b
+                    if args.gp_only:
+                        output.append(entry)
+                        continue
                     counts=dict.fromkeys(work_categories,0);works=[]
                     if gp['worksMR']:
                         errors=[];verified=False
@@ -165,6 +176,20 @@ def main():
         finally:browser.close()
     expected=sum(x['works'] for x in blocks.values())
     if len(output)!=695 or len({(r['janpad'],key(r['panchayat'])) for r in output})!=695:raise ValueError('695 unique GPs required')
+    if args.gp_only:
+        from zoneinfo import ZoneInfo
+        if not all(r.get('gpProgressVerified') for r in output):
+            raise ValueError('Official GP progress details are not verified against all 8 Janpads')
+        payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),
+                 'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),
+                 'sourceLastUpdated':source_date,'gpProgressVerified':True,
+                 'blocks':list(blocks.values()),'rows':output}
+        for item in payload['blocks']:
+            item.pop('links',None);item.pop('workLinks',None)
+        path=ROOT/'shramik-gp-progress-data.js';temp=path.with_suffix('.tmp')
+        temp.write_text('window.SHRAMIK_GP_PROGRESS = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
+        print('SUCCESS: 695 current GP details, progress/labour/MR totals validated against 8 Janpads',flush=True)
+        return
     if len(all_works)!=expected or len({w['code'] for w in all_works})!=expected:raise ValueError('Work list total/unique codes mismatch')
     payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
     path=ROOT/'gp-emuster-data.js';temp=path.with_suffix('.tmp')

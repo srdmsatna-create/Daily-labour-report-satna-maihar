@@ -184,12 +184,12 @@
     return source.map(r=>{const q=metrics.get([nrm(r.janpad),String(r.engineer||'').replace(/\s+/g,' ').trim(),String(r.cluster||'').replace(/\s+/g,' ').trim()].join('¦'))||{},recoveryWorks=recoveryCount(r.janpad,r.engineer,r.cluster),ongoing=Number(q.ongoing||0);return {...r,todayLabour:Number(q.labour||0),ongoing,mrIssued:Number(q.mrIssued||0),recoveryWorks,postRecoveryOngoing:Math.max(0,ongoing-recoveryWorks)}});
   }
   const engineerRows=buildEngineerRows();
-  fetch('gp-emuster-data.js?live='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('GP detail fetch failed');return r.text()}).then(text=>{
+  fetch('shramik-gp-progress-data.js?live='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('GP detail fetch failed');return r.text()}).then(text=>{
     const raw=text.slice(text.indexOf('=')+1).trim().replace(/;$/,'');
     verifiedGPDetail=JSON.parse(raw);if(freshGPDetail())draw();
   }).catch(()=>{});
 
-  let verifiedGPDetail=window.GP_WORK_TYPE_MUSTER_REPORT;
+  let verifiedGPDetail=window.SHRAMIK_GP_PROGRESS;
   const reportDay=()=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date()).replaceAll('/','-');
   const freshGPDetail=()=>verifiedGPDetail?.gpProgressVerified===true&&verifiedGPDetail.date===reportDay();
   const officialMap=new Map((auto.official||[]).map(r=>[nrm(r.janpad),r]));
