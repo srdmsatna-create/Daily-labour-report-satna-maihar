@@ -166,7 +166,9 @@ def main():
             response=page.goto(url,wait_until='domcontentloaded',timeout=90000)
             if response and response.status>=400:raise ValueError('Official HTTP '+str(response.status))
             page.locator('table').first.wait_for(timeout=30000)
-            page.wait_for_load_state('networkidle',timeout=60000)
+            # This ASP.NET report renders its table in the HTML response.
+            # domcontentloaded + table readiness avoids waiting for unrelated
+            # analytics/translation requests on every GP and work page.
             return page.evaluate(GRID)
         try:
             top=fetch(args.url)
