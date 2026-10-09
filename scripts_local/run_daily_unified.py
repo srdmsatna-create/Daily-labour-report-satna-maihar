@@ -66,8 +66,13 @@ def main():
     finally:
         lock.unlink(missing_ok=True)
         if stage is not None and cleanup:
-            run(['git','worktree','remove',str(stage)])
-            stage.parent.rmdir()
+            # Only this run's disposable worktree: fetchers leave debug files
+            # outside the committed output list. Cleanup cannot undo a push.
+            try:
+                run(['git','worktree','remove','--force',str(stage)])
+                stage.parent.rmdir()
+            except (OSError, subprocess.CalledProcessError) as exc:
+                print('WARNING: Reports published successfully; temporary cleanup incomplete: ' + str(exc), flush=True)
 
 if __name__ == '__main__':
     try:
