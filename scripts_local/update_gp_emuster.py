@@ -144,19 +144,18 @@ def main():
             top=fetch(args.url)
             # Use the same unfiltered R6.9 view as the official summary reader.
             # Signed links can carry a preselected category/status.
-            if args.gp_only:
-                selects=page.locator('select')
-                if selects.count()<3:
-                    raise ValueError('R6.9 ALL filters missing; GP snapshot not published')
-                selects.nth(1).select_option(label='ALL')
-                page.wait_for_load_state('networkidle',timeout=60000)
-                page.locator('select').nth(2).select_option(label='ALL')
-                page.wait_for_load_state('networkidle',timeout=60000)
-                submit=page.get_by_role('button',name=re.compile(r'submit',re.I))
-                if submit.count():submit.first.click()
-                else:page.locator('input[type=submit],button[type=submit]').first.click()
-                page.wait_for_load_state('networkidle',timeout=60000)
-                top=page.evaluate(GRID)
+            selects=page.locator('select')
+            if selects.count()<3:
+                raise ValueError('R6.9 ALL filters missing; GP snapshot not published')
+            selects.nth(1).select_option(label='ALL')
+            page.wait_for_load_state('networkidle',timeout=60000)
+            page.locator('select').nth(2).select_option(label='ALL')
+            page.wait_for_load_state('networkidle',timeout=60000)
+            submit=page.get_by_role('button',name=re.compile(r'submit',re.I))
+            if submit.count():submit.first.click()
+            else:page.locator('input[type=submit],button[type=submit]').first.click()
+            page.wait_for_load_state('networkidle',timeout=60000)
+            top=page.evaluate(GRID)
             dump('main',top);blocks=blocks_from(top)
             date_match=re.search(r'(?:report\s*)?last\s*updated(?:\s*on)?\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',page.locator('body').inner_text(),re.I)
             source_date=date_match.group(1).replace('/','-') if date_match else 'तिथि उपलब्ध नहीं'
@@ -194,22 +193,22 @@ def main():
         finally:browser.close()
     expected=sum(x['works'] for x in blocks.values())
     if len(output)!=695 or len({(r['janpad'],key(r['panchayat'])) for r in output})!=695:raise ValueError('695 unique GPs required')
-    if args.gp_only:
-        from zoneinfo import ZoneInfo
-        if not all(r.get('gpProgressVerified') for r in output):
-            raise ValueError('Official GP progress details are not verified against all 8 Janpads')
-        payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),
-                 'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),
-                 'sourceLastUpdated':source_date,'gpProgressVerified':True,
-                 'blocks':list(blocks.values()),'rows':output}
-        for item in payload['blocks']:
-            item.pop('links',None);item.pop('workLinks',None)
-        path=ROOT/'shramik-gp-progress-data.js';temp=path.with_suffix('.tmp')
-        temp.write_text('window.SHRAMIK_GP_PROGRESS = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
-        print('SUCCESS: 695 current GP details, progress/labour/MR totals validated against 8 Janpads',flush=True)
-        return
+    if not args.gp_only and (len(all_works)!=expected or len({w['code'] for w in all_works})!=expected):raise ValueError('Work list total/unique codes mismatch')
+    from zoneinfo import ZoneInfo
+    if not all(r.get('gpProgressVerified') for r in output):
+        raise ValueError('Official GP progress details are not verified against all 8 Janpads')
+    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),
+             'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),
+             'sourceLastUpdated':source_date,'gpProgressVerified':True,
+             'blocks':list(blocks.values()),'rows':output}
+    for item in payload['blocks']:
+        item.pop('links',None);item.pop('workLinks',None)
+    path=ROOT/'shramik-gp-progress-data.js';temp=path.with_suffix('.tmp')
+    temp.write_text('window.SHRAMIK_GP_PROGRESS = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
+    print('SUCCESS: 695 current GP details, progress/labour/MR totals validated against 8 Janpads',flush=True)
+    if args.gp_only:return
     if len(all_works)!=expected or len({w['code'] for w in all_works})!=expected:raise ValueError('Work list total/unique codes mismatch')
-    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
+    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),'sourceLastUpdated':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
     path=ROOT/'gp-emuster-data.js';temp=path.with_suffix('.tmp')
     temp.write_text('window.GP_WORK_TYPE_MUSTER_REPORT = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
     print('SUCCESS: 695 GP, '+str(expected)+' unique MR-issued works, all master work categories. '+str(path),flush=True)

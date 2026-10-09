@@ -8,10 +8,10 @@ GP_URL=os.environ.get('VBGRAM_DAILY_REPORT_URL','').strip() or runpy.run_path(st
 GROUPS=[
  ('shramik_complete',[
   ['scripts_local/local_auto_update.py'],['scripts/merge_official_summary.py'],
-  ['scripts_local/update_gp_emuster.py','--url',GP_URL,'--gp-only'],
+  ['scripts_local/update_gp_emuster.py','--url',GP_URL],
   ['scripts_local/update_shramik_niyojan.py'],['scripts_local/update_shramik_state.py']
  ],['auto-data.js','auto-status.js','data/official-summary.csv','data/fetch-status.json',
-    'shramik-gp-progress-data.js','shramik-niyojan-data.js','shramik-district-reports.js',
+    'shramik-gp-progress-data.js','gp-emuster-data.js','shramik-niyojan-data.js','shramik-district-reports.js',
     'shramik-state-refresh-status.js','shramik-refresh-status.js']),
  ('muster_emb',[['scripts_local/update_muster_emb_monitoring.py','--update-only']],['muster-emb-data.js']),
  ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only']],['yuktdhara-data.js','yuktdhara-official-data.js']),
@@ -96,11 +96,25 @@ def validate_shramik(root):
   differences={k:{'official':o.get(k),'GP_total':v} for k,v in totals.items() if float(o.get(k,-1))!=v}
   if differences:raise ValueError('Live GP/Janpad total mismatch: '+j+' '+json.dumps(differences,ensure_ascii=False))
   if any(r['gpsProgress'] not in (0,1) for r in members):raise ValueError('Invalid GP progress flag')
+ validate_work_types(root,gp)
  # Replace old workbook daily metrics only after every feed validates.
  auto['rows']=rows
  auto.setdefault('meta',{}).setdefault('sourceDates',{})['RepDay']=today
  auto['meta']['gpProgressVerified']=True
  p=root/'auto-data.js';p.write_text('window.AUTO_REPORT = '+json.dumps(auto,ensure_ascii=False)+';\n',encoding='utf-8')
+def validate_work_types(root,gp):
+ d=data(root/'gp-emuster-data.js')
+ if d.get('date')!=gp['date'] or not d.get('gpProgressVerified'):raise ValueError('Today verified GP work-type snapshot required')
+ keys=lambda rr:{(norm(r['janpad']),norm(r['panchayat'])):r for r in rr}
+ workrows=d.get('rows',[]);detail=keys(workrows);progress=keys(gp['rows'])
+ if len(workrows)!=695 or len(detail)!=695 or set(detail)!=set(progress):raise ValueError('Work-type feed must contain the same 695 GPs')
+ for k,r in detail.items():
+  if any(r.get(f)!=progress[k].get(f) for f in ('labour','worksMR','gpsProgress')):raise ValueError('Work-type GP snapshot differs: '+str(k))
+  issued=r.get('issuedWorks')
+  if not isinstance(issued,dict) or any(not isinstance(v,int) or v<0 for v in issued.values()) or sum(issued.values())!=r['worksMR']:raise ValueError('MR-issued work categories incomplete: '+str(k))
+ works=d.get('works',[]);expected=sum(r['worksMR'] for r in workrows)
+ if d.get('totalWorks')!=expected or len(works)!=expected or len({w['code'] for w in works})!=expected:raise ValueError('MR-issued work list count/unique codes do not reconcile')
+
 def restore(root,saved):
  for name,content in saved.items():
   p=root/name
@@ -112,7 +126,7 @@ def refresh_group(group,commands,files,root=ROOT,executor=None,validator=validat
  try:
   for command in commands:
    if executor:executor(command,root)
-   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=1800 if '--gp-only' in command else 900)
+   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0]=='scripts_local/update_gp_emuster.py' else 900)
   validator(group,root)
   return {'success':True,'files':files}
  except Exception as e:

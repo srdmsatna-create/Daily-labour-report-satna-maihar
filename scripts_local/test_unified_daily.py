@@ -26,6 +26,8 @@ class DailyTests(unittest.TestCase):
     p=root/name;p.write_text((('window.AUTO_REPORT=' if name=='auto-data.js' else 'window.DATA=')+json.dumps(value)+';' if p.suffix=='.js' else json.dumps(value)),encoding='utf-8')
    write('auto-data.js',{'official':[],'rows':[]})
    write('shramik-gp-progress-data.js',gp)
+   workrows=[dict(r,issuedWorks={'Other Works':1}) for r in rows]
+   write('gp-emuster-data.js',{'date':today,'gpProgressVerified':True,'rows':workrows,'totalWorks':695,'works':[{'code':str(i)} for i in range(695)]})
    write('shramik-niyojan-data.js',{'officialDate':today,'engineerRows':[{'target':621552 if i==0 else 0} for i in range(59)],'gpMandaysRows':rows})
    write('shramik-district-reports.js',{'snapshotDate':today,'districts':{str(i):{} for i in range(52)}})
    write('shramik-state-refresh-status.js',{k:True for k in ('success','persondaysSuccess','labourSuccess','gpSuccess')})
@@ -36,6 +38,9 @@ class DailyTests(unittest.TestCase):
    gp['blocks'][0]['progressGP']=67;write('shramik-gp-progress-data.js',gp)
    with self.assertRaises(ValueError):m.validate_shramik(root)
    self.assertEqual((root/'auto-data.js').read_bytes(),before)
+   workrows[0]['issuedWorks']={}
+   write('gp-emuster-data.js',{'date':today,'gpProgressVerified':True,'rows':workrows,'totalWorks':695,'works':[{'code':str(i)} for i in range(695)]})
+   with self.assertRaises(ValueError):m.validate_work_types(root,gp)
  def test_official_parser_preserves_empty_columns_and_ignores_layout(self):
   m=load('local_auto_update')
   html='<table><tr><td><table><tr><td>1</td><td>AMARPATAN</td><td>75</td><td>74</td><td>280</td><td>184</td><td></td><td>190</td></tr></table></td></tr></table>'
