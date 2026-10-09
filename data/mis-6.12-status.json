@@ -1,11 +1,11 @@
 {
   "source": "Official MIS Report 6.12",
   "officialUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=4PmH2eRA9khYNUNqz1h5yt9D8POKLA7Afp0nercX3xt22K65u-hNco55SZiMHr78IufQr-Pyxw1-2tJEz-65UMtG5kOTBzCEHurJmRrAtoAIfVSTK-qhJdX02vLZMWrVbwM-oS9xX58g6SiO5ODhhFid9RqKvnwTnS-hLkXfa1-25phIp66JlphIcilUU7cK",
-  "updatedAt": "2026-10-02T08:12:12.286503+00:00",
-  "rows": 17246,
+  "updatedAt": "2026-10-09T09:36:58.112905+00:00",
+  "rows": 17482,
   "statusCounts": {
-    "Ongoing": 15570,
-    "Completed": 141,
-    "Physically Completed": 1535
+    "Ongoing": 15420,
+    "Completed": 169,
+    "Physically Completed": 1893
   }
 }
