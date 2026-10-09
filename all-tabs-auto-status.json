@@ -1,9 +1,10 @@
 {
-  "checkedAt": "2026-10-09T12:10:10.867554+00:00",
+  "checkedAt": "2026-10-09T17:33:18.177337+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/local_auto_update.py']' returned non-zero exit status 1.",
       "files": [
         "auto-data.js",
         "auto-status.js",
@@ -18,26 +19,31 @@
       ]
     },
     "muster_emb": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_muster_emb_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "muster-emb-data.js"
       ]
     },
     "yuktdhara": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "yuktdhara-data.js",
-        "yuktdhara-official-data.js"
+        "yuktdhara-official-data.js",
+        "yuktdhara-received-data.js"
       ]
     },
     "block_statistics": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_satna_block_statistics.py']' returned non-zero exit status 1.",
       "files": [
         "vbg-block-stats.js"
       ]
     },
     "mis_612": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
       "files": [
         "data/Ongoing_Works_dynamic_work_details_latest.csv",
         "data/mis-6.12-status.json",
@@ -51,11 +57,12 @@
       ]
     },
     "rejected_wage": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts/update_rejected_wage.py']' returned non-zero exit status 1.",
       "files": [
         "data/rejected-wage-latest.json"
       ]
     }
   },
-  "success": true
+  "success": false
 }
