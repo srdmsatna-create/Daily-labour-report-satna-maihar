@@ -29,7 +29,7 @@ def main():
     stage = None
     cleanup = False
     try:
-        run(['git', 'fetch', 'origin', 'main'])
+        run(['git', 'fetch', 'origin', '+refs/heads/main:refs/remotes/origin/main'])
         stage = Path(tempfile.mkdtemp(prefix='SRDM_DAILY_')) / 'report'
         run(['git', 'worktree', 'add', '--detach', str(stage), 'origin/main'])
         spec = importlib.util.spec_from_file_location('daily_feeds', stage / 'scripts_local/update_all_tabs.py')
