@@ -14,7 +14,7 @@ GROUPS=[
     'shramik-gp-progress-data.js','gp-emuster-data.js','shramik-niyojan-data.js','shramik-district-reports.js',
     'shramik-state-refresh-status.js','shramik-refresh-status.js']),
  ('muster_emb',[['scripts_local/update_muster_emb_monitoring.py','--update-only']],['muster-emb-data.js']),
- ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only']],['yuktdhara-data.js','yuktdhara-official-data.js']),
+ ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-data.js','yuktdhara-official-data.js','yuktdhara-received-data.js']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js']),
  ('planner',[['scripts/fetch_planner_portal_summary.py']],['planner-portal-data.js']),
@@ -50,6 +50,9 @@ def validate(group,root):
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
  elif group=='yuktdhara':
   if len(data(root/'yuktdhara-official-data.js').get('rows',[]))!=8:raise ValueError('Yuktdhara Janpads incomplete')
+  received=data(root/'yuktdhara-received-data.js')
+  today=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
+  if not received.get('success') or received.get('officialDate','').replace('/','-')!=today or not received.get('rows'):raise ValueError('Current verified Yuktdhara GP/engineer detail required: '+str(received.get('message','stale or empty detail')))
  elif group=='block_statistics':
   if len(data(root/'vbg-block-stats.js').get('rows',[]))!=8:raise ValueError('Block statistics incomplete')
 def norm(value):return ' '.join(str(value or '').split()).upper()
