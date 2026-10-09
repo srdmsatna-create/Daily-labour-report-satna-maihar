@@ -1,6 +1,6 @@
 @echo off
 title SRDM FINAL - Daily 8 AM Reports
-echo SRDM FINAL 8AM - 09 OCT 2026 - corrected launcher
+echo SRDM FINAL 8AM - 09 OCT 2026 - VERSION CHECK ENABLED
 setlocal EnableExtensions DisableDelayedExpansion
 set "PYTHONUTF8=1"
 set "PYTHONIOENCODING=utf-8"
@@ -28,11 +28,15 @@ if errorlevel 1 goto failed
 powershell.exe -NoProfile -Command "$names=@('SRDM_52_DISTRICTS_AUTO','SRDM_GP_EMUSTER_DAILY_8AM','SRDM_GP_ALL_IN_ONE_DAILY_8AM'); foreach($n in $names){try{$t=Get-ScheduledTask -TaskName $n -ErrorAction SilentlyContinue; if($t){$t | Disable-ScheduledTask -ErrorAction Stop | Out-Null}}catch{Write-Host ('WARNING: Could not disable old task '+$n+'. Current report update will continue.')}}; exit 0"
 :run
 echo Preparing latest unified updater...
-git fetch origin main
+git fetch origin +refs/heads/main:refs/remotes/origin/main
 if errorlevel 1 goto failed
 set "SRDM_DAILY_BOOT=%TEMP%\SRDM_BOOT_%RANDOM%_%RANDOM%"
 git worktree add --detach "%SRDM_DAILY_BOOT%" origin/main
 if errorlevel 1 goto failed
+echo Checking updater before reading any live report...
+%SRDM_DAILY_PY% -c "import os; from pathlib import Path; p=Path(os.environ['SRDM_DAILY_BOOT']); checks={'scripts_local/run_daily_unified.py':'--publish-verified','scripts_local/update_gp_emuster.py':'sourceDifferences','scripts_local/update_yuktdhara_received.py':'summaryWorksReceived'}; bad=[f for f,marker in checks.items() if marker not in (p/f).read_text(encoding='utf-8')]; print('STOP: outdated updater: '+', '.join(bad) if bad else 'VERSION CHECK PASSED'); raise SystemExit(1 if bad else 0)"
+if errorlevel 1 goto failed
+git -C "%SRDM_DAILY_BOOT%" log -1 --format="Updater revision: %%h %%s"
 %SRDM_DAILY_PY% -c "import requests,bs4,openpyxl,playwright,tzdata; from importlib.metadata import version; assert tuple(map(int,version('openpyxl').split('.')[:3])) >= (3,1,5); assert tuple(map(int,version('playwright').split('.')[:2])) >= (1,46)" >nul 2>&1
 if not errorlevel 1 goto dependencies_ready
 %SRDM_DAILY_PY% -m pip install -r "%SRDM_DAILY_BOOT%\requirements.txt" requests beautifulsoup4 >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
