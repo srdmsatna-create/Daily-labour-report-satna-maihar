@@ -138,6 +138,16 @@ def paged_works(page, fetch, url, expected, gp):
         tables=page.evaluate(GRID)
     raise ValueError(f'Work list incomplete: received {len(out)}/{expected} unique works; no further readable page')
 
+
+def fetch_work_list(page, fetch, url, expected, gp, attempts=3):
+    """Retry only an incomplete GP detail, without repeating earlier GPs."""
+    for attempt in range(1,attempts+1):
+        try:
+            return paged_works(page,fetch,url,expected,gp)
+        except ValueError as exc:
+            if 'Work list incomplete:' not in str(exc) or attempt==attempts:raise
+            print(f'  {gp}: incomplete detail; fetching this GP again ({attempt+1}/{attempts})',flush=True)
+
 def main():
     a=argparse.ArgumentParser();a.add_argument('--url',required=True);a.add_argument('--headed',action='store_true');a.add_argument('--gp-only',action='store_true');args=a.parse_args()
     from playwright.sync_api import sync_playwright
@@ -154,7 +164,7 @@ def main():
     with sync_playwright() as p:
         try:browser=p.chromium.launch(channel='chrome',headless=not args.headed)
         except Exception:browser=p.chromium.launch(headless=not args.headed)
-        ctx=browser.new_context()
+        ctx=browser.new_context(extra_http_headers={'Cache-Control':'no-cache','Pragma':'no-cache'})
         cookie=os.environ.get('VBGRAM_COOKIE','')
         cookies=[]
         for pair in cookie.split(';'):
@@ -211,7 +221,7 @@ def main():
                         errors=[];verified=False
                         for url in gp['workLinks']:
                             try:
-                                works=paged_works(page,fetch,url,gp['worksMR'],gp['panchayat'])
+                                works=fetch_work_list(page,fetch,url,gp['worksMR'],gp['panchayat'])
                                 dump(b+'-'+key(gp['panchayat'])+'-works',page.evaluate(GRID));verified=True;break
                             except Exception as e:errors.append(str(e))
                         if not verified:
