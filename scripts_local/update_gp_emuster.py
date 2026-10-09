@@ -129,7 +129,6 @@ def paged_works(page, fetch, url, expected, gp):
         eligible.sort(key=lambda c:(0 if re.search(r'next|[>»›]',c['text'],re.I) else 1,int(re.search(r'Page\$(\d+)',c['href']).group(1)) if re.search(r'Page\$(\d+)',c['href']) else 0))
         target=next((c for c in eligible if not re.search(r'Page\$(\d+)',c['href']) or int(re.search(r'Page\$(\d+)',c['href']).group(1))>current_page),None)
         if target is None:
-            if len(out)<expected:raise ValueError(f'Work list incomplete: received {len(out)}/{expected} unique works')
             return list(out.values())
         number=re.search(r'Page\$(\d+)',target['href'])
         current_page=int(number.group(1)) if number else current_page+1
@@ -258,7 +257,7 @@ def main():
     print('SUCCESS: 695 current GP details, progress/labour/MR totals validated against 8 Janpads',flush=True)
     if args.gp_only:return
     if len(all_works)!=expected or len({w['code'] for w in all_works})!=expected:raise ValueError('Work list total/unique codes mismatch')
-    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),'sourceLastUpdated':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'totalWorks':expected,'countBasis':'complete official GP work list','summaryTotalWorks':sum(x['works'] for x in blocks.values()),'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
+    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),'sourceLastUpdated':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'totalWorks':expected,'countBasis':'complete official GP work list','summaryTotalWorks':sum(x['works'] for x in blocks.values()),'sourceDifferences':[{'janpad':r['janpad'],'panchayat':r['panchayat'],'summaryWorks':r['summaryWorksMR'],'detailWorks':r['worksMR']} for r in output if r['summaryWorksMR']!=r['worksMR']],'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
     path=ROOT/'gp-emuster-data.js';temp=path.with_suffix('.tmp')
     temp.write_text('window.GP_WORK_TYPE_MUSTER_REPORT = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
     print('SUCCESS: 695 GP, '+str(expected)+' unique MR-issued works, all master work categories. '+str(path),flush=True)
