@@ -198,7 +198,7 @@
     if(r.gpParts){const parts=r.gpParts.map(reportGPStats);return [0,1].map(i=>parts.every(x=>x[i]!=null)?parts.reduce((a,x)=>a+x[i],0):null);}
     const official=officialMap.get(nrm(r.janpad));
     if(!r.engineer&&!r.cluster){const t=official?.totalGP,a=official?.musterGP;return [t!=null?Number(t):null,a!=null&&t!=null&&Number(a)>=0&&Number(a)<=Number(t)?Number(a):null];}
-    const entries=(auto.rows||[]).filter(x=>nrm(x.janpad)===nrm(r.janpad)&&(!r.engineer||String(x.engineer||'').trim()===String(r.engineer).trim())&&(!r.cluster||String(x.cluster||'').trim()===String(r.cluster).trim()));
+    const entries=(auto.rows||[]).filter(x=>nrm(x.janpad)===nrm(r.janpad)&&(!r.engineer||String(x.engineer||'').replace(/\s+/g,' ').trim()===String(r.engineer).replace(/\s+/g,' ').trim())&&(!r.cluster||String(x.cluster||'').replace(/\s+/g,' ').trim()===String(r.cluster).replace(/\s+/g,' ').trim()));
     if(!entries.length||entries.some(x=>x.gps==null||x.gpsProgress==null))return [null,null];
     const total=entries.reduce((a,x)=>a+Number(x.gps),0),active=entries.reduce((a,x)=>a+Number(x.gpsProgress),0);
     return [total,active>=0&&active<=total?active:null];
