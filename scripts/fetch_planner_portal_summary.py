@@ -3,9 +3,13 @@ from urllib.parse import urljoin
 import json,re,datetime
 import requests
 from bs4 import BeautifulSoup
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 BASE='https://planner.nregsmp.org/reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block'
 HEADERS={'User-Agent':'Mozilla/5.0 SRDM-SATNA/1.0'}
+SESSION=requests.Session()
+SESSION.mount('https://',HTTPAdapter(max_retries=Retry(total=2,connect=2,read=2,status=2,backoff_factor=1,status_forcelist=[502,503,504],allowed_methods=['GET'])))
 JANPADS={'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA'}
 
 def nint(s):
@@ -13,7 +17,7 @@ def nint(s):
     return int(m.group(0).replace(',','')) if m else 0
 
 def get(url):
-    r=requests.get(url,headers=HEADERS,timeout=45)
+    r=SESSION.get(url,headers=HEADERS,timeout=(15,45))
     r.raise_for_status();return r.text
 
 def rows_from_table(table):
@@ -33,7 +37,7 @@ for table in soup.find_all('table'):
         # 11 agri %, 12 NRM %, 13 TOTAL WORKS, ...
         if len(c)>=14 and c[0].strip().isdigit() and c[1].strip().upper() in JANPADS:
             name=c[1].strip().upper(); new=nint(c[7]); total=nint(c[13]); spill=nint(c[2])
-            a=tr.find('a',href=True)
+            a=next((a for a in tr.find_all('a',href=True) if a.get_text(' ',strip=True).upper()==name and 'view=gp' in a['href']),None)
             if a: block_links[name]=urljoin(BASE,a['href'])
             blocks.append({'janpad':name,'newWorks':new,'spillWorks':spill,'totalWorks':total})
 
@@ -60,10 +64,13 @@ for b in blocks:
             # 7 spill labour cost, 8 spill total cost, 9 NEW WORK COUNT,
             # 10 material, 11 labour, 12 total cost, 13 agri %, 14 NRM %,
             # 15 TOTAL WORKS, 16 material, 17 labour, 18 total cost, 19 mandays.
-            if len(c)>=20 and c[0].strip().isdigit() and c[1].strip().upper()==name:
-                gp=c[2].strip()
+            # A block-filtered GP page omits the Block column (19 cells).
+            # The district-wide GP page includes it (20 cells).
+            offset=0 if len(c)==20 and c[1].strip().upper()==name else -1 if len(c)==19 else None
+            if offset is not None and c[0].strip().isdigit():
+                gp=c[2+offset].strip()
                 if not gp or gp.upper() in {'TOTAL','GRAND TOTAL'}: continue
-                spill=nint(c[4]); new=nint(c[9]); total=nint(c[15])
+                spill=nint(c[4+offset]); new=nint(c[9+offset]); total=nint(c[15+offset])
                 key=(name,gp.upper())
                 if key in seen: continue
                 seen.add(key)
@@ -80,7 +87,7 @@ for b in blocks:
         'newWorksJanpad':b['newWorks'],
         'spillGpSum':sum(x['spillWorks'] for x in rr),
         'spillJanpad':b['spillWorks'],
-        'ok':sum(x['newWorks'] for x in rr)==b['newWorks'] and sum(x['spillWorks'] for x in rr)==b['spillWorks']
+        'ok':bool(rr) and sum(x['newWorks'] for x in rr)==b['newWorks'] and sum(x['spillWorks'] for x in rr)==b['spillWorks'] and sum(x['totalWorks'] for x in rr)==b['totalWorks']
     })
 
 payload={

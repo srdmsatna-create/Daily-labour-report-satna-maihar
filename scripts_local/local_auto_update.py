@@ -59,29 +59,23 @@ def _number(value):
 
 def _row_data(html):
     """Return {JANPAD: [numeric cells after the Janpad cell]}."""
+    from bs4 import BeautifulSoup
     out = {}
-    for row_html in re.findall(r"<tr[^>]*>(.*?)</tr>", html, re.I | re.S):
-        cells = re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", row_html, re.I | re.S)
-        clean = [_clean_text(c) for c in cells]
-        clean = [c for c in clean if c]
-
-        janpad = None
-        janpad_index = None
-        for i, cell in enumerate(clean):
-            name = cell.upper().strip()
-            for j in JANPAD_ORDER:
-                if name == j or j in name or name in j:
-                    janpad = j
-                    janpad_index = i
-                    break
-            if janpad:
-                break
-
-        if not janpad:
+    for row in BeautifulSoup(html, 'html.parser').find_all('tr'):
+        cells = row.find_all(['td','th'], recursive=False)
+        # Layout tables can contain an entire nested report; never parse those
+        # as one numeric row or shift values by dropping blank cells.
+        if any(cell.find('table') for cell in cells):
             continue
-
-        nums = [_number(c) for c in clean[janpad_index + 1:]]
-        if nums:
+        clean = [cell.get_text(' ', strip=True) for cell in cells]
+        indices = [i for i,cell in enumerate(clean) if cell.upper().strip() in JANPAD_ORDER]
+        if len(indices) != 1:
+            continue
+        i = indices[0];janpad = clean[i].upper().strip()
+        nums = [_number(c) for c in clean[i + 1:]]
+        if len(nums) >= 6:
+            if janpad in out and out[janpad] != nums:
+                raise ValueError('Conflicting official source rows: ' + janpad)
             out[janpad] = nums
 
     return out
@@ -191,7 +185,10 @@ def fetch_reports():
 
         # 1) ALL report
         _select_label(work_category, "ALL")
+        page.wait_for_load_state("networkidle", timeout=60000)
+        proposed_status = page.locator("select").nth(2)
         _select_label(proposed_status, "ALL")
+        page.wait_for_load_state("networkidle", timeout=60000)
         _submit_and_wait(page)
         all_html = page.content()
 
@@ -200,6 +197,8 @@ def fetch_reports():
         work_category = selects.nth(1)
         proposed_status = selects.nth(2)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
+        page.wait_for_load_state("networkidle", timeout=60000)
+        proposed_status = page.locator("select").nth(2)
         _select_label(proposed_status, "ALL")
         _submit_and_wait(page)
         individual_html = page.content()
@@ -209,6 +208,8 @@ def fetch_reports():
         work_category = selects.nth(1)
         proposed_status = selects.nth(2)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
+        page.wait_for_load_state("networkidle", timeout=60000)
+        proposed_status = page.locator("select").nth(2)
         _select_label(proposed_status, PMAY_STATUS)
         _submit_and_wait(page)
         pmay_html = page.content()
@@ -218,6 +219,8 @@ def fetch_reports():
         work_category = selects.nth(1)
         proposed_status = selects.nth(2)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
+        page.wait_for_load_state("networkidle", timeout=60000)
+        proposed_status = page.locator("select").nth(2)
         _select_label(proposed_status, EK_BAGIYA_STATUS)
         _submit_and_wait(page)
         ek_html = page.content()
@@ -321,6 +324,10 @@ def main():
     try:
         all_html, individual_html, pmay_html, ek_html = fetch_reports()
         data = combine_reports(all_html, individual_html, pmay_html, ek_html)
+        for j in JANPAD_ORDER:
+            if j in data:
+                d=data[j]
+                print(f"Official ALL {j}: GP={d['totalGP']:g}; progress={d['musterGP']:g}; labour={d['labourAll']:g}; MR works={d['mrAll']:g}", flush=True)
 
         if len(data) < 8:
             raise RuntimeError(

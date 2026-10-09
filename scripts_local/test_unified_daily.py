@@ -10,6 +10,11 @@ def load(name):
  mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
 
 class DailyTests(unittest.TestCase):
+ def test_official_parser_preserves_empty_columns_and_ignores_layout(self):
+  m=load('local_auto_update')
+  html='<table><tr><td><table><tr><td>1</td><td>AMARPATAN</td><td>75</td><td>74</td><td>280</td><td>184</td><td></td><td>190</td></tr></table></td></tr></table>'
+  row=m.parse_all_report(html)['AMARPATAN']
+  self.assertEqual((row['totalGP'],row['musterGP'],row['labourAll'],row['mrAll'],row['noEkyc'],row['mrs']),(75,74,280,184,0,190))
  def test_rejected_wage_requires_all_three_years_without_duplicates(self):
   m=load('update_all_tabs')
   janpads=['AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA']
