@@ -26,7 +26,7 @@ def number(value):
 # Flatten spans and retain links at their original column positions.
 GRID = '''tables=>tables.map(t=>{const g=[];Array.from(t.rows).filter(r=>r.closest('table')===t).forEach((r,y)=>{g[y]??=[];let x=0;Array.from(r.cells).forEach(c=>{while(g[y][x]!==undefined)x++;const v={text:c.innerText.trim(),links:Array.from(c.querySelectorAll('a[href]')).map(a=>a.href)};for(let dy=0;dy<c.rowSpan;dy++){g[y+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)g[y+dy][x+dx]=v}x+=c.colSpan})});return g})'''
 
-def gp_counts(tables, expected_gp, expected_works, expected_created=None):
+def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_gp=None):
     candidates=[]
     diagnostics=[]
     for table in tables:
@@ -60,9 +60,10 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None):
             actual_gp=sum(x['worksReceived']>0 for x in out.values())
             actual_created=sum(x.get('worksCreated',0) for x in out.values())
             diagnostics.append('received GPs '+str(actual_gp)+'/'+str(expected_gp)+', received works '+str(actual_works)+'/'+str(expected_works)+', created works '+str(actual_created)+'/'+str(expected_created)+', created column '+str(ci is not None))
-            if actual_works!=expected_works:continue
-            if sum(x['worksReceived']>0 for x in out.values())!=expected_gp:continue
-            if any(t!=expected_works for t in totals):continue
+            if total_gp is None:
+                if actual_works!=expected_works or actual_gp!=expected_gp:continue
+            elif len(out)!=total_gp or not totals:continue
+            if any(t!=actual_works for t in totals):continue
             if expected_created is not None and (ci is None or sum(x.get('worksCreated',0) for x in out.values())!=expected_created):continue
             candidates.append(out)
     if not candidates:raise RuntimeError('GP detail does not reconcile: '+('; '.join(diagnostics) if diagnostics else 'received-work GP headers not found'))
@@ -154,7 +155,7 @@ def collect():
             blocks=block_counts(top,blocks)
             date_node=page.locator('#ContentPlaceHolder1_Shedule_updated_date')
             if date_node.count():summary['officialDate']=date_node.inner_text().strip()
-            summary['rows']=blocks
+            summary['rows']=[dict(b) for b in blocks]
             summary['updatedAt']=datetime.now(timezone.utc).isoformat()
             print('Using current browser-session Yuktdhara parent totals for all 8 blocks',flush=True)
             debug=ROOT/'data'/'yuktdhara-received-debug';debug.mkdir(parents=True,exist_ok=True)
@@ -179,7 +180,7 @@ def collect():
                             tables=fetch(url)
                             (debug/(b+'-attempt-'+str(attempt)+'-link-'+str(link_index)+'.json')).write_text(json.dumps(tables,ensure_ascii=False),encoding='utf-8')
                             (debug/(b+'-tables.json')).write_text(json.dumps(tables,ensure_ascii=False),encoding='utf-8')
-                            details[b]=gp_counts(tables,block['gpReceived'],block['worksReceived'],block['worksCreated'])
+                            details[b]=gp_counts(tables,block['gpReceived'],block['worksReceived'],block['worksCreated'],block['gp'])
                             break
                         except Exception as e:
                             message=b+' attempt '+str(attempt)+': '+str(e)
@@ -188,6 +189,11 @@ def collect():
                     if b in details:break
                     if attempt<3:time.sleep(2*attempt)
                 if b not in details:raise RuntimeError(b+': '+'; '.join(errors))
+            for block in blocks:
+                rr=details[jan(block['block'])]
+                block['summaryGpReceived']=block['gpReceived'];block['summaryWorksReceived']=block['worksReceived']
+                block['gpReceived']=sum(r['worksReceived']>0 for r in rr)
+                block['worksReceived']=sum(r['worksReceived'] for r in rr)
             work_debug=[]
             pending=sum(gp['worksReceived']>0 for gp_rows in details.values() for gp in gp_rows)
             done=0
