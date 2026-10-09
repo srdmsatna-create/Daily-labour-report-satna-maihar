@@ -33,10 +33,16 @@ if errorlevel 1 goto failed
 set "SRDM_DAILY_BOOT=%TEMP%\SRDM_BOOT_%RANDOM%_%RANDOM%"
 git worktree add --detach "%SRDM_DAILY_BOOT%" origin/main
 if errorlevel 1 goto failed
+%SRDM_DAILY_PY% -c "import requests,bs4,openpyxl,playwright,tzdata; from importlib.metadata import version; assert tuple(map(int,version('openpyxl').split('.')[:3])) >= (3,1,5); assert tuple(map(int,version('playwright').split('.')[:2])) >= (1,46)" >nul 2>&1
+if not errorlevel 1 goto dependencies_ready
 %SRDM_DAILY_PY% -m pip install -r "%SRDM_DAILY_BOOT%\requirements.txt" requests beautifulsoup4 >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
 if errorlevel 1 goto failed
+:dependencies_ready
+%SRDM_DAILY_PY% -c "from pathlib import Path; from playwright.sync_api import sync_playwright; p=sync_playwright().start(); exists=Path(p.chromium.executable_path).is_file(); p.stop(); raise SystemExit(0 if exists else 1)" >nul 2>&1
+if not errorlevel 1 goto browser_ready
 %SRDM_DAILY_PY% -m playwright install chromium >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
 if errorlevel 1 goto failed
+:browser_ready
 echo Refreshing all reports. Details: daily-all-reports.log
 %SRDM_DAILY_PY% -u "%SRDM_DAILY_BOOT%\scripts_local\run_daily_unified.py" --publish >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
 if errorlevel 1 goto failed
