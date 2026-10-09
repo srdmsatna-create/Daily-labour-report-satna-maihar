@@ -40,7 +40,12 @@ def validate(group,root):
   d=data(root/'planner-portal-data.js')
   if len(d.get('blocks',[]))!=8 or len(d.get('panchayats',[]))!=695 or len(d.get('validation',[]))!=8 or not all(r['ok'] for r in d['validation']):raise ValueError('Planner GP totals incomplete or do not reconcile')
  elif group=='rejected_wage':
-  if len(data(root/'data/rejected-wage-latest.json').get('rows',[]))!=8:raise ValueError('Expected 8 rejected wage Janpads')
+  d=data(root/'data/rejected-wage-latest.json');rows=d.get('rows',[])
+  janpads={'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA'}
+  expected={(fy,j) for fy in ('2024-25','2025-26','2026-27') for j in janpads}
+  actual={(r.get('fy'),norm(r.get('janpad'))) for r in rows}
+  if len(rows)!=24 or actual!=expected:raise ValueError('Expected 24 unique rejected wage Janpad/FY records: 8 Janpads for each of 3 years')
+  if d.get('date')!=datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat() or not d.get('combined'):raise ValueError('Current combined rejected wage snapshot required')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
  elif group=='yuktdhara':

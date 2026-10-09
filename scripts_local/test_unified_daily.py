@@ -10,6 +10,18 @@ def load(name):
  mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
 
 class DailyTests(unittest.TestCase):
+ def test_rejected_wage_requires_all_three_years_without_duplicates(self):
+  m=load('update_all_tabs')
+  janpads=['AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA']
+  rows=[{'fy':fy,'janpad':j} for fy in ('2024-25','2025-26','2026-27') for j in janpads]
+  with tempfile.TemporaryDirectory() as temp:
+   root=Path(temp);(root/'data').mkdir();path=root/'data/rejected-wage-latest.json'
+   def write(rr):path.write_text(json.dumps({'date':m.datetime.now(m.ZoneInfo('Asia/Kolkata')).date().isoformat(),'combined':True,'rows':rr}))
+   write(rows);m.validate('rejected_wage',root)
+   write(rows[:8])
+   with self.assertRaises(ValueError):m.validate('rejected_wage',root)
+   write(rows[:-1]+[rows[0]])
+   with self.assertRaises(ValueError):m.validate('rejected_wage',root)
  def test_failed_second_step_restores_entire_group(self):
   m=load('update_all_tabs')
   with tempfile.TemporaryDirectory() as temp:
