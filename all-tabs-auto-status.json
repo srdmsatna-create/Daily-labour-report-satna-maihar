@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-09T09:38:16.036268+00:00",
+  "checkedAt": "2026-10-09T12:10:10.867554+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -10,6 +10,7 @@
         "data/official-summary.csv",
         "data/fetch-status.json",
         "shramik-gp-progress-data.js",
+        "gp-emuster-data.js",
         "shramik-niyojan-data.js",
         "shramik-district-reports.js",
         "shramik-state-refresh-status.js",
