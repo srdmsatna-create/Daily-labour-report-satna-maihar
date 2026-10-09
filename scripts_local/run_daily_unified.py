@@ -50,11 +50,12 @@ def main():
             bundle = failure_root / 'daily-update-diagnostics.zip'
             with zipfile.ZipFile(bundle, 'w', zipfile.ZIP_DEFLATED) as archive:
                 archive.write(failure, failure.name)
-                debug = stage / 'data/gp-emuster-debug'
-                if debug.exists():
-                    for item in sorted(debug.glob('*')):
-                        if item.is_file():
-                            archive.write(item, 'gp-emuster-debug/' + item.name)
+                for folder in ('gp-emuster-debug','yuktdhara-received-debug'):
+                    debug = stage / 'data' / folder
+                    if debug.exists():
+                        for item in sorted(debug.glob('*')):
+                            if item.is_file():
+                                archive.write(item, folder + '/' + item.name)
             print('Current-run diagnostics saved: ' + str(bundle), flush=True)
             raise RuntimeError('Full daily refresh incomplete. Live reports unchanged; diagnostics: ' + str(failure))
         files = [f for f in feeds.OUTPUTS if (stage / f).exists()]
