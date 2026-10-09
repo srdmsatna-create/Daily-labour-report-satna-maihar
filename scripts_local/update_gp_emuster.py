@@ -112,7 +112,7 @@ def works_from(tables, expected, gp=None):
     if not candidates:raise ValueError('Work detail incomplete: expected '+str(expected)+' unique codes; pagination/export may be required')
     return candidates[0]
 
-def paged_works(page, fetch, url, expected, gp):
+def paged_works(page, fetch, url, expected, gp, preserve_extra=False):
     tables=fetch(url);out={};visited=set();current_page=1
     for _ in range(1000):
         rows=works_from(tables,None,gp)
@@ -123,12 +123,14 @@ def paged_works(page, fetch, url, expected, gp):
             if r['code'] in out and out[r['code']]!=r:raise ValueError('Conflicting work across pages '+r['code'])
             out[r['code']]=r
         if len(out)==expected:return list(out.values())
-        if len(out)>expected:raise ValueError(f'{gp}: received {len(out)} unique works; official GP total {expected}; page {current_page}')
+        if len(out)>expected and not preserve_extra:raise ValueError(f'{gp}: received {len(out)} unique works; official GP total {expected}; page {current_page}')
         controls=page.locator('a,button').evaluate_all("""els=>els.map((e,i)=>({i,text:(e.innerText||e.getAttribute('aria-label')||e.title||'').trim(),href:e.getAttribute('href')||'',cls:e.className||'',disabled:e.disabled||e.getAttribute('aria-disabled')==='true'||!!e.closest('.disabled')}))""")
         eligible=[c for c in controls if not c['disabled'] and (re.search(r'Page\$\d+',c['href']) or re.fullmatch(r'Next(?:\s*(?:Page|[>»]))?|[>»›]',c['text'],re.I) or ('next' in c['cls'].lower() and c['text']))]
         eligible.sort(key=lambda c:(0 if re.search(r'next|[>»›]',c['text'],re.I) else 1,int(re.search(r'Page\$(\d+)',c['href']).group(1)) if re.search(r'Page\$(\d+)',c['href']) else 0))
         target=next((c for c in eligible if not re.search(r'Page\$(\d+)',c['href']) or int(re.search(r'Page\$(\d+)',c['href']).group(1))>current_page),None)
-        if target is None:break
+        if target is None:
+            if preserve_extra and len(out)>expected:return list(out.values())
+            break
         number=re.search(r'Page\$(\d+)',target['href'])
         current_page=int(number.group(1)) if number else current_page+1
         page.locator('a,button').nth(target['i']).click()
@@ -166,9 +168,7 @@ def main():
             response=page.goto(url,wait_until='domcontentloaded',timeout=90000)
             if response and response.status>=400:raise ValueError('Official HTTP '+str(response.status))
             page.locator('table').first.wait_for(timeout=30000)
-            # This ASP.NET report renders its table in the HTML response.
-            # domcontentloaded + table readiness avoids waiting for unrelated
-            # analytics/translation requests on every GP and work page.
+            # Server-rendered table is ready after DOM and table readiness.
             return page.evaluate(GRID)
         try:
             top=fetch(args.url)
@@ -209,7 +209,7 @@ def main():
                         errors=[];verified=False
                         for url in gp['workLinks']:
                             try:
-                                works=paged_works(page,fetch,url,gp['worksMR'],gp['panchayat'])
+                                works=paged_works(page,fetch,url,gp['worksMR'],gp['panchayat'],preserve_extra=True)
                                 dump(b+'-'+key(gp['panchayat'])+'-works',page.evaluate(GRID));verified=True;break
                             except Exception as e:errors.append(str(e))
                         if not verified:
@@ -222,10 +222,15 @@ def main():
                         counts[work['category']]=counts.get(work['category'],0)+1;work['janpad']=b
                     if all(w['labour'] is not None for w in works) and sum(w['labour'] for w in works)!=gp['labour']:
                         raise ValueError('Work labour total differs from official GP labour: '+b+'/'+gp['panchayat'])
+                    entry['detailWorks']=len(works)
+                    entry['workCountDifference']=len(works)-gp['worksMR']
+                    if entry['workCountDifference']:
+                        print(f"SOURCE DIFFERENCE {b}/{gp['panchayat']}: official summary={gp['worksMR']}; official detail={len(works)}; both retained",flush=True)
                     entry['issuedWorks']=counts;output.append(entry);all_works.extend(works)
                     print('  '+gp['panchayat']+': '+str(len(works))+' works verified',flush=True)
         finally:browser.close()
-    expected=sum(x['works'] for x in blocks.values())
+    official_expected=sum(x['works'] for x in blocks.values())
+    expected=sum(r.get('detailWorks',r['worksMR']) for r in output)
     if len(output)!=695 or len({(r['janpad'],key(r['panchayat'])) for r in output})!=695:raise ValueError('695 unique GPs required')
     if not args.gp_only and (len(all_works)!=expected or len({w['code'] for w in all_works})!=expected):raise ValueError('Work list total/unique codes mismatch')
     from zoneinfo import ZoneInfo
@@ -242,7 +247,7 @@ def main():
     print('SUCCESS: 695 current GP details, progress/labour/MR totals validated against 8 Janpads',flush=True)
     if args.gp_only:return
     if len(all_works)!=expected or len({w['code'] for w in all_works})!=expected:raise ValueError('Work list total/unique codes mismatch')
-    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),'sourceLastUpdated':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'totalWorks':expected,'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
+    payload={'source':args.url,'fetchedAt':datetime.now(timezone.utc).isoformat(),'date':datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y'),'sourceLastUpdated':source_date,'gpProgressVerified':all(r.get('gpProgressVerified') for r in output),'officialSummaryWorks':official_expected,'totalWorks':expected,'sourceDifferences':[{'janpad':r['janpad'],'panchayat':r['panchayat'],'summaryWorks':r['worksMR'],'detailWorks':r['detailWorks']} for r in output if r.get('workCountDifference')],'workCategories':sorted(set(work_categories)|{w['category'] for w in all_works}),'rows':output,'works':all_works}
     path=ROOT/'gp-emuster-data.js';temp=path.with_suffix('.tmp')
     temp.write_text('window.GP_WORK_TYPE_MUSTER_REPORT = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
     print('SUCCESS: 695 GP, '+str(expected)+' unique MR-issued works, all master work categories. '+str(path),flush=True)
@@ -268,3 +273,4 @@ def run_consistent_snapshot(fetch_snapshot=main, attempts=3):
 if __name__=='__main__':
     try:run_consistent_snapshot()
     except Exception as e:print('FAILED: '+str(e)+'; previous report preserved.',file=sys.stderr);sys.exit(1)
+

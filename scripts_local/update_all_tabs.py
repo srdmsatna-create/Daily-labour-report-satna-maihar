@@ -111,8 +111,8 @@ def validate_work_types(root,gp):
  for k,r in detail.items():
   if any(r.get(f)!=progress[k].get(f) for f in ('labour','worksMR','gpsProgress')):raise ValueError('Work-type GP snapshot differs: '+str(k))
   issued=r.get('issuedWorks')
-  if not isinstance(issued,dict) or any(not isinstance(v,int) or v<0 for v in issued.values()) or sum(issued.values())!=r['worksMR']:raise ValueError('MR-issued work categories incomplete: '+str(k))
- works=d.get('works',[]);expected=sum(r['worksMR'] for r in workrows)
+  if not isinstance(issued,dict) or any(not isinstance(v,int) or v<0 for v in issued.values()) or sum(issued.values())!=r.get('detailWorks',r['worksMR']):raise ValueError('MR-issued work categories incomplete: '+str(k))
+ works=d.get('works',[]);expected=sum(r.get('detailWorks',r['worksMR']) for r in workrows)
  if d.get('totalWorks')!=expected or len(works)!=expected or len({w['code'] for w in works})!=expected:raise ValueError('MR-issued work list count/unique codes do not reconcile')
 
 def restore(root,saved):
