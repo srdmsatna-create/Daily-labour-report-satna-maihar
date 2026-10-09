@@ -205,6 +205,19 @@
   }
   function reportGPCells(r){const [total,active]=reportGPStats(r),missing=total==null||active==null?null:total-active;return `<td>${fmt(total)}</td><td>${fmt(active)}</td><td>${fmt(missing)}</td><td style="color:#a31313;background:#fff0ee;font-weight:900">${missing==null||!total?'—':(missing*100/total).toFixed(2)+'%'}</td>`;}
   function row(r,rank,cls=''){const mrPct=Number(r.ongoing||0)?Number(r.mrIssued||0)*100/Number(r.ongoing):0,shortage=r.dailyTarget125==null?null:Math.max(0,Number(r.dailyTarget125)-Number(r.todayLabour||0));return `<tr class="${cls}"><td>${rank||''}</td><td>${esc(districtHindi(r.district))}</td><td>${esc(janpadName(r.janpad))}</td><td>${esc(r.engineer||'—')}</td><td>${esc(r.cluster||'—')}</td>${reportGPCells(r)}<td>${fmt(r.target)}</td><td>${fmt(r.augustAchievement)}</td><td>${fmt(r.septemberAchievement)}</td><td>${fmt(r.achievement)}</td><td>${fmt(r.difference)}</td><td>${fmt(r.remainingDays)}</td><td>${fmt(r.dailyTarget125)}</td><td>${fmt(r.todayLabour)}</td><td><span class="sn-pct ${pctClass(r.achievementPct)}">${r.achievementPct==null?'—':Number(r.achievementPct).toFixed(1)+'%'}</span></td><td class="sn-shortage">${fmt(shortage)}</td><td>${fmt(r.ongoing)}</td><td>${fmt(r.mrIssued)}</td><td>${mrPct.toFixed(1)}%</td></tr>`}
+
+  let headingColumn=null,headingDirection='asc';
+  const localHeadings=[...section.querySelector('.sn-table').querySelectorAll('thead th')];
+  function headingValue(r,i){
+    const [t,a]=reportGPStats(r),inactive=t==null||a==null?null:t-a;
+    return [null,districtHindi(r.district),janpadName(r.janpad),r.engineer||'',r.cluster||'',t,a,inactive,t&&inactive!=null?inactive*100/t:null,r.target,r.augustAchievement,r.septemberAchievement,r.achievement,r.difference,r.remainingDays,r.dailyTarget125,r.todayLabour,r.achievementPct,r.dailyTarget125==null?null:Math.max(0,Number(r.dailyTarget125)-Number(r.todayLabour||0)),r.ongoing,r.mrIssued,Number(r.ongoing||0)?Number(r.mrIssued||0)*100/Number(r.ongoing):0][i];
+  }
+  localHeadings.forEach((th,i)=>{
+    const button=document.createElement('button');button.type='button';button.style.cssText='width:100%;border:0;background:transparent;color:inherit;font:inherit;line-height:inherit;padding:0;cursor:pointer';
+    button.innerHTML=th.innerHTML+' <span class="sn-local-arrow">↕</span>';
+    button.title='आरोही / अवरोही क्रम';button.setAttribute('aria-label',th.textContent+' — आरोही / अवरोही क्रम');th.replaceChildren(button);
+    button.onclick=()=>{headingDirection=headingColumn===i?(headingDirection==='asc'?'desc':'asc'):(i>=5?'desc':'asc');headingColumn=i;draw();};
+  });
   function draw(){
     const incomplete=level.value==='engineer'&&engineerRows.some(r=>r.target==null);
     document.getElementById('snWarnings').innerHTML=(incomplete?['उपयंत्रीवार पिछले वर्ष (जुलाई–अक्टूबर) का सत्यापित लक्ष्य उपलब्ध नहीं है। — वाले लक्ष्य, अंतर, दैनिक लक्ष्य एवं प्रतिशत की गणना लंबित है। उपलब्धि 695 GP के वास्तविक मासिक मानव दिवस से है।']:data.warnings||[]).map(x=>`<div class="sn-warning">${esc(x)}</div>`).join('');
@@ -213,8 +226,20 @@
     rows=rows.filter(r=>(dist.value==='ALL'||r.district===dist.value)&&(jan.value==='ALL'||r.janpad===jan.value)&&(eng.value==='ALL'||r.engineer===eng.value)&&(clu.value==='ALL'||r.cluster===clu.value));
     const order=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
     rows=rows.slice().sort((a,b)=>sort.value==='ASC'?Number(a.achievementPct||0)-Number(b.achievementPct||0):sort.value==='DESC'?Number(b.achievementPct||0)-Number(a.achievementPct||0):order.indexOf(nrm(a.janpad))-order.indexOf(nrm(b.janpad))||String(a.engineer).localeCompare(String(b.engineer),'hi'));
+    if(headingColumn!=null){
+      rows=rows.map((r,i)=>({r,i})).sort((x,y)=>{
+        const a=headingColumn===0?x.i:headingValue(x.r,headingColumn),b=headingColumn===0?y.i:headingValue(y.r,headingColumn);
+        if(a==null||b==null)return a==null?(b==null?x.i-y.i:1):-1;
+        const difference=typeof a==='string'?a.localeCompare(String(b),'hi'):Number(a)-Number(b);
+        return (headingDirection==='asc'?difference:-difference)||x.i-y.i;
+      }).map(x=>x.r);
+    }
+    localHeadings.forEach((th,i)=>{th.setAttribute('aria-sort',headingColumn===i?(headingDirection==='asc'?'ascending':'descending'):'none');th.querySelector('.sn-local-arrow').textContent=headingColumn===i?(headingDirection==='asc'?'↑':'↓'):'↕';});
     exportRows=rows;let h='',serial=1;
-    if(level.value==='janpad'&&jan.value==='ALL'){
+    if(headingColumn!=null){
+      rows.forEach(r=>h+=row(r,serial++));
+      if(rows.length)h+=row(aggregate(rows,'कुल',dist.value==='ALL'?'':dist.value),'','sn-total');
+    }else if(level.value==='janpad'&&jan.value==='ALL'){
       ['MAIHAR','SATNA'].filter(d=>dist.value==='ALL'||dist.value===d).forEach(d=>{
         const q=rows.filter(r=>r.district===d);
         q.forEach(r=>h+=row(r,serial++));
@@ -238,7 +263,7 @@
     document.getElementById('snKpis').innerHTML=[['लक्ष्य',total.target,''],['उपलब्धि',total.achievement,''],['अंतर',total.difference,''],['दैनिक लक्ष्य',total.dailyTarget125,''],['उपलब्धि %',total.achievementPct==null?'—':total.achievementPct.toFixed(1)+'%',''],['लक्ष्य अनुसार श्रमिक नियोजन में कमी',totalShortage,'sn-kpi-shortage']].map(x=>`<div class="sn-kpi ${x[2]}"><small>${x[0]}</small><strong>${x[1]==null?'—':typeof x[1]==='number'?fmt(x[1]):x[1]}</strong></div>`).join('');
     if(section.classList.contains('sn-cluster-mode'))drawClusterCards()
   }
-  function fc(){let r=level.value==='engineer'?engineerRows:janpadRows,oldEng=eng.value,oldClu=clu.value,base=r.filter(x=>(dist.value==='ALL'||x.district===dist.value)&&(jan.value==='ALL'||x.janpad===jan.value)),e=[...new Set(base.map(x=>x.engineer).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'hi'));eng.innerHTML='<option value="ALL">सभी उपयंत्री</option>'+e.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');eng.value=e.includes(oldEng)?oldEng:'ALL';let c=[...new Set(base.filter(x=>eng.value==='ALL'||x.engineer===eng.value).map(x=>x.cluster).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'hi'));clu.innerHTML='<option value="ALL">सभी क्लस्टर</option>'+c.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');clu.value=c.includes(oldClu)?oldClu:'ALL'}level.onchange=()=>{options();fc();draw()};dist.onchange=()=>{jan.value='ALL';eng.value='ALL';clu.value='ALL';options();fc();draw()};jan.onchange=()=>{eng.value='ALL';clu.value='ALL';fc();draw()};eng.onchange=()=>{clu.value='ALL';fc();draw()};clu.onchange=draw;sort.onchange=draw;options();fc();draw();
+  function fc(){let r=level.value==='engineer'?engineerRows:janpadRows,oldEng=eng.value,oldClu=clu.value,base=r.filter(x=>(dist.value==='ALL'||x.district===dist.value)&&(jan.value==='ALL'||x.janpad===jan.value)),e=[...new Set(base.map(x=>x.engineer).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'hi'));eng.innerHTML='<option value="ALL">सभी उपयंत्री</option>'+e.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');eng.value=e.includes(oldEng)?oldEng:'ALL';let c=[...new Set(base.filter(x=>eng.value==='ALL'||x.engineer===eng.value).map(x=>x.cluster).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),'hi'));clu.innerHTML='<option value="ALL">सभी क्लस्टर</option>'+c.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join('');clu.value=c.includes(oldClu)?oldClu:'ALL'}level.onchange=()=>{options();fc();draw()};dist.onchange=()=>{jan.value='ALL';eng.value='ALL';clu.value='ALL';options();fc();draw()};jan.onchange=()=>{eng.value='ALL';clu.value='ALL';fc();draw()};eng.onchange=()=>{clu.value='ALL';fc();draw()};clu.onchange=draw;sort.onchange=()=>{headingColumn=null;draw()};options();fc();draw();
   const todayIST=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date()).replaceAll('/','-');
   const refresh=window.SHRAMIK_REFRESH_STATUS;
   const isCurrent=data.officialDate===todayIST;
