@@ -93,7 +93,10 @@ def works_from(tables, expected, gp=None):
             names=[clean(c['text']) for c in row]
             ci=header_col(names,r'work\s*(?:code|id)')
             ni=header_col(names,r'work\s*name|name\s*of\s*(?:the\s*)?work')
-            ti=header_col(names,r'^(?:permissible\s*work|type\s*of\s*work|work\s*type|work\s*category|category\s*of\s*work)$')
+            # The portal includes BOTH Work Category and Work Type.
+            # Prefer the specific type; category is only a fallback.
+            ti=header_col(names,r'^(?:permissible\s*work|type\s*of\s*work|work\s*type)$')
+            if ti is None:ti=header_col(names,r'^(?:work\s*category|category\s*of\s*work)$')
             li=header_col(names,r'expected.*labour|labour.*engagement|^(?:no\.?\s*of\s*)?(?:workers|labour|labourers)$')
             if ci is None or ni is None or ti is None:continue
             out={}

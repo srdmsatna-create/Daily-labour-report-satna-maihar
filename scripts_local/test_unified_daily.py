@@ -11,6 +11,14 @@ def load(name):
  mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
 
 class DailyTests(unittest.TestCase):
+ def test_work_detail_with_category_and_type_columns(self):
+  m=load('update_gp_emuster');cell=lambda t:{'text':t,'links':[]}
+  headers=['S No.','Panchayat','Work Code','Work Name','Work Category','Work Type','Agency Name']
+  row=['1','AHIRGAON','1712006039/DP/22012034626235','वृक्षारोपण कार्य','Drought Proofing','Boundary Line Plantation of Forestry-Community','GP-RD Deptt']
+  tables=[[list(map(cell,headers)),list(map(cell,row))]]
+  works=m.works_from(tables,1,'AHIRGAON')
+  self.assertEqual(len(works),1);self.assertEqual(works[0]['type'],row[5]);self.assertEqual(works[0]['code'],row[2])
+  with self.assertRaises(ValueError):m.works_from(tables,2,'AHIRGAON')
  def test_shramik_uses_verified_official_parent_snapshot(self):
   m=load('update_all_tabs')
   counts={'AMARPATAN':75,'MAIHAR':115,'MAJHGAWAN':96,'NAGOD':94,'RAMNAGAR':55,'RAMPUR BAGHELAN':97,'SATNA':93,'UNCHAHARA':70}
