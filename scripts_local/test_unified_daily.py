@@ -11,7 +11,7 @@ def load(name):
  mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
 
 class DailyTests(unittest.TestCase):
- def test_work_pagination_collects_39_and_rejects_incomplete_pages(self):
+ def test_work_pagination_uses_complete_detail_and_rejects_repeated_pages(self):
   m=load('update_gp_emuster');cell=lambda t:{'text':t,'links':[]}
   header=list(map(cell,['Panchayat','Work Code','Work Name','Work Category','Work Type']))
   allrows=[list(map(cell,['TEST',f'1712008013/IF/{100000+i}','PMAY house','Individuals','PMAY-G'])) for i in range(39)]
@@ -27,6 +27,8 @@ class DailyTests(unittest.TestCase):
   self.assertEqual(len(works),39);self.assertEqual(p.index,4)
   p=Page();self.assertEqual(len(m.paged_works(p,lambda url:p.pages[0],'source',36,'TEST')),39)
   p=Page();p.pages=p.pages[:1]
+  self.assertEqual(len(m.paged_works(p,lambda url:p.pages[0],'source',39,'TEST')),8)
+  p=Page();p.pages=[p.pages[0],p.pages[0]]
   with self.assertRaises(ValueError):m.paged_works(p,lambda url:p.pages[0],'source',39,'TEST')
  def test_work_detail_with_category_and_type_columns(self):
   m=load('update_gp_emuster');cell=lambda t:{'text':t,'links':[]}
