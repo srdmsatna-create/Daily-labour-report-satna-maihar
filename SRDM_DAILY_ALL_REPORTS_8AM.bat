@@ -18,6 +18,8 @@ if /i "%~1"=="--scheduled" goto run
 echo Installing one daily 8 AM India task...
 powershell.exe -NoProfile -Command "$ErrorActionPreference='Stop'; if((Get-TimeZone).Id -ne 'India Standard Time'){throw 'Windows timezone must be India Standard Time for the 8 AM timer'}; $a=New-ScheduledTaskAction -Execute $env:ComSpec -Argument ('/d /s /c ""'+$env:SRDM_DAILY_BAT+'" --scheduled"') -WorkingDirectory $env:SRDM_DAILY_REPO; $t=New-ScheduledTaskTrigger -Daily -At '08:00'; $s=New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 3); $p=New-ScheduledTaskPrincipal -UserId ([Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited; Register-ScheduledTask -TaskName 'SRDM_ALL_REPORTS_DAILY_8AM' -Action $a -Trigger $t -Settings $s -Principal $p -Force | Out-Null; Write-Host 'Daily 08:00 task installed; missed start runs when laptop is available.'"
 if errorlevel 1 goto failed
+powershell.exe -NoProfile -Command "$names=@('SRDM_52_DISTRICTS_AUTO','SRDM_GP_EMUSTER_DAILY_8AM','SRDM_GP_ALL_IN_ONE_DAILY_8AM'); foreach($n in $names){$t=Get-ScheduledTask -TaskName $n -ErrorAction SilentlyContinue; if($t){$t | Disable-ScheduledTask | Out-Null}}"
+if errorlevel 1 goto failed
 :run
 echo Preparing latest unified updater...
 git fetch origin main
