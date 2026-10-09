@@ -1,10 +1,10 @@
 {
-  "checkedAt": "2026-10-09T17:59:51.218817+00:00",
+  "checkedAt": "2026-10-09T18:29:53.679950+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
       "success": false,
-      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/local_auto_update.py']' returned non-zero exit status 1.",
+      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/local_auto_update.py']' returned non-zero exit status 1.",
       "files": [
         "auto-data.js",
         "auto-status.js",
@@ -20,14 +20,14 @@
     },
     "muster_emb": {
       "success": false,
-      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_muster_emb_monitoring.py', '--update-only']' returned non-zero exit status 1.",
+      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_muster_emb_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "muster-emb-data.js"
       ]
     },
     "yuktdhara": {
       "success": false,
-      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--update-only']' returned non-zero exit status 1.",
+      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "yuktdhara-data.js",
         "yuktdhara-official-data.js",
@@ -36,14 +36,14 @@
     },
     "block_statistics": {
       "success": false,
-      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_satna_block_statistics.py']' returned non-zero exit status 1.",
+      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_satna_block_statistics.py']' returned non-zero exit status 1.",
       "files": [
         "vbg-block-stats.js"
       ]
     },
     "mis_612": {
       "success": false,
-      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
+      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
       "files": [
         "data/Ongoing_Works_dynamic_work_details_latest.csv",
         "data/mis-6.12-status.json",
@@ -58,7 +58,7 @@
     },
     "rejected_wage": {
       "success": false,
-      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts/update_rejected_wage.py']' returned non-zero exit status 1.",
+      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts/update_rejected_wage.py']' returned non-zero exit status 1.",
       "files": [
         "data/rejected-wage-latest.json"
       ]
