@@ -195,7 +195,16 @@
   function drawClusterCards(){const holder=document.getElementById('snClusterCards');if(!holder)return;let rows=engineerRows.filter(r=>(dist.value==='ALL'||r.district===dist.value)&&(jan.value==='ALL'||r.janpad===jan.value)&&(eng.value==='ALL'||r.engineer===eng.value)&&(clu.value==='ALL'||r.cluster===clu.value));rows=rows.map(r=>{const daily=Number(r.dailyTarget125||0),today=Number(r.todayLabour||0),mr=Number(r.ongoing||0)?Number(r.mrIssued||0)*100/Number(r.ongoing):100,dailyPct=daily?today*100/daily:100;return {...r,_severity:dailyPct<50||mr<25?2:dailyPct<75||mr<50?1:0,_shortage:Math.max(0,daily-today)}}).sort((a,b)=>b._severity-a._severity||b._shortage-a._shortage||String(a.engineer).localeCompare(String(b.engineer),'hi'));holder.innerHTML=rows.length?rows.map(clusterCard).join(''):'<div class="sn-cluster-empty">चयनित filter में उपयंत्री-क्लस्टर data उपलब्ध नहीं है।</div>'}
   // Match the official Screen-2 GP-with-progress column.
   function reportGPStats(r){
-    if(r.gpParts){const parts=r.gpParts.map(reportGPStats);return [0,1].map(i=>parts.every(x=>x[i]!=null)?parts.reduce((a,x)=>a+x[i],0):null);}
+    if(r.gpParts){
+      const groups=new Map();for(const part of r.gpParts){const key=nrm(part.janpad);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(part);}
+      const parts=[...groups].map(([key,members])=>{
+        const detail=members.map(reportGPStats),total=detail.every(x=>x[0]!=null)?detail.reduce((sum,x)=>sum+x[0],0):null;
+        const official=officialMap.get(key);
+        if(official&&total===Number(official.totalGP))return reportGPStats({janpad:key});
+        return [0,1].map(i=>detail.every(x=>x[i]!=null)?detail.reduce((sum,x)=>sum+x[i],0):null);
+      });
+      return [0,1].map(i=>parts.every(x=>x[i]!=null)?parts.reduce((sum,x)=>sum+x[i],0):null);
+    }
     const official=officialMap.get(nrm(r.janpad));
     if(!r.engineer&&!r.cluster){const t=official?.totalGP,a=official?.musterGP;return [t!=null?Number(t):null,a!=null&&t!=null&&Number(a)>=0&&Number(a)<=Number(t)?Number(a):null];}
     const entries=(auto.rows||[]).filter(x=>nrm(x.janpad)===nrm(r.janpad)&&(!r.engineer||String(x.engineer||'').replace(/\s+/g,' ').trim()===String(r.engineer).replace(/\s+/g,' ').trim())&&(!r.cluster||String(x.cluster||'').replace(/\s+/g,' ').trim()===String(r.cluster).replace(/\s+/g,' ').trim()));
@@ -258,7 +267,16 @@
       if(rows.length)h+=row(aggregate(rows,'कुल',dist.value==='ALL'?'':dist.value),'','sn-total');
     }
     if(!rows.length)h='<tr><td colspan="18" style="text-align:center;padding:24px">लाइव आँकड़े उपलब्ध नहीं हैं। वन क्लिक अपडेटर चलाएँ।</td></tr>';
-    body.innerHTML=h;const total=aggregate(rows,'','');
+    body.innerHTML=h;
+    if(level.value==='engineer'){
+      const selectedJanpads=[...new Set(rows.map(r=>nrm(r.janpad)))];
+      const mismatches=selectedJanpads.filter(j=>{
+        const members=engineerRows.filter(r=>nrm(r.janpad)===j),parts=members.map(reportGPStats),o=officialMap.get(j);
+        return o&&parts.every(x=>x[1]!=null)&&parts.reduce((sum,x)=>sum+x[1],0)!==Number(o.musterGP);
+      });
+      if(mismatches.length)document.getElementById('snWarnings').innerHTML+='<div class="sn-warning">उपयंत्रीवार GP विवरण और आधिकारिक जनपद सारांश में प्रगतिरत GPs का अंतर है। जनपद योग एवं महायोग आधिकारिक सारांश के अनुसार हैं; उपयंत्रीवार विवरण का पुनः सत्यापन आवश्यक है।</div>';
+    }
+    const total=aggregate(rows,'','');
     const totalShortage=total.dailyTarget125==null?null:Math.max(0,Number(total.dailyTarget125)-Number(total.todayLabour||0));
     document.getElementById('snKpis').innerHTML=[['लक्ष्य',total.target,''],['उपलब्धि',total.achievement,''],['अंतर',total.difference,''],['दैनिक लक्ष्य',total.dailyTarget125,''],['उपलब्धि %',total.achievementPct==null?'—':total.achievementPct.toFixed(1)+'%',''],['लक्ष्य अनुसार श्रमिक नियोजन में कमी',totalShortage,'sn-kpi-shortage']].map(x=>`<div class="sn-kpi ${x[2]}"><small>${x[0]}</small><strong>${x[1]==null?'—':typeof x[1]==='number'?fmt(x[1]):x[1]}</strong></div>`).join('');
     if(section.classList.contains('sn-cluster-mode'))drawClusterCards()
