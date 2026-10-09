@@ -100,7 +100,11 @@ def read_auto_mapping():
 
 def fetch_bhuvan_detail():
     query=urllib.parse.urlencode({"level":"district","state":"17","district":"1712","back":"/planner_v3/yuktdhara_dashboard/public_dashboard/index.php?state=17&district=1712&go=1"})
-    lists={name:fetch_bhuvan_list(page,query) for name,page in BHUVAN_LISTS.items()}
+    lists={}
+    for name,page in BHUVAN_LISTS.items():
+        print('Fetching Bhuvan GP list: '+name,flush=True)
+        lists[name]=fetch_bhuvan_list(page,query)
+        print('Bhuvan '+name+': '+str(len(lists[name]))+' rows received',flush=True)
     if len(lists["master"]) < 690:
         raise RuntimeError(f"Bhuvan master GP list incomplete: {len(lists['master'])}")
     home=get_text(BHUVAN_INDEX)

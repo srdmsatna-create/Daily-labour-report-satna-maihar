@@ -139,7 +139,23 @@ def main():
             page.locator('table').first.wait_for(timeout=30000)
             return page.evaluate(GRID)
         try:
-            top=fetch(args.url);dump('main',top);blocks=blocks_from(top)
+            top=fetch(args.url)
+            # Use the same unfiltered R6.9 view as the official summary reader.
+            # Signed links can carry a preselected category/status.
+            if args.gp_only:
+                selects=page.locator('select')
+                if selects.count()<3:
+                    raise ValueError('R6.9 ALL filters missing; GP snapshot not published')
+                selects.nth(1).select_option(label='ALL')
+                page.wait_for_load_state('networkidle',timeout=60000)
+                page.locator('select').nth(2).select_option(label='ALL')
+                page.wait_for_load_state('networkidle',timeout=60000)
+                submit=page.get_by_role('button',name=re.compile(r'submit',re.I))
+                if submit.count():submit.first.click()
+                else:page.locator('input[type=submit],button[type=submit]').first.click()
+                page.wait_for_load_state('networkidle',timeout=60000)
+                top=page.evaluate(GRID)
+            dump('main',top);blocks=blocks_from(top)
             date_match=re.search(r'(?:report\s*)?last\s*updated(?:\s*on)?\s*[:\-]?\s*(\d{1,2}[/-]\d{1,2}[/-]\d{4})',page.locator('body').inner_text(),re.I)
             source_date=date_match.group(1).replace('/','-') if date_match else 'तिथि उपलब्ध नहीं'
             for b,summary in blocks.items():

@@ -64,7 +64,8 @@ def validate_shramik(root):
  for j,o in official.items():
   members=[r for r in rows if norm(r['janpad'])==j]
   totals={'totalGP':len(members),'musterGP':sum(r['gpsProgress'] for r in members),'labourAll':sum(r['labour'] for r in members),'mrAll':sum(r['worksMR'] for r in members)}
-  if any(float(o.get(k,-1))!=v for k,v in totals.items()):raise ValueError('Live GP/Janpad total mismatch: '+j)
+  differences={k:{'official':o.get(k),'GP_total':v} for k,v in totals.items() if float(o.get(k,-1))!=v}
+  if differences:raise ValueError('Live GP/Janpad total mismatch: '+j+' '+json.dumps(differences,ensure_ascii=False))
   if any(r['gpsProgress'] not in (0,1) for r in members):raise ValueError('Invalid GP progress flag')
  # Replace old workbook daily metrics only after every feed validates.
  auto['rows']=rows
