@@ -1,1 +1,1 @@
-window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-09T02:32:21.497883+00:00","success":true,"districtCount":52,"persondaysSuccess":true,"labourSuccess":true,"gpSuccess":true,"ongoingSuccess":true,"warnings":[]};
+window.SHRAMIK_STATE_REFRESH_STATUS={"checkedAt":"2026-10-09T06:26:15.701061+00:00","success":true,"districtCount":52,"persondaysSuccess":true,"labourSuccess":true,"gpSuccess":true,"ongoingSuccess":true,"warnings":[]};
