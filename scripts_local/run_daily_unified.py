@@ -43,7 +43,8 @@ def main():
         (stage / 'all-tabs-auto-status.json').write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
         # A failed refresh publishes no report files or partial source status.
         if not status['success']:
-            failure = ROOT / 'daily-update-last-failure.json'
+            failure_root = Path(os.environ.get('SRDM_DAILY_REPO') or ROOT)
+            failure = failure_root / 'daily-update-last-failure.json'
             failure.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
             raise RuntimeError('Full daily refresh incomplete. Live reports unchanged; diagnostics: ' + str(failure))
         files = [f for f in feeds.OUTPUTS if (stage / f).exists()]

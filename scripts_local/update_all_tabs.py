@@ -87,6 +87,7 @@ def refresh_group(group,commands,files,root=ROOT,executor=None,validator=validat
   return {'success':True,'files':files}
  except Exception as e:
   restore(root,saved)
+  print(group + ': validation/fetch failed: ' + str(e), flush=True)
   return {'success':False,'message':str(e),'files':files}
 def main():
  states={}
