@@ -2,6 +2,7 @@
 """Build Satna's 8-block VB-G RAM G At-a-Glance table from the official portal."""
 import html, http.cookiejar, json, re, urllib.parse, urllib.request
 from datetime import datetime, timezone
+from vbgram_access import session_opener
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,7 +57,7 @@ def parse_metrics(source):
 
 def fetch_block(block_name, block_code):
     jar = http.cookiejar.CookieJar()
-    opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+    opener = session_opener()
     headers = {"User-Agent": "Mozilla/5.0", "Referer": FORM, "Cache-Control": "no-cache"}
     def request(payload=None):
         req = urllib.request.Request(FORM, data=payload, headers=headers)

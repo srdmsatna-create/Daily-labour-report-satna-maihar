@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import csv, html, io, json, re, shutil, sys, urllib.parse, urllib.request
 from datetime import datetime, timezone
+from vbgram_access import open_url
 from pathlib import Path
 
 def get_root():
@@ -31,7 +32,7 @@ def num(v):
 
 def get_text(url):
     req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0","Cache-Control":"no-cache"})
-    return urllib.request.urlopen(req,timeout=120).read().decode("utf-8","ignore")
+    return open_url(req,timeout=120).read().decode("utf-8","ignore")
 
 def parse_bhuvan_gp_rows(source):
     out=[]
@@ -124,7 +125,7 @@ def fetch_bhuvan_detail():
 
 def fetch():
     req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0","Cache-Control":"no-cache"})
-    source=urllib.request.urlopen(req,timeout=90).read().decode("utf-8","ignore")
+    source=open_url(req,timeout=90).read().decode("utf-8","ignore")
     rows=[]
     for tr in re.findall(r"<tr[^>]*>(.*?)</tr>",source,re.I|re.S):
         cells=[clean(x) for x in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>",tr,re.I|re.S)]

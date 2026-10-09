@@ -12,6 +12,9 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
+import sys
+sys.path.insert(0, str(ROOT / 'scripts_local'))
+from vbgram_access import session_cookies
 DEST = ROOT / 'data/rejected-wage-latest.json'
 SAVED_SOURCE = ROOT / 'vc-rejected-wage-janpad.json'
 SOURCE = os.environ.get('REJECTED_WAGE_SOURCE_URL', '').strip() or (json.loads(SAVED_SOURCE.read_text()).get('sourceUrl', '') if SAVED_SOURCE.exists() else '') or 'https://vbgramgrep.dord.gov.in/VBGRAMG/rej_trans_track.aspx?lflag=eng&page=d&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&rdbutton=0&Digest=bxHEcyU8JyvdJ3rs8H7x9g'
@@ -83,7 +86,7 @@ async def enrich_details(page, browser, rows, fy, scheme):
       if(i<0)return [];const a=cells[i+3]?.querySelector('a[href]');return a?[{janpad:cells[i].innerText.trim(),url:a.href}]:[];
     })""")
     urls = {key(x['janpad']):x['url'] for x in links}
-    detail = await browser.new_page()
+    detail = await page.context.new_page()
     try:
         for row in rows:
             if row['pending']==0:
@@ -135,7 +138,11 @@ async def main():
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=True)
         try:
-            page = await browser.new_page()
+            context = await browser.new_context()
+            cookies = session_cookies()
+            if cookies:
+                await context.add_cookies(cookies)
+            page = await context.new_page()
             for fy, scheme, url in SOURCES:
                 response = await page.goto(url, wait_until='domcontentloaded', timeout=90000)
                 print(f'{scheme} FY {fy}: HTTP {response.status if response else "none"}', flush=True)

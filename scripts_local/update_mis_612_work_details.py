@@ -3,6 +3,7 @@
 import csv, html, json, re, subprocess, sys, tempfile
 import urllib.parse, urllib.request
 from datetime import datetime, timezone
+from vbgram_access import session_opener
 from html.parser import HTMLParser
 from pathlib import Path
 
@@ -56,7 +57,7 @@ def selected_values(src,d):
         if o:d[name]=html.unescape(o.group(1))
 
 def fetch():
-    opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor())
+    opener=session_opener()
     home,home_url=open_text(opener,URL)
     d=hidden_fields(home);d.update({'__EVENTTARGET':'ctl00$ContentPlaceHolder1$ddl_dist','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712'})
     district,district_url=open_text(opener,form_action(home,home_url),urllib.parse.urlencode(d).encode())
