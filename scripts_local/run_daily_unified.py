@@ -18,6 +18,7 @@ def run(args, root=ROOT):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--publish', action='store_true')
+    parser.add_argument('--publish-verified', action='store_true', help='Publish only fully validated independent groups even when another group fails')
     args = parser.parse_args()
     lock = ROOT / '.unified-daily.lock'
     try:
@@ -42,7 +43,7 @@ def main():
         status = {'checkedAt':datetime.now(timezone.utc).isoformat(), 'schedule':'08:00 Asia/Kolkata',
                   'reports':states, 'success':all(x['success'] for x in states.values())}
         (stage / 'all-tabs-auto-status.json').write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
-        # A failed refresh publishes no report files or partial source status.
+        # Failed groups remain atomic; optional publication includes successful groups only.
         if not status['success']:
             failure_root = Path(os.environ.get('SRDM_DAILY_REPO') or ROOT)
             failure = failure_root / 'daily-update-last-failure.json'
@@ -57,8 +58,10 @@ def main():
                             if item.is_file():
                                 archive.write(item, folder + '/' + item.name)
             print('Current-run diagnostics saved: ' + str(bundle), flush=True)
-            raise RuntimeError('Full daily refresh incomplete. Live reports unchanged; diagnostics: ' + str(failure))
-        files = [f for f in feeds.OUTPUTS if (stage / f).exists()]
+            if not args.publish_verified or not any(x['success'] for x in states.values()):
+                raise RuntimeError('Full daily refresh incomplete. Live reports unchanged; diagnostics: ' + str(failure))
+        eligible = list(dict.fromkeys(f for group, _, outputs in feeds.GROUPS if states[group]['success'] for f in outputs))
+        files = [f for f in eligible + ['all-tabs-auto-status.json'] if (stage / f).exists()]
         if not args.publish:
             print('VERIFIED: publication disabled. Prepared files: ' + str(stage), flush=True)
             return 0
@@ -67,11 +70,14 @@ def main():
         run(['git', 'add', '--'] + files, stage)
         changed = subprocess.run(['git','diff','--cached','--quiet'], cwd=stage).returncode
         if changed == 1:
-            run(['git','commit','-m','Verified complete daily reports ' + status['checkedAt']], stage)
+            run(['git','commit','-m','Verified daily report groups ' + status['checkedAt']], stage)
             run(['git','push','origin','HEAD:main'], stage)
         elif changed != 0:
             raise RuntimeError('Cannot check prepared report changes')
         cleanup = True
+        if not status['success']:
+            print('PARTIAL: validated groups published; failed groups kept at their previous source dates.', flush=True)
+            return 1
         print('SUCCESS: every report validated; one complete publication.', flush=True)
         return 0
     finally:
