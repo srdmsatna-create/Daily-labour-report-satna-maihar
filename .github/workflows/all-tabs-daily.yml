@@ -39,7 +39,7 @@ jobs:
           SHRAMIK_FY2627_URL: ${{ secrets.SHRAMIK_FY2627_URL }}
           SHRAMIK_FY2526_URL: ${{ secrets.SHRAMIK_FY2526_URL }}
           REJECTED_WAGE_SOURCE_URL: ${{ secrets.REJECTED_WAGE_SOURCE_URL }}
-        run: python -u scripts_local/run_daily_unified.py --publish
+        run: python -u scripts_local/run_daily_unified.py --publish --publish-verified
       - name: Keep failure diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
