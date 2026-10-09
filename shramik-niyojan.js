@@ -184,6 +184,14 @@
     return source.map(r=>{const q=metrics.get([nrm(r.janpad),String(r.engineer||'').replace(/\s+/g,' ').trim(),String(r.cluster||'').replace(/\s+/g,' ').trim()].join('¦'))||{},recoveryWorks=recoveryCount(r.janpad,r.engineer,r.cluster),ongoing=Number(q.ongoing||0);return {...r,todayLabour:Number(q.labour||0),ongoing,mrIssued:Number(q.mrIssued||0),recoveryWorks,postRecoveryOngoing:Math.max(0,ongoing-recoveryWorks)}});
   }
   const engineerRows=buildEngineerRows();
+  fetch('gp-emuster-data.js?live='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('GP detail fetch failed');return r.text()}).then(text=>{
+    const raw=text.slice(text.indexOf('=')+1).trim().replace(/;$/,'');
+    verifiedGPDetail=JSON.parse(raw);if(freshGPDetail())draw();
+  }).catch(()=>{});
+
+  let verifiedGPDetail=window.GP_WORK_TYPE_MUSTER_REPORT;
+  const reportDay=()=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date()).replaceAll('/','-');
+  const freshGPDetail=()=>verifiedGPDetail?.gpProgressVerified===true&&verifiedGPDetail.date===reportDay();
   const officialMap=new Map((auto.official||[]).map(r=>[nrm(r.janpad),r]));
   const janpadRows=(data.rows||[]).map(r=>{const o=officialMap.get(nrm(r.janpad))||{},fallback=[...metrics.values()].filter(x=>x.janpad===nrm(r.janpad)),ongoing=Number(o.ongoingAll??fallback.reduce((a,x)=>a+x.ongoing,0)),recoveryWorks=[...recoveries.values()].filter(x=>x.janpad===nrm(r.janpad)).reduce((a,x)=>a+x.recoveryWorks,0);return {...r,todayLabour:Number(o.labourAll??fallback.reduce((a,x)=>a+x.labour,0)),ongoing,mrIssued:Number(o.mrAll??fallback.reduce((a,x)=>a+x.mrIssued,0)),recoveryWorks,postRecoveryOngoing:Math.max(0,ongoing-recoveryWorks)}});
   function aggregate(rows,label,district){const t={gpParts:rows,district:district||'',janpad:label,engineer:'',cluster:'',target:0,augustAchievement:0,septemberAchievement:0,achievement:0,difference:0,remainingDays:Number(data.remainingOctoberDays||data.remainingSeptemberDays||0),dailyRequired:0,dailyTarget125:0,todayLabour:0,achievementPct:0,ongoing:0,mrIssued:0,recoveryWorks:0,postRecoveryOngoing:0};rows.forEach(r=>['target','augustAchievement','septemberAchievement','achievement','todayLabour','ongoing','mrIssued','recoveryWorks'].forEach(k=>t[k]+=Number(r[k]||0)));t.postRecoveryOngoing=Math.max(0,t.ongoing-t.recoveryWorks);t.difference=Math.max(0,t.target-t.achievement);t.dailyRequired=t.remainingDays?Math.ceil(t.difference/t.remainingDays):0;t.dailyTarget125=rows.reduce((sum,r)=>sum+Number(r.dailyTarget125||0),0);t.achievementPct=t.target?t.achievement*100/t.target:0;if(rows.some(r=>r.target==null)){for(const k of ['target','difference','dailyRequired','dailyTarget125','achievementPct'])t[k]=null;}return t}
@@ -207,10 +215,11 @@
     }
     const official=officialMap.get(nrm(r.janpad));
     if(!r.engineer&&!r.cluster){const t=official?.totalGP,a=official?.musterGP;return [t!=null?Number(t):null,a!=null&&t!=null&&Number(a)>=0&&Number(a)<=Number(t)?Number(a):null];}
-    const entries=(auto.rows||[]).filter(x=>nrm(x.janpad)===nrm(r.janpad)&&(!r.engineer||String(x.engineer||'').replace(/\s+/g,' ').trim()===String(r.engineer).replace(/\s+/g,' ').trim())&&(!r.cluster||String(x.cluster||'').replace(/\s+/g,' ').trim()===String(r.cluster).replace(/\s+/g,' ').trim()));
+    const gpSource=freshGPDetail()?verifiedGPDetail.rows:(auto.rows||[]);
+    const entries=(gpSource||[]).filter(x=>nrm(x.janpad)===nrm(r.janpad)&&(!r.engineer||String(x.engineer||'').replace(/\s+/g,' ').trim()===String(r.engineer).replace(/\s+/g,' ').trim())&&(!r.cluster||String(x.cluster||'').replace(/\s+/g,' ').trim()===String(r.cluster).replace(/\s+/g,' ').trim()));
     if(!entries.length||entries.some(x=>x.gps==null||x.gpsProgress==null))return [null,null];
     const total=entries.reduce((a,x)=>a+Number(x.gps),0),active=entries.reduce((a,x)=>a+Number(x.gpsProgress),0);
-    return [total,active>=0&&active<=total?active:null];
+    return [total,freshGPDetail()&&active>=0&&active<=total?active:null];
   }
   function reportGPCells(r){const [total,active]=reportGPStats(r),missing=total==null||active==null?null:total-active;return `<td>${fmt(total)}</td><td>${fmt(active)}</td><td>${fmt(missing)}</td><td style="color:#a31313;background:#fff0ee;font-weight:900">${missing==null||!total?'—':(missing*100/total).toFixed(2)+'%'}</td>`;}
   function row(r,rank,cls=''){const mrPct=Number(r.ongoing||0)?Number(r.mrIssued||0)*100/Number(r.ongoing):0,shortage=r.dailyTarget125==null?null:Math.max(0,Number(r.dailyTarget125)-Number(r.todayLabour||0));return `<tr class="${cls}"><td>${rank||''}</td><td>${esc(districtHindi(r.district))}</td><td>${esc(janpadName(r.janpad))}</td><td>${esc(r.engineer||'—')}</td><td>${esc(r.cluster||'—')}</td>${reportGPCells(r)}<td>${fmt(r.target)}</td><td>${fmt(r.augustAchievement)}</td><td>${fmt(r.septemberAchievement)}</td><td>${fmt(r.achievement)}</td><td>${fmt(r.difference)}</td><td>${fmt(r.remainingDays)}</td><td>${fmt(r.dailyTarget125)}</td><td>${fmt(r.todayLabour)}</td><td><span class="sn-pct ${pctClass(r.achievementPct)}">${r.achievementPct==null?'—':Number(r.achievementPct).toFixed(1)+'%'}</span></td><td class="sn-shortage">${fmt(shortage)}</td><td>${fmt(r.ongoing)}</td><td>${fmt(r.mrIssued)}</td><td>${mrPct.toFixed(1)}%</td></tr>`}
@@ -268,13 +277,8 @@
     }
     if(!rows.length)h='<tr><td colspan="18" style="text-align:center;padding:24px">लाइव आँकड़े उपलब्ध नहीं हैं। वन क्लिक अपडेटर चलाएँ।</td></tr>';
     body.innerHTML=h;
-    if(level.value==='engineer'){
-      const selectedJanpads=[...new Set(rows.map(r=>nrm(r.janpad)))];
-      const mismatches=selectedJanpads.filter(j=>{
-        const members=engineerRows.filter(r=>nrm(r.janpad)===j),parts=members.map(reportGPStats),o=officialMap.get(j);
-        return o&&parts.every(x=>x[1]!=null)&&parts.reduce((sum,x)=>sum+x[1],0)!==Number(o.musterGP);
-      });
-      if(mismatches.length)document.getElementById('snWarnings').innerHTML+='<div class="sn-warning">उपयंत्रीवार GP विवरण और आधिकारिक जनपद सारांश में प्रगतिरत GPs का अंतर है। जनपद योग एवं महायोग आधिकारिक सारांश के अनुसार हैं; उपयंत्रीवार विवरण का पुनः सत्यापन आवश्यक है।</div>';
+    if(level.value==='engineer'&&!freshGPDetail()){
+      document.getElementById('snWarnings').innerHTML+='<div class="sn-warning">उपयंत्रीवार प्रगतिरत GP का आज का सत्यापित विवरण उपलब्ध नहीं है। पुराना GP विवरण '+esc(auto.meta?.sourceDates?.RepDay||'अज्ञात तिथि')+' का है; उसके स्थान पर — दिखाया गया है। जनपद सारांश आधिकारिक स्रोत से है।</div>';
     }
     const total=aggregate(rows,'','');
     const totalShortage=total.dailyTarget125==null?null:Math.max(0,Number(total.dailyTarget125)-Number(total.todayLabour||0));
