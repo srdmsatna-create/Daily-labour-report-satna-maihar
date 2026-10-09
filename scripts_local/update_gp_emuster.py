@@ -245,6 +245,24 @@ def main():
     temp.write_text('window.GP_WORK_TYPE_MUSTER_REPORT = '+json.dumps(payload,ensure_ascii=False)+';\n',encoding='utf-8');os.replace(temp,path)
     print('SUCCESS: 695 GP, '+str(expected)+' unique MR-issued works, all master work categories. '+str(path),flush=True)
 
+def run_consistent_snapshot(fetch_snapshot=main, attempts=3):
+    """Retry source-count drift with a fresh parent, GP list and detail session."""
+    retryable = (
+        'official GP total',
+        'GP/labour/work totals do not match',
+        'Work labour total differs from official GP labour',
+    )
+    for attempt in range(1, attempts + 1):
+        print(f'GP snapshot attempt {attempt}/{attempts}: reading current official totals and work lists', flush=True)
+        try:
+            fetch_snapshot()
+            return
+        except Exception as exc:
+            if attempt == attempts or not any(marker in str(exc) for marker in retryable):
+                raise
+            print('SOURCE COUNT MISMATCH: ' + str(exc), flush=True)
+            print('Re-reading the complete snapshot in a new browser session; no counts changed or published.', flush=True)
+
 if __name__=='__main__':
-    try:main()
+    try:run_consistent_snapshot()
     except Exception as e:print('FAILED: '+str(e)+'; previous report preserved.',file=sys.stderr);sys.exit(1)
