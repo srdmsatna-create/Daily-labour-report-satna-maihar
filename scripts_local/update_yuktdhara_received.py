@@ -1,5 +1,5 @@
 """Fetch official received-work GP counts; never substitute Bhuvan planning counts."""
-import json, re, sys, time
+import json, os, re, sys, time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -145,7 +145,11 @@ def collect():
         try:browser=p.chromium.launch(channel='chrome',headless=True)
         except Exception:browser=p.chromium.launch(headless=True)
         try:
-            context=browser.new_context();page=context.new_page()
+            context=browser.new_context(extra_http_headers={'Cache-Control':'no-cache','Pragma':'no-cache'})
+            from vbgram_access import session_cookies
+            cookies=session_cookies()
+            if cookies:context.add_cookies(cookies)
+            page=context.new_page()
             def fetch(url, timeout=60000):
                 if urlparse(url).hostname!='vbgramgrep.dord.gov.in':raise RuntimeError('Unexpected official link host')
                 response=page.goto(url,wait_until='domcontentloaded',timeout=timeout)
