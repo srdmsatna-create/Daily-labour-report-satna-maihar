@@ -279,6 +279,9 @@ main table tr.total td,main table tr.janpad-total td,main table tr.grand-total t
   $('officialBody').innerHTML=h;
 }
 function workPermission(label){
+// Work-type corrections supplied for this dashboard.
+const correctedAllowed=['Construction of Compost Pit for Community','Construction of Cattle Shelter for Individual','Construction of Recharge Pit for Individual'];
+if(correctedAllowed.some(type=>type.toLowerCase()===String(label||'').replace(/\s+/g,' ').trim().toLowerCase()))return 'allowed';
 if(/Construction of (?:Roof Top Rain Water Harvesting Structure|Boulder Check Dam|Goat Shelter|Sand-Filled Groundwater Recharge in Borewell) for (?:Community|Individual|Groups)/i.test(label))return 'allowed';
 if(/Soak Pit|Recharge Pit|Plantation|Construction of Cement Concrete Road/i.test(label))return 'pending';
 return 'outside';
