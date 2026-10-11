@@ -71,9 +71,10 @@ def build(vbg,nrega,dates,urls,known=None):
  for j in JANPADS:
   works=[w for w in master.values() if w['janpad']==j and w['status'].lower() not in ('new','deleted')]
   if not works:raise ValueError('No sanctioned works for '+j)
-  summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),**{k:sum(w[k] for w in works)/100000 for k in ('sw','sm','bw','bm','pw','pm')}))
+  financial_works=[w for w in works if w['status'].lower() in ('ongoing','physically completed','completed')]
+  summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),financialWorks=len(financial_works),**{k:sum(w[k] for w in financial_works)/100000 for k in ('sw','sm','bw','bm','pw','pm')}))
  now=datetime.now(ZoneInfo('Asia/Kolkata'))
- return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialYears':sorted(ALLOWED_FYS),'deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
+ return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialBasis':'Ongoing, physically completed and completed works; excludes unstarted approved/new/closed works, matching original financial-report scope','financialYears':sorted(ALLOWED_FYS),'deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
 def attach_mapping(d,root=ROOT):
  text=(root/'shramik-niyojan-data.js').read_text(encoding='utf-8-sig')
  mapping=json.loads(text.split('=',1)[1].strip().rstrip(';'))
