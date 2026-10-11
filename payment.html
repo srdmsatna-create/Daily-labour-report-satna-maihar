@@ -89,8 +89,8 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 <main>
 <div class="actions"><button class="primary" onclick="window.print()">Payment Table Print / PDF</button><button onclick="downloadCSV()">CSV Download</button><button onclick="document.getElementById('paymentNotice').scrollIntoView({behavior:'smooth'})" style="background:#0b5f94;color:#fff;border-color:#0b5f94">जनपदवार कारण बताओ सूचना पत्र</button></div>
 <section class="card">
-<div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति) — स्रोत दिनांक <span id="paymentSourceDate">26/09/2026</span></div>
-<div class="sub">Official Sanction Works: <b style="color:#0b5f94;font-size:14px">821</b> • Amount in ₹ Lakh • Booked / Paid figures Ek Bagiya work-level source से</div>
+<div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति) — रिपोर्ट दिनांक <span id="paymentSourceDate">26/09/2026</span> <small id="paymentRetrievedDate"></small></div>
+<div class="sub">Official Sanction Works: <b style="color:#0b5f94;font-size:14px" id="paymentWorkCount">821</b> • Amount in ₹ Lakh • Booked / Paid figures Ek Bagiya work-level source से</div>
 <div class="wrap"><table class="tbl" id="paymentTable"><tbody><tr><td class="status">डेटा लोड हो रहा है…</td></tr></tbody></table></div>
 <div class="note"><b>नोट:</b> स्वीकृति राशि के विरुद्ध Booked Wage और Booked Material तथा Paid Wage और Paid Material पोर्टल के work-level data से लिये गये हैं। Pending Payment = Booked − Paid. % Paid Amount = Paid Total ÷ Booked Total × 100.</div>
 </section>
@@ -116,6 +116,7 @@ const DISTRICT={AMARPATAN:'MAIHAR',MAIHAR:'MAIHAR',RAMNAGAR:'MAIHAR',MAJHGAWAN:'
 let exportRows=[];
 let paymentRows=[];
 let paymentSourceDate='26/09/2026';
+let paymentSourceDates=null;
 const issueDate=()=>new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date());
 function parseCSV(text){
  text=text.replace(/^\uFEFF/,'');const rows=[];let row=[],cell='',q=false;
@@ -132,6 +133,7 @@ function summarize(text){
 }
 function total(rows,label){const x={janpad:label,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};for(const r of rows)for(const k of ['works','ongoing','sw','sm','bw','bm','pw','pm'])x[k]+=num(r[k]);return x}
 function render(rows){
+ document.getElementById("paymentWorkCount").textContent=rows.reduce((n,r)=>n+r.works,0).toLocaleString("en-IN");
  const all=[...rows.slice(0,3),total(rows.slice(0,3),'DISTRICT MAIHAR TOTAL'),...rows.slice(3),total(rows.slice(3),'DISTRICT SATNA TOTAL'),total(rows,'कुल (MAIHAR + SATNA)')];
  exportRows=[];
  let h='<colgroup><col style="width:230px"><col style="width:62px"><col style="width:70px"><col style="width:86px"><col style="width:86px"><col style="width:86px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:72px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:155px"></colgroup><thead><tr><th rowspan="2">Janpad</th><th colspan="5">Sanction Works & Amount in Lakhs</th><th colspan="3">Booked Amount in Lakhs</th><th colspan="3">Paid Amount in Lakhs</th><th rowspan="2" class="pct-head">% Paid<br>Amount</th><th colspan="3" class="pending-head">Pending Payment in Lakhs</th><th rowspan="2">सहायक लेखाधिकारी</th></tr><tr><th>Works</th><th>Ongoing</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th class="pending-head">Wages</th><th class="pending-head">Material</th><th class="pending-head">Total</th></tr></thead><tbody>';
@@ -156,7 +158,7 @@ function scnHTML(r){
    <div><b>प्रति,</b><br><b>${officer}</b><br>सहायक लेखाधिकारी, जनपद पंचायत ${janpadHi}।</div>
    <div class="notice-subject">विषय: “एक बगिया माँ के नाम” के हितग्राहियों का शत-प्रतिशत सामग्री भुगतान आज दिनांक तक सुनिश्चित न किए जाने के संबंध में कारण बताओ सूचना पत्र।</div>
    <p>“एक बगिया माँ के नाम” योजना अंतर्गत हितग्राहियों के भुगतान के संबंध में समय-समय पर स्पष्ट निर्देश दिए जाने एवं भुगतान प्रगति की समीक्षा किए जाने के उपरांत भी आपके जनपद में आज दिनांक तक शत-प्रतिशत सामग्री भुगतान सुनिश्चित नहीं किया गया है।</p>
-   <p>उपलब्ध पोर्टल विवरण (स्रोत दिनांक <b>${paymentSourceDate}</b>) के अनुसार आपके जनपद <b>${janpadHi}</b> में सामग्री मद में कुल <span class="scn-amount">₹ ${f(bookedMaterial)} लाख</span> राशि बुक की गई है, जिसके विरुद्ध मात्र <span class="scn-amount">₹ ${f(paidMaterial)} लाख</span> का भुगतान किया गया है। अभी भी <span class="scn-amount">₹ ${f(pendingMaterial)} लाख</span> सामग्री भुगतान लंबित है। स्पष्ट निर्देशों एवं निरंतर समीक्षा के बाद भी इतनी राशि लंबित रहना अत्यंत आपत्तिजनक है तथा प्रथम दृष्टया दायित्व निर्वहन में गंभीर उदासीनता, निर्देशों की अवहेलना एवं प्रशासनिक लापरवाही को दर्शाता है। इसके लिए आपकी व्यक्तिगत जिम्मेदारी निर्धारित की जाती है।</p>
+   <p>उपलब्ध पोर्टल विवरण (MGNREGA स्रोत <b>${paymentSourceDates?.MGNREGA||paymentSourceDate}</b>; VB G RAM G स्रोत <b>${paymentSourceDates?.VBGRAMG||paymentSourceDate}</b>) के अनुसार आपके जनपद <b>${janpadHi}</b> में सामग्री मद में कुल <span class="scn-amount">₹ ${f(bookedMaterial)} लाख</span> राशि बुक की गई है, जिसके विरुद्ध मात्र <span class="scn-amount">₹ ${f(paidMaterial)} लाख</span> का भुगतान किया गया है। अभी भी <span class="scn-amount">₹ ${f(pendingMaterial)} लाख</span> सामग्री भुगतान लंबित है। स्पष्ट निर्देशों एवं निरंतर समीक्षा के बाद भी इतनी राशि लंबित रहना अत्यंत आपत्तिजनक है तथा प्रथम दृष्टया दायित्व निर्वहन में गंभीर उदासीनता, निर्देशों की अवहेलना एवं प्रशासनिक लापरवाही को दर्शाता है। इसके लिए आपकी व्यक्तिगत जिम्मेदारी निर्धारित की जाती है।</p>
    <p><b>आप स्पष्ट करें कि आपके द्वारा आज दिनांक तक “एक बगिया माँ के नाम” के पात्र हितग्राहियों का शत-प्रतिशत सामग्री भुगतान क्यों नहीं किया गया?</b> केवल सामान्य अथवा अस्पष्ट उत्तर स्वीकार्य नहीं होगा। प्रत्येक लंबित प्रकरण में विलंब का स्पष्ट, तथ्यात्मक एवं अभिलेखीय आधार प्रस्तुत करना अनिवार्य होगा।</p>
    <div class="notice-warning">आपको अंतिम रूप से निर्देशित किया जाता है कि इस सूचना पत्र की प्राप्ति से एक सप्ताह के भीतर भुगतान योग्य समस्त लंबित सामग्री राशि का 100% भुगतान सुनिश्चित करें। निर्धारित अवधि में भुगतान पूर्ण नहीं किए जाने अथवा उत्तर असंतोषजनक पाए जाने की स्थिति में इसे आदेशों की अवहेलना एवं दायित्व निर्वहन में गंभीर लापरवाही मानते हुए नियमानुसार उत्तरदायित्व निर्धारित कर कार्रवाई प्रस्तावित की जाएगी, जिसके लिए आप स्वयं उत्तरदायी होंगे।</div>
    <p>यदि किसी प्रकरण में तकनीकी, अभिलेखीय अथवा अन्य वास्तविक बाधा हो तो संबंधित प्रकरण का कार्य कोड, हितग्राही का नाम, लंबित राशि एवं बाधा का कारण पृथक सूची में संलग्न करते हुए प्रस्तुत करें। बिना कारण लंबित भुगतान स्वीकार्य नहीं होगा।</p>
@@ -261,7 +263,9 @@ async function loadPayment(){
   if(!response.ok)throw Error('Verified payment snapshot unavailable');
   const d=await response.json();
   if(!d.sourceDate||!Array.isArray(d.rows)||d.rows.length!==8)throw Error('Incomplete payment snapshot');
-  paymentSourceDate=d.sourceDate;
+  paymentSourceDate=d.retrievedDate;
+  paymentSourceDates=d.sourceDates;
+  document.getElementById("paymentRetrievedDate").textContent=" • प्राप्ति दिनांक "+d.retrievedDate+" • MGNREGA "+d.sourceDates.MGNREGA+" • VB G RAM G "+d.sourceDates.VBGRAMG;
   document.getElementById('paymentSourceDate').textContent=paymentSourceDate;
   render(d.rows);
  }catch(e){
