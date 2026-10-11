@@ -2375,7 +2375,7 @@ function syncVerifiedEkBagiyaWorkData(){
  ongoingDetails=ongoingDetails.filter(r=>!codes.has(clean(r.code).toUpperCase())&&!['Ek Bagiya','Ek Bagiya Maa Ke Naam'].includes(resolvedFinalCategory(r)));
  for(const w of report.works.filter(w=>clean(w.status).toLowerCase()==='ongoing')){
   const prior=old.get(clean(w.code).toUpperCase())||{},n=w.sources.MGNREGA||{},v=w.sources.VBGRAMG||{},san=w.sw+w.sm,book=w.bw+w.bm;
-  ongoingDetails.push({...prior,district:w.district,janpad:w.janpad,engineer:w.engineer,cluster:w.cluster,panchayat:w.panchayat,fy:w.financialYear,status:w.status,code:w.code,name:w.name,type:'Ek Bagiya',category:'Ek Bagiya',
+  ongoingDetails.push({...prior,district:w.district,janpad:w.janpad,engineer:w.engineer,cluster:w.cluster,panchayat:w.panchayat,fy:w.financialYear,status:w.status,code:w.code,name:w.name,type:'Ek Bagiya',category:'Ek Bagiya',finalCategory:'Ek Bagiya',
    sanction:san,nregaBookedWage:n.bw||0,nregaBookedMaterial:n.bm||0,nregaBooked:(n.bw||0)+(n.bm||0),vbgBookedWage:v.bw||0,vbgBookedMaterial:v.bm||0,vbgBooked:(v.bw||0)+(v.bm||0),
    overallBookedWage:w.bw,overallBookedMaterial:w.bm,overallBooked:book,booked:book,expPct:san?100*book/san:0,nregaAprJunMandays:w.nregaAprJunMandays,nregaTotalMandays:w.nregaTotalMandays,julyMandays:w.julyMandays,mandays:w.nregaTotalMandays+w.julyMandays,currentFYMandays:w.nregaAprJunMandays+w.julyMandays});
  }
