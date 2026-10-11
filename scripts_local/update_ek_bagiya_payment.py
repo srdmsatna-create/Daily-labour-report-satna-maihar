@@ -1,5 +1,5 @@
 """Fetch Ek Bagiya Booked/Paid amounts from both official work reports."""
-import html,json,re,urllib.parse
+import html,json,re,urllib.parse,unicodedata,csv
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime,timezone
 from zoneinfo import ZoneInfo
@@ -31,12 +31,20 @@ def number(value):
  value=value.replace(',','').strip()
  if not re.fullmatch(r'\d+(?:\.\d+)?',value):raise ValueError('Missing/invalid official amount')
  return float(value)
-def build(vbg,nrega,dates,urls):
+def scheme_codes(root=ROOT):
+ with (root/'ek-bagiya/work_details.csv').open(encoding='utf-8-sig',newline='') as f:return {r['Work Code'].strip() for r in csv.DictReader(f) if r.get('Work Code')}
+def is_bagiya(name,code,known):
+ name=unicodedata.normalize('NFKD',name).replace('\u093c','')
+ return code in known or bool(re.search(r'ब[ा]?ग[िी]य[ा]?|b(?:a|ai)[gk]i?(?:y|i)a',name,re.I))
+def build(vbg,nrega,dates,urls,known=None):
+ if known is None:known=scheme_codes()
+ ongoing=lambda rr:{c[6] for c in rr if c[5].lower()=='ongoing' and is_bagiya(c[7],c[6],known)}
+ if ongoing(vbg)!=ongoing(nrega):raise ValueError('Official ongoing Ek Bagiya work codes do not reconcile')
  master={}
  for system,rr in [('MGNREGA',nrega),('VBGRAMG',vbg)]:
   seen=set()
   for c in rr:
-   if not re.search(r'बगिया|bagiya|bagia',c[7],re.I) or c[5].lower()=='deleted':continue
+   if not is_bagiya(c[7],c[6],known) or c[5].lower()=='deleted':continue
    code=c[6]
    if code in seen:raise ValueError('Duplicate official work code')
    seen.add(code)
@@ -57,7 +65,7 @@ def build(vbg,nrega,dates,urls):
   if not works:raise ValueError('No sanctioned works for '+j)
   summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),**{k:sum(w[k] for w in works)/100000 for k in ('sw','sm','bw','bm','pw','pm')}))
  now=datetime.now(ZoneInfo('Asia/Kolkata'))
- return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'basis':'Unique non-deleted Ek Bagiya codes; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
+ return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
 def attach_mapping(d,root=ROOT):
  text=(root/'shramik-niyojan-data.js').read_text(encoding='utf-8-sig')
  mapping=json.loads(text.split('=',1)[1].strip().rstrip(';'))
