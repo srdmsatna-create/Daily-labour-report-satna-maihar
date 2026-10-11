@@ -56,6 +56,7 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_
                     value=number(row[ci]['text'])
                     if value>count:raise RuntimeError('Created works exceed received GP works: '+name)
                     out[key]['worksCreated']=value
+                    out[key]['createdDetailLinks']=row[ci].get('links',[])
             actual_works=sum(x['worksReceived'] for x in out.values())
             actual_gp=sum(x['worksReceived']>0 for x in out.values())
             actual_created=sum(x.get('worksCreated',0) for x in out.values())
@@ -85,7 +86,7 @@ def work_types(tables, expected):
                 except ValueError:continue
                 value=row[ti]['text'].strip()
                 if value:counts[value]+=1
-            if sum(counts.values())==expected:candidates.append(dict(counts))
+            if (expected is None and counts) or sum(counts.values())==expected:candidates.append(dict(counts))
     if not candidates or any(x!=candidates[0] for x in candidates):
         raise RuntimeError('Work types missing or do not reconcile with received works')
     return candidates[0]
@@ -98,7 +99,7 @@ def aggregate(blocks, details, mapping):
         if not engineer or engineer.lower()=='unmapped':continue
         if k in master and master[k]!=engineer:raise RuntimeError('Conflicting GP engineer mapping: '+str(k))
         master[k]=engineer
-    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0,'workTypes':{},'typesComplete':True,'worksCreated':0})
+    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0,'workTypes':{},'typesComplete':True,'worksCreated':0,'createdWorkTypes':{},'createdTypesComplete':True})
     for block in blocks:
         b=jan(block['block']); rows=details[b]
         if sum(r['worksReceived'] for r in rows)!=block['worksReceived'] or sum(r['worksReceived']>0 for r in rows)!=block['gpReceived']:
@@ -110,6 +111,10 @@ def aggregate(blocks, details, mapping):
             k=(b,norm(r['gp']))
             if k not in master:raise RuntimeError('Received GP has no exact engineer mapping: '+str(k))
             a=sums[(b,master[k])];a['gpReceived']+=1;a['worksReceived']+=r['worksReceived'];a['worksCreated']+=r['worksCreated']
+            if r.get('worksCreated',0):
+                if 'createdWorkTypes' not in r:a['createdTypesComplete']=False
+                else:
+                    for label,count in r['createdWorkTypes'].items():a['createdWorkTypes'][label]=a['createdWorkTypes'].get(label,0)+count
             if 'workTypes' not in r:a['typesComplete']=False
             else:
                 for label,count in r['workTypes'].items():a['workTypes'][label]=a['workTypes'].get(label,0)+count
@@ -199,22 +204,22 @@ def collect():
                 block['gpReceived']=sum(r['worksReceived']>0 for r in rr)
                 block['worksReceived']=sum(r['worksReceived'] for r in rr)
             work_debug=[]
-            pending=sum(gp['worksReceived']>0 for gp_rows in details.values() for gp in gp_rows)
+            pending=sum(gp.get('worksCreated',0)>0 for gp_rows in details.values() for gp in gp_rows)
             done=0
             print('Fetching work types for '+str(pending)+' receiving GPs...',flush=True)
             for block_name,gp_rows in details.items():
                 for gp in gp_rows:
-                    if not gp['worksReceived']:continue
+                    if not gp.get('worksCreated',0):continue
                     done+=1
                     print('Work details ['+str(done)+'/'+str(pending)+'] '+block_name+' / '+gp['gp'],flush=True)
-                    for url in gp.get('detailLinks',[]):
+                    for url in gp.get('createdDetailLinks',[]):
                         if not url.startswith('https://vbgramgrep.dord.gov.in/'):continue
                         try:
                             tables=fetch(url, timeout=20000)
                             work_debug.append({'block':block_name,'gp':gp['gp'],'worksReceived':gp['worksReceived'],'tables':tables})
                             (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
-                            gp['workTypes']=work_types(tables,gp['worksReceived'])
-                            print('  Verified '+str(gp['worksReceived'])+' work types.',flush=True)
+                            gp['createdWorkTypes']=work_types(tables,None)
+                            print('  Verified '+str(gp['worksCreated'])+' created work types.',flush=True)
                             break
                         except Exception as e:
                             gp['typeMessage']=str(e)
