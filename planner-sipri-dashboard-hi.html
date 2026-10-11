@@ -352,17 +352,20 @@ total+=count;totals[x[1]]=(totals[x[1]]||0)+count;
 categoryTotals[x[1]]??={};categoryTotals[x[1]][category]=(categoryTotals[x[1]][category]||0)+count;
 }}
 for(const [janpad,count] of Object.entries(totals))html+='<tr class="janpad-total"><td>'+esc(districtOf(janpad))+'</td><td>'+esc(janpad)+'</td><td colspan="2">जनपद कुल — चयनित श्रेणी</td><td class="num">'+count.toLocaleString('en-IN')+'</td></tr>';
-html+='<tr class="total"><td colspan="4">'+(total?'कुल — चयनित श्रेणी':'चयनित फ़िल्टर में सत्यापित कार्य उपलब्ध नहीं')+'</td><td class="num">'+total.toLocaleString('en-IN')+'</td></tr>';
-const pivotCategories=[...new Set(Object.values(categoryTotals).flatMap(v=>Object.keys(v)))],pivotJanpads=Object.keys(categoryTotals);
+html+='<tr class="total"><td colspan="4">'+(total?'कुल — चयनित श्रेणी':'कार्य-प्रकार का विवरण उपलब्ध नहीं / लंबित')+'</td><td class="num">'+(total?total.toLocaleString('en-IN'):'—')+'</td></tr>';
+const pivotCategories=[...new Set(Object.values(categoryTotals).flatMap(v=>Object.keys(v)))],pivotJanpads=[...new Set(eligible.map(v=>v.x[1]))];
+const incomplete=eligible.some(v=>v.row?.typesComplete!==true),hasVerified=eligible.some(v=>v.row?.typesComplete===true);
+const receivedByJanpad=j=>eligible.filter(v=>v.x[1]===j).reduce((n,v)=>n+Number(v.row?.worksReceived||0),0);
 $('workCategorySummaryHead').innerHTML='<tr><th>कार्य का प्रकार</th><th>वर्गीकरण</th>'+pivotJanpads.map(j=>'<th>'+esc(j)+'<br><small>'+esc(districtOf(j))+'</small></th>').join('')+'<th>कुल</th></tr>';
 const numberLink=(n,janpad,category)=>n?'<a href="#workCategoryBody" data-janpad="'+esc(janpad)+'" data-category="'+esc(category)+'">'+n.toLocaleString('en-IN')+'</a>':'0';
-let summary='';
+let summary=incomplete?'<tr><td colspan="'+(pivotJanpads.length+3)+'">कार्य-प्रकार का विवरण अधूरा है। उपलब्ध संख्या को शून्य नहीं माना गया है।</td></tr>':'';
 for(const category of pivotCategories){
-const rowTotal=pivotJanpads.reduce((n,j)=>n+(categoryTotals[j][category]||0),0);
-summary+='<tr><td>'+esc(labels[category]||category)+'</td><td>'+permissionBadge(category)+'</td>'+pivotJanpads.map(j=>'<td class="num">'+numberLink(categoryTotals[j][category]||0,j,category)+'</td>').join('')+'<td class="num">'+numberLink(rowTotal,'ALL',category)+'</td></tr>';
+const rowTotal=pivotJanpads.reduce((n,j)=>n+(categoryTotals[j]?.[category]||0),0);
+summary+='<tr><td>'+esc(labels[category]||category)+'</td><td>'+permissionBadge(category)+'</td>'+pivotJanpads.map(j=>'<td class="num">'+numberLink(categoryTotals[j]?.[category]||0,j,category)+'</td>').join('')+'<td class="num">'+numberLink(rowTotal,'ALL',category)+'</td></tr>';
 }
-summary+='<tr class="total"><td colspan="2">कुल — चयनित फ़िल्टर</td>'+pivotJanpads.map(j=>'<td class="num">'+numberLink(totals[j]||0,j,'ALL')+'</td>').join('')+'<td class="num">'+numberLink(total,'ALL','ALL')+'</td></tr>';
-$('workCategorySummaryBody').innerHTML=summary;$('workPermissionTotals').innerHTML=permissionCounts(visibleTypes);
+summary+='<tr class="total"><td colspan="2">कुल — चयनित फ़िल्टर</td>'+pivotJanpads.map(j=>'<td class="num">'+(eligible.filter(v=>v.x[1]===j).some(v=>v.row?.typesComplete!==true)?'—':numberLink(totals[j]||0,j,'ALL'))+'</td>').join('')+'<td class="num">'+(incomplete?'—':numberLink(total,'ALL','ALL'))+'</td></tr>';
+summary+='<tr class="janpad-total"><td colspan="2">प्राप्त कार्य — उपलब्ध स्रोत</td>'+pivotJanpads.map(j=>'<td class="num">'+receivedByJanpad(j).toLocaleString('en-IN')+'</td>').join('')+'<td class="num">'+pivotJanpads.reduce((n,j)=>n+receivedByJanpad(j),0).toLocaleString('en-IN')+'</td></tr>';
+$('workCategorySummaryBody').innerHTML=summary;$('workPermissionTotals').innerHTML=(!incomplete||Object.keys(visibleTypes).length)?permissionCounts(visibleTypes)+(incomplete?' · कुछ कार्यों का वर्गीकरण विवरण लंबित है':''):'कार्य-प्रकार का विवरण लंबित है; अनुमत्य / गैर अनुमत्य संख्या उपलब्ध नहीं है।';
 $('workCategorySummaryBody').onclick=event=>{const link=event.target.closest('a[data-category]');if(!link)return;event.preventDefault();$('janpad').value=link.dataset.janpad;updateCascade();render();$('workCategoryFilter').value=link.dataset.category;renderWorkCategories();$('workCategoryBody').scrollIntoView({behavior:'smooth',block:'start'});};
 $('workCategoryBody').innerHTML=html;select.onchange=renderWorkCategories;$('workPermissionFilter').onchange=()=>{$('workCategoryFilter').value='ALL';renderWorkCategories();};
 }
