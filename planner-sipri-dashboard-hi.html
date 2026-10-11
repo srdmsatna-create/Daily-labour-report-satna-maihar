@@ -409,6 +409,21 @@ td b{color:#56329a}
 #workCategorySummaryTable a{color:inherit!important;text-decoration:none!important}
 #workCategorySummaryTable thead{display:table-header-group!important}
 #workCategorySummaryTable tr{break-inside:avoid!important;page-break-inside:avoid!important}
+
+/* Readable print typography and bounded identity columns. */
+th,td{border:.4mm solid #263746!important;padding:1.6mm .8mm!important;line-height:1.4!important}
+td.num{font-size:13pt!important;font-weight:900!important}
+th{font-size:9.5pt!important}
+#workCategorySummaryTable th:first-child,#workCategorySummaryTable td:first-child{width:34%!important}
+#workCategorySummaryTable th:nth-child(2),#workCategorySummaryTable td:nth-child(2){width:12%!important}
+#workCategorySummaryTable th,#workCategorySummaryTable td{font-size:10pt!important;padding:1.5mm .8mm!important;line-height:1.4!important}
+#workCategorySummaryTable td.num{font-size:14pt!important;font-weight:900!important;white-space:nowrap!important}
+#workCategoryDetailTable col:nth-child(1){width:8%!important}
+#workCategoryDetailTable col:nth-child(2){width:13%!important}
+#workCategoryDetailTable col:nth-child(3){width:22%!important}
+#workCategoryDetailTable col:nth-child(4){width:47%!important}
+#workCategoryDetailTable col:nth-child(5){width:10%!important}
+td,b,small{white-space:normal;overflow-wrap:anywhere;word-break:normal}
 `;
 const heading=scope==='categorySummary'?'युक्तधारा — कार्य की श्रेणी और संख्या':document.querySelector('header h1').textContent;
 const content=scope==='categorySummary'?'<section><p>'+esc($('workPermissionFilter').selectedOptions[0].text)+' · '+esc($('workCategoryFilter').selectedOptions[0].text)+'</p><p>'+$('workPermissionTotals').innerHTML+'</p><h2>युक्तधारा पोर्टल से VBG RAM G में प्रदर्शित जनपदवार कार्य-प्रकार सारांश</h2>'+$('workCategorySummaryTable').outerHTML+'</section>':sections.flatMap(s=>[...s.querySelectorAll('table')].filter(t=>scope!=='category'||t.id==='workCategoryDetailTable').map(t=>{const title=t.id==='workCategorySummaryTable'?'युक्तधारा — जनपदवार कार्य-प्रकार सारांश':t.id==='workCategoryDetailTable'?'युक्तधारा — उपयंत्रीवार कार्य-प्रकार विवरण':s.querySelector('h2').textContent;return '<section><h2>'+esc(title)+'</h2>'+t.outerHTML+'</section>'})).join('');
