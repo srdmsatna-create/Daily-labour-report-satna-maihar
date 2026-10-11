@@ -134,11 +134,12 @@ function summarize(text){
  return ORDER.map(j=>{const x=m.get(j)||{janpad:j,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};x.works=SANCTIONED_WORKS[j]||x.works;return x;});
 }
 function total(rows,label){const x={janpad:label,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};for(const r of rows)for(const k of ['works','ongoing','sw','sm','bw','bm','pw','pm'])x[k]+=num(r[k]);return x}
-function portalSinceRows(d,system){
+function portalSinceRows(d,system,fy=null){
  return ORDER.map(janpad=>{
-  const r={janpad,bw:0,bm:0,pw:0,pm:0};
-  for(const w of d.works.filter(w=>w.janpad===janpad&&['ongoing','physically completed','completed'].includes(String(w.status).toLowerCase()))){
+  const r={janpad,bw:0,bm:0,pw:0,pm:0,mandaysTotal:0,mandaysCurrentFY:0};
+  for(const w of d.works.filter(w=>w.janpad===janpad&&(!fy||w.financialYear===fy)&&['ongoing','physically completed','completed'].includes(String(w.status).toLowerCase()))){
    const a=w.sources[system]||{};for(const k of ['bw','bm','pw','pm'])r[k]+=Number(a[k]||0)/100000;
+   for(const k of ['mandaysTotal','mandaysCurrentFY'])r[k]+=Number(a[k]||0);
   }
   return r;
  });
@@ -146,17 +147,17 @@ function portalSinceRows(d,system){
 let portalPaymentSnapshot=null;
 function renderPortalSince(d){
  portalPaymentSnapshot=d;
- const blocks=['MGNREGA','VBGRAMG'].map(system=>{
-  const rows=portalSinceRows(d,system),all=[...rows.slice(0,3),portalTotal(rows.slice(0,3),'मैहर जिला कुल'),...rows.slice(3),portalTotal(rows.slice(3),'सतना जिला कुल'),portalTotal(rows,'कुल')];
-  return '<section class="portal-since"><h3>'+ (system==='VBGRAMG'?'VB G RAM G':system)+' — योजना प्रारंभ से (Since Inception) • स्रोत '+d.sourceDates[system]+'</h3><div class="wrap"><table class="since-table"><thead><tr><th rowspan="2">जनपद</th><th colspan="3">Booked Since Inception — ₹ लाख</th><th colspan="3">Paid Since Inception — ₹ लाख</th></tr><tr><th>Wage</th><th>Material</th><th>Total Booked</th><th>Wage</th><th>Material</th><th>Total Paid</th></tr></thead><tbody>'+all.map(r=>'<tr><td>'+(JANPAD_HI[r.janpad]||r.janpad)+'</td>'+[r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm].map(v=>'<td>'+f(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div></section>';
- });
+ const blocks=['MGNREGA','VBGRAMG'].flatMap(system=>['2025-2026','2026-2027',null].map(fy=>{
+  const rows=portalSinceRows(d,system,fy),all=[...rows.slice(0,3),portalTotal(rows.slice(0,3),'मैहर जिला कुल'),...rows.slice(3),portalTotal(rows.slice(3),'सतना जिला कुल'),portalTotal(rows,'कुल')];
+  return '<section class="portal-since"><h3>'+ (system==='VBGRAMG'?'VB G RAM G':system)+' — '+(fy||'दोनों FY का कुल')+' • योजना प्रारंभ से (Since Inception) • स्रोत '+d.sourceDates[system]+'</h3><div class="wrap"><table class="since-table"><thead><tr><th rowspan="2">जनपद</th><th colspan="3">Booked Since Inception — ₹ लाख</th><th colspan="3">Paid Since Inception — ₹ लाख</th><th colspan="2">Mandays Generation</th></tr><tr><th>Wage</th><th>Material</th><th>Total Booked</th><th>Wage</th><th>Material</th><th>Total Paid</th><th>Since Inception</th><th>Current FY</th></tr></thead><tbody>'+all.map(r=>'<tr><td>'+(JANPAD_HI[r.janpad]||r.janpad)+'</td>'+[r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm].map(v=>'<td>'+f(v)+'</td>') .join('')+'<td>'+r.mandaysTotal.toLocaleString('en-IN')+'</td><td>'+r.mandaysCurrentFY.toLocaleString('en-IN')+'</td></tr>').join('')+'</tbody></table></div></section>';
+ }));
  document.getElementById('portalSinceDetails').innerHTML=blocks.join('');
  for(const r of d.rows){
   const n=portalSinceRows(d,'MGNREGA').find(x=>x.janpad===r.janpad),v=portalSinceRows(d,'VBGRAMG').find(x=>x.janpad===r.janpad);
   for(const k of ['bw','bm','pw','pm'])if(Math.abs(n[k]+v[k]-r[k])>0.000001)throw Error('Portal total mismatch '+r.janpad+' '+k);
  }
 }
-function portalTotal(rows,janpad){return {janpad,...Object.fromEntries(['bw','bm','pw','pm'].map(k=>[k,rows.reduce((n,r)=>n+r[k],0)]))};}
+function portalTotal(rows,janpad){return {janpad,...Object.fromEntries(['bw','bm','pw','pm','mandaysTotal','mandaysCurrentFY'].map(k=>[k,rows.reduce((n,r)=>n+r[k],0)]))};}
 function render(rows){
  document.getElementById("paymentFinancialWorkCount").textContent=rows.reduce((n,r)=>n+(r.financialWorks??r.ongoing),0).toLocaleString("en-IN");
  document.getElementById("paymentWorkCount").textContent=rows.reduce((n,r)=>n+r.works,0).toLocaleString("en-IN");
@@ -283,7 +284,7 @@ function printSelectedSCN(){
  }
 }
 function downloadCSV(){if(!exportRows.length)return;
- if(portalPaymentSnapshot){const head=['Portal','Janpad','Booked Wage Since Inception Lakh','Booked Material Since Inception Lakh','Total Booked Since Inception Lakh','Paid Wage Since Inception Lakh','Paid Material Since Inception Lakh','Total Paid Since Inception Lakh'];const records=['MGNREGA','VBGRAMG'].flatMap(system=>portalSinceRows(portalPaymentSnapshot,system).map(r=>[system,r.janpad,r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm]));records.push(...paymentRows.map(r=>['BOTH PORTALS',r.janpad,r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm]));const csv='\uFEFF'+[head,...records].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Both_Portals_Since_Inception.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);return;}
+ if(portalPaymentSnapshot){const head=['Portal','Janpad','Work Start FY','Mandays Since Inception','Mandays Current FY','Booked Wage Since Inception Lakh','Booked Material Since Inception Lakh','Total Booked Since Inception Lakh','Paid Wage Since Inception Lakh','Paid Material Since Inception Lakh','Total Paid Since Inception Lakh'];const records=['MGNREGA','VBGRAMG'].flatMap(system=>['2025-2026','2026-2027'].flatMap(fy=>portalSinceRows(portalPaymentSnapshot,system,fy).map(r=>[system,r.janpad,fy,r.mandaysTotal,r.mandaysCurrentFY,r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm])));records.push(...paymentRows.map(r=>['BOTH PORTALS',r.janpad,'2025-26 + 2026-27','','',r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm]));const csv='\uFEFF'+[head,...records].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Both_Portals_Since_Inception.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);return;}
 const head=['Janpad','Works','Ongoing','Sanction Wages Lakh','Sanction Material Lakh','Sanction Total Lakh','Booked Wages Lakh','Booked Material Lakh','Booked Total Lakh','Paid Wages Lakh','Paid Material Lakh','Paid Total Lakh','% Paid Amount','Pending Wages Lakh','Pending Material Lakh','Pending Total Lakh','सहायक लेखाधिकारी'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\uFEFF'+[head,...exportRows].map(r=>r.map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Payment_Status.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
 async function loadPayment(){
  try{
