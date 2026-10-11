@@ -64,7 +64,7 @@ def build(vbg,nrega,dates,urls,known=None):
     if x['nregaAprJunMandays']>x['nregaTotalMandays']:raise ValueError('NREGA manday periods invalid')
    x['sw']=max(x['sw'],number(c[13]));x['sm']=max(x['sm'],number(c[14]))
    amounts={k:number(c[i]) for k,i in [('bw',20),('bm',21),('pw',22),('pm',23)]}
-   x['sources'][system]=amounts
+   x['sources'][system]={**amounts,'mandaysTotal':number(c[24]),'mandaysCurrentFY':number(c[25]),'workFinancialYear':work_fy(c[4])}
    for k,v in amounts.items():x[k]+=v
  if not master:raise ValueError('No Ek Bagiya work details')
  summary=[]
