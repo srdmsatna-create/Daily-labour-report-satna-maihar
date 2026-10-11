@@ -15,6 +15,20 @@ ROOT = Path(__file__).resolve().parents[1]
 def run(args, root=ROOT):
     subprocess.run(args, cwd=root, check=True)
 
+def publish(stage):
+    # A refresh can take hours; main may advance while sources are fetched.
+    for attempt in range(3):
+        run(['git', 'fetch', 'origin', '+refs/heads/main:refs/remotes/origin/main'], stage)
+        result = subprocess.run(['git', 'rebase', 'origin/main'], cwd=stage)
+        if result.returncode:
+            subprocess.run(['git', 'rebase', '--abort'], cwd=stage)
+            raise RuntimeError('Remote report conflict. Validated commit retained at ' + str(stage) + '; no reports overwritten.')
+        result = subprocess.run(['git', 'push', 'origin', 'HEAD:main'], cwd=stage)
+        if result.returncode == 0:
+            return
+        print('Publication failed; fetching latest main before retry ' + str(attempt + 1), flush=True)
+    raise RuntimeError('Publication failed after 3 attempts. Validated commit retained at ' + str(stage))
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--publish', action='store_true')
@@ -71,7 +85,7 @@ def main():
         changed = subprocess.run(['git','diff','--cached','--quiet'], cwd=stage).returncode
         if changed == 1:
             run(['git','commit','-m','Verified daily report groups ' + status['checkedAt']], stage)
-            run(['git','push','origin','HEAD:main'], stage)
+            publish(stage)
         elif changed != 0:
             raise RuntimeError('Cannot check prepared report changes')
         cleanup = True
