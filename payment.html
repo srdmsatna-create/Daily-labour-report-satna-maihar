@@ -82,6 +82,7 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
   body.notice-print{--print-mode:notice}
 }
 @media print{body.notice-print #paymentNotice{break-before:page}}
+.portal-since{padding:14px}.portal-since h3{color:#0b3159}.since-table{border-collapse:collapse;width:100%;min-width:900px}.since-table th,.since-table td{border:2px solid #33485c;padding:9px;text-align:right;font-size:17px;font-weight:800;white-space:nowrap}.since-table th{background:#deedf8;text-align:center;white-space:normal}.since-table td:first-child{text-align:left}.since-table tbody tr:last-child{background:#d5e7f5;font-weight:950}@media print{body.notice-print #portalSinceDetails{display:none!important}body:not(.notice-print) #portalSinceDetails{break-before:page}.portal-since{break-inside:avoid;padding:0;margin:0 0 8mm}.since-table{min-width:0}.since-table th,.since-table td{font-size:12pt;padding:2mm}.since-table thead{display:table-header-group}}
 </style>
 </head>
 <body>
@@ -92,9 +93,10 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 <div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति) — रिपोर्ट दिनांक <span id="paymentSourceDate">26/09/2026</span> <small id="paymentRetrievedDate"></small></div>
 <div class="sub">दोनों स्रोतों में अद्वितीय स्वीकृत/पूर्ण कार्य: <b style="color:#0b5f94;font-size:14px" id="paymentWorkCount">821</b> • राशि ₹ लाख में • वित्तीय विवरण: <b id="paymentFinancialWorkCount">756</b> प्रगतिरत/पूर्ण कार्य</div>
 <div class="wrap"><table class="tbl" id="paymentTable"><tbody><tr><td class="status">डेटा लोड हो रहा है…</td></tr></tbody></table></div>
-<div class="note"><b>नोट:</b> Sanction में बिना शुरू हुए स्वीकृत कार्यों सहित सभी अद्वितीय स्वीकृत/प्रगतिरत/पूर्ण कार्यों की राशि शामिल है। Booked/Paid राशि प्रगतिरत, भौतिक पूर्ण एवं पूर्ण कार्यों की है। FY 2025–26 एवं 2026–27 के कार्य कोड एक बार गिने गए हैं।  स्वीकृति राशि के विरुद्ध Booked Wage और Booked Material तथा Paid Wage और Paid Material पोर्टल के work-level data से लिये गये हैं। Pending Payment = Booked − Paid. % Paid Amount = Paid Total ÷ Booked Total × 100.</div>
+<div class="note"><b>नोट:</b> Sanction में बिना शुरू हुए स्वीकृत कार्यों सहित सभी अद्वितीय स्वीकृत/प्रगतिरत/पूर्ण कार्यों की राशि शामिल है। Booked/Paid राशि प्रगतिरत, भौतिक पूर्ण एवं पूर्ण कार्यों की है। FY 2025–26 एवं 2026–27 के कार्य कोड एक बार गिने गए हैं।  स्वीकृति राशि के विरुद्ध Booked Wage और Booked Material तथा Paid Wage और Paid Material पोर्टल के work-level data से लिये गये हैं। MGNREGA तथा VB G RAM G के Since Inception Booked/Paid Wage एवं Material को अलग-अलग जोड़कर संयुक्त राशि निकाली गई है। Pending Payment = दोनों पोर्टल का Booked − दोनों पोर्टल का Paid. % Paid Amount = Paid Total ÷ Booked Total × 100.</div>
 </section>
 
+<section class="card" id="portalSinceDetails" style="margin-top:18px"></section>
 <section class="notice-card" id="paymentNotice">
   <div class="notice-head">जनपदवार कारण बताओ सूचना पत्र — एक बगिया माँ के नाम भुगतान</div>
   <div class="notice-body">
@@ -132,12 +134,35 @@ function summarize(text){
  return ORDER.map(j=>{const x=m.get(j)||{janpad:j,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};x.works=SANCTIONED_WORKS[j]||x.works;return x;});
 }
 function total(rows,label){const x={janpad:label,works:0,ongoing:0,sw:0,sm:0,bw:0,bm:0,pw:0,pm:0};for(const r of rows)for(const k of ['works','ongoing','sw','sm','bw','bm','pw','pm'])x[k]+=num(r[k]);return x}
+function portalSinceRows(d,system){
+ return ORDER.map(janpad=>{
+  const r={janpad,bw:0,bm:0,pw:0,pm:0};
+  for(const w of d.works.filter(w=>w.janpad===janpad&&['ongoing','physically completed','completed'].includes(String(w.status).toLowerCase()))){
+   const a=w.sources[system]||{};for(const k of ['bw','bm','pw','pm'])r[k]+=Number(a[k]||0)/100000;
+  }
+  return r;
+ });
+}
+let portalPaymentSnapshot=null;
+function renderPortalSince(d){
+ portalPaymentSnapshot=d;
+ const blocks=['MGNREGA','VBGRAMG'].map(system=>{
+  const rows=portalSinceRows(d,system),all=[...rows.slice(0,3),portalTotal(rows.slice(0,3),'मैहर जिला कुल'),...rows.slice(3),portalTotal(rows.slice(3),'सतना जिला कुल'),portalTotal(rows,'कुल')];
+  return '<section class="portal-since"><h3>'+ (system==='VBGRAMG'?'VB G RAM G':system)+' — योजना प्रारंभ से (Since Inception) • स्रोत '+d.sourceDates[system]+'</h3><div class="wrap"><table class="since-table"><thead><tr><th rowspan="2">जनपद</th><th colspan="3">Booked Since Inception — ₹ लाख</th><th colspan="3">Paid Since Inception — ₹ लाख</th></tr><tr><th>Wage</th><th>Material</th><th>Total Booked</th><th>Wage</th><th>Material</th><th>Total Paid</th></tr></thead><tbody>'+all.map(r=>'<tr><td>'+(JANPAD_HI[r.janpad]||r.janpad)+'</td>'+[r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm].map(v=>'<td>'+f(v)+'</td>').join('')+'</tr>').join('')+'</tbody></table></div></section>';
+ });
+ document.getElementById('portalSinceDetails').innerHTML=blocks.join('');
+ for(const r of d.rows){
+  const n=portalSinceRows(d,'MGNREGA').find(x=>x.janpad===r.janpad),v=portalSinceRows(d,'VBGRAMG').find(x=>x.janpad===r.janpad);
+  for(const k of ['bw','bm','pw','pm'])if(Math.abs(n[k]+v[k]-r[k])>0.000001)throw Error('Portal total mismatch '+r.janpad+' '+k);
+ }
+}
+function portalTotal(rows,janpad){return {janpad,...Object.fromEntries(['bw','bm','pw','pm'].map(k=>[k,rows.reduce((n,r)=>n+r[k],0)]))};}
 function render(rows){
  document.getElementById("paymentFinancialWorkCount").textContent=rows.reduce((n,r)=>n+(r.financialWorks??r.ongoing),0).toLocaleString("en-IN");
  document.getElementById("paymentWorkCount").textContent=rows.reduce((n,r)=>n+r.works,0).toLocaleString("en-IN");
  const all=[...rows.slice(0,3),total(rows.slice(0,3),'DISTRICT MAIHAR TOTAL'),...rows.slice(3),total(rows.slice(3),'DISTRICT SATNA TOTAL'),total(rows,'कुल (MAIHAR + SATNA)')];
  exportRows=[];
- let h='<colgroup><col style="width:230px"><col style="width:62px"><col style="width:70px"><col style="width:86px"><col style="width:86px"><col style="width:86px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:72px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:155px"></colgroup><thead><tr><th rowspan="2">Janpad</th><th colspan="5">Sanction Works & Amount in Lakhs</th><th colspan="3">Booked Amount in Lakhs</th><th colspan="3">Paid Amount in Lakhs</th><th rowspan="2" class="pct-head">% Paid<br>Amount</th><th colspan="3" class="pending-head">Pending Payment in Lakhs</th><th rowspan="2">सहायक लेखाधिकारी</th></tr><tr><th>Works</th><th>Ongoing</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th class="pending-head">Wages</th><th class="pending-head">Material</th><th class="pending-head">Total</th></tr></thead><tbody>';
+ let h='<colgroup><col style="width:230px"><col style="width:62px"><col style="width:70px"><col style="width:86px"><col style="width:86px"><col style="width:86px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:72px"><col style="width:84px"><col style="width:84px"><col style="width:84px"><col style="width:155px"></colgroup><thead><tr><th rowspan="2">Janpad</th><th colspan="5">Sanction Works & Amount in Lakhs</th><th colspan="3">दोनों पोर्टल — Booked Since Inception ₹ लाख</th><th colspan="3">दोनों पोर्टल — Paid Since Inception ₹ लाख</th><th rowspan="2" class="pct-head">% Paid<br>Amount</th><th colspan="3" class="pending-head">Pending Payment in Lakhs</th><th rowspan="2">सहायक लेखाधिकारी</th></tr><tr><th>Works</th><th>Ongoing</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th>Wages</th><th>Material</th><th>Total</th><th class="pending-head">Wages</th><th class="pending-head">Material</th><th class="pending-head">Total</th></tr></thead><tbody>';
  for(const r of all){const st=r.sw+r.sm,bt=r.bw+r.bm,pt=r.pw+r.pm,nw=Math.max(0,r.bw-r.pw),nm=Math.max(0,r.bm-r.pm),nt=nw+nm,pct=bt?pt*100/bt:0;const isD=r.janpad.startsWith('DISTRICT'),isG=r.janpad.startsWith('कुल');const cls=isG?'grand':(r.janpad==='DISTRICT MAIHAR TOTAL'?'district maihar-total':(r.janpad==='DISTRICT SATNA TOTAL'?'district satna-total':isD?'district':''));const janpadLabel=(isD||isG)?r.janpad:(JANPAD_HI[r.janpad]||r.janpad);h+='<tr class="'+cls+'"><td>'+janpadLabel+'</td><td>'+r.works.toLocaleString('en-IN')+'</td><td>'+r.ongoing.toLocaleString('en-IN')+'</td><td>'+f(r.sw)+'</td><td>'+f(r.sm)+'</td><td>'+f(st)+'</td><td>'+f(r.bw)+'</td><td>'+f(r.bm)+'</td><td>'+f(bt)+'</td><td>'+f(r.pw)+'</td><td>'+f(r.pm)+'</td><td>'+f(pt)+'</td><td class="pct">'+pct.toFixed(2)+'%</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nw)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nm)+'</td><td class="'+(isD||isG?'pending-total':'pending-cell')+'">'+f(nt)+'</td><td>'+(OFFICERS[r.janpad]||'')+'</td></tr>';exportRows.push([r.janpad,r.works,r.ongoing,r.sw,r.sm,st,r.bw,r.bm,bt,r.pw,r.pm,pt,pct,nw,nm,nt,OFFICERS[r.janpad]||'']);}
  h+='</tbody>';document.getElementById('paymentTable').innerHTML=h;
  paymentRows=rows;
@@ -257,7 +282,9 @@ function printSelectedSCN(){
    setTimeout(()=>{if(!fired){fired=true;doPrint();}},1600);
  }
 }
-function downloadCSV(){if(!exportRows.length)return;const head=['Janpad','Works','Ongoing','Sanction Wages Lakh','Sanction Material Lakh','Sanction Total Lakh','Booked Wages Lakh','Booked Material Lakh','Booked Total Lakh','Paid Wages Lakh','Paid Material Lakh','Paid Total Lakh','% Paid Amount','Pending Wages Lakh','Pending Material Lakh','Pending Total Lakh','सहायक लेखाधिकारी'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\uFEFF'+[head,...exportRows].map(r=>r.map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Payment_Status.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+function downloadCSV(){if(!exportRows.length)return;
+ if(portalPaymentSnapshot){const head=['Portal','Janpad','Booked Wage Since Inception Lakh','Booked Material Since Inception Lakh','Total Booked Since Inception Lakh','Paid Wage Since Inception Lakh','Paid Material Since Inception Lakh','Total Paid Since Inception Lakh'];const records=['MGNREGA','VBGRAMG'].flatMap(system=>portalSinceRows(portalPaymentSnapshot,system).map(r=>[system,r.janpad,r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm]));records.push(...paymentRows.map(r=>['BOTH PORTALS',r.janpad,r.bw,r.bm,r.bw+r.bm,r.pw,r.pm,r.pw+r.pm]));const csv='\uFEFF'+[head,...records].map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Both_Portals_Since_Inception.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);return;}
+const head=['Janpad','Works','Ongoing','Sanction Wages Lakh','Sanction Material Lakh','Sanction Total Lakh','Booked Wages Lakh','Booked Material Lakh','Booked Total Lakh','Paid Wages Lakh','Paid Material Lakh','Paid Total Lakh','% Paid Amount','Pending Wages Lakh','Pending Material Lakh','Pending Total Lakh','सहायक लेखाधिकारी'];const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\uFEFF'+[head,...exportRows].map(r=>r.map(q).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Ek_Bagiya_Payment_Status.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
 async function loadPayment(){
  try{
   const response=await fetch('data/ek-bagiya-payment-latest.json?live='+Date.now(),{cache:'no-store'});
@@ -268,6 +295,7 @@ async function loadPayment(){
   paymentSourceDates=d.sourceDates;
   document.getElementById("paymentRetrievedDate").textContent=" • प्राप्ति दिनांक "+d.retrievedDate+" • MGNREGA "+d.sourceDates.MGNREGA+" • VB G RAM G "+d.sourceDates.VBGRAMG;
   document.getElementById('paymentSourceDate').textContent=paymentSourceDate;
+  renderPortalSince(d);
   render(d.rows);
  }catch(e){
   try{
