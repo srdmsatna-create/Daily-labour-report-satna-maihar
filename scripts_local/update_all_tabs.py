@@ -18,6 +18,7 @@ GROUPS=[
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js']),
  ('planner',[['scripts/fetch_planner_portal_summary.py']],['planner-portal-data.js']),
+ ('ek_bagiya_payment',[['scripts_local/update_ek_bagiya_payment.py']],['data/ek-bagiya-payment-latest.json']),
  ('rejected_wage',[['scripts/update_rejected_wage.py']],['data/rejected-wage-latest.json'])
 ]
 OUTPUTS=list(dict.fromkeys(f for _,_,files in GROUPS for f in files))+['all-tabs-auto-status.json']
@@ -46,6 +47,9 @@ def validate(group,root):
   actual={(r.get('fy'),norm(r.get('janpad'))) for r in rows}
   if len(rows)!=24 or actual!=expected:raise ValueError('Expected 24 unique rejected wage Janpad/FY records: 8 Janpads for each of 3 years')
   if d.get('date')!=datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat() or not d.get('combined'):raise ValueError('Current combined rejected wage snapshot required')
+ elif group=='ek_bagiya_payment':
+  d=data(root/'data/ek-bagiya-payment-latest.json')
+  if len(d.get('rows',[]))!=8 or d.get('sourceDate')!=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d/%m/%Y'):raise ValueError('Current complete payment source required')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
  elif group=='yuktdhara':
