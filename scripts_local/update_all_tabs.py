@@ -49,7 +49,7 @@ def validate(group,root):
   if d.get('date')!=datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat() or not d.get('combined'):raise ValueError('Current combined rejected wage snapshot required')
  elif group=='ek_bagiya_payment':
   d=data(root/'data/ek-bagiya-payment-latest.json')
-  if len(d.get('rows',[]))!=8 or d.get('sourceDate')!=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d/%m/%Y'):raise ValueError('Current complete payment source required')
+  if len(d.get('rows',[]))!=8 or d.get('retrievedDate')!=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d/%m/%Y') or not d.get('sourceDates') or not d.get('works'):raise ValueError('Current complete payment source required')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
  elif group=='yuktdhara':
