@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-11T09:08:57.995565+00:00",
+  "checkedAt": "2026-10-11T11:24:26.278894+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -54,6 +54,13 @@
       "success": true,
       "files": [
         "planner-portal-data.js"
+      ]
+    },
+    "ek_bagiya_payment": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_ek_bagiya_payment.py']' returned non-zero exit status 1.",
+      "files": [
+        "data/ek-bagiya-payment-latest.json"
       ]
     },
     "rejected_wage": {
