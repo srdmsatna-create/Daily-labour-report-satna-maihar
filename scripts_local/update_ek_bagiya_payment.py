@@ -36,20 +36,28 @@ def scheme_codes(root=ROOT):
 def is_bagiya(name,code,known):
  name=unicodedata.normalize('NFKD',name).replace('\u093c','')
  return code in known or bool(re.search(r'ब[ा]?ग[िी]य[ा]?|b(?:a|ai)[gk]i?(?:y|i)a',name,re.I))
+ALLOWED_FYS={'2025-2026','2026-2027'}
+def work_fy(value):
+ value=value.strip().replace('/','-')
+ return {'2025-26':'2025-2026','2026-27':'2026-2027'}.get(value,value)
 def build(vbg,nrega,dates,urls,known=None):
  if known is None:known=scheme_codes()
+ vbg=[c for c in vbg if work_fy(c[4]) in ALLOWED_FYS]
+ nrega=[c for c in nrega if work_fy(c[4]) in ALLOWED_FYS]
  ongoing=lambda rr:{c[6] for c in rr if c[5].lower()=='ongoing' and is_bagiya(c[7],c[6],known)}
  if ongoing(vbg)!=ongoing(nrega):raise ValueError('Official ongoing Ek Bagiya work codes do not reconcile')
  master={}
  for system,rr in [('MGNREGA',nrega),('VBGRAMG',vbg)]:
-  seen=set()
+  seen={}
   for c in rr:
    if not is_bagiya(c[7],c[6],known) or c[5].lower()=='deleted':continue
    code=c[6]
-   if code in seen:raise ValueError('Duplicate official work code')
-   seen.add(code)
-   x=master.setdefault(code,{'code':code,'janpad':c[2],'name':c[7],'status':c[5],'sw':0,'sm':0,'bw':0,'bm':0,'pw':0,'pm':0,'sources':{},'panchayat':c[3],'nregaTotalMandays':0,'nregaAprJunMandays':0,'julyMandays':0})
-   if x['janpad']!=c[2]:raise ValueError('Work Janpad mismatch')
+   if code in seen:
+    if seen[code]!=c:raise ValueError('Conflicting duplicate official work code')
+    continue
+   seen[code]=c
+   x=master.setdefault(code,{'code':code,'janpad':c[2],'name':c[7],'status':c[5],'sw':0,'sm':0,'bw':0,'bm':0,'pw':0,'pm':0,'sources':{},'panchayat':c[3],'financialYear':work_fy(c[4]),'nregaTotalMandays':0,'nregaAprJunMandays':0,'julyMandays':0})
+   if x['janpad']!=c[2] or x['financialYear']!=work_fy(c[4]):raise ValueError('Work Janpad/FY mismatch')
    if system=='VBGRAMG':x['status']=c[5];x['julyMandays']=number(c[25])
    else:
     x['nregaTotalMandays']=number(c[24]);x['nregaAprJunMandays']=number(c[25])
@@ -65,7 +73,7 @@ def build(vbg,nrega,dates,urls,known=None):
   if not works:raise ValueError('No sanctioned works for '+j)
   summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),**{k:sum(w[k] for w in works)/100000 for k in ('sw','sm','bw','bm','pw','pm')}))
  now=datetime.now(ZoneInfo('Asia/Kolkata'))
- return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
+ return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialYears':sorted(ALLOWED_FYS),'deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
 def attach_mapping(d,root=ROOT):
  text=(root/'shramik-niyojan-data.js').read_text(encoding='utf-8-sig')
  mapping=json.loads(text.split('=',1)[1].strip().rstrip(';'))
