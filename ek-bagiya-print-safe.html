@@ -63,7 +63,9 @@ async function prepare(){
   const tab=d.querySelector('#v64MainTabs .tab[data-view="ekbagiya"]');
   if(tab && !tab.classList.contains('active')) tab.click();
   statusEl.textContent='Ek Bagiya report तैयार हो रही है…';
-  await new Promise(r=>setTimeout(r,700));
+  for(let i=0;i<60&&!w.EK_BAGIYA_VERIFIED_REPORT;i++)await new Promise(r=>setTimeout(r,500));
+  if(!w.EK_BAGIYA_VERIFIED_REPORT){statusEl.textContent='सत्यापित डेटा अभी लोड नहीं हुआ। पुनः प्रयास करें।';return;}
+  if(typeof w.renderEkBagiyaDashboard==='function')w.renderEkBagiyaDashboard();
   const scope=document.getElementById('scope').value;
   const summary=d.getElementById('ekBlockSummary');
   const detail=d.getElementById('reportTable');
