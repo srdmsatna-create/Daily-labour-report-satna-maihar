@@ -1,9 +1,10 @@
 {
-  "checkedAt": "2026-10-11T06:47:52.994773+00:00",
+  "checkedAt": "2026-10-11T09:08:57.995565+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/local_auto_update.py']' returned non-zero exit status 1.",
       "files": [
         "auto-data.js",
         "auto-status.js",
@@ -18,14 +19,15 @@
       ]
     },
     "muster_emb": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_muster_emb_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "muster-emb-data.js"
       ]
     },
     "yuktdhara": {
       "success": false,
-      "message": "Current verified Yuktdhara GP/engineer detail required: RAMPURBAGHELAN: RAMPURBAGHELAN attempt 1: GP detail does not reconcile: received GPs 54/54, received works 75/75, created works 5/4, created column True; RAMPURBAGHELAN attempt 2: GP detail does not reconcile: received GPs 54/54, received works 75/75, created works 5/4, created column True; RAMPURBAGHELAN attempt 3: GP detail does not reconcile: received GPs 54/54, received works 75/75, created works 5/4, created column True",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "yuktdhara-data.js",
         "yuktdhara-official-data.js",
@@ -33,13 +35,15 @@
       ]
     },
     "block_statistics": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_satna_block_statistics.py']' returned non-zero exit status 1.",
       "files": [
         "vbg-block-stats.js"
       ]
     },
     "mis_612": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
       "files": [
         "data/Ongoing_Works_dynamic_work_details_latest.csv",
         "data/mis-6.12-status.json",
@@ -53,7 +57,8 @@
       ]
     },
     "rejected_wage": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts/update_rejected_wage.py']' returned non-zero exit status 1.",
       "files": [
         "data/rejected-wage-latest.json"
       ]
