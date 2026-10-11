@@ -86,6 +86,8 @@
   fetch('data/ek-bagiya-payment-latest.json?live='+Date.now(),{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('Source unavailable');return r.json()}).then(d=>{
     if(!d.retrievedDate||!d.sourceDates||!Array.isArray(d.works)||!d.works.length)throw Error('Incomplete KPI source');
     if(d.works.some(w=>!w.engineer||!w.cluster||!Number.isFinite(w.julyMandays)||!Number.isFinite(w.nregaTotalMandays)||!Number.isFinite(w.nregaAprJunMandays)))throw Error('Incomplete KPI work mapping/mandays');
-    liveSnapshot=d;render();
+    liveSnapshot=d;window.EK_BAGIYA_VERIFIED_REPORT=d;
+    if(document.body.dataset.reportView==='ekbagiya'&&typeof renderEkBagiyaDashboard==='function')renderEkBagiyaDashboard();
+    render();
   }).catch(()=>{loadError=true;render()});
 })();
