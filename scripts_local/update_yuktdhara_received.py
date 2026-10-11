@@ -204,29 +204,33 @@ def collect():
                 block['gpReceived']=sum(r['worksReceived']>0 for r in rr)
                 block['worksReceived']=sum(r['worksReceived'] for r in rr)
             work_debug=[]
-            pending=sum(gp.get('worksCreated',0)>0 for gp_rows in details.values() for gp in gp_rows)
+            pending=sum(gp['worksReceived']>0 for gp_rows in details.values() for gp in gp_rows)
             done=0
-            print('Fetching work types for '+str(pending)+' receiving GPs...',flush=True)
+            print('Fetching received-work types for '+str(pending)+' receiving GPs...',flush=True)
             for block_name,gp_rows in details.items():
                 for gp in gp_rows:
-                    if not gp.get('worksCreated',0):continue
+                    if not gp['worksReceived']:continue
                     done+=1
                     print('Work details ['+str(done)+'/'+str(pending)+'] '+block_name+' / '+gp['gp'],flush=True)
-                    for url in gp.get('createdDetailLinks',[]):
-                        if not url.startswith('https://vbgramgrep.dord.gov.in/'):continue
-                        try:
-                            tables=fetch(url, timeout=20000)
-                            work_debug.append({'block':block_name,'gp':gp['gp'],'worksReceived':gp['worksReceived'],'tables':tables})
-                            (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
-                            gp['createdWorkTypes']=work_types(tables,None)
-                            print('  Verified '+str(gp['worksCreated'])+' created work types.',flush=True)
-                            break
-                        except Exception as e:
-                            gp['typeMessage']=str(e)
-                            print('  Work detail unavailable: '+str(e)[:160],flush=True)
-                            if not any(v['block']==block_name and v['gp']==gp['gp'] for v in work_debug):
-                                work_debug.append({'block':block_name,'gp':gp['gp'],'worksReceived':gp['worksReceived'],'error':str(e)})
-                            (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
+                    for field,link_field,expected in (
+                        ('workTypes','detailLinks',gp['worksReceived']),
+                        ('createdWorkTypes','createdDetailLinks',None),
+                    ):
+                        if field=='createdWorkTypes' and not gp.get('worksCreated',0):continue
+                        for url in gp.get(link_field,[]):
+                            if not url.startswith('https://vbgramgrep.dord.gov.in/'):continue
+                            for attempt in range(1,4):
+                                try:
+                                    tables=fetch(url, timeout=30000)
+                                    gp[field]=work_types(tables,expected)
+                                    work_debug.append({'block':block_name,'gp':gp['gp'],'kind':field,'expected':expected,'tables':tables})
+                                    print('  Verified '+field+': '+str(sum(gp[field].values())),flush=True)
+                                    break
+                                except Exception as e:
+                                    gp['typeMessage']=str(e)
+                                    print('  '+field+' attempt '+str(attempt)+': '+str(e)[:160],flush=True)
+                            if field in gp:break
+                    (debug/'work-details.json').write_text(json.dumps(work_debug,ensure_ascii=False),encoding='utf-8')
             rows=aggregate(blocks,details,mapping)
         finally:browser.close()
     (ROOT/'yuktdhara-official-data.js').write_text('window.YUKTDHARA_REPORT='+json.dumps(summary,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
@@ -234,7 +238,16 @@ def collect():
 
 def main():
     output=ROOT/OUTPUT
-    try:payload=collect();print('Yuktdhara received GP/engineer counts reconciled for 8 blocks',flush=True)
+    previous=read_js(output) if output.exists() else {}
+    try:
+        payload=collect()
+        if payload.get('rows') and all(r.get('typesComplete') is True for r in payload['rows']):
+            payload['completeCategorySnapshot']={'officialDate':payload.get('officialDate'),'rows':payload['rows'],'total':sum(r['worksReceived'] for r in payload['rows'])}
+        elif previous.get('completeCategorySnapshot'):
+            payload['completeCategorySnapshot']=previous['completeCategorySnapshot']
+        elif previous.get('rows') and all(r.get('typesComplete') is True for r in previous['rows']):
+            payload['completeCategorySnapshot']={'officialDate':previous.get('officialDate'),'rows':previous['rows'],'total':sum(r['worksReceived'] for r in previous['rows'])}
+        print('Yuktdhara received GP/engineer counts reconciled for 8 blocks; work categories complete: '+str(all(r.get('typesComplete') is True for r in payload['rows'])),flush=True)
     except Exception as e:
         payload=read_js(output) if output.exists() else {'rows':[],'blocks':[]}
         payload.update(success=False,message=str(e))
