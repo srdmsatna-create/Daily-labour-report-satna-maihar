@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-12T09:32:57.364855+00:00",
+  "checkedAt": "2026-10-12T11:45:39.115609+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -48,6 +48,13 @@
         "data/Ongoing_Works_dynamic_work_details_latest.csv",
         "data/mis-6.12-status.json",
         "ongoing-details.js"
+      ]
+    },
+    "pmayg": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_pmayg.py']' returned non-zero exit status 1.",
+      "files": [
+        "data/pmayg-latest.json"
       ]
     },
     "planner": {
