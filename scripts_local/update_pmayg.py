@@ -1,5 +1,5 @@
 """Official MIS 6.12 PMAY-G/IAY, all years, Approved and Ongoing."""
-import json, csv, re, sys, os, time, hashlib
+import json, csv, re, sys, os, time, hashlib, threading
 import urllib.error
 from pathlib import Path
 from datetime import datetime
@@ -10,16 +10,21 @@ NREGA_URL = 'https://mnregaweb4.dord.gov.in/netnregarep/dynamic_work_details.asp
 VBG_URL = 'https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=ftnyL9stdXeAc7zMQW8cHY09zYjD7YVdkcCL1EOM3Wm_8lISfAJzdF6JhnQsT5n17zpy7r_Vba0PwONGLjnUmidzdUwQaYSFBWiqr8uMNsbD7W7oGi8r9C5028sI0yPRNL4IbdUTLIJyaorEpuLA8Q4t0xSSpie_wrjIAKCgcGA7aPT1CYMPdmkLhKSFE6NZ'
 
 def norm(s):return re.sub(r'[^A-Z0-9]','',str(s).upper())
-def open_with_retry(opener,url,data=None,timeout=120):
- for attempt in range(1,5):
-  try:return open_text(opener,url,data,timeout=timeout)
+def open_with_retry(opener,url,data=None,timeout=60):
+ for attempt in range(1,4):
+  stop=threading.Event();started=time.monotonic()
+  def heartbeat():
+   while not stop.wait(15):
+    print('Waiting for official portal response: '+str(int(time.monotonic()-started))+' sec (attempt '+str(attempt)+'/3)',flush=True)
+  worker=threading.Thread(target=heartbeat,daemon=True);worker.start()
+  try:return open_text(opener,url,data,timeout=min(timeout,60))
   except Exception as e:
    retryable=isinstance(e,(TimeoutError,urllib.error.URLError))
    if isinstance(e,urllib.error.HTTPError):retryable=e.code in (408,429,500,502,503,504)
-   if not retryable or attempt==4:raise
-   delay=min(attempt*5,15)
-   print('Temporary portal failure; retry '+str(attempt)+'/3 in '+str(delay)+' sec',flush=True)
-   time.sleep(delay)
+   if not retryable or attempt==3:raise
+   print('Temporary portal failure; retry '+str(attempt)+'/2',flush=True)
+  finally:stop.set();worker.join(timeout=1)
+
 
 def fetch_source(source_url):
  opener=session_opener();src,url=open_with_retry(opener,source_url)
