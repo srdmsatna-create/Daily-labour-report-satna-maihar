@@ -10,6 +10,9 @@ NREGA_URL = 'https://mnregaweb4.dord.gov.in/netnregarep/dynamic_work_details.asp
 VBG_URL = 'https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=ftnyL9stdXeAc7zMQW8cHY09zYjD7YVdkcCL1EOM3Wm_8lISfAJzdF6JhnQsT5n17zpy7r_Vba0PwONGLjnUmidzdUwQaYSFBWiqr8uMNsbD7W7oGi8r9C5028sI0yPRNL4IbdUTLIJyaorEpuLA8Q4t0xSSpie_wrjIAKCgcGA7aPT1CYMPdmkLhKSFE6NZ'
 
 def norm(s):return re.sub(r'[^A-Z0-9]','',str(s).upper())
+def block_key(s):
+ key=norm(s)
+ return 'SOHAWAL' if key=='SATNA' else key
 def open_with_retry(opener,url,data=None,timeout=60):
  for attempt in range(1,4):
   stop=threading.Event();started=time.monotonic()
@@ -57,13 +60,16 @@ def fetch_source(source_url):
    print('Rows: '+str(len(parser.rows)),flush=True);rows.extend(parser.rows)
  return rows
 
+def record_priority(r):
+ booked=sum(float(str(r.get(k,'0')).replace(',','').strip() or 0) for k in ['Booked Since Inception Wages (Rs)','Booked Since Inception Material (Rs)'])
+ return (booked>0, r.get('Work Status','').lower()=='approved', booked)
+
 def combine_sources(nrega_rows,vbg_rows):
  def index(rows):
   out={}
   for r in rows:
-   code=r['Work Code']
-   if code in out and out[code]!=r:raise ValueError('Conflicting source work code: '+code)
-   out[code]=r
+   code=re.sub(r'\s+','',r['Work Code']).upper()
+   if code not in out or record_priority(r)>record_priority(out[code]):out[code]=r
   return out
  nrega=index(nrega_rows);vbg=index(vbg_rows);compiled=[]
  def md(row,key):
@@ -77,7 +83,8 @@ def combine_sources(nrega_rows,vbg_rows):
   a=nrega.get(code);b=vbg.get(code)
   # NREGA total includes prior years; VBGRAMG Current FY is the separate new period.
   n=md(a,'Total Mandays');v=md(b,'Mandays Generated Current FY')
-  r=dict(b or a);r['Total Mandays']=str(n+v)
+  candidates=[x for x in [b,a] if x is not None]
+  r=dict(max(candidates,key=record_priority));r['Work Code']=code;r['Total Mandays']=str(n+v)
   r['_nregaMandays']=n;r['_vbgMandays']=v
   r['_sourceCoverage']='Both' if a and b else 'MGNREGA only' if a else 'VBGRAMG only'
   compiled.append(r)
@@ -96,10 +103,10 @@ def main():
  master=list(csv.DictReader((ROOT/'gp-sector-engineer-master-25-09-2026.csv').open(encoding='utf-8-sig')))
  mapping={}
  for m in master:
-  for k in ['Gram_Panchayat','GP_20Sep_Name']:mapping[(norm(m['Janpad']),norm(m[k]))]=m
+  for k in ['Gram_Panchayat','GP_20Sep_Name']:mapping[(block_key(m['Janpad']),norm(m[k]))]=m
  unique={};unmapped=[]
  for r in rows:
-  m=mapping.get((norm(r['Janpad / Block Name']),norm(r['Panchayat Name'])))
+  m=mapping.get((block_key(r['Janpad / Block Name']),norm(r['Panchayat Name'])))
   if not m:unmapped.append(r['Janpad / Block Name']+'/'+r['Panchayat Name'])
   def number(k):return float(r[k].replace(',','') or 0)
   item={'district':m['District'] if m else '', 'janpad':r['Janpad / Block Name'],'cluster':m['Sector'] if m else 'Mapping pending','gp':r['Panchayat Name'],'engineer':m['Sub_Engineer'] if m else '', 'fy':r['Work Start Fin Year'],'status':r['Work Status'],'code':r['Work Code'],'name':r['Work Name'],'type':r['Work Type'],'sanction':number('Total Sanction (Rs)'),'booked':number('Booked Since Inception Wages (Rs)')+number('Booked Since Inception Material (Rs)'),'mandays':number('Total Mandays'),'nregaMandays':r['_nregaMandays'],'vbgMandays':r['_vbgMandays'],'sourceCoverage':r['_sourceCoverage'],'targetMandays':90,'balanceMandays':max(90-number('Total Mandays'),0)}
