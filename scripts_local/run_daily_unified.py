@@ -30,6 +30,7 @@ def publish(stage):
     raise RuntimeError('Publication failed after 3 attempts. Validated commit retained at ' + str(stage))
 
 def main():
+    os.environ.setdefault('PMAY_FETCH_CACHE_DIR', str(ROOT / 'data' / 'pmayg-fetch-cache'))
     parser = argparse.ArgumentParser()
     parser.add_argument('--publish', action='store_true')
     parser.add_argument('--publish-verified', action='store_true', help='Publish only fully validated independent groups even when another group fails')

@@ -51,6 +51,13 @@ def validate(group,root):
  elif group=='ek_bagiya_payment':
   d=data(root/'data/ek-bagiya-payment-latest.json')
   if len(d.get('rows',[]))!=8 or d.get('retrievedDate')!=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d/%m/%Y') or not d.get('sourceDates') or not d.get('works'):raise ValueError('Current complete payment source required')
+ elif group=='pmayg':
+  d=data(root/'data/pmayg-latest.json');rows=d.get('rows',[])
+  if not d.get('allYears') or not rows or not d.get('nregaRows') or not d.get('vbgRows'):raise ValueError('Both PMAY sources and all work-start years required')
+  if len({r['code'] for r in rows})!=len(rows):raise ValueError('Duplicate PMAY work codes')
+  for r in rows:
+   if r['status'] not in ('Ongoing','Approved') or not r.get('cluster'):raise ValueError('Invalid PMAY status/mapping')
+   if abs(r['mandays']-r['nregaMandays']-r['vbgMandays'])>0.000001 or abs(r['balanceMandays']-max(90-r['mandays'],0))>0.000001:raise ValueError('PMAY mandays arithmetic failed')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
  elif group=='yuktdhara':
