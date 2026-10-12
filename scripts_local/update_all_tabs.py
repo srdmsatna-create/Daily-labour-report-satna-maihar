@@ -18,6 +18,7 @@ GROUPS=[
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js']),
  ('pmayg',[['scripts_local/update_pmayg.py']],['data/pmayg-latest.json']),
+ ('above75',[['scripts_local/update_above75.py']],['data/above75-latest.json']),
  ('planner',[['scripts/fetch_planner_portal_summary.py']],['planner-portal-data.js']),
  ('ek_bagiya_payment',[['scripts_local/update_ek_bagiya_payment.py']],['data/ek-bagiya-payment-latest.json']),
  ('rejected_wage',[['scripts/update_rejected_wage.py']],['data/rejected-wage-latest.json'])
@@ -58,6 +59,12 @@ def validate(group,root):
   for r in rows:
    if r['status'] not in ('Ongoing','Approved') or not r.get('cluster'):raise ValueError('Invalid PMAY status/mapping')
    if abs(r['mandays']-r['nregaMandays']-r['vbgMandays'])>0.000001 or abs(r['balanceMandays']-max(90-r['mandays'],0))>0.000001:raise ValueError('PMAY mandays arithmetic failed')
+ elif group=='above75':
+  d=data(root/'data/above75-latest.json');rr=d.get('rows',[])
+  if not rr or not d.get('allWorkYears') or len(rr)+len(d.get('unmatched',[]))!=d.get('nregaCount'):raise ValueError('Above75 source reconciliation failed')
+  if len({r['code'] for r in rr})!=len(rr):raise ValueError('Duplicate Above75 work codes')
+  for r in rr:
+   if r['status']!='Ongoing' or abs(r['overallBooked']-r['nregaBooked']-r['vbgBooked'])>0.000001:raise ValueError('Invalid Above75 combined expenditure')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
  elif group=='yuktdhara':
