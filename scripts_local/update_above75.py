@@ -19,6 +19,9 @@ class ExpenditureRows(ResultRows):
    self.rows[-1]['Current FY Material']=cells[17]
 
 def norm(s):return re.sub(r'[^A-Z0-9]','',str(s).upper())
+def block_key(s):
+ key=norm(s)
+ return 'SOHAWAL' if key=='SATNA' else key
 def open_with_retry(opener,url,data=None,timeout=60):
  for attempt in range(1,4):
   stop=threading.Event();started=time.monotonic()
@@ -80,7 +83,7 @@ def main():
  master=list(csv.DictReader((ROOT/'gp-sector-engineer-master-25-09-2026.csv').open(encoding='utf-8-sig')))
  mapping={}
  for m in master:
-  for k in ['Gram_Panchayat','GP_20Sep_Name']:mapping[(norm(m['Janpad']),norm(m[k]))]=m
+  for k in ['Gram_Panchayat','GP_20Sep_Name']:mapping[(block_key(m['Janpad']),norm(m[k]))]=m
  def number(r,k):
   v=r.get(k,'').replace(',','').strip()
   if not v:raise ValueError('Missing expenditure field '+k)
@@ -94,9 +97,9 @@ def main():
   sanction=number(a,'Total Sanction (Rs)')
   old=number(a,'Booked Since Inception Wages (Rs)')+number(a,'Booked Since Inception Material (Rs)')
   fresh=number(b,'Current FY Wages')+number(b,'Current FY Material')
-  m=mapping.get((norm(a['Janpad / Block Name']),norm(a['Panchayat Name'])))
+  m=mapping.get((block_key(a['Janpad / Block Name']),norm(a['Panchayat Name'])))
   if not m:raise ValueError('GP mapping missing: '+a['Panchayat Name'])
-  rows.append({'code':code,'name':a['Work Name'],'janpad':a['Janpad / Block Name'],'panchayat':a['Panchayat Name'],'cluster':m['Sector'],'engineer':m['Sub_Engineer'],'fy':a['Work Start Fin Year'],'status':'Ongoing','sanction':sanction,'nregaBooked':old,'vbgBooked':fresh,'overallBooked':old+fresh,'overallExpPct':(old+fresh)*100/sanction if sanction else None})
+  rows.append({'code':code,'name':a['Work Name'],'janpad':a['Janpad / Block Name'],'panchayat':a['Panchayat Name'],'cluster':m['Sector'],'engineer':m['Sub_Engineer'],'fy':a['Work Start Fin Year'],'status':'Ongoing','type':a['Work Type'],'sanction':sanction,'nregaBooked':old,'vbgBooked':fresh,'overallBooked':old+fresh,'overallExpPct':(old+fresh)*100/sanction if sanction else None})
  if not rows:raise ValueError('No matched works; publication refused')
  output={'source':'MGNREGA FY 2026-27 Ongoing + VBGRAMG FY 2026-27 current expenditure','fetchedAt':datetime.now(ZoneInfo('Asia/Kolkata')).isoformat(),'allWorkYears':True,'nregaCount':len(nrega),'vbgCount':len(vbg),'matchedCount':len(rows),'unmatched':missing,'rows':rows}
  p=ROOT/'data/above75-latest.json';p.parent.mkdir(exist_ok=True);t=p.with_suffix('.tmp');t.write_text(json.dumps(output,ensure_ascii=False),encoding='utf-8');os.replace(t,p)
