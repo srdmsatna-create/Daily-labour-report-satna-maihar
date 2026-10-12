@@ -1,5 +1,6 @@
 """Official MIS 6.12 PMAY-G/IAY, all years, Approved and Ongoing."""
-import json, csv, re, sys, os
+import json, csv, re, sys, os, time, hashlib
+import urllib.error
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from update_mis_612_work_details import ROOT, URL, session_opener, open_text, hidden_fields, selected_values, form_action, ResultRows, urllib
@@ -8,25 +9,45 @@ NREGA_URL = 'https://mnregaweb4.dord.gov.in/netnregarep/dynamic_work_details.asp
 VBG_URL = 'https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=ftnyL9stdXeAc7zMQW8cHY09zYjD7YVdkcCL1EOM3Wm_8lISfAJzdF6JhnQsT5n17zpy7r_Vba0PwONGLjnUmidzdUwQaYSFBWiqr8uMNsbD7W7oGi8r9C5028sI0yPRNL4IbdUTLIJyaorEpuLA8Q4t0xSSpie_wrjIAKCgcGA7aPT1CYMPdmkLhKSFE6NZ'
 
 def norm(s):return re.sub(r'[^A-Z0-9]','',str(s).upper())
+def open_with_retry(opener,url,data=None,timeout=120):
+ for attempt in range(1,5):
+  try:return open_text(opener,url,data,timeout=timeout)
+  except Exception as e:
+   retryable=isinstance(e,(TimeoutError,urllib.error.URLError))
+   if isinstance(e,urllib.error.HTTPError):retryable=e.code in (408,429,500,502,503,504)
+   if not retryable or attempt==4:raise
+   delay=min(attempt*5,15)
+   print('Temporary portal failure; retry '+str(attempt)+'/3 in '+str(delay)+' sec',flush=True)
+   time.sleep(delay)
+
 def fetch_source(source_url):
- opener=session_opener();src,url=open_text(opener,source_url)
+ opener=session_opener();src,url=open_with_retry(opener,source_url)
  d=hidden_fields(src);selected_values(src,d);d.update({'__EVENTTARGET':'ctl00$ContentPlaceHolder1$ddl_dist','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712'})
- src,url=open_text(opener,form_action(src,url),urllib.parse.urlencode(d).encode())
+ src,url=open_with_retry(opener,form_action(src,url),urllib.parse.urlencode(d).encode())
  if 'value="1712006"' not in src:raise ValueError('District/block form did not load')
  base=hidden_fields(src);selected_values(src,base)
  prefix='ctl00$ContentPlaceHolder1$'
  base.update({'__EVENTTARGET':'',prefix+'ddl_blk':'ALL',prefix+'ddl_pan':'ALL',prefix+'Ddlworkcategory':'ALL',prefix+'ddlFin_year':'ALL',prefix+'filter':'ALL',prefix+'Button1':'Submit'})
+ cache_dir=Path(os.environ.get('PMAY_FETCH_CACHE_DIR','')) if os.environ.get('PMAY_FETCH_CACHE_DIR') else ROOT/'data'/'pmayg-fetch-cache';cache_dir.mkdir(parents=True,exist_ok=True)
+ today=datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
  rows=[]
  for status,label in [('03','Ongoing'),('02','Approved')]:
   for kind in ['Constr of PMAY-G House for Individuals','IAY Houses']:
+   key=hashlib.sha256((source_url+'|'+today+'|'+status+'|'+kind).encode()).hexdigest()
+   cache=cache_dir/(key+'.json')
+   if cache.exists():
+    saved=json.loads(cache.read_text(encoding='utf-8'))
+    if saved.get('date')==today and saved.get('status')==label:
+     rows.extend(saved['rows']);print('CHECKPOINT '+label+' / '+kind+': '+str(len(saved['rows']))+' rows',flush=True);continue
    payload=dict(base);payload.update({prefix+'Ddlwork_status':status,prefix+'ddlprostatus':kind})
    print('Fetching '+label+' / '+kind,flush=True)
-   page,_=open_text(opener,form_action(src,url),urllib.parse.urlencode(payload).encode(),timeout=300)
+   page,_=open_with_retry(opener,form_action(src,url),urllib.parse.urlencode(payload).encode(),timeout=180)
    if 'Work Code' not in page and 'Work_Code' not in page and not re.search(r'No\s+(?:Record|Data)',page,re.I):raise ValueError('Unrecognized report response')
    parser=ResultRows(label);parser.feed(page);parser.close()
    for r in parser.rows:
     if r['Work Status'].lower()!=label.lower():raise ValueError('Status filter mismatch')
     if not re.search(r'PMAY|IAY',r['Work Type']+' '+r['Work Name'],re.I):raise ValueError('PMAY filter mismatch')
+   temp=cache.with_suffix('.tmp');temp.write_text(json.dumps({'date':today,'status':label,'rows':parser.rows},ensure_ascii=False),encoding='utf-8');os.replace(temp,cache)
    print('Rows: '+str(len(parser.rows)),flush=True);rows.extend(parser.rows)
  return rows
 
