@@ -1,6 +1,6 @@
 {
-  "date": "2026-10-11",
-  "fetchedAt": "2026-10-11T12:17:52+05:30",
+  "date": "2026-10-12",
+  "fetchedAt": "2026-10-12T13:58:40+05:30",
   "combined": true,
   "sources": [
     {
@@ -26,7 +26,7 @@
             "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 1
           },
           "detailCount": 1,
-          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=sDQIz2kNKHZ352_lzqlJ0Mir6j3wtpudZl80rHKpdSoTYOKy3lPwC14eqiA8ypj8ze2WKPpIbMfsvpVU9FXg6iP7yfms_BlLjT3B1-sO2fWJavlT-o5ynXE6AUCJjq8DBtDFLT11ew85DdEn44n4pNdFvp64WqSg2JYTNsvdw8n_EYDJfsg8ReCuaf5Ti6E_BJtXhc1bsH4LRIWVxuLG_Ic_i6t-RE9D7ahTtgBIX4RL7WP9BFpxNhBg-oS2V2Snb07KMJtvebdqGkdUUM6Rma9E6nRe4q6AWO32YNS1-MRDiX2gfscFQb7bRgOFMNyM"
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=neRUWvkb3c3LctDeLAyB8QqrJ0SlT7AYJG9lwc_6V9kUJcPQULTzjCi4LtZjx81HvwO3nwaVGC3L8U7bRcaVfqIPdwXeMBh5mqynGCiH5LwIvT2_GuN60_ZBKXwH1pGq4mq9dLGEzybY8cEMd-Z-18AbJcq2SMc9lD94_5_HK68nQ92FPmUu50uLpC5F_pYY0E0fUykUwNUWI06o03a2bGUiK_EEeULt7Ci6u1fJPrNPUsnMGVfiANVWinFKOatWLUMeLPi8l2SniFtZ8SAKCbq2IV8Cz9bTyMRydRUp4FxcW82LlqmwYPKmwPLhs_8a"
         },
         {
           "fy": "2026-27",
@@ -48,7 +48,7 @@
             "Special characters and numeric values found in the address field.": 1
           },
           "detailCount": 7,
-          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ldVMGY0YDTIB1ESV_xPlnbkXrzy3U4xSraqnEvAh8z65gB1cVL28RrFdtlscQQ86xAfcVzqDO9eHVtOxV077FeX4SAFHdL9feOVBlTX9-aDyuwe-UcM9yVuahyqpHlJ7AOAraKrPcWLBKIFuISC9gdtIfDipPhCzglnOz5HOjsXAdUZnYIjFlA2N2MKS9iVbBJ-vqtgMBQ5KhA9091FThEwE4zFkRzBD-dBwPTNt6kli45-_MvT9it3Taa8I67rPbjQ0KgVVI4mg5ES_k079X8ftxy37jbkZM0guPk-iPsBMMT-3KtDEd4coBiKQFPps"
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=b2p5VUyfDt9bGhK8LmQEE9PyzCkHfkkvPKqvvdDwJjcSS03kWiOI2siSbibT2NBzWviWPW3YSvB4elie4VEWOPXy_P9Kruw8js5dnNcde4OSOxhgoJD_1mflOWkkDcVmepXLZHw5oD68mnqygQEOZvOZJeFBvs4D0r5ou0THMEfCJas8ThP4w8tJoDGdM2WFNkzD2zh5K9kgIa4zUklTS40gIh9kqOGgfPTKEE0HgKft2FZ7RD8RYusMvrLCn-_aL6gZIzEKjUzrgW56NBLcUS0I0w5CUYjlN7gMiYl97QHNBCezzNVMtQ7I8WRZ8lyd"
         },
         {
           "fy": "2026-27",
@@ -56,23 +56,23 @@
           "district": "SATNA",
           "total": 550,
           "totalAmount": 1384396,
-          "pending": 246,
-          "pendingAmount": 616411,
-          "muster": 160,
+          "pending": 240,
+          "pendingAmount": 594811,
+          "muster": 159,
           "fto": 42,
           "success": 0,
           "successAmount": 0,
-          "bankPending": 304,
-          "bankPendingAmount": 767985,
+          "bankPending": 310,
+          "bankPendingAmount": 789585,
           "reasons": {
-            "Duplicate Benificiary": 169,
+            "Duplicate Benificiary": 167,
             "Special characters and numeric values found in the address field.": 24,
             "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 11,
             "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 20,
             "Payee Data Validation Failed.": 16
           },
-          "detailCount": 240,
-          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=tJetKL8mnzhvKHtuo5lWgmyA8jc1-oLrGetoTN4WmQSNNZgzr0oH_Z00MQFn_slxGFZrflxsDwZSlJ-5-uFNieMTx9-sj5AuPet8-3mBS57CK2NO8s21X0lAWcq1uX_FclX8u5j06KlqyIGBK125XNs4oKPpwouy9f_sRMuFVW-p6-rDNd4lJQZ8BGlkNTR7Q2DVoafTgBstP7AEAmwz0O4cXJuguhi_FkKbbeXzyom8AP1v3aMxc1VRr5wTn_0eigaae_qthAHcgsT-2uw8FF8JlV4Hhkc1KVPcot2pyj4jBxpfkdoS4sV4EeH6aRcw"
+          "detailCount": 238,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ZtFSs-aHekd_rVW7M5Vfa1XPZk8ifMVcD1PSyN1urm1KICxqU-oFB4COzUPCECQTJWhu-0zAR-aOciX7pC4Zbg1Ej5NOOF45I61GbWhJLAJIEQRafN-oB0WLyznvpAgjxqsqmGBb5azt4Z2NMnEkhk_w1YmPQOASf7GQiVZeOq7ee1iz6jFJxujSG2TzKlIXSrqnshkP0Dn1gCaMDKUvmTPSNhFkxlBXp4ERyyunT5FcCBaq1DrnQqYjfitMczmulbSO2yo2NrXJbVOxFEte4jZST4uzX6AwnNtqbm5rpPcx-UhsuI7gDwtKJ18saH7d"
         },
         {
           "fy": "2026-27",
@@ -80,24 +80,24 @@
           "district": "SATNA",
           "total": 1785,
           "totalAmount": 3590815,
-          "pending": 242,
-          "pendingAmount": 471482,
-          "muster": 189,
-          "fto": 40,
+          "pending": 206,
+          "pendingAmount": 393927,
+          "muster": 162,
+          "fto": 38,
           "success": 73,
           "successAmount": 179294,
-          "bankPending": 1470,
-          "bankPendingAmount": 2940039,
+          "bankPending": 1506,
+          "bankPendingAmount": 3017594,
           "reasons": {
-            "Special characters and numeric values found in the address field.": 67,
-            "Duplicate Benificiary": 84,
-            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 38,
-            "Payee Data Validation Failed.": 29,
-            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 14,
+            "Special characters and numeric values found in the address field.": 58,
+            "Duplicate Benificiary": 72,
+            "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 34,
+            "Payee Data Validation Failed.": 24,
+            "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 10,
             "Objected by DDO": 1
           },
-          "detailCount": 233,
-          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=543AqCv4ehAHTwqrhlw5VQl3DhA1MmZV4mSqrr3xutSC3SSRevcEj0t2Mjqo3xFTmJdDpQ7X2tlwVjdJEENHbUHPrfn9cgPJVGWbWdjvw2FwmYzCVr75owlLC2fymjjerRxpAJWV80F8lxjm89RujzWOeEYavaJdd2ffqjSbC-Feqnim1hHCUudOPLNwTsnAAhWVo7oiBrX9DE3pxKmCN0ZL52BnUrtdJFc2lu9IOGfCsA4m60NXhcEV3y8WFf0nq-2S-uHqXrFCfrBHsol8nzG8DWbfmwtNBuJuvN56a2E"
+          "detailCount": 199,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=B0w2g__D9B2tNZ8zONHiteRRCT5f7dmTJxc-xgoy6bUK45sKb8qzB7uaEGMjYRKEZaZR9cE3BwvVaXaPTccHoFZs7y7nvQ0sWgR5Dp6YI12GZe0jFkPXS5av2tsWVAFXvTmFz4RrHfQZ7KBygAoOPFdxdQEbFt24uX0FEVgxpCmKIIZowei-UUvPv2G9j_pElOzpgC3hRjIJx4tcXhZ48IQBjWVSeAivNnM_efeunjKB4Vx2MvXD439yuMeRbB390PnYOvnTmeFMb-NDOqAAFHcB-_-ZPCFTicZJgKv_oYg"
         },
         {
           "fy": "2026-27",
@@ -124,22 +124,22 @@
           "totalAmount": 1669246,
           "pending": 67,
           "pendingAmount": 209893,
-          "muster": 56,
-          "fto": 23,
+          "muster": 53,
+          "fto": 22,
           "success": 0,
           "successAmount": 0,
           "bankPending": 560,
           "bankPendingAmount": 1459353,
           "reasons": {
-            "Payee Data Validation Failed.": 9,
+            "Payee Data Validation Failed.": 6,
             "Duplicate Benificiary": 40,
             "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 11,
             "Special characters and numeric values found in the address field.": 3,
             "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 3,
             "95|Inactive Aadhaar": 1
           },
-          "detailCount": 67,
-          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=_nh9s1Ls6RkCNWoQ78KzzAdy1YrpavA03Z2zwMg59J5ov_NqZ7Ahu39An_FFdisdqDUFE6jH_7x3zSZ5Kw4Qd8yrwuIDWZDbSePcEOteggGXrFQz_jIouaPDFs9rwr_IZZHE5tNIZpqeiNomqmKi3UFcCj3iTLY-O1i05S61iBS-1074MaIY2hG3pB7MY4NsHAn0W7R4oaJFucmLjlt9-IajS253vVEukLpvBaJIrZ7OqklYW30MZgmPwCsJyu0ezX6f1bovWnpniGrvpLhY4G9I6ho8q4RE8x7jG-Vli1bFrd_83j8N9AXl9t9-1oCO"
+          "detailCount": 64,
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=fhMmfuoit1MI0hnb0WAqPmY7KCqvy12VftJAUfi5XXqJxz2pC-yC5A_0Gq7_NLXEnbQ74uJAu6YUjypi3cJccXX-QKNuVgNHO3-Yguxsq5vv0gsvm1a2OWPYcaHuo3wMV0J5cgoUd3Y7oCHfj8YMopBrHzlea-sFuzP3tC6N66gZNZONUZ1Ob1DU3Oz0b9bTd3dyaYob_-Nr-lpYp5J6le0KNVViwRC2toyax9x1U2NoBdKJwJzrJvyZOSDkV4Kml66wXv4FudEZPGe5hEuZ8XCVXpsBoC334sObjK5Ej8W0IeZdq3b_ME4Di88A6yvV"
         },
         {
           "fy": "2026-27",
@@ -161,7 +161,7 @@
             "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 2
           },
           "detailCount": 11,
-          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=AewyFrD6HzFdKuGLWi4i2Qfpo4twbRdGL1ci7fzCFNejXc0Z0-2WWo6wofjOv9Axx1G6vckyKa2rtfadhhFmBkybjgyECnO2lQkBgVVWbjq1nCNxudKysXmCX4F8MRlOUsiFafPbFQzhDXxg8Qy7wt02y9fLFE8nbXePP2iXL36tvFSr5Yz7CDFfsz83DtUKBtXNMoSgmmqOo3D7CL1HB8Y3eqWe6XhDxibPaSQSvzC-hkQ5FjhuIFuoQyQIP-3OV62Afe6uFeaU0RQWPAjBwtiy-Eao5Lv7cfucZ-v5aRA"
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=7itVky92yxtm0By1jFsLE08dnXR4dc53wFYEEZQXgVu2VRPbOY-BoWAZ2xoeoXubdbUn-YqlS71Ujinn3xo6jLPtwSgeYunI5bA_U53PfKrFOi5MyWR5-aZqOqLhKXutjBc1chF9o3IKx0LRddO_FZUvtrO0sEJuOJ88lV7TlZDYbAQGHyHzIElT-67zGiaJ47Pveh89yF3tNJkQHgdWhQk7hXE4uM31w6RVzfMZSbZmQsgtzF7ZIoaeDkHbIO-VevvKhCZvRk65mlY-G1SLo44NpEVVK1NTea8ZZBydn7w"
         },
         {
           "fy": "2026-27",
@@ -181,7 +181,7 @@
             "Duplicate Benificiary": 2
           },
           "detailCount": 2,
-          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=9UNZ1P3P0_VUcXr1BdOyxsjPbL6-iyDteCxQ1o4rB9ckeITI9S-0NfIYbTcqSwvGUxgRhxWZFtPbwtffjVrA9HABgJd5JCcPEgV-twoZPAb-C9zknAwfrPfkwxXAzmtPbnfcm2cEScTgnRa87Ln2c21qQlBrGW3OkVS4KSjbKjT1kEVUOi2RJcIEvKHh1nZy4eFbwTxMb_w2LJaGFY5v3M8Dgyd87sT5XXohcsWTf5Eji7N2h9Airq6pAqGyj0383rLKeitaTCiXpEvZR4sFhzjtCFUMNWLEX05qMt56vyHBG4bVEgfvYtUyJFqjRIsp"
+          "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=8QI-WokpFV1BtC9zBR0rszeNRn6ti_gcwxuN-vZe8G8zAY3qfZ5a2I0XvKN9W0DxdYpDGMQ_6NmNhWcPAESs1glTBZKW3ssnSEuLKzpeH5c3pgjL6rJDSPLLnAJ9Czd8ZPAFkt6hc34MW1b_j1F4e6dOqH60IYfE8-wM0xeLRDKg0mepDJq_3m1wcnb1Fbm3-BJh9V_VveS33ShdbKbzCgi2XD9Qlsjth4e_bLHgm8XmhjvLoCHmalKS_1Hu8XlLFCIVJ20eQplsZAs7b8bpViDBSJdlogDlbnic6M4hijVNbl9zYd5i6rk6z5CjfeGw"
         }
       ]
     },
@@ -244,7 +244,7 @@
             "Aadhaar Number not Mapped to Account Number": 1
           },
           "detailCount": 16,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=cAWsgUX34I_wdctqZRmcTOX77pyZy9qErP6W3DR7oHDu4GMNf-7teRcWSJ29oEH2YiRbjysAGC_R1BawLKDFbpbJCVI8YmR63SCiKJZ9vTpDXghRxmdBqlqkDIBGR58q1lQHEtu9xRYgWWvSLJlVhVh4C24nQy8drTaicZln4DOXW8B1OslKqjJGmo-1I4xpG_lb8yOiJLxWkzMjNlQByuYPya0MLYcYnDqxdQw4erlrZy6gvzvHXBYThZQu2kBDkIqepAWK_bHPtEGcItSVsTmVfDOHhjijVjdJbdBieLDpUgQVRudABxstPDJgGUiU"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=rVQTeR219-M6F_w1IfTcJDkLct5ea4c_bHi2jIuUAINkelraAikmZ1iZju86pENZDCW63i9qvH0gNPxbSpQzIHUdlvKjvVmixGUSSXiZvXFm16aDsPUm3lu8H9r5RJOi_NvbVF8vuXRgEBdMd23CTxG9iquGemBdivHhjZ9HQjToZMwkx_BbhzVZX_f09pQZ1g2Ur-C6Wwy4yWMqqniSes3j1aWMT6P_33Z72pMXI5TXeZeQFveYAhdwZob0i8yEzHsm8f3jjBDmN8Xt5FoMtDm71LwS2QnWtjAKQ1sepgd3oLLCBdPKH0mIiSY7UFHE"
         },
         {
           "fy": "2026-27",
@@ -264,7 +264,7 @@
             "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 7
           },
           "detailCount": 7,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=OUhUhZTwKYAJvLoXxcOLwlVIAz6jdFIFxNMs2Rr_44xx0BM_VAwFb7Ef4VLs-S2E7ML_sP-xXp-v0p9ixXsNJ5NGWVmb1g4EGmmlB3VYn4CdCFKDOYQqapWQSxdrsBsp5_ogk0paU0BgBjuWUtzT-ZFvh8UpXYXUkn070xik9XZ5S9bl6EHjNr39b9dAuDBq4hFkQ2GEHmeMM_TwXnDhkPnQbY6kk6xUg7TNWJIiEOMy5Rk8RvaTdA0MpA3lIHIb3gD1NoNNqqIcxuHvA5OVlibh-C0Mn7sv0Nmg4EVLbUo"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=HfgtzSS5EyjfnL_nhnh_M4YguIS-e0WMauQv7CKKO_oQzAh9xqDlOx7lz0-zvyTk28FxcpBsU2ERqVhJuDODQ2Ozg4Gjqs28uXROrhtq36-94nVH2-ZmCoKeJ2DKcvmUdSiS3C0OlJfhTu80T8LkzxgwkAnSqVUID--XHxjKiNMAm-pwWxbKW58pgyvrdOWdlQIv9bHcHMjgAHJbDjslXeWVrvwX9FQGwjIK9NPGnajZQ9nxojgh6gMCGz4UTI6xhjuzDX66U14af-91osoC5trOc2tbIRxEJaVMZNEuLLA"
         },
         {
           "fy": "2026-27",
@@ -302,7 +302,7 @@
             "A/c Blocked or Frozen": 1
           },
           "detailCount": 10,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=fBsx2RFwWP2OiqvVdQiqRglZ1tcYGT7w24Kuoancj2ttiz_j5Uw7IHolrlKtngF2EKhm4FCcnjBeqrfb2qM1oEkVudyZc6yN2hvTKoEbIqovVb0uk2so5dsGIwmBDj7x8SFaHoQjeXoffYU_V38D59F83mkju-nJwYDhd-GjxKwftEBS4m2pRiUlTFIa9PCTwkh1h9GTKye8WaAQ5ENZV-InsbubWRhA2bT74tSMZqZUvXEAlctn6Cr5v1ZsINVs6f4LyMfkrP0sFfFJfiC5SkdvulhlZO42gXaVw_6DAv2RcjcPWXlvv1Vg_skT8S4J"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ww9VXL4mvVgiq-zlNRHxb5LkgRQK2K2fC68QmOcWd1S7hgnkABq7TqKjdDWkrfnC15m1Uu_xL6ssGrAURIexc-1zGiomWzpxrnaosEoYVWf3CMbLh1KmKp1xtz3_LR6IFKxBFjecKrZOpr999LThqbNpd2ZDPjdrXlhFChmwhtQ0m1-uSswvsjZdYc4wX_fi0Z5-DIcLKKLN_7tdCnm12eF74TFbfoKDwRGPVm3F4LLcB2Gtq58baOqVD2pxUtStOD0JS3W0_JYtNjrnn_wakD0tzAMb2nrNrWIO4oZqCq2p7q6i75QIUNcSvRztpX0y"
         },
         {
           "fy": "2026-27",
@@ -323,7 +323,7 @@
             "Aadhaar Number not Mapped to Account Number": 1
           },
           "detailCount": 4,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=Caoe1UOjFdv4Y4ySLawdEqqIAxdtYdIrfQf_YMRLMcQ-pTyOITiAwS7O-SCjIhXKOk3358Vv5MBkxCU-WTjQCPUSXoc2mxT_-AhxDYHvJtu_Vi0_9Fki0zzxd3kd771exY5tIgrcw3h1vSt5l__rl7l5RcOqgHD0bNTGCImC2qgIsUV8Xj72XOYmggpRGpui-iRQXHVSz4OiSE4CSWQQpdiN1jfGz3EDELP6nK4P4G7QzyvaWFUijbAtiFYL9FkkQlUYhRCecqEAgFoueNKOis7ZajvvgRZUHlmNtvT6nas"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=bF-Mv1eLBMpY07ecOetXqpiRbnAZq6R6GdpI7SV2htdWJoNZFHFpMoT-Kpor3vfprmvmGPDPm8Xy9-4Fu_M0sGLVUGuyDuVKHnWYfPapKB7V2jONkTu6zg4Wwdv0oVf07011kPFsgbyJbhA4t565nZEdo6CguqZ8kCnIob3r9l2BW3KRayMQGsomvy4UzKLTAr98oEHAw6wNHFrs2DZDbhkkyUhG8LbVepwvNYhnG5yho7bcUfEiBz5sUWR69wwyXe079lTR1XTknA44olX7QmMW-KBqzUxzNdJnGbwUG8w"
         },
         {
           "fy": "2026-27",
@@ -406,7 +406,7 @@
             "Document Pending for Account Holder turning Major": 1
           },
           "detailCount": 44,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=KujK_iXqCmDnum6XJQPTsJL6ZC7OxHM4jEbLcBNlGwrlBKY_PxJTeK8QWbbUoUz2cX89VQUGVJ1wGKLlGL_Vn2RHg2HQ9t8ZHiUtkUSKnhSXsmCAyWaoXR_k9UfiQJMnEGoGf8fgPQiItLSO1aCku_tbhPRDpglrs3FU9X7_mb4WmX6nz4j2fEC4uwxKWMz5qc-XU_TFD7L9VNn0Ao2LVpioOsx7AXxYuyA59gkUbP6mmEHvi_Np7an8L-WaZLUt9fmyKCr063G5rCUwNz5KBqw8ged_ztc83p0dUYnKo4jh5VYNdjpb9-4x1GRamMmd"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=UVkjKqqSeKvntlLvU2ySf8Hf7rCvGvtvXhvoeeAgGmZVtriTOpH74IzacPvefZKG6ZiTtVMyIssAHmn2Gzv4hf94DBM1u3U062uB2Nm6UnnTvULXGveCTXOMofnWRBA1CgfBWnjLc_r5f0O5qmfc4kVu0RMhS5XxEgLRSq2wumaYMtz7ROn08NYqUs5LC68O5McuDqH6A2LWB78TcI_ErfO4k9bvxCxwgsmLhYJARZuaaftxsGMxJzdbXdOROOsyvcwS21zNAFfsrH1gyqiqEPrypexXIfLWjB4XidlBa6YDHlJXcdAxowtUL1AL98rC"
         },
         {
           "fy": "2025-26",
@@ -431,7 +431,7 @@
             "Aadhaar Number not Mapped to Account Number": 1
           },
           "detailCount": 29,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=EjXB8QY9cTe4fDVaocCqwxmv2N9lqulTRywrXOPXIJvH1xuJ6BEn8DDZYkxwndZBYjFpPLNVSY8b2t1Q-JKvr_8oyRGi6RfmeUYgPAz0zZqELo6eJxJHc3keFyy2cRLz1uKR--Asq5DjVOXRT3FJhXtAo7jzDN7p9qoxjFMRXcOtFczhKZRmfX68ammvEOzygxlkyTesQHSFmlj1NYnR5c24DcZofWQPGAEvJs7lliQ1T8IZlx-8_isMUglCt-LisBnR_gnLFNoXDMcCsPlR0EXwlFk8_q1cfwziB4rkaAU"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=g4mDmoreAf0v4noMNEvkWQ617BI_3ay_0BkynijvMj9yjk14iAxCeTbalzJpCC39MLc5VYNJIU_gDAQgTfFS1orcAfcuQ4uedDmrmKe4wAt3zaso-ZSdeESu72HD2NnIqdDu_wawe9b5t_WDycSKBlXRoAAP62fGdHJGLSQmQQwPoeRKzHIRm1FbJuWVpJq5st98i-pseN3rmvfTnx-b8HxJESsfLIUR_W35c_jbD5oi8vtCZOaYFh86pLM41Jua5s38cvwA3ZaO4Ipdzshf1VkYe6jKckQLBt31ySFm1tM"
         },
         {
           "fy": "2025-26",
@@ -451,7 +451,7 @@
             "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
           },
           "detailCount": 1,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=EMmYAaxsUDiqX_RelVLdoVllBT9TvZiRMGO03ddhXFz48-T_qlzNGhBYYA-PuVV0HZJV75QMnDrC9V35kQEn2MMwgH4lnDoXYeF5J8ejmXF3Yz4wC3pgjqCva5Nx2evvqLtTazZ7RoA8Q2uth5FakPFjtdyOQoVxjtdBX84QkaAZuXY-UXpqVyqpjgaoNyR5RWz4u_7JdtG5iZxDF0W8_mP16p9MWFcyo247V9eDlPdr3i3pT-v47eiGPQyQ9Yvn-pZtqIjpPU-9urXTIsVZkQ4mGS_kyDQdVedRBm_P_6r24elGlQLA0IYsKCg_vacQ"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=3jzttBJqiq-u-UBymPlfVF0RepCoS_9d5uNvRBR-D7u3Bs_LNJ3Z1HD9AyvIPak6C1da9vUA4ZfAyLpc5qGRH0cBe6qV0zwNpbrN0yK7MJZCmjvq32a6qUII8ik241PHFs_MCwW5gsoqgdeBaUPbuvmVRYCGdEpzUQb9XQRWafwiRqnQD0xh8-fk6Aw256lkWXWgc9eSi8ZETuiTCxk8oR1l3CBuksWLz9quHT7PwPOOXn1fyJzGqF0arAPbmLu65mS3FwXvu-SZVq3NV9Irmucjayfko0VA17_nEbIbcgMCxf9c9KJzzSzrHb7aBtaa"
         },
         {
           "fy": "2025-26",
@@ -475,7 +475,7 @@
             "Unclaimed/DEAF accounts": 2
           },
           "detailCount": 73,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=2luaj6TQvITIQaHeCthc3qN4XqE-eFbkDQOZnB6X9t09slWPePwFTivi51UwaOrUMuyRtdNkEaB14IV3NlteCTDchEGv0rLg50VuikupXYWfuu-iAXSHuYNOCyaRSlBDsc3-EX6EEwsITliBIPjz1crDxT7JqXItQBX4b9u0_-izQXXYbVSFcORuofykOz7CAaXTJLOEce7JEThWqTG6w6vd44lTOIW5Nxfq4qjLrxDzA_klV-IHa3I8KFMSPX974zOHDBkkkq6znpNxYWeLOJutvyOTojA9wMulTitdK6KjEW-53Zl1wqgqwv0fMBQl"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=uH0gp8Pu72FldcPuP7XRUUNGcmp0hsyDU6jt3iOynYhg5FtFhFVV-wF0C7N5810e0eyEUtZEBtJ3FULnLFOhHFL-hrvPxtcaVYoPD62W5RtlyotLTu8_M0T7Y4IktA8SoQCm2GvjzgGVWqg_due_A9VLsxTW1AtuL2QRzamdPWlftPsb2lqPeVfxMl2DvXF0loAlepIat4_AdPMmSn3-aJgV5ncfPccDR21YZYHVF0uvZNddiQgnsf8e09X_hSjWutASLheHw_5kRqZzLMZwcEbSPAS2N6fv8XWdZQsUoChYOTXSjDRWibrYcqCXqyFL"
         },
         {
           "fy": "2025-26",
@@ -497,7 +497,7 @@
             "Participant not mapped to the product": 1
           },
           "detailCount": 7,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=fpkmoP2u5kGBKyDizWKMo1oKxMiTAxpJMK9wkIffPWo58BRAlUkaWGAPnRR2f0-mJZHDTg4TNYVOl_o40Z9H6dO1zUrTMm00PhxYS0skXW3LTeuZ3gr94Zi1dRpsn5kIqAsmtz-KZQJIPEthsv7AwOcb6JzKWPhrrNA05P5fY0bXIjJwPOrv1oKAteu_2nAwZrw1j9pd9yuMMMF9Bjmi9-aTFxYCbzJZnjeIqm8KfbefHTlsrhfYZE3aMi07pNECYmE-zFYoTOA-47R-h-04_S7qOdgD9IYJdMj-8pAmSfg"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=fkggwuseIONa8LXTQCxCruLla2ePL1m8ul_sUyzmv3IQiGwmUWJ3EASZiEQ-DZ12_3wz1nvZY-GB4TQYQROccbwrx0b3J6Bxl_UDj1E6FxJ-B5RZC3ana6D6z4eXf-v0SfII00Jxc8qxZwzqptJaKF7U0ETbZ5vJHdBAyRX2cRjgX0dcr1wuVgLmHpXSf0o4dNaXl4nOJkvPmIBk7aISqldoTt3GfJ46Fzvcz7QGdBdd-RC67F-gm1CH8G6sMp9x75L1gY_GHZ8Lmf9CQ90RSYZBxeiMlFQHCGah2OEWx94"
         },
         {
           "fy": "2025-26",
@@ -541,7 +541,7 @@
             "Account Holder Expired": 1
           },
           "detailCount": 1,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=FLZJKBF7gUDRUyK3M-Wt_1woQr7uY07bUsSGflii44O0pWkSZ5trKwteC3h1qbcFQfGY9L7SJW6T76WxlGDbEqmVXrocdJx4eOxz7Shk-0xyYHTeY1Td_gP6cpAvoW39jlxSRWLGW5L-ZUSd6eWFTk44R36Ai3aCr-0fnl3RKRTmBs8e_RXm3xXDq2C-4eAtts1pYHrJOwXdsD8ZyFCpManObSufeK45XSxL3xXopkBDlTGBZTBQUTrsW3Fs6VX9y7oBqFtj0ON46LjxVaNnDbPU3HfM5LU_PzivtCtoO_6NmILX2_TSP3e40AMPIUbd"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=HUBGutDrOVSmIbJGrL-R4ctXCoOiN0DGitaVbhBMfsGBPp0Pnoyz4rDWhvtj-84yGS4n53EKGKQeZe7QwiSht4oojDP1p_E1NtpoKpwp48v6uDoJQqPufRfCsbniJSmEXMSCX3MYy-LKrw4IKVOG3Ee18S-QUuxnc1cCkgkTj5AbURoWOqjNLUb2aKOb7xhlQsM1S7ORK9jae-s_keyf6boSB1XIox2IPOteeP5VhbqBslobkh-4BiQuE_-3Onbc-AvN6iEnOYcYrOwRNr_KklGvMBCHeDxcdNtAS3-veVU10WxlluWd30m-z4IoIY4S"
         },
         {
           "fy": "2024-25",
@@ -583,7 +583,7 @@
             "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
           },
           "detailCount": 25,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=-oYhE-h0MRYnHcrESoaFgVchNp3igRtjvjnwKyitT6kOiuAMPtrt6zKLaecrTJu-JlSg-rRh8Bsn0_OtPIW51yLdo-VnrQo9lxnjMtjNROcuON2IcUc6Oh1Z6HASDtFx_sfkTCYf2MOVb9DWQzkiFFt6CyVXDwe1k3mkEc1Yi9qo76KFHUpmA1Ug1P2kAwEj4M8cd2araFhS4Wiv-khHmOLcWZ8aUfEON-SHBNV4nStb8Ly1uUVpDYpUxxEtDgOywHPcmv8_XDV1OOA7al-TYq4cPWOY0BdG5QPNVxjv2Ofcv4zm9sbtM2_4E-20sb7f"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ofzxHqbSHpdutu4zTw2KJe4elKYp6Chef99G0EEJVRUNB_6Iqey3jmONG6KVK4hztfb2562ys1ObuVIjkmT9KWgcZWoayQNr66jfJXQ7Ltv0h96IYdNY8hD3gKDpewCpepBUR5Vb1UPZsxvPYXFVnuKj7RhiRtl7bm-wxuE0LEKp6GrA5pjLPpYgqdhxHfFAti4nqp9Da1wl1Vzy96uJXJ5jqyu2kFg4Sn8HuAiGWEVoCeqfbX7kv9DDjJSGZbJqJQGCxLepujLRnvcio9sLEhjQ6cjTlESXxHZd_8A15KsLReF8M7U82_faLzpLDNyG"
         },
         {
           "fy": "2024-25",
@@ -606,7 +606,7 @@
             "invalid Bank Identifier": 2
           },
           "detailCount": 11,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ldq4uUmqaHGQjP--tma4nEgDO0foW-EzOVyqYrNF2DYEiHtKg3TZoijHBgtyg_R4X_653PuV77RbLA5yC8rdSSmSXhzF3o-D4KnuawiaZB2xfNXeaCQKbZHvpXmd-h_pIi9luGXxBD6PF-iZH0DZ1lmx0sYEky6ZMFKtYkwfTvlANp5GUrg2bQH7ZKBhzPlaMx9qERfuKF_78oHvlCNFT4qmlVZFu6LhgHzBsboB3rgVibGNc69g6mCFVrW7bCQaepJXJQL3Plmv6p3ERsKL2wsXtE-HejHn812Rt6X2xf8"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=bFWtmzja2cXdzfSu6052F1WVnD7TkFH82aQNaGpKvWX8uzmSMdLOvBgoA-2KRDhGspJLKxixW1wSgkajznm5MD-ws6Qdw7t3OkBSMFUDBd1ZUUmQ3ZLzOJLxCeYKtov-_yVdjtFW59Tx6LLK-ooU74ll_cnM6R0iDm_RZVc1zB4P5gCuDCte8Qu-ZJBFsuSexnEDBROWH6UXax6u4LAnEnPEytQ0EVuHPb1yjDegkdgVO68VnDG2ngNGfm0Ls3wQ-k_N8It3lFSwc5ErWtmKFrELP_muBWag-gUoO26F7UI"
         },
         {
           "fy": "2024-25",
@@ -644,7 +644,7 @@
             "Account closed": 3
           },
           "detailCount": 9,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=YIF3ExyS4vQqfgOQoxmEfymWKYuS27CGiTQS2zxl1SNUkN22gYtEnvSlyO9nLeY5gQSxjlpC56VA5OxoZ6XnzT0XOSWb5US5lEH_-8f1M3aP-r0lNa59_qmUu4LYg2zEH7cg6rouqDLnQdUg2W7IJB779lz0P06B7SkYPbTpcQ3QDC4Pt2r2h3QpTUSvviteQtzkVRILpxXJJ8Ruz1tSPAiYPgcaxwdpRL7m60muw2jA608Muc5yMfdvVp4oSxlTInaGrp5lQM0scVd4t9KTN1No4FzFoH83SdcHhmdyFNqdZSCyiKvMncj0b9EXCkt_"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=V3WJvEFy_mH4csY29gPqqqqy0qWN4koqixfJUFLZPjHAeNABLS45slqIgR_jdOEWlHvrum1lVk47knEijsJNAjNLm_PTf4_1Ki4YO42AL7s3OC-8IrP-PiFYFi-f49SqF-itQzdMtanjW8YvCKfzUqGCkIUzXE76YWfplncYovm4kD0KT6N0WL1QYn2k1cvyaF16MiDiNPXdrkiezvGqziUwORJcflp93P47To9G4zCvaItCmdty2G-gXNGLp96sgiKviWN-qFhTZOg4WzLWKYLhJkK0VA27oqteQElFhyXLJKDwOlawzi6RwY59oEuM"
         },
         {
           "fy": "2024-25",
@@ -664,7 +664,7 @@
             "Account closed": 1
           },
           "detailCount": 1,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=S_HlTgA5I9MMNvvWk2GlFnjzi-7eH_XeXBXH7HJlvnmFIJG8tzE0gvBQLX0yksGyBNshONzKcmx1lhMOcwm_Y6l9uZRs4Yd9Opr_8Km-9xpzqHwpNWJ0cIiDnZWGjmkC4iSd7HwJksyYCpffR9I_WjptZ3tZXMWrFCk4mBqwowm2oxfmmcJz-KTSvo2KJMcufMBae8AY2cK9MNMmVJ8yCZmaaSuT0gZh2S8nPjjQSoddUbKjH8U8cv32e8Lb1AuiHyexOVIzqGC9njZ_T_ROovqGFzQXJVaKXQQpvUBVigI"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=yInjvi8TwEhC9Xyke4nW-QD-cywjgLGS2PmHM0sd2bmP_KHCPUlDjYAn5SEqfpiTBuD8AZU3k4a_dk3adSYmX4DYsqq7wlnhYJj2XaouZyTpA5td7qTLHD7M6y0h2jO9_pP21cMZOjljsvjpkj4fnQjKHTV2zHcOVOfgWfPSrfFIgbwbHZ_fXDYdK_HQzOlJbU4Pzmpg3h3EgtR-wbUZyYUvy_lIx3Oo4Apn-CE17rVMtMYNExsmPJMLZ1WYMV-S0eUv8ToLMlIhO1tDFUtFX2u5574IxyU5erG1JXPSFhE"
         },
         {
           "fy": "2024-25",
@@ -686,7 +686,7 @@
             "No Such Account": 1
           },
           "detailCount": 5,
-          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ghVCFK_2hinP8bsX6LiUidU8GtJ24l1ZL_uAkH09dqKHDHqwBDo8xKY2D8IJsQm3cT14fG4SiVsIHKdDpBk5YGYX5KUguK8NLi0rIM2DrP5oL84iIb-mfv-eqaOkNX8PRc3EDQNRzGd_j5hywWOtwf81orZfztp6ZHceVEbTkvYHbsySWSIKsewObgKJ-NzBB-paFG3a-Sy6dpq8mgWZ-oeeI9avlUDqYLGC9_kSCF1iURz156Hs4E5R7pNesPlWR6O-6yQdnVPudIV7krbxxT_QX9Diivpn2vK4PYgw80lVtRgRelAjpxFx-My2zmyY"
+          "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=yAy_QrbQOwzUXTrC7h5xSUlwfHQrnfzvV4eJSQnOegKe9FXbRqo5tsb7T7gsXaQLo9umJvmzuOOlsBnt8nrUoA0agsGkOOCFxqYHTqJmo9FyJmKf_rG-180lOxcvsDKvDiP1a2WtfC_PTHfWoSIkAAXL2hR2OVujD-Khmc2B18HfZDaIDOYLJbqRFGg6puhR6tfFOs4FIQMczGO6rwnKSs9man1ismuLh5SuMfedZ7by8_T56-VYiL_vQMB-G23mT_zcGdgnxBoqyiIW_BiSbtofsQHvy3SU4FRjEpytiu596kXbQBWsJTza1Ne1oJTm"
         }
       ]
     }
@@ -710,7 +710,7 @@
         "Account Holder Expired": 1
       },
       "detailCount": 1,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=FLZJKBF7gUDRUyK3M-Wt_1woQr7uY07bUsSGflii44O0pWkSZ5trKwteC3h1qbcFQfGY9L7SJW6T76WxlGDbEqmVXrocdJx4eOxz7Shk-0xyYHTeY1Td_gP6cpAvoW39jlxSRWLGW5L-ZUSd6eWFTk44R36Ai3aCr-0fnl3RKRTmBs8e_RXm3xXDq2C-4eAtts1pYHrJOwXdsD8ZyFCpManObSufeK45XSxL3xXopkBDlTGBZTBQUTrsW3Fs6VX9y7oBqFtj0ON46LjxVaNnDbPU3HfM5LU_PzivtCtoO_6NmILX2_TSP3e40AMPIUbd",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=HUBGutDrOVSmIbJGrL-R4ctXCoOiN0DGitaVbhBMfsGBPp0Pnoyz4rDWhvtj-84yGS4n53EKGKQeZe7QwiSht4oojDP1p_E1NtpoKpwp48v6uDoJQqPufRfCsbniJSmEXMSCX3MYy-LKrw4IKVOG3Ee18S-QUuxnc1cCkgkTj5AbURoWOqjNLUb2aKOb7xhlQsM1S7ORK9jae-s_keyf6boSB1XIox2IPOteeP5VhbqBslobkh-4BiQuE_-3Onbc-AvN6iEnOYcYrOwRNr_KklGvMBCHeDxcdNtAS3-veVU10WxlluWd30m-z4IoIY4S",
       "scheme": "MGNREGA"
     },
     {
@@ -754,7 +754,7 @@
         "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
       },
       "detailCount": 25,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=-oYhE-h0MRYnHcrESoaFgVchNp3igRtjvjnwKyitT6kOiuAMPtrt6zKLaecrTJu-JlSg-rRh8Bsn0_OtPIW51yLdo-VnrQo9lxnjMtjNROcuON2IcUc6Oh1Z6HASDtFx_sfkTCYf2MOVb9DWQzkiFFt6CyVXDwe1k3mkEc1Yi9qo76KFHUpmA1Ug1P2kAwEj4M8cd2araFhS4Wiv-khHmOLcWZ8aUfEON-SHBNV4nStb8Ly1uUVpDYpUxxEtDgOywHPcmv8_XDV1OOA7al-TYq4cPWOY0BdG5QPNVxjv2Ofcv4zm9sbtM2_4E-20sb7f",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ofzxHqbSHpdutu4zTw2KJe4elKYp6Chef99G0EEJVRUNB_6Iqey3jmONG6KVK4hztfb2562ys1ObuVIjkmT9KWgcZWoayQNr66jfJXQ7Ltv0h96IYdNY8hD3gKDpewCpepBUR5Vb1UPZsxvPYXFVnuKj7RhiRtl7bm-wxuE0LEKp6GrA5pjLPpYgqdhxHfFAti4nqp9Da1wl1Vzy96uJXJ5jqyu2kFg4Sn8HuAiGWEVoCeqfbX7kv9DDjJSGZbJqJQGCxLepujLRnvcio9sLEhjQ6cjTlESXxHZd_8A15KsLReF8M7U82_faLzpLDNyG",
       "scheme": "MGNREGA"
     },
     {
@@ -778,7 +778,7 @@
         "invalid Bank Identifier": 2
       },
       "detailCount": 11,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ldq4uUmqaHGQjP--tma4nEgDO0foW-EzOVyqYrNF2DYEiHtKg3TZoijHBgtyg_R4X_653PuV77RbLA5yC8rdSSmSXhzF3o-D4KnuawiaZB2xfNXeaCQKbZHvpXmd-h_pIi9luGXxBD6PF-iZH0DZ1lmx0sYEky6ZMFKtYkwfTvlANp5GUrg2bQH7ZKBhzPlaMx9qERfuKF_78oHvlCNFT4qmlVZFu6LhgHzBsboB3rgVibGNc69g6mCFVrW7bCQaepJXJQL3Plmv6p3ERsKL2wsXtE-HejHn812Rt6X2xf8",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=bFWtmzja2cXdzfSu6052F1WVnD7TkFH82aQNaGpKvWX8uzmSMdLOvBgoA-2KRDhGspJLKxixW1wSgkajznm5MD-ws6Qdw7t3OkBSMFUDBd1ZUUmQ3ZLzOJLxCeYKtov-_yVdjtFW59Tx6LLK-ooU74ll_cnM6R0iDm_RZVc1zB4P5gCuDCte8Qu-ZJBFsuSexnEDBROWH6UXax6u4LAnEnPEytQ0EVuHPb1yjDegkdgVO68VnDG2ngNGfm0Ls3wQ-k_N8It3lFSwc5ErWtmKFrELP_muBWag-gUoO26F7UI",
       "scheme": "MGNREGA"
     },
     {
@@ -818,7 +818,7 @@
         "Account closed": 3
       },
       "detailCount": 9,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=YIF3ExyS4vQqfgOQoxmEfymWKYuS27CGiTQS2zxl1SNUkN22gYtEnvSlyO9nLeY5gQSxjlpC56VA5OxoZ6XnzT0XOSWb5US5lEH_-8f1M3aP-r0lNa59_qmUu4LYg2zEH7cg6rouqDLnQdUg2W7IJB779lz0P06B7SkYPbTpcQ3QDC4Pt2r2h3QpTUSvviteQtzkVRILpxXJJ8Ruz1tSPAiYPgcaxwdpRL7m60muw2jA608Muc5yMfdvVp4oSxlTInaGrp5lQM0scVd4t9KTN1No4FzFoH83SdcHhmdyFNqdZSCyiKvMncj0b9EXCkt_",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=V3WJvEFy_mH4csY29gPqqqqy0qWN4koqixfJUFLZPjHAeNABLS45slqIgR_jdOEWlHvrum1lVk47knEijsJNAjNLm_PTf4_1Ki4YO42AL7s3OC-8IrP-PiFYFi-f49SqF-itQzdMtanjW8YvCKfzUqGCkIUzXE76YWfplncYovm4kD0KT6N0WL1QYn2k1cvyaF16MiDiNPXdrkiezvGqziUwORJcflp93P47To9G4zCvaItCmdty2G-gXNGLp96sgiKviWN-qFhTZOg4WzLWKYLhJkK0VA27oqteQElFhyXLJKDwOlawzi6RwY59oEuM",
       "scheme": "MGNREGA"
     },
     {
@@ -839,7 +839,7 @@
         "Account closed": 1
       },
       "detailCount": 1,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=S_HlTgA5I9MMNvvWk2GlFnjzi-7eH_XeXBXH7HJlvnmFIJG8tzE0gvBQLX0yksGyBNshONzKcmx1lhMOcwm_Y6l9uZRs4Yd9Opr_8Km-9xpzqHwpNWJ0cIiDnZWGjmkC4iSd7HwJksyYCpffR9I_WjptZ3tZXMWrFCk4mBqwowm2oxfmmcJz-KTSvo2KJMcufMBae8AY2cK9MNMmVJ8yCZmaaSuT0gZh2S8nPjjQSoddUbKjH8U8cv32e8Lb1AuiHyexOVIzqGC9njZ_T_ROovqGFzQXJVaKXQQpvUBVigI",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=yInjvi8TwEhC9Xyke4nW-QD-cywjgLGS2PmHM0sd2bmP_KHCPUlDjYAn5SEqfpiTBuD8AZU3k4a_dk3adSYmX4DYsqq7wlnhYJj2XaouZyTpA5td7qTLHD7M6y0h2jO9_pP21cMZOjljsvjpkj4fnQjKHTV2zHcOVOfgWfPSrfFIgbwbHZ_fXDYdK_HQzOlJbU4Pzmpg3h3EgtR-wbUZyYUvy_lIx3Oo4Apn-CE17rVMtMYNExsmPJMLZ1WYMV-S0eUv8ToLMlIhO1tDFUtFX2u5574IxyU5erG1JXPSFhE",
       "scheme": "MGNREGA"
     },
     {
@@ -862,7 +862,7 @@
         "No Such Account": 1
       },
       "detailCount": 5,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ghVCFK_2hinP8bsX6LiUidU8GtJ24l1ZL_uAkH09dqKHDHqwBDo8xKY2D8IJsQm3cT14fG4SiVsIHKdDpBk5YGYX5KUguK8NLi0rIM2DrP5oL84iIb-mfv-eqaOkNX8PRc3EDQNRzGd_j5hywWOtwf81orZfztp6ZHceVEbTkvYHbsySWSIKsewObgKJ-NzBB-paFG3a-Sy6dpq8mgWZ-oeeI9avlUDqYLGC9_kSCF1iURz156Hs4E5R7pNesPlWR6O-6yQdnVPudIV7krbxxT_QX9Diivpn2vK4PYgw80lVtRgRelAjpxFx-My2zmyY",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=yAy_QrbQOwzUXTrC7h5xSUlwfHQrnfzvV4eJSQnOegKe9FXbRqo5tsb7T7gsXaQLo9umJvmzuOOlsBnt8nrUoA0agsGkOOCFxqYHTqJmo9FyJmKf_rG-180lOxcvsDKvDiP1a2WtfC_PTHfWoSIkAAXL2hR2OVujD-Khmc2B18HfZDaIDOYLJbqRFGg6puhR6tfFOs4FIQMczGO6rwnKSs9man1ismuLh5SuMfedZ7by8_T56-VYiL_vQMB-G23mT_zcGdgnxBoqyiIW_BiSbtofsQHvy3SU4FRjEpytiu596kXbQBWsJTza1Ne1oJTm",
       "scheme": "MGNREGA"
     },
     {
@@ -924,7 +924,7 @@
         "Document Pending for Account Holder turning Major": 1
       },
       "detailCount": 44,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=KujK_iXqCmDnum6XJQPTsJL6ZC7OxHM4jEbLcBNlGwrlBKY_PxJTeK8QWbbUoUz2cX89VQUGVJ1wGKLlGL_Vn2RHg2HQ9t8ZHiUtkUSKnhSXsmCAyWaoXR_k9UfiQJMnEGoGf8fgPQiItLSO1aCku_tbhPRDpglrs3FU9X7_mb4WmX6nz4j2fEC4uwxKWMz5qc-XU_TFD7L9VNn0Ao2LVpioOsx7AXxYuyA59gkUbP6mmEHvi_Np7an8L-WaZLUt9fmyKCr063G5rCUwNz5KBqw8ged_ztc83p0dUYnKo4jh5VYNdjpb9-4x1GRamMmd",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=UVkjKqqSeKvntlLvU2ySf8Hf7rCvGvtvXhvoeeAgGmZVtriTOpH74IzacPvefZKG6ZiTtVMyIssAHmn2Gzv4hf94DBM1u3U062uB2Nm6UnnTvULXGveCTXOMofnWRBA1CgfBWnjLc_r5f0O5qmfc4kVu0RMhS5XxEgLRSq2wumaYMtz7ROn08NYqUs5LC68O5McuDqH6A2LWB78TcI_ErfO4k9bvxCxwgsmLhYJARZuaaftxsGMxJzdbXdOROOsyvcwS21zNAFfsrH1gyqiqEPrypexXIfLWjB4XidlBa6YDHlJXcdAxowtUL1AL98rC",
       "scheme": "MGNREGA"
     },
     {
@@ -950,7 +950,7 @@
         "Aadhaar Number not Mapped to Account Number": 1
       },
       "detailCount": 29,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=EjXB8QY9cTe4fDVaocCqwxmv2N9lqulTRywrXOPXIJvH1xuJ6BEn8DDZYkxwndZBYjFpPLNVSY8b2t1Q-JKvr_8oyRGi6RfmeUYgPAz0zZqELo6eJxJHc3keFyy2cRLz1uKR--Asq5DjVOXRT3FJhXtAo7jzDN7p9qoxjFMRXcOtFczhKZRmfX68ammvEOzygxlkyTesQHSFmlj1NYnR5c24DcZofWQPGAEvJs7lliQ1T8IZlx-8_isMUglCt-LisBnR_gnLFNoXDMcCsPlR0EXwlFk8_q1cfwziB4rkaAU",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=g4mDmoreAf0v4noMNEvkWQ617BI_3ay_0BkynijvMj9yjk14iAxCeTbalzJpCC39MLc5VYNJIU_gDAQgTfFS1orcAfcuQ4uedDmrmKe4wAt3zaso-ZSdeESu72HD2NnIqdDu_wawe9b5t_WDycSKBlXRoAAP62fGdHJGLSQmQQwPoeRKzHIRm1FbJuWVpJq5st98i-pseN3rmvfTnx-b8HxJESsfLIUR_W35c_jbD5oi8vtCZOaYFh86pLM41Jua5s38cvwA3ZaO4Ipdzshf1VkYe6jKckQLBt31ySFm1tM",
       "scheme": "MGNREGA"
     },
     {
@@ -971,7 +971,7 @@
         "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
       },
       "detailCount": 1,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=EMmYAaxsUDiqX_RelVLdoVllBT9TvZiRMGO03ddhXFz48-T_qlzNGhBYYA-PuVV0HZJV75QMnDrC9V35kQEn2MMwgH4lnDoXYeF5J8ejmXF3Yz4wC3pgjqCva5Nx2evvqLtTazZ7RoA8Q2uth5FakPFjtdyOQoVxjtdBX84QkaAZuXY-UXpqVyqpjgaoNyR5RWz4u_7JdtG5iZxDF0W8_mP16p9MWFcyo247V9eDlPdr3i3pT-v47eiGPQyQ9Yvn-pZtqIjpPU-9urXTIsVZkQ4mGS_kyDQdVedRBm_P_6r24elGlQLA0IYsKCg_vacQ",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=3jzttBJqiq-u-UBymPlfVF0RepCoS_9d5uNvRBR-D7u3Bs_LNJ3Z1HD9AyvIPak6C1da9vUA4ZfAyLpc5qGRH0cBe6qV0zwNpbrN0yK7MJZCmjvq32a6qUII8ik241PHFs_MCwW5gsoqgdeBaUPbuvmVRYCGdEpzUQb9XQRWafwiRqnQD0xh8-fk6Aw256lkWXWgc9eSi8ZETuiTCxk8oR1l3CBuksWLz9quHT7PwPOOXn1fyJzGqF0arAPbmLu65mS3FwXvu-SZVq3NV9Irmucjayfko0VA17_nEbIbcgMCxf9c9KJzzSzrHb7aBtaa",
       "scheme": "MGNREGA"
     },
     {
@@ -996,7 +996,7 @@
         "Unclaimed/DEAF accounts": 2
       },
       "detailCount": 73,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=2luaj6TQvITIQaHeCthc3qN4XqE-eFbkDQOZnB6X9t09slWPePwFTivi51UwaOrUMuyRtdNkEaB14IV3NlteCTDchEGv0rLg50VuikupXYWfuu-iAXSHuYNOCyaRSlBDsc3-EX6EEwsITliBIPjz1crDxT7JqXItQBX4b9u0_-izQXXYbVSFcORuofykOz7CAaXTJLOEce7JEThWqTG6w6vd44lTOIW5Nxfq4qjLrxDzA_klV-IHa3I8KFMSPX974zOHDBkkkq6znpNxYWeLOJutvyOTojA9wMulTitdK6KjEW-53Zl1wqgqwv0fMBQl",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=uH0gp8Pu72FldcPuP7XRUUNGcmp0hsyDU6jt3iOynYhg5FtFhFVV-wF0C7N5810e0eyEUtZEBtJ3FULnLFOhHFL-hrvPxtcaVYoPD62W5RtlyotLTu8_M0T7Y4IktA8SoQCm2GvjzgGVWqg_due_A9VLsxTW1AtuL2QRzamdPWlftPsb2lqPeVfxMl2DvXF0loAlepIat4_AdPMmSn3-aJgV5ncfPccDR21YZYHVF0uvZNddiQgnsf8e09X_hSjWutASLheHw_5kRqZzLMZwcEbSPAS2N6fv8XWdZQsUoChYOTXSjDRWibrYcqCXqyFL",
       "scheme": "MGNREGA"
     },
     {
@@ -1019,7 +1019,7 @@
         "Participant not mapped to the product": 1
       },
       "detailCount": 7,
-      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=fpkmoP2u5kGBKyDizWKMo1oKxMiTAxpJMK9wkIffPWo58BRAlUkaWGAPnRR2f0-mJZHDTg4TNYVOl_o40Z9H6dO1zUrTMm00PhxYS0skXW3LTeuZ3gr94Zi1dRpsn5kIqAsmtz-KZQJIPEthsv7AwOcb6JzKWPhrrNA05P5fY0bXIjJwPOrv1oKAteu_2nAwZrw1j9pd9yuMMMF9Bjmi9-aTFxYCbzJZnjeIqm8KfbefHTlsrhfYZE3aMi07pNECYmE-zFYoTOA-47R-h-04_S7qOdgD9IYJdMj-8pAmSfg",
+      "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=fkggwuseIONa8LXTQCxCruLla2ePL1m8ul_sUyzmv3IQiGwmUWJ3EASZiEQ-DZ12_3wz1nvZY-GB4TQYQROccbwrx0b3J6Bxl_UDj1E6FxJ-B5RZC3ana6D6z4eXf-v0SfII00Jxc8qxZwzqptJaKF7U0ETbZ5vJHdBAyRX2cRjgX0dcr1wuVgLmHpXSf0o4dNaXl4nOJkvPmIBk7aISqldoTt3GfJ46Fzvcz7QGdBdd-RC67F-gm1CH8G6sMp9x75L1gY_GHZ8Lmf9CQ90RSYZBxeiMlFQHCGah2OEWx94",
       "scheme": "MGNREGA"
     },
     {
@@ -1058,7 +1058,7 @@
         "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 1
       },
       "detailCount": 1,
-      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=sDQIz2kNKHZ352_lzqlJ0Mir6j3wtpudZl80rHKpdSoTYOKy3lPwC14eqiA8ypj8ze2WKPpIbMfsvpVU9FXg6iP7yfms_BlLjT3B1-sO2fWJavlT-o5ynXE6AUCJjq8DBtDFLT11ew85DdEn44n4pNdFvp64WqSg2JYTNsvdw8n_EYDJfsg8ReCuaf5Ti6E_BJtXhc1bsH4LRIWVxuLG_Ic_i6t-RE9D7ahTtgBIX4RL7WP9BFpxNhBg-oS2V2Snb07KMJtvebdqGkdUUM6Rma9E6nRe4q6AWO32YNS1-MRDiX2gfscFQb7bRgOFMNyM",
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=neRUWvkb3c3LctDeLAyB8QqrJ0SlT7AYJG9lwc_6V9kUJcPQULTzjCi4LtZjx81HvwO3nwaVGC3L8U7bRcaVfqIPdwXeMBh5mqynGCiH5LwIvT2_GuN60_ZBKXwH1pGq4mq9dLGEzybY8cEMd-Z-18AbJcq2SMc9lD94_5_HK68nQ92FPmUu50uLpC5F_pYY0E0fUykUwNUWI06o03a2bGUiK_EEeULt7Ci6u1fJPrNPUsnMGVfiANVWinFKOatWLUMeLPi8l2SniFtZ8SAKCbq2IV8Cz9bTyMRydRUp4FxcW82LlqmwYPKmwPLhs_8a",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -1081,7 +1081,7 @@
         "Special characters and numeric values found in the address field.": 1
       },
       "detailCount": 7,
-      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ldVMGY0YDTIB1ESV_xPlnbkXrzy3U4xSraqnEvAh8z65gB1cVL28RrFdtlscQQ86xAfcVzqDO9eHVtOxV077FeX4SAFHdL9feOVBlTX9-aDyuwe-UcM9yVuahyqpHlJ7AOAraKrPcWLBKIFuISC9gdtIfDipPhCzglnOz5HOjsXAdUZnYIjFlA2N2MKS9iVbBJ-vqtgMBQ5KhA9091FThEwE4zFkRzBD-dBwPTNt6kli45-_MvT9it3Taa8I67rPbjQ0KgVVI4mg5ES_k079X8ftxy37jbkZM0guPk-iPsBMMT-3KtDEd4coBiKQFPps",
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=b2p5VUyfDt9bGhK8LmQEE9PyzCkHfkkvPKqvvdDwJjcSS03kWiOI2siSbibT2NBzWviWPW3YSvB4elie4VEWOPXy_P9Kruw8js5dnNcde4OSOxhgoJD_1mflOWkkDcVmepXLZHw5oD68mnqygQEOZvOZJeFBvs4D0r5ou0THMEfCJas8ThP4w8tJoDGdM2WFNkzD2zh5K9kgIa4zUklTS40gIh9kqOGgfPTKEE0HgKft2FZ7RD8RYusMvrLCn-_aL6gZIzEKjUzrgW56NBLcUS0I0w5CUYjlN7gMiYl97QHNBCezzNVMtQ7I8WRZ8lyd",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -1090,16 +1090,16 @@
       "district": "SATNA",
       "total": 592,
       "totalAmount": 1493222,
-      "pending": 262,
-      "pendingAmount": 662858,
-      "muster": 176,
+      "pending": 256,
+      "pendingAmount": 641258,
+      "muster": 175,
       "fto": 52,
       "success": 1,
       "successAmount": 261,
-      "bankPending": 329,
-      "bankPendingAmount": 830103,
+      "bankPending": 335,
+      "bankPendingAmount": 851703,
       "reasons": {
-        "Duplicate Benificiary": 169,
+        "Duplicate Benificiary": 167,
         "Special characters and numeric values found in the address field.": 24,
         "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 11,
         "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 20,
@@ -1108,8 +1108,8 @@
         "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 5,
         "Aadhaar Number not Mapped to Account Number": 1
       },
-      "detailCount": 256,
-      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=tJetKL8mnzhvKHtuo5lWgmyA8jc1-oLrGetoTN4WmQSNNZgzr0oH_Z00MQFn_slxGFZrflxsDwZSlJ-5-uFNieMTx9-sj5AuPet8-3mBS57CK2NO8s21X0lAWcq1uX_FclX8u5j06KlqyIGBK125XNs4oKPpwouy9f_sRMuFVW-p6-rDNd4lJQZ8BGlkNTR7Q2DVoafTgBstP7AEAmwz0O4cXJuguhi_FkKbbeXzyom8AP1v3aMxc1VRr5wTn_0eigaae_qthAHcgsT-2uw8FF8JlV4Hhkc1KVPcot2pyj4jBxpfkdoS4sV4EeH6aRcw",
+      "detailCount": 254,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ZtFSs-aHekd_rVW7M5Vfa1XPZk8ifMVcD1PSyN1urm1KICxqU-oFB4COzUPCECQTJWhu-0zAR-aOciX7pC4Zbg1Ej5NOOF45I61GbWhJLAJIEQRafN-oB0WLyznvpAgjxqsqmGBb5azt4Z2NMnEkhk_w1YmPQOASf7GQiVZeOq7ee1iz6jFJxujSG2TzKlIXSrqnshkP0Dn1gCaMDKUvmTPSNhFkxlBXp4ERyyunT5FcCBaq1DrnQqYjfitMczmulbSO2yo2NrXJbVOxFEte4jZST4uzX6AwnNtqbm5rpPcx-UhsuI7gDwtKJ18saH7d",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -1118,25 +1118,25 @@
       "district": "SATNA",
       "total": 1793,
       "totalAmount": 3605557,
-      "pending": 249,
-      "pendingAmount": 485180,
-      "muster": 196,
-      "fto": 47,
+      "pending": 213,
+      "pendingAmount": 407625,
+      "muster": 169,
+      "fto": 45,
       "success": 73,
       "successAmount": 179294,
-      "bankPending": 1471,
-      "bankPendingAmount": 2941083,
+      "bankPending": 1507,
+      "bankPendingAmount": 3018638,
       "reasons": {
-        "Special characters and numeric values found in the address field.": 67,
-        "Duplicate Benificiary": 84,
-        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 38,
-        "Payee Data Validation Failed.": 29,
-        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 14,
+        "Special characters and numeric values found in the address field.": 58,
+        "Duplicate Benificiary": 72,
+        "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 34,
+        "Payee Data Validation Failed.": 24,
+        "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 10,
         "Objected by DDO": 1,
         "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 7
       },
-      "detailCount": 240,
-      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=543AqCv4ehAHTwqrhlw5VQl3DhA1MmZV4mSqrr3xutSC3SSRevcEj0t2Mjqo3xFTmJdDpQ7X2tlwVjdJEENHbUHPrfn9cgPJVGWbWdjvw2FwmYzCVr75owlLC2fymjjerRxpAJWV80F8lxjm89RujzWOeEYavaJdd2ffqjSbC-Feqnim1hHCUudOPLNwTsnAAhWVo7oiBrX9DE3pxKmCN0ZL52BnUrtdJFc2lu9IOGfCsA4m60NXhcEV3y8WFf0nq-2S-uHqXrFCfrBHsol8nzG8DWbfmwtNBuJuvN56a2E",
+      "detailCount": 206,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=B0w2g__D9B2tNZ8zONHiteRRCT5f7dmTJxc-xgoy6bUK45sKb8qzB7uaEGMjYRKEZaZR9cE3BwvVaXaPTccHoFZs7y7nvQ0sWgR5Dp6YI12GZe0jFkPXS5av2tsWVAFXvTmFz4RrHfQZ7KBygAoOPFdxdQEbFt24uX0FEVgxpCmKIIZowei-UUvPv2G9j_pElOzpgC3hRjIJx4tcXhZ48IQBjWVSeAivNnM_efeunjKB4Vx2MvXD439yuMeRbB390PnYOvnTmeFMb-NDOqAAFHcB-_-ZPCFTicZJgKv_oYg",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -1165,14 +1165,14 @@
       "totalAmount": 1700242,
       "pending": 77,
       "pendingAmount": 240889,
-      "muster": 66,
-      "fto": 32,
+      "muster": 63,
+      "fto": 31,
       "success": 0,
       "successAmount": 0,
       "bankPending": 560,
       "bankPendingAmount": 1459353,
       "reasons": {
-        "Payee Data Validation Failed.": 9,
+        "Payee Data Validation Failed.": 6,
         "Duplicate Benificiary": 40,
         "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 11,
         "Special characters and numeric values found in the address field.": 3,
@@ -1181,8 +1181,8 @@
         "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 9,
         "A/c Blocked or Frozen": 1
       },
-      "detailCount": 77,
-      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=_nh9s1Ls6RkCNWoQ78KzzAdy1YrpavA03Z2zwMg59J5ov_NqZ7Ahu39An_FFdisdqDUFE6jH_7x3zSZ5Kw4Qd8yrwuIDWZDbSePcEOteggGXrFQz_jIouaPDFs9rwr_IZZHE5tNIZpqeiNomqmKi3UFcCj3iTLY-O1i05S61iBS-1074MaIY2hG3pB7MY4NsHAn0W7R4oaJFucmLjlt9-IajS253vVEukLpvBaJIrZ7OqklYW30MZgmPwCsJyu0ezX6f1bovWnpniGrvpLhY4G9I6ho8q4RE8x7jG-Vli1bFrd_83j8N9AXl9t9-1oCO",
+      "detailCount": 74,
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=fhMmfuoit1MI0hnb0WAqPmY7KCqvy12VftJAUfi5XXqJxz2pC-yC5A_0Gq7_NLXEnbQ74uJAu6YUjypi3cJccXX-QKNuVgNHO3-Yguxsq5vv0gsvm1a2OWPYcaHuo3wMV0J5cgoUd3Y7oCHfj8YMopBrHzlea-sFuzP3tC6N66gZNZONUZ1Ob1DU3Oz0b9bTd3dyaYob_-Nr-lpYp5J6le0KNVViwRC2toyax9x1U2NoBdKJwJzrJvyZOSDkV4Kml66wXv4FudEZPGe5hEuZ8XCVXpsBoC334sObjK5Ej8W0IeZdq3b_ME4Di88A6yvV",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -1207,7 +1207,7 @@
         "Aadhaar Number not Mapped to Account Number": 1
       },
       "detailCount": 15,
-      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=AewyFrD6HzFdKuGLWi4i2Qfpo4twbRdGL1ci7fzCFNejXc0Z0-2WWo6wofjOv9Axx1G6vckyKa2rtfadhhFmBkybjgyECnO2lQkBgVVWbjq1nCNxudKysXmCX4F8MRlOUsiFafPbFQzhDXxg8Qy7wt02y9fLFE8nbXePP2iXL36tvFSr5Yz7CDFfsz83DtUKBtXNMoSgmmqOo3D7CL1HB8Y3eqWe6XhDxibPaSQSvzC-hkQ5FjhuIFuoQyQIP-3OV62Afe6uFeaU0RQWPAjBwtiy-Eao5Lv7cfucZ-v5aRA",
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=7itVky92yxtm0By1jFsLE08dnXR4dc53wFYEEZQXgVu2VRPbOY-BoWAZ2xoeoXubdbUn-YqlS71Ujinn3xo6jLPtwSgeYunI5bA_U53PfKrFOi5MyWR5-aZqOqLhKXutjBc1chF9o3IKx0LRddO_FZUvtrO0sEJuOJ88lV7TlZDYbAQGHyHzIElT-67zGiaJ47Pveh89yF3tNJkQHgdWhQk7hXE4uM31w6RVzfMZSbZmQsgtzF7ZIoaeDkHbIO-VevvKhCZvRk65mlY-G1SLo44NpEVVK1NTea8ZZBydn7w",
       "scheme": "MGNREGA + VBGRAMG"
     },
     {
@@ -1228,12 +1228,12 @@
         "Duplicate Benificiary": 2
       },
       "detailCount": 2,
-      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=9UNZ1P3P0_VUcXr1BdOyxsjPbL6-iyDteCxQ1o4rB9ckeITI9S-0NfIYbTcqSwvGUxgRhxWZFtPbwtffjVrA9HABgJd5JCcPEgV-twoZPAb-C9zknAwfrPfkwxXAzmtPbnfcm2cEScTgnRa87Ln2c21qQlBrGW3OkVS4KSjbKjT1kEVUOi2RJcIEvKHh1nZy4eFbwTxMb_w2LJaGFY5v3M8Dgyd87sT5XXohcsWTf5Eji7N2h9Airq6pAqGyj0383rLKeitaTCiXpEvZR4sFhzjtCFUMNWLEX05qMt56vyHBG4bVEgfvYtUyJFqjRIsp",
+      "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=8QI-WokpFV1BtC9zBR0rszeNRn6ti_gcwxuN-vZe8G8zAY3qfZ5a2I0XvKN9W0DxdYpDGMQ_6NmNhWcPAESs1glTBZKW3ssnSEuLKzpeH5c3pgjL6rJDSPLLnAJ9Czd8ZPAFkt6hc34MW1b_j1F4e6dOqH60IYfE8-wM0xeLRDKg0mepDJq_3m1wcnb1Fbm3-BJh9V_VveS33ShdbKbzCgi2XD9Qlsjth4e_bLHgm8XmhjvLoCHmalKS_1Hu8XlLFCIVJ20eQplsZAs7b8bpViDBSJdlogDlbnic6M4hijVNbl9zYd5i6rk6z5CjfeGw",
       "scheme": "MGNREGA + VBGRAMG"
     }
   ],
   "previous": {
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "rows": [
       {
         "fy": "2024-25",
@@ -1253,7 +1253,7 @@
           "Account Holder Expired": 1
         },
         "detailCount": 1,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=QYr_60js4tkbj-A0AKZ4LaqQDa2YQqFygo0QSEXgRArehmvwWJ_ZkWb5dQT3wTfgJWC4VgcVBkrhLp9bNnK-JmuzxmSXo-kUGDHv2EcXS7ypIQZ-ulsb3L2rmzlrw4ZLvrfMhb6HtVYkBh2Y3keuBYH6paxEUqkkQnQ7IZT3p1QKWNYh8SkypaD_WsJiTKs5uKF62Xt31VpERW-6UhbbW9AX3zCI3OyNlYCG8fLmJZioB5xzbBJ1iHjBalrz94niVooGfVa8UbHylPqu7fitTQAK15w6b4rltoI5SBwZwBYcyUQHWAYbe7pbz4XGqDB4",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=FLZJKBF7gUDRUyK3M-Wt_1woQr7uY07bUsSGflii44O0pWkSZ5trKwteC3h1qbcFQfGY9L7SJW6T76WxlGDbEqmVXrocdJx4eOxz7Shk-0xyYHTeY1Td_gP6cpAvoW39jlxSRWLGW5L-ZUSd6eWFTk44R36Ai3aCr-0fnl3RKRTmBs8e_RXm3xXDq2C-4eAtts1pYHrJOwXdsD8ZyFCpManObSufeK45XSxL3xXopkBDlTGBZTBQUTrsW3Fs6VX9y7oBqFtj0ON46LjxVaNnDbPU3HfM5LU_PzivtCtoO_6NmILX2_TSP3e40AMPIUbd",
         "scheme": "MGNREGA"
       },
       {
@@ -1297,7 +1297,7 @@
           "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
         },
         "detailCount": 25,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=RrAdIiXwV5GVD1i6OMJg28YDxrQAHa-06OJkWWpW4Eo0px6p9ev7XDnv8D3moMEbcjEw62kV8RHhfFcrv0AR2Sf-dk0e1DVccvN7Low7dpzBCQzyJb58b_ph5Y1gRr28uXPtTy7cM_GFf5LPauxhLPkQmiJeT2H9zX-XElDN8bbPFJmjXBKqtGGwdZeXAebdPkPZPHTYXkONS7mXZKEMRvWj7zNPDYUMDunWOjMWyP-EiCJ0km6TbmFkRFptZdcUGi1X1KXC8-hc2pAzCAVwezcucM9JWGC5or4Dhhyuhx8pR0pr1Y_210d-rl_0DL2h",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=-oYhE-h0MRYnHcrESoaFgVchNp3igRtjvjnwKyitT6kOiuAMPtrt6zKLaecrTJu-JlSg-rRh8Bsn0_OtPIW51yLdo-VnrQo9lxnjMtjNROcuON2IcUc6Oh1Z6HASDtFx_sfkTCYf2MOVb9DWQzkiFFt6CyVXDwe1k3mkEc1Yi9qo76KFHUpmA1Ug1P2kAwEj4M8cd2araFhS4Wiv-khHmOLcWZ8aUfEON-SHBNV4nStb8Ly1uUVpDYpUxxEtDgOywHPcmv8_XDV1OOA7al-TYq4cPWOY0BdG5QPNVxjv2Ofcv4zm9sbtM2_4E-20sb7f",
         "scheme": "MGNREGA"
       },
       {
@@ -1321,7 +1321,7 @@
           "invalid Bank Identifier": 2
         },
         "detailCount": 11,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=mHEyqwEyBeoIGk4igpoHwf7QGjKHCR0dY9iUNeTcFdDif6Foa9RWWK4M77OCYHDIYoPE8XG65rby5I_WA83igxMGCU6jtezziW13YncuKIdBseeVuJAZbEUDwuzzF-GP_do4CtjuxX7S-vVtyWbA-Ot-jToAcj0IpXNpzvhJNZEX1biDUgGpm8NFqqMONOF1gziDDEzjHLOSjUweMP8BZP28ARTXBQghIrDy2hDeNXnGwWF-gyKGoEPTZTVYxX4nsiFaWTWIdTGm8xGl_zNRdlIghLdsrZh_wb1mq6J-9vo",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ldq4uUmqaHGQjP--tma4nEgDO0foW-EzOVyqYrNF2DYEiHtKg3TZoijHBgtyg_R4X_653PuV77RbLA5yC8rdSSmSXhzF3o-D4KnuawiaZB2xfNXeaCQKbZHvpXmd-h_pIi9luGXxBD6PF-iZH0DZ1lmx0sYEky6ZMFKtYkwfTvlANp5GUrg2bQH7ZKBhzPlaMx9qERfuKF_78oHvlCNFT4qmlVZFu6LhgHzBsboB3rgVibGNc69g6mCFVrW7bCQaepJXJQL3Plmv6p3ERsKL2wsXtE-HejHn812Rt6X2xf8",
         "scheme": "MGNREGA"
       },
       {
@@ -1361,7 +1361,7 @@
           "Account closed": 3
         },
         "detailCount": 9,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=E4tnfVmRP-lBwJGzYcNHyuRzXWVbM6nyMiQIjQ651mlUjZZM8N09gH-bdY87pdYpyuK5gZRePHlsZxdp15uMsAHZzj51MK6A4IQx7W6cwfXi_wEt-8TUgggnCM7Q4cAILFclPj5qzVlkajeKn0Gf9mR0UkzFwuRXtvtlB2jZkavJrMGaI0rPp4aSGrsE1dXCPNLbnU0jhnP_q9GAbfpIv11eH6ZyC8nTuQl14BoPm_vOn153V0PISiEDP5W1lT0qisUcNPceVPlLMjW63GuakgPLu6hYQzi-21qqfVI6nzsLxx4PP6EkCbQBhDjmGzBI",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=YIF3ExyS4vQqfgOQoxmEfymWKYuS27CGiTQS2zxl1SNUkN22gYtEnvSlyO9nLeY5gQSxjlpC56VA5OxoZ6XnzT0XOSWb5US5lEH_-8f1M3aP-r0lNa59_qmUu4LYg2zEH7cg6rouqDLnQdUg2W7IJB779lz0P06B7SkYPbTpcQ3QDC4Pt2r2h3QpTUSvviteQtzkVRILpxXJJ8Ruz1tSPAiYPgcaxwdpRL7m60muw2jA608Muc5yMfdvVp4oSxlTInaGrp5lQM0scVd4t9KTN1No4FzFoH83SdcHhmdyFNqdZSCyiKvMncj0b9EXCkt_",
         "scheme": "MGNREGA"
       },
       {
@@ -1382,7 +1382,7 @@
           "Account closed": 1
         },
         "detailCount": 1,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ntY_C3uelguDFIFK9K4tq4fxZCBfoV5qa8a_iGBkYrTuppU8rnQyDabXfpiNpsFRbo9M7y9BNcxrtDj_zLhWXG6VP8skC84SOfbZli6WF20stpqmwXQYhfrQOga6EV_LjoMZqAcoF6F_4SutxCRbxiSWtE-j52I8xJ4-uXsLF61qt2oTdYPR_V81f7pMCW_2Bbj8_-9zDMGxfFOM2_g9OQ9qiEc8BjHgSdEJGne_ZE6A1BLmgVAHK4SMLxyFzA2LQ4NVYNur_rU3t6BozL5c3ksAfDaZPGqSdquz-mM-DuE",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=S_HlTgA5I9MMNvvWk2GlFnjzi-7eH_XeXBXH7HJlvnmFIJG8tzE0gvBQLX0yksGyBNshONzKcmx1lhMOcwm_Y6l9uZRs4Yd9Opr_8Km-9xpzqHwpNWJ0cIiDnZWGjmkC4iSd7HwJksyYCpffR9I_WjptZ3tZXMWrFCk4mBqwowm2oxfmmcJz-KTSvo2KJMcufMBae8AY2cK9MNMmVJ8yCZmaaSuT0gZh2S8nPjjQSoddUbKjH8U8cv32e8Lb1AuiHyexOVIzqGC9njZ_T_ROovqGFzQXJVaKXQQpvUBVigI",
         "scheme": "MGNREGA"
       },
       {
@@ -1405,7 +1405,7 @@
           "No Such Account": 1
         },
         "detailCount": 5,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=BPS8dmAeZVtaChI1H17MG-zKSNwLJMpRk1fFDVpbqrobOyBeYe7WOMwc5IlWHqerOdTioojmX-zNwWrsygE2V4oDRiYxJC2AMsYKpaU4HgHp46MwYJlJk1mo8MgjJFgWV0V0NIiC8Tbplnlb5PuwX9_u-QAQNlPYDGKgqZfhvD3lLTPllDfr2DdqJnZf_GtrOFruYkjtfXguDBQ3NkKb2qtfdJi595M2ymNq6MIEjKT9zxATzGJYeiQEX7uCuI_rKC45pdOuP2bEhAQ9lG1wYACiXAELLqOdqDUnpX0W9EJLX4GJ2ZrHchNDchRVZ77o",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=ghVCFK_2hinP8bsX6LiUidU8GtJ24l1ZL_uAkH09dqKHDHqwBDo8xKY2D8IJsQm3cT14fG4SiVsIHKdDpBk5YGYX5KUguK8NLi0rIM2DrP5oL84iIb-mfv-eqaOkNX8PRc3EDQNRzGd_j5hywWOtwf81orZfztp6ZHceVEbTkvYHbsySWSIKsewObgKJ-NzBB-paFG3a-Sy6dpq8mgWZ-oeeI9avlUDqYLGC9_kSCF1iURz156Hs4E5R7pNesPlWR6O-6yQdnVPudIV7krbxxT_QX9Diivpn2vK4PYgw80lVtRgRelAjpxFx-My2zmyY",
         "scheme": "MGNREGA"
       },
       {
@@ -1467,7 +1467,7 @@
           "Document Pending for Account Holder turning Major": 1
         },
         "detailCount": 44,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=pXtGlkuXlyUk2wIoevVjqrcqhPJmk9hIvmNVn3vAlYnecNSOSjaFMliG7B5dVLchgntLGQqNfJKEYqNcQQMIYJvlsMw2eu6SAKX1RckNO_3y8WjDlPu-R7Rr_1LdOWWfz2M0ETYOPd6xPWz7tpo4yCVpmK-lf57veQoku4MHFynQNRfHJI1Du2ka8nVxaY2AlX_VjuVIvjMbsL7odYIU9WA60LXDy2KvEhSkkRYPBDxnC_gR60-Jhr5o2ViCA5WHaSqBVvdrShNpoYA7qUZRKo45s_QMWWA6Bj5nxAXA5YGKj7uRQ-gv6H6oLsC0sAwS",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=KujK_iXqCmDnum6XJQPTsJL6ZC7OxHM4jEbLcBNlGwrlBKY_PxJTeK8QWbbUoUz2cX89VQUGVJ1wGKLlGL_Vn2RHg2HQ9t8ZHiUtkUSKnhSXsmCAyWaoXR_k9UfiQJMnEGoGf8fgPQiItLSO1aCku_tbhPRDpglrs3FU9X7_mb4WmX6nz4j2fEC4uwxKWMz5qc-XU_TFD7L9VNn0Ao2LVpioOsx7AXxYuyA59gkUbP6mmEHvi_Np7an8L-WaZLUt9fmyKCr063G5rCUwNz5KBqw8ged_ztc83p0dUYnKo4jh5VYNdjpb9-4x1GRamMmd",
         "scheme": "MGNREGA"
       },
       {
@@ -1493,7 +1493,7 @@
           "Aadhaar Number not Mapped to Account Number": 1
         },
         "detailCount": 29,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=PIOP5jaGX5IlVpi5HfPW0f7fC1WwPdzlxmh8QemRubXff4ZSXvWPqCbCB1v_cOj_RIcyIvc5qydYZ01-_C0MEN910m7IkM7ka9nYeRAgSL5tAeQkCF6uHGuPChMKT2zZGxqgh6GVENexD_IIK0RhUlv3bBfrnJYsGW0ZkS-MrhAOxeK_2vsPabpiEAflBj-1u3c0lPpBJ3EoUEn18wp-66XiSDaOp8tvPZTMWMCgigLg1HqTKZwU9J5XVAKetutmuiV-TENzk9u4Hkjya02I4V23k1SKPjPaTSw_1skCJGw",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=EjXB8QY9cTe4fDVaocCqwxmv2N9lqulTRywrXOPXIJvH1xuJ6BEn8DDZYkxwndZBYjFpPLNVSY8b2t1Q-JKvr_8oyRGi6RfmeUYgPAz0zZqELo6eJxJHc3keFyy2cRLz1uKR--Asq5DjVOXRT3FJhXtAo7jzDN7p9qoxjFMRXcOtFczhKZRmfX68ammvEOzygxlkyTesQHSFmlj1NYnR5c24DcZofWQPGAEvJs7lliQ1T8IZlx-8_isMUglCt-LisBnR_gnLFNoXDMcCsPlR0EXwlFk8_q1cfwziB4rkaAU",
         "scheme": "MGNREGA"
       },
       {
@@ -1514,7 +1514,7 @@
           "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 1
         },
         "detailCount": 1,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=k81vFrAHO2YDSkjhOh5ZIs_W24xz97JpUVw-5tANm6dVQPxSkXLjtBoLDqN0mdBzNNINN4MzJdhE8JOnb_r1HBdCK0FX2ezUevgb0kJAdTJcof6mAJhuaU0nbql0U82sJFejWYyqb2Y8XNCKJ-_ZGiogHafTcxgu58x1SO8zzx6SqFYT6x6VVdIfWPAuvTau7f8kGixOTHRCzzTe5u3HBSphMoTb2McZqikkiQTR4gg9GM5n59NSXL3iKXy9rMfkppADd87ec40yzWGFBQSopIKo8rD1dDC9Vwi72U6dq4X2f_rbZCcjfn-0lLjg1L5a",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=EMmYAaxsUDiqX_RelVLdoVllBT9TvZiRMGO03ddhXFz48-T_qlzNGhBYYA-PuVV0HZJV75QMnDrC9V35kQEn2MMwgH4lnDoXYeF5J8ejmXF3Yz4wC3pgjqCva5Nx2evvqLtTazZ7RoA8Q2uth5FakPFjtdyOQoVxjtdBX84QkaAZuXY-UXpqVyqpjgaoNyR5RWz4u_7JdtG5iZxDF0W8_mP16p9MWFcyo247V9eDlPdr3i3pT-v47eiGPQyQ9Yvn-pZtqIjpPU-9urXTIsVZkQ4mGS_kyDQdVedRBm_P_6r24elGlQLA0IYsKCg_vacQ",
         "scheme": "MGNREGA"
       },
       {
@@ -1539,7 +1539,7 @@
           "Unclaimed/DEAF accounts": 2
         },
         "detailCount": 73,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=mfuc2kJxYhRNSMkhIkePeTaPB6x3dtWyjjKwbrKzGlTx1-0CIwQLuV-nfeADONfQGZwXuzoBe1ZTkLaBkz086HDfj7wVRQnfN4GLy_QggIJlv9aRtVuNAwVGlFrMuH6dWwdjA2YzCCvyn3JZtW4X0aAx2EgIbMyo-4I9kJln9D7l6u852q9mabVybAJ5wUHiVjktt5gBndVTqF53B7mmTDkgjlX9IZ6TFYDpnr_PAll-fGMkfMOTBM22nI66X-iOgGwrivhEZVA_diUsBDdxEJ7kEsFmvNGdgovwQYhsPaQMmencJOMntpswTLqUmn14",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=2luaj6TQvITIQaHeCthc3qN4XqE-eFbkDQOZnB6X9t09slWPePwFTivi51UwaOrUMuyRtdNkEaB14IV3NlteCTDchEGv0rLg50VuikupXYWfuu-iAXSHuYNOCyaRSlBDsc3-EX6EEwsITliBIPjz1crDxT7JqXItQBX4b9u0_-izQXXYbVSFcORuofykOz7CAaXTJLOEce7JEThWqTG6w6vd44lTOIW5Nxfq4qjLrxDzA_klV-IHa3I8KFMSPX974zOHDBkkkq6znpNxYWeLOJutvyOTojA9wMulTitdK6KjEW-53Zl1wqgqwv0fMBQl",
         "scheme": "MGNREGA"
       },
       {
@@ -1562,7 +1562,7 @@
           "Participant not mapped to the product": 1
         },
         "detailCount": 7,
-        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=XFfLZ89K2abOcB9YPODf7Xyr0rYS1SlNHeE75pudF4lkG4WpzYEknIgSmUeaB7-n3q5qypjCSKpafAJtJYc5tUvrvdoCmR8TQELYXqfAfINfVdWbiqdtJ1PVALHT4JVZEOCZ5AvJWjoszTn1xbHxIKlxqVEHAeC9Xol8bZuTLoX17JqQyQUARkpwLfZ8DHYCNj6k249T5v2Yu5Rpx5vDWOJ7mtcrD8dsWnz_dfoC3GBsoLCDzkdb9Bw1TxFzX1rNdTNVeoEGBF69ErtECz0qu3dMgx6GX1T6Ch2HDHa2esA",
+        "detailUrl": "https://mnregaweb4.dord.gov.in/netnrega/rej_transftomusteroll.aspx?payload=fpkmoP2u5kGBKyDizWKMo1oKxMiTAxpJMK9wkIffPWo58BRAlUkaWGAPnRR2f0-mJZHDTg4TNYVOl_o40Z9H6dO1zUrTMm00PhxYS0skXW3LTeuZ3gr94Zi1dRpsn5kIqAsmtz-KZQJIPEthsv7AwOcb6JzKWPhrrNA05P5fY0bXIjJwPOrv1oKAteu_2nAwZrw1j9pd9yuMMMF9Bjmi9-aTFxYCbzJZnjeIqm8KfbefHTlsrhfYZE3aMi07pNECYmE-zFYoTOA-47R-h-04_S7qOdgD9IYJdMj-8pAmSfg",
         "scheme": "MGNREGA"
       },
       {
@@ -1601,7 +1601,7 @@
           "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 1
         },
         "detailCount": 1,
-        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=1IxNG2efWKLiZ4n6xLfmTahwFHMOaSMODOxadxYvGoNbhticYVkaEY0Jj85GeghzvkH6BSKOgciZniIRh9urQ1diPHM4rXeDYjRjwtaeJPokn8dJWOTkHeW-t87Q46wkhk187z9qhiynIKgNLMfg2P4SfhVs80FRfZwFx3x4lXfHYYq-qL70edkkvNcmuhP4wUyXQCIHQ0MG8CqzRyzO11coIwzrOmpT7nhg5rQUj1_VkrbbeBjzCGCBkhnk2MO3UMS9a8MDpejGc3HOqe2aiEde-ekSgyiWV5kgfeE7HwH6npHQjp8bx7U3xJLGyEI5",
+        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=sDQIz2kNKHZ352_lzqlJ0Mir6j3wtpudZl80rHKpdSoTYOKy3lPwC14eqiA8ypj8ze2WKPpIbMfsvpVU9FXg6iP7yfms_BlLjT3B1-sO2fWJavlT-o5ynXE6AUCJjq8DBtDFLT11ew85DdEn44n4pNdFvp64WqSg2JYTNsvdw8n_EYDJfsg8ReCuaf5Ti6E_BJtXhc1bsH4LRIWVxuLG_Ic_i6t-RE9D7ahTtgBIX4RL7WP9BFpxNhBg-oS2V2Snb07KMJtvebdqGkdUUM6Rma9E6nRe4q6AWO32YNS1-MRDiX2gfscFQb7bRgOFMNyM",
         "scheme": "MGNREGA + VBGRAMG"
       },
       {
@@ -1624,7 +1624,7 @@
           "Special characters and numeric values found in the address field.": 1
         },
         "detailCount": 7,
-        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=Krpb6X1g90j5e6Wl_a5JZCeFrDfPcFR901nz90Ym7bmnvrNemcF58CvjsHsJ9MhOt0nY1SkUGMJCV9Y4hpXZJaGjNNdGoESUvKwoqMlMQMAY6R2F-FtUWoGhMpuxkzpji0kzZCfZokQpvRcMTLpoV-FcAOu71XyI8a0cgVReh13D789n1PgbqZt10H6xoshzNP_dJBDNS1XHOgWQTxdnlf8DWjDcBWGaHK_OKdLo0ZyHUTLJL5hA9nEEDU5rdERC6aZJap5lTuBHeAWWl9q48GllrR9dwsF7vqlUxkZhmTJpp2W5L7M8MR5WQDvl3e9U",
+        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=ldVMGY0YDTIB1ESV_xPlnbkXrzy3U4xSraqnEvAh8z65gB1cVL28RrFdtlscQQ86xAfcVzqDO9eHVtOxV077FeX4SAFHdL9feOVBlTX9-aDyuwe-UcM9yVuahyqpHlJ7AOAraKrPcWLBKIFuISC9gdtIfDipPhCzglnOz5HOjsXAdUZnYIjFlA2N2MKS9iVbBJ-vqtgMBQ5KhA9091FThEwE4zFkRzBD-dBwPTNt6kli45-_MvT9it3Taa8I67rPbjQ0KgVVI4mg5ES_k079X8ftxy37jbkZM0guPk-iPsBMMT-3KtDEd4coBiKQFPps",
         "scheme": "MGNREGA + VBGRAMG"
       },
       {
@@ -1635,14 +1635,14 @@
         "totalAmount": 1493222,
         "pending": 262,
         "pendingAmount": 662858,
-        "muster": 179,
+        "muster": 176,
         "fto": 52,
         "success": 1,
         "successAmount": 261,
         "bankPending": 329,
         "bankPendingAmount": 830103,
         "reasons": {
-          "Duplicate Benificiary": 175,
+          "Duplicate Benificiary": 169,
           "Special characters and numeric values found in the address field.": 24,
           "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 11,
           "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 20,
@@ -1651,8 +1651,8 @@
           "Aadhaar mapping does not exist/Aadhaar number not mapped to IIN": 5,
           "Aadhaar Number not Mapped to Account Number": 1
         },
-        "detailCount": 262,
-        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=VpdUFGwrtIhA-qU9_rHQZtpq8Y-VmAUI500Qbbs4vf7IMcicmJmlQoOjm4l0ZLSv1M6Wqn9fbctKkUJmoGvl7QqZFPyOV8_UhKj9_q4j1CHFhuyve3f3IF_2CLJk42QeZOk1xqD_vA5-H-ydYN4Bmte5OALHTjgfcKuFnaInb48Pm6l8ATkDkOTGUj53gUv5to7OmDr1r9UVlosNsCeBVHsw2Snwf_pF8f81UqfI9AOdmwbeLnK-yvfE2IN5IurByn5rAs79Pv2Voc1664i-XLwanuGh0uPxkjdQvVFLa02VkU91Yvf6KEr8ES1wwitt",
+        "detailCount": 256,
+        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=tJetKL8mnzhvKHtuo5lWgmyA8jc1-oLrGetoTN4WmQSNNZgzr0oH_Z00MQFn_slxGFZrflxsDwZSlJ-5-uFNieMTx9-sj5AuPet8-3mBS57CK2NO8s21X0lAWcq1uX_FclX8u5j06KlqyIGBK125XNs4oKPpwouy9f_sRMuFVW-p6-rDNd4lJQZ8BGlkNTR7Q2DVoafTgBstP7AEAmwz0O4cXJuguhi_FkKbbeXzyom8AP1v3aMxc1VRr5wTn_0eigaae_qthAHcgsT-2uw8FF8JlV4Hhkc1KVPcot2pyj4jBxpfkdoS4sV4EeH6aRcw",
         "scheme": "MGNREGA + VBGRAMG"
       },
       {
@@ -1661,25 +1661,25 @@
         "district": "SATNA",
         "total": 1793,
         "totalAmount": 3605557,
-        "pending": 261,
-        "pendingAmount": 514424,
-        "muster": 204,
+        "pending": 249,
+        "pendingAmount": 485180,
+        "muster": 196,
         "fto": 47,
         "success": 73,
         "successAmount": 179294,
-        "bankPending": 1459,
-        "bankPendingAmount": 2911839,
+        "bankPending": 1471,
+        "bankPendingAmount": 2941083,
         "reasons": {
-          "Special characters and numeric values found in the address field.": 68,
-          "Duplicate Benificiary": 85,
-          "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 43,
-          "Payee Data Validation Failed.": 31,
-          "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 16,
+          "Special characters and numeric values found in the address field.": 67,
+          "Duplicate Benificiary": 84,
+          "The Address field must contain at least 2 characters and should not include special characters or numeric values.": 38,
+          "Payee Data Validation Failed.": 29,
+          "MOTHERSANCORDERNUMBER/STATESANCORDERNUMBER is missing or length of STATESANCORDERNUMBER should be 12 characters.": 14,
           "Objected by DDO": 1,
           "Aadhaar number de-seeded from NPCI mapper by bank - customer to contact his/her bank": 7
         },
-        "detailCount": 251,
-        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=_KD_wukBxkwkhIZdFY9QKx190ypL0eg0qqhp-ElsH0bJi2rDgcKiZ7BqlytI9xsNcAZ-gtf-R4C7Bx2-pgXi-HSYo5312VCijfA-sOOjd05vBSLePTSz7uS6Ei2pbONrhm0yatxpD3wdc_gKObE0V9Dr8apT_TkrYJdoIyuegHRLHE7_OtBZd2kLzArjuu5rEUb-T8JxCMeQF4-8eYA12CJ0X6CJiTJtTAI8e1eViNotehVpVUESK-szIwfSRstq7x2rBFMfESAcA23CxUwQ0GPBLQU_3h2ltOBRwClCRNI",
+        "detailCount": 240,
+        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=543AqCv4ehAHTwqrhlw5VQl3DhA1MmZV4mSqrr3xutSC3SSRevcEj0t2Mjqo3xFTmJdDpQ7X2tlwVjdJEENHbUHPrfn9cgPJVGWbWdjvw2FwmYzCVr75owlLC2fymjjerRxpAJWV80F8lxjm89RujzWOeEYavaJdd2ffqjSbC-Feqnim1hHCUudOPLNwTsnAAhWVo7oiBrX9DE3pxKmCN0ZL52BnUrtdJFc2lu9IOGfCsA4m60NXhcEV3y8WFf0nq-2S-uHqXrFCfrBHsol8nzG8DWbfmwtNBuJuvN56a2E",
         "scheme": "MGNREGA + VBGRAMG"
       },
       {
@@ -1706,14 +1706,14 @@
         "district": "SATNA",
         "total": 637,
         "totalAmount": 1700242,
-        "pending": 78,
-        "pendingAmount": 241489,
+        "pending": 77,
+        "pendingAmount": 240889,
         "muster": 66,
         "fto": 32,
         "success": 0,
         "successAmount": 0,
-        "bankPending": 559,
-        "bankPendingAmount": 1458753,
+        "bankPending": 560,
+        "bankPendingAmount": 1459353,
         "reasons": {
           "Payee Data Validation Failed.": 9,
           "Duplicate Benificiary": 40,
@@ -1725,7 +1725,7 @@
           "A/c Blocked or Frozen": 1
         },
         "detailCount": 77,
-        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=VIteBhQpjPQed-T77LGKpgazDNGOp_xqk99K9DqShnzm4O9rQEuJZFEJLVfU02KDEzTXXXZbv6bU5hOK8mIhFR1m5Pu1ibY0aBGQji9KLOGa62iKdP9hmUTd2I18n4EENWM0nNe2jd4lCbmod9P7DzlEpKTb4VIATLvZP4wp0401dQ0S8_pwFsKW7BkeeAyYBnZCddVbZTHszmz0wsqxdNGTdLEn1zTwZBbHcDgmxo6I-b9QSyzhMxV75llVrAUZdErnthVVG52SAdyZTSrGlji8MEtlSMdF4icb24p6dPMKiy905M9JoDxlzS-777lC",
+        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=_nh9s1Ls6RkCNWoQ78KzzAdy1YrpavA03Z2zwMg59J5ov_NqZ7Ahu39An_FFdisdqDUFE6jH_7x3zSZ5Kw4Qd8yrwuIDWZDbSePcEOteggGXrFQz_jIouaPDFs9rwr_IZZHE5tNIZpqeiNomqmKi3UFcCj3iTLY-O1i05S61iBS-1074MaIY2hG3pB7MY4NsHAn0W7R4oaJFucmLjlt9-IajS253vVEukLpvBaJIrZ7OqklYW30MZgmPwCsJyu0ezX6f1bovWnpniGrvpLhY4G9I6ho8q4RE8x7jG-Vli1bFrd_83j8N9AXl9t9-1oCO",
         "scheme": "MGNREGA + VBGRAMG"
       },
       {
@@ -1750,7 +1750,7 @@
           "Aadhaar Number not Mapped to Account Number": 1
         },
         "detailCount": 15,
-        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=JhECYhYNi9RAwF4DpZtt7onpJjZdA53MeHsEEpaw56N2ogLEfArjuTW4JWBQHaoohApVsjyemMy1TzKvKlg7c8wSj9Dii8CRkSDDbj34qFGMnZQ0F87ax-EBqSEKY8a-rfSRBko066oHrgcjxLiOlupM3DWDp6LfumTsXJ0Oqqy7BJioxsoARKscPUb5pStn-vZxefytsscvpp7dg1qI38B1lnHS9Bbt0OmhVW_68UodH6oLqzvhPkeOegExUQCLZ0dYEba62q5h40VK-N1eoEYZK8k5yRX1mYcytyMQpnA",
+        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=AewyFrD6HzFdKuGLWi4i2Qfpo4twbRdGL1ci7fzCFNejXc0Z0-2WWo6wofjOv9Axx1G6vckyKa2rtfadhhFmBkybjgyECnO2lQkBgVVWbjq1nCNxudKysXmCX4F8MRlOUsiFafPbFQzhDXxg8Qy7wt02y9fLFE8nbXePP2iXL36tvFSr5Yz7CDFfsz83DtUKBtXNMoSgmmqOo3D7CL1HB8Y3eqWe6XhDxibPaSQSvzC-hkQ5FjhuIFuoQyQIP-3OV62Afe6uFeaU0RQWPAjBwtiy-Eao5Lv7cfucZ-v5aRA",
         "scheme": "MGNREGA + VBGRAMG"
       },
       {
@@ -1771,7 +1771,7 @@
           "Duplicate Benificiary": 2
         },
         "detailCount": 2,
-        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=L1DgJom84BT-c54l4KsgV196D0tzpTgnXF_7lDH6zx_j8mAOKT1YPiG9SjSnA0Gz6Ggxj2JUQRV6GTqAdjcH-0-Lqj2CrK5hdiHeYpK-9bik38dz3xtaqcWNe9fbdPb_imT8X8pv7kpjEtSeWRGlciarF8bJUaMmDwdnhOwbrAheqzzKNyJ-BrcklhCobEEIqh_QblBVO5qqMVdVolUDIBhb1sYqrxbeiPeHhqZSgZoOBCUiSH4X-cRESvdmNm5386JD1PAa-6JNixc1oQPaqKptIX5a33WSnMczQeNG8CQ-0vCkPIUe-NswBnPS733L",
+        "detailUrl": "https://vbgramgrep.dord.gov.in/VBGRAMG/rej_transftomusteroll.aspx?payload=9UNZ1P3P0_VUcXr1BdOyxsjPbL6-iyDteCxQ1o4rB9ckeITI9S-0NfIYbTcqSwvGUxgRhxWZFtPbwtffjVrA9HABgJd5JCcPEgV-twoZPAb-C9zknAwfrPfkwxXAzmtPbnfcm2cEScTgnRa87Ln2c21qQlBrGW3OkVS4KSjbKjT1kEVUOi2RJcIEvKHh1nZy4eFbwTxMb_w2LJaGFY5v3M8Dgyd87sT5XXohcsWTf5Eji7N2h9Airq6pAqGyj0383rLKeitaTCiXpEvZR4sFhzjtCFUMNWLEX05qMt56vyHBG4bVEgfvYtUyJFqjRIsp",
         "scheme": "MGNREGA + VBGRAMG"
       }
     ]
