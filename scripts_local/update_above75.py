@@ -94,8 +94,11 @@ def main():
   sanction=number(a,'Total Sanction (Rs)')
   old=number(a,'Booked Since Inception Wages (Rs)')+number(a,'Booked Since Inception Material (Rs)')
   fresh=number(b,'Current FY Wages')+number(b,'Current FY Material')
-  m=mapping.get((norm(a['Janpad / Block Name']),norm(a['Panchayat Name'])))
-  if not m:raise ValueError('GP mapping missing: '+a['Panchayat Name'])
+  # MIS calls Sohawal block SATNA; identify its block from the work code.
+  block_names={'1712006':'Amarpatan','1712008':'Maihar','1712001':'Majhgawan','1712003':'Nagod','1712007':'Ramnagar','1712005':'Rampur Baghelan','1712002':'Sohawal','1712004':'Unchahara'}
+  mapping_block=block_names.get(code[:7],a['Janpad / Block Name'])
+  m=mapping.get((norm(mapping_block),norm(a['Panchayat Name'])))
+  if not m:raise ValueError('GP mapping missing: '+mapping_block+' / '+a['Panchayat Name']+' / '+code)
   rows.append({'code':code,'name':a['Work Name'],'janpad':a['Janpad / Block Name'],'panchayat':a['Panchayat Name'],'cluster':m['Sector'],'engineer':m['Sub_Engineer'],'fy':a['Work Start Fin Year'],'status':'Ongoing','sanction':sanction,'nregaBooked':old,'vbgBooked':fresh,'overallBooked':old+fresh,'overallExpPct':(old+fresh)*100/sanction if sanction else None})
  if not rows:raise ValueError('No matched works; publication refused')
  output={'source':'MGNREGA FY 2026-27 Ongoing + VBGRAMG FY 2026-27 current expenditure','fetchedAt':datetime.now(ZoneInfo('Asia/Kolkata')).isoformat(),'allWorkYears':True,'nregaCount':len(nrega),'vbgCount':len(vbg),'matchedCount':len(rows),'unmatched':missing,'rows':rows}
