@@ -258,7 +258,7 @@ function printSelectedSCN(){
    .pratilipi-sign{margin-top:10px!important}
    img{print-color-adjust:exact;-webkit-print-color-adjust:exact}
  `;
- w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><base href="https://srdmsatna.online/"><title>SCN - '+r.janpad+'</title><style>'+css+'</style></head><body>'+scnHTML(r)+'</body></html>');
+ w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><base href="https://srdmsatna.online/"><title>SCN - '+r.janpad+'</title><style>'+css+'</style></head><body>'+scnHTML(r)+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261012-large"></body></html>');
  w.document.close();
  w.focus();
  const fitMainPage=()=>{
@@ -310,4 +310,4 @@ async function loadPayment(){
 }
 loadPayment();
 </script>
-</body></html>
+<link rel="stylesheet" href="srdm-report-fonts.css?v=20261012-large"></body></html>

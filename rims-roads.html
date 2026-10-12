@@ -202,7 +202,7 @@ thead{display:table-header-group}tr{break-inside:avoid}
 .report-sa th:nth-child(6){width:43%}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 `;
-const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html lang="hi"><meta charset="utf-8"><title>'+ (scope==='sa'?'State Approved सड़कें':'जनपद सारांश')+'</title><style>'+css+'\n'+fit+'</style><body>'+heading.outerHTML+'<main>'+sections.map(s=>s.outerHTML).join('')+'</main></body></html>');doc.close();
+const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html lang="hi"><meta charset="utf-8"><title>'+ (scope==='sa'?'State Approved सड़कें':'जनपद सारांश')+'</title><style>'+css+'\n'+fit+'</style><body>'+heading.outerHTML+'<main>'+sections.map(s=>s.outerHTML).join('')+'</main><link rel="stylesheet" href="srdm-report-fonts.css?v=20261012-large"></body></html>');doc.close();
 frame.contentWindow.onafterprint=()=>frame.remove();
 Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},300));
 }
