@@ -16,3 +16,20 @@
  body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) td.num,body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) td.numeric {font-size:13pt!important}
  body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) .srdm-report-code {font-size:11pt!important}
 }
+
+/* Official Janpad print: retain all 8 blocks and total on one landscape sheet. */
+@media print {
+ body[data-report-view="official"] .shell,
+ body[data-report-view="official"] .report-card,
+ body[data-report-view="official"] .table-wrap {width:100%!important;max-width:100%!important;min-width:0!important;overflow:visible!important;margin:0!important;padding:0!important}
+ body[data-report-view="official"] .report-card,
+ body[data-report-view="official"] #reportTable {break-inside:avoid!important;page-break-inside:avoid!important}
+ body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #reportTable.official-grid {width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important}
+ body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #reportTable.official-grid th {font-size:7pt!important;line-height:1.15!important;padding:1.4mm .5mm!important;white-space:normal!important;word-break:normal!important;overflow-wrap:normal!important;height:auto!important;position:static!important}
+ body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #reportTable.official-grid td {font-size:8pt!important;line-height:1.15!important;padding:1.6mm .4mm!important;word-break:normal!important;overflow-wrap:normal!important;white-space:nowrap!important;height:auto!important;border:1px solid #405873!important}
+ body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #reportTable.official-grid td:nth-child(-n+2) {white-space:normal!important;font-size:7pt!important}
+ body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #reportTable.official-grid .badge {font-size:6.5pt!important;white-space:nowrap!important;line-height:1.1!important;padding:.4mm!important;min-width:0!important}
+ #reportTable.official-grid thead {display:table-header-group!important}
+ #reportTable.official-grid tbody {break-inside:avoid!important;page-break-inside:avoid!important}
+ #reportTable.official-grid tr {break-inside:avoid!important;page-break-inside:avoid!important}
+}
