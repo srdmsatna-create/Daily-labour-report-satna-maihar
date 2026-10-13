@@ -51,7 +51,7 @@ def fetch_source(source_url):
  rows=[]
  for status,label in [('03','Ongoing')]:
   for kind in ['ALL']:
-   key=hashlib.sha256((source_url+'|above75-v1|'+today+'|'+status+'|'+kind).encode()).hexdigest()
+   key=hashlib.sha256((source_url+'|above75-v2-mgnrega-only|'+today+'|'+status+'|'+kind).encode()).hexdigest()
    cache=cache_dir/(key+'.json')
    if cache.exists():
     saved=json.loads(cache.read_text(encoding='utf-8'))
@@ -71,39 +71,31 @@ def fetch_source(source_url):
 
 
 def main():
- nrega=fetch_source(NREGA_URL);vbg=fetch_source(VBG_URL)
- if not nrega or not vbg:raise ValueError('Both official ongoing reports required')
- def index(rows):
-  out={}
-  for r in rows:
-   if r['Work Code'] in out:raise ValueError('Duplicate Work Code')
-   out[r['Work Code']]=r
-  return out
- nrega=index(nrega);vbg=index(vbg)
+ raw=fetch_source(NREGA_URL)
+ if not raw:raise ValueError('MGNREGA ongoing report is empty; previous data retained')
  master=list(csv.DictReader((ROOT/'gp-sector-engineer-master-25-09-2026.csv').open(encoding='utf-8-sig')))
  mapping={}
  for m in master:
   for k in ['Gram_Panchayat','GP_20Sep_Name']:mapping[(block_key(m['Janpad']),norm(m[k]))]=m
  def number(r,k):
-  v=r.get(k,'').replace(',','').strip()
+  v=str(r.get(k,'')).replace(',','').strip()
   if not v:raise ValueError('Missing expenditure field '+k)
   v=float(v)
-  if v<0:raise ValueError('Negative amount')
+  if not __import__('math').isfinite(v) or v<0:raise ValueError('Invalid amount '+k)
   return v
- rows=[];missing=[]
- for code,a in nrega.items():
-  b=vbg.get(code)
-  if b is None:missing.append({'code':code,'janpad':a['Janpad / Block Name'],'gp':a['Panchayat Name']});continue
+ rows=[];seen=set()
+ for a in raw:
+  code=a['Work Code'].strip()
+  if code in seen:raise ValueError('Duplicate MGNREGA Work Code: '+code)
+  seen.add(code)
   sanction=number(a,'Total Sanction (Rs)')
-  old=number(a,'Booked Since Inception Wages (Rs)')+number(a,'Booked Since Inception Material (Rs)')
-  fresh=number(b,'Current FY Wages')+number(b,'Current FY Material')
+  booked=number(a,'Booked Since Inception Wages (Rs)')+number(a,'Booked Since Inception Material (Rs)')
   m=mapping.get((block_key(a['Janpad / Block Name']),norm(a['Panchayat Name'])))
-  if not m:raise ValueError('GP mapping missing: '+a['Panchayat Name'])
-  rows.append({'code':code,'name':a['Work Name'],'janpad':a['Janpad / Block Name'],'panchayat':a['Panchayat Name'],'cluster':m['Sector'],'engineer':m['Sub_Engineer'],'fy':a['Work Start Fin Year'],'status':'Ongoing','type':a['Work Type'],'sanction':sanction,'nregaBooked':old,'vbgBooked':fresh,'overallBooked':old+fresh,'overallExpPct':(old+fresh)*100/sanction if sanction else None})
- if not rows:raise ValueError('No matched works; publication refused')
- output={'source':'MGNREGA FY 2026-27 Ongoing + VBGRAMG FY 2026-27 current expenditure','fetchedAt':datetime.now(ZoneInfo('Asia/Kolkata')).isoformat(),'allWorkYears':True,'nregaCount':len(nrega),'vbgCount':len(vbg),'matchedCount':len(rows),'unmatched':missing,'rows':rows}
+  if not m:raise ValueError('GP mapping missing: '+a['Janpad / Block Name']+' / '+a['Panchayat Name'])
+  rows.append({'code':code,'name':a['Work Name'],'janpad':a['Janpad / Block Name'],'panchayat':a['Panchayat Name'],'cluster':m['Sector'],'engineer':m['Sub_Engineer'],'fy':a['Work Start Fin Year'],'status':'Ongoing','type':a['Work Type'],'sanction':sanction,'nregaBooked':booked,'overallBooked':booked,'overallExpPct':booked*100/sanction if sanction else None})
+ output={'schemaVersion':2,'basis':'mgnrega-only','source':'MGNREGA MIS 6.12; all work years; Ongoing; booked since inception; expenditure > 75%','fetchedAt':datetime.now(ZoneInfo('Asia/Kolkata')).isoformat(),'allWorkYears':True,'nregaCount':len(raw),'matchedCount':len(rows),'unmatched':[],'above75Count':sum(r['sanction']>0 and r['nregaBooked']*100>r['sanction']*75 for r in rows),'rows':rows}
  p=ROOT/'data/above75-latest.json';p.parent.mkdir(exist_ok=True);t=p.with_suffix('.tmp');t.write_text(json.dumps(output,ensure_ascii=False),encoding='utf-8');os.replace(t,p)
- print('SUCCESS above75: matched='+str(len(rows))+'; pending VBGRAMG match='+str(len(missing)),flush=True)
+ print('SUCCESS above75: all MGNREGA works='+str(len(rows))+'; expenditure >75%='+str(output['above75Count']),flush=True)
 if __name__=='__main__':
  try:main()
  except Exception as e:print('FAILED above75; previous data retained: '+str(e),flush=True);sys.exit(1)
