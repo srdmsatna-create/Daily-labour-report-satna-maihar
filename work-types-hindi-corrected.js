@@ -1,6 +1,6 @@
 /* Match the actual work name first; fall back to the official work type. */
 function hindiWorkType(v,name,mapping,code,sanction){
- if(Number(String(sanction??'').replace(/[,₹\s]/g,''))===25899)return 'ओपन डग वेल';
+ if([24577,24961,25899,30899].includes(Number(String(sanction??'').replace(/[,₹\s]/g,''))))return 'ओपन डग वेल';
  const correctedWorks={"1712004008/WC/22012035228726":"परकोलेशन टैंक","1712005080/IF/22012034993930":"खेत तालाब","1712008042/LD/22012034951218":"खेल मैदान","1712008001/LD/22012034939964":"नाली निर्माण","1712005058/LD/22012034590003":"खेल मैदान"};
  if(correctedWorks[String(code||'').trim()])return correctedWorks[String(code||'').trim()];
 
@@ -32,7 +32,7 @@ function hindiWorkType(v,name,mapping,code,sanction){
  [/anicut|एनीकट|एनिकट/,'एनीकट'],
  [/percolation|parkul[ae]tion|parkuleshan|parcolation|परकोलेशन/,'परकोलेशन टैंक'],
  [/gully.*plug|गली.*प्लग/,'गली प्लग'],
- [/trench|ट्रेंच/,'ट्रेंच निर्माण'],
+ [/trench|ट्रेंच/,'कंटूर ट्रेंच'],
  [/play[\s_-]*(?:ground|field)|khel[\s_-]*ma[iy]?d[a]+n|खेल\s*मैदान/,'खेल मैदान'],
  [/bagiya|बगिया/,'एक बगिया'],
  [/plantation|vriksh|वृक्षारोपण|वृक्षारोपड|पौधरोपण|वृक्षारोपण/,'वृक्षारोपण'],
