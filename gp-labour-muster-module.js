@@ -155,10 +155,11 @@ function draw(){
  const gpRow=isGP?data[Number(document.getElementById('gpNoticeGP').value)]:null;
  const isEngineer=role==='उपयंत्री';
  const g=isEngineer?summary[Number(document.getElementById('gpNoticeSector').value)]:janpadTotals.find(x=>x.janpad===selected);if(!g||g.janpad!==selected)return;
- const gpDetailRows=isGP?[gpRow]:data.filter(x=>normJanpad(x.janpad)===selected&&(!isEngineer||(clean(x.engineer)===g.engineer&&clean(x.cluster)===g.sector)));
+ const gpNoticeEligible=x=>x&&x.labour!==null&&x.labour!==undefined&&String(x.labour).trim()!==''&&Number.isInteger(Number(x.labour))&&Number(x.labour)>=0&&Number(x.labour)<=5;
+ const gpDetailRows=(isGP?[gpRow]:data.filter(x=>normJanpad(x.janpad)===selected&&(!isEngineer||(clean(x.engineer)===g.engineer&&clean(x.cluster)===g.sector)))).filter(gpNoticeEligible).sort((a,b)=>Number(a.labour)-Number(b.labour)||String(a.panchayat).localeCompare(String(b.panchayat),'hi'));
  const gpDetailGroups=10;
  const gpDetailBody=Array.from({length:Math.ceil(gpDetailRows.length/gpDetailGroups)},(_,row)=>'<tr>'+Array.from({length:gpDetailGroups},(_,col)=>{const x=gpDetailRows[row*gpDetailGroups+col];return x?'<td><div class="gp-name">'+esc(x.panchayat)+'</div><div class="gp-count">'+fmt(x.labour)+'</div></td>':'<td></td>';}).join('')+'</tr>').join('');
- const gpDetail='<h3>संबंधित ग्राम पंचायतवार विवरण</h3><table class="notice-gp-detail"><thead><tr>'+Array.from({length:gpDetailGroups},()=>'<th>पंचायत<br>श्रमिक</th>').join('')+'</tr></thead><tbody>'+gpDetailBody+'</tbody></table>';
+ const gpDetail='<h3>संबंधित ग्राम पंचायतवार विवरण — 0 से 5 श्रमिक वाली GP</h3><table class="notice-gp-detail"><thead><tr>'+Array.from({length:gpDetailGroups},()=>'<th>पंचायत<br>श्रमिक</th>').join('')+'</tr></thead><tbody>'+gpDetailBody+'</tbody></table>';
  const scopeLabel=isEngineer?'आपके प्रभार के सेक्टर '+g.sector:'जनपद '+janpadHindi;
  const scopeWarning='<p style="border:1px solid #15803d;color:#166534;padding:8px;font-weight:bold">'+esc(scopeLabel)+' में '+fmt(g.counts[0])+' ग्राम पंचायतों में शून्य श्रमिक नियोजन ('+zeroPercent(g).toFixed(2)+'%) तथा '+fmt(lowLabourGP(g))+' ग्राम पंचायतों में 1–5 श्रमिक नियोजन है। सतत समीक्षा एवं श्रमिक नियोजन बढ़ाने की जिम्मेदारी संबंधित APO एवं सहायक यंत्री की समान रूप से तथा संबंधित उपयंत्री की अपने प्रभार क्षेत्र में होगी।</p>';
  const w=window.open('','_blank');if(!w){alert('प्रिंट के लिए popup अनुमति दें।');return;}
