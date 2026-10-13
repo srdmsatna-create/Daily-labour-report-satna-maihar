@@ -38,7 +38,13 @@ def open_with_retry(opener,url,data=None,timeout=60):
   finally:stop.set();worker.join(timeout=1)
 
 
-def fetch_source(source_url):
+import html,math
+BaseRows=ExpenditureRows
+class ExpenditureRows(BaseRows):
+ def handle_endtag(self,tag):
+  cells=list(self.row or []) if tag.lower()=='tr' else [];n=len(self.rows);super().handle_endtag(tag)
+  if len(self.rows)>n:self.rows[-1].update(paidWages=cells[22],paidMaterial=cells[23])
+def fetch_source(source_url,status,label):
  opener=session_opener();src,url=open_with_retry(opener,source_url)
  d=hidden_fields(src);selected_values(src,d);d.update({'__EVENTTARGET':'ctl00$ContentPlaceHolder1$ddl_dist','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712'})
  src,url=open_with_retry(opener,form_action(src,url),urllib.parse.urlencode(d).encode())
@@ -49,9 +55,9 @@ def fetch_source(source_url):
  cache_dir=Path(os.environ.get('PMAY_FETCH_CACHE_DIR','')) if os.environ.get('PMAY_FETCH_CACHE_DIR') else ROOT/'data'/'pmayg-fetch-cache';cache_dir.mkdir(parents=True,exist_ok=True)
  today=datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
  rows=[]
- for status,label in [('03','Ongoing')]:
+ for status,label in [(status,label)]:
   for kind in ['ALL']:
-   key=hashlib.sha256((source_url+'|above75-v2-mgnrega-only|'+today+'|'+status+'|'+kind).encode()).hexdigest()
+   key=hashlib.sha256((source_url+'|r613-paid-inspection|'+today+'|'+status+'|'+kind).encode()).hexdigest()
    cache=cache_dir/(key+'.json')
    if cache.exists():
     saved=json.loads(cache.read_text(encoding='utf-8'))
@@ -70,32 +76,47 @@ def fetch_source(source_url):
  return rows
 
 
+R613_URLS=['https://mnregaweb4.dord.gov.in/netnregarep/incomplete_works_Yearwise.aspx?payload=wlzcDkNgHsc1Bqk56sgn0cRHAZRE5bP2FwOm2Qq0je66lRYnpzRheqn29gJJheJ9CaJtM8RTrWs1rxPwAoNXQym-VjO0GmHKE6lJt6VsOGs9puWbJahcgoNsYmLcbGE4-0wBQJx-ABBDc_HZ_CROqiutmaLJD-358w32JVEDtUZ_qSCX8YD7oEoAEQwQ2c1OZt2Z8AukQRTbY_XSHEDnil26rqKffXb7bfm3V5hgP9-cT-0rnS2-jCqQ-8VI9kIF', 'https://vbgramgrep.dord.gov.in/VBGRAMG/incomplete_works_Yearwise.aspx?payload=zNVdSezGPZEO5qnUauuNyrKXu3I5UPwSHnyG_YQrImXAYNKQG6UsdzLiMmvM1oMAkfiMpurs-eRmDMRcaQe233MOvvhD3GcnBv0xAA8yQWuJAa8k7YT8uOpgKPJBDpB8m7-ohnSIjaAsKsn_usika7sWulAvmKGgN401-zec2jTyMw4aRNXD4dSwrO9go3cw7xFRxTY0JCvDsvwF87JbPChGtJ_UmVqS1Qt0xwa5pcpl_HdoR9WgTYyPADkzsOtc']
+def official_summary(url):
+ page,_=open_with_retry(session_opener(),url)
+ clean=lambda s:html.unescape(re.sub('<[^>]+>',' ',s)).strip()
+ rows=[]
+ for tr in re.findall(r'<tr[^>]*>(.*?)</tr>',page,re.S):
+  cells=[clean(x) for x in re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>',tr,re.S)]
+  if len(cells)==12 and cells[0].isdigit() and cells[2].isdigit() and block_key(cells[1]) in {'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA'}:
+   rows.append(dict(janpad=cells[1],incomplete=int(cells[2]),band75to100=int(cells[10]),above100=int(cells[11])))
+ if len(rows)!=8 or len({block_key(x['janpad']) for x in rows})!=8:raise ValueError('Official R6.13 summary incomplete')
+ return rows
+
 def main():
- raw=fetch_source(NREGA_URL)
- if not raw:raise ValueError('MGNREGA ongoing report is empty; previous data retained')
- master=list(csv.DictReader((ROOT/'gp-sector-engineer-master-25-09-2026.csv').open(encoding='utf-8-sig')))
- mapping={}
+ official=official_summary(R613_URLS[0]);vbg=official_summary(R613_URLS[1])
+ raw=[]
+ for status,label in [('03','Ongoing'),('04','Suspended'),('06','Physically Completed')]:raw.extend(fetch_source(NREGA_URL,status,label))
+ master=list(csv.DictReader((ROOT/'gp-sector-engineer-master-25-09-2026.csv').open(encoding='utf-8-sig')));mapping={}
  for m in master:
   for k in ['Gram_Panchayat','GP_20Sep_Name']:mapping[(block_key(m['Janpad']),norm(m[k]))]=m
  def number(r,k):
-  v=str(r.get(k,'')).replace(',','').strip()
-  if not v:raise ValueError('Missing expenditure field '+k)
-  v=float(v)
-  if not __import__('math').isfinite(v) or v<0:raise ValueError('Invalid amount '+k)
+  v=float(str(r.get(k,'')).replace(',','').strip())
+  if not math.isfinite(v) or v<0:raise ValueError('Invalid amount '+k)
   return v
  rows=[];seen=set()
  for a in raw:
   code=a['Work Code'].strip()
-  if code in seen:raise ValueError('Duplicate MGNREGA Work Code: '+code)
-  seen.add(code)
-  sanction=number(a,'Total Sanction (Rs)')
-  booked=number(a,'Booked Since Inception Wages (Rs)')+number(a,'Booked Since Inception Material (Rs)')
+  if code in seen:raise ValueError('Duplicate work code '+code)
+  seen.add(code);san=number(a,'Total Sanction (Rs)');paid=number(a,'paidWages')+number(a,'paidMaterial')
   m=mapping.get((block_key(a['Janpad / Block Name']),norm(a['Panchayat Name'])))
-  if not m:raise ValueError('GP mapping missing: '+a['Janpad / Block Name']+' / '+a['Panchayat Name'])
-  rows.append({'code':code,'name':a['Work Name'],'janpad':a['Janpad / Block Name'],'panchayat':a['Panchayat Name'],'cluster':m['Sector'],'engineer':m['Sub_Engineer'],'fy':a['Work Start Fin Year'],'status':'Ongoing','type':a['Work Type'],'sanction':sanction,'nregaBooked':booked,'overallBooked':booked,'overallExpPct':booked*100/sanction if sanction else None})
- output={'schemaVersion':2,'basis':'mgnrega-only','source':'MGNREGA MIS 6.12; all work years; Ongoing; booked since inception; expenditure > 75%','fetchedAt':datetime.now(ZoneInfo('Asia/Kolkata')).isoformat(),'allWorkYears':True,'nregaCount':len(raw),'matchedCount':len(rows),'unmatched':[],'above75Count':sum(r['sanction']>0 and r['nregaBooked']*100>r['sanction']*75 for r in rows),'rows':rows}
- p=ROOT/'data/above75-latest.json';p.parent.mkdir(exist_ok=True);t=p.with_suffix('.tmp');t.write_text(json.dumps(output,ensure_ascii=False),encoding='utf-8');os.replace(t,p)
- print('SUCCESS above75: all MGNREGA works='+str(len(rows))+'; expenditure >75%='+str(output['above75Count']),flush=True)
+  if not m:raise ValueError('Missing GP mapping '+a['Janpad / Block Name']+' / '+a['Panchayat Name'])
+  rows.append(dict(code=code,name=a['Work Name'],janpad=a['Janpad / Block Name'],panchayat=a['Panchayat Name'],cluster=m['Sector'],engineer=m['Sub_Engineer'],fy=a['Work Start Fin Year'],status=a['Work Status'],type=a['Work Type'],sanction=san,nregaBooked=paid,paidWages=number(a,'paidWages'),paidMaterial=number(a,'paidMaterial'),overallBooked=paid,overallExpPct=paid*100/san if san else None))
+ validation=[]
+ for o in official:
+  rr=[r for r in rows if block_key(r['janpad'])==block_key(o['janpad']) and r['sanction']>0]
+  band=sum(r['overallBooked']*100>r['sanction']*75 and r['overallBooked']*100<r['sanction']*99 for r in rr)
+  above=sum(r['overallBooked']>r['sanction'] for r in rr)
+  if band!=o['band75to100'] or above!=o['above100']:raise ValueError('R6.13 count mismatch '+o['janpad']+': detail '+str(band)+' / '+str(above)+' official '+str(o['band75to100'])+' / '+str(o['above100'])+'; previous report retained')
+  validation.append(dict(janpad=o['janpad'],band=band,above100=above,ok=True))
+ output=dict(schemaVersion=3,basis='r613-paid-validated',source='Official MGNREGA R6.13, reconciled to MIS paid since inception',fetchedAt=datetime.now(ZoneInfo('Asia/Kolkata')).isoformat(),nregaCount=sum(r['incomplete'] for r in official),detailedCount=len(rows),officialSummary=official,vbgOfficialSummary=vbg,validation=validation,above75Count=sum(r['overallBooked']*100>r['sanction']*75 for r in rows if r['sanction']>0),bandCount=sum(r['band75to100'] for r in official),rows=rows)
+ p=ROOT/'data/above75-latest.json';t=p.with_suffix('.tmp');t.write_text(json.dumps(output,ensure_ascii=False),encoding='utf-8');os.replace(t,p)
+ print('SUCCESS: R6.13 matched for all 8 Janpads. Official 75-100 band='+str(output['bandCount'])+'; above100='+str(sum(x['above100'] for x in official)),flush=True)
 if __name__=='__main__':
  try:main()
- except Exception as e:print('FAILED above75; previous data retained: '+str(e),flush=True);sys.exit(1)
+ except Exception as e:print('FAILED: '+str(e),flush=True);sys.exit(1)
