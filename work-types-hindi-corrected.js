@@ -6,6 +6,7 @@ function hindiWorkType(v,name,mapping,code,sanction){
 
  const normalize=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
  const names=[
+ [/\bdug[\s_-]*p(?:ond|ound|aund|and)s?\b|डग\s*पॉ[नण]्ड|डग\s*पोंड/,'डग पॉन्ड'],
  [/kapil[\s_-]*dhara.*recharge[\s_-]*(?:pit|fit)|कपिल\s*धारा.*(?:रिचार्ज|पुनर्भरण).*पि[टट्]/,'ओपन डग वेल'],
  [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'ओपन डग वेल'],
  [/\b(?:pmay[\s_-]*g?|iay)\b|प्रधानमंत्री.*आवास|इंदिरा.*आवास/,'PMAY-G'],
