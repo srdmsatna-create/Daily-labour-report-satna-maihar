@@ -1,12 +1,12 @@
 /* Match the actual work name first; fall back to the official work type. */
 function hindiWorkType(v,name,mapping,code,sanction){
  if([24577,24961,25899,30899].includes(Number(String(sanction??'').replace(/[,₹\s]/g,''))))return 'ओपन डग वेल';
- const correctedWorks={"1712004008/WC/22012035228726":"परकोलेशन टैंक","1712005080/IF/22012034993930":"खेत तालाब","1712008042/LD/22012034951218":"खेल मैदान","1712008001/LD/22012034939964":"नाली निर्माण","1712005058/LD/22012034590003":"खेल मैदान"};
+ const correctedWorks={"1712005003/AV/22012034653299":"खाद्यान्न भंडारण","1712004008/WC/22012035228726":"परकोलेशन टैंक","1712005080/IF/22012034993930":"खेत तालाब","1712008042/LD/22012034951218":"खेल मैदान","1712008001/LD/22012034939964":"नाली निर्माण","1712005058/LD/22012034590003":"खेल मैदान"};
  if(correctedWorks[String(code||'').trim()])return correctedWorks[String(code||'').trim()];
 
  const normalize=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
  const names=[
- [/\bdug[\s_-]*p(?:ond|ound|aund|and)s?\b|डग\s*पॉ[नण]्ड|डग\s*पोंड/,'डग पॉन्ड'],
+ [/\b(?:dug|duck|dag)[\s_-]*p(?:ond|ound|aund|and)s?\b|डग\s*पॉ[नण]्ड|डग\s*पोंड/,'डग पॉन्ड'],
  [/kapil[\s_-]*dhara.*recharge[\s_-]*(?:pit|fit)|कपिल\s*धारा.*(?:रिचार्ज|पुनर्भरण).*पि[टट्]/,'ओपन डग वेल'],
  [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'ओपन डग वेल'],
  [/\b(?:pmay[\s_-]*g?|iay)\b|प्रधानमंत्री.*आवास|इंदिरा.*आवास/,'PMAY-G'],
@@ -16,9 +16,9 @@ function hindiWorkType(v,name,mapping,code,sanction){
  [/khet[\s_-]*ta[l]+ab|farm[\s_-]*pond|खेत\s*तालाब/,'खेत तालाब'],
  [/m[eai]+[dḍ]h?[\s_-]*b[a]+n?dh?(?:an)?|मे[ड़ढडध]़?\s*(?:बंध|बन्ध)|farm\s*bunding/,'मेढ़ बंधान'],
  [/charagah|charagaah|चारागाह|silvi.?pasture|grass.?land/,'चारागाह विकास'],
- [/food.?grain|agri.*produce.*storage|khad[d]?y?[a-z]*[\s_-]*bhandar|खाद्यान्न.*भंडार|कृषि.*उपज.*भंडार/,'खाद्यान्न भंडारण'],
+ [/food.?grain|agri.*produce.*storage|khad[a-z]*[\s_-]*bh[a]+n+d+h?[a]+r|(?:anaj|anaaj).*(?:godam|bh[a]+n+d+h?[a]+r)|(?:godam|bh[a]+n+d+h?[a]+r).*(?:anaj|anaaj)|खाद्या[नं्]*.*भ[ंँण]डार|अनाज.*(?:गोदाम|भंडार)|(?:गोदाम|भंडार).*अनाज|कृषि.*उपज.*भंडार/,'खाद्यान्न भंडारण'],
  [/bore[\s_-]*well[\s_-]*recharge|बोरवेल.*पुनर्भरण/,'ओपन डग वेल'],
- [/(?:open|dug)[\s_-]*well[\s_-]*recharge|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'ओपन डग वेल'],
+ [/(?:open|dug|dag)[\s_-]*well[\s_-]*(?:recharge|rechrage)|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'ओपन डग वेल'],
  [/recharge\s*pit|रिचार्ज\s*पिट|पुनर्भरण\s*(?:गड्ढा|पिट)/,'ओपन डग वेल'],
  [/pul[iy]+a|culvert|पुलिया/,'पुलिया'],
  [/nali|grey.?water|drain|नाली/,'नाली निर्माण'],
@@ -60,7 +60,10 @@ function hindiWorkType(v,name,mapping,code,sanction){
  [/community.*hall|samudayik.*bhawan|सामुदायिक\s*भवन/,'सामुदायिक भवन']
  ];
  let t=normalize(name);
- for(const [p,label] of names)if(p.test(t))return label;
+ // The first actual work term wins; later landmarks do not replace its type.
+ let first=null;
+ for(const [p,label] of names){const hit=p.exec(t);if(hit&&(!first||hit.index<first.index))first={index:hit.index,label};}
+ if(first)return first.label;
  t=normalize(v);
  if(/cattle.*(?:shed|shelter).*community|सामुदायिक\s*पशु\s*शेड/.test(t))return 'गौशाला';
  for(const [p,label] of names)if(p.test(t))return label;
