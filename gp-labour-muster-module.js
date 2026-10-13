@@ -222,3 +222,21 @@ fetch('gp-emuster-data.js?live='+Date.now(),{cache:'no-store'})
  }).catch(error=>{console.error('GP report load failed',error);if(box){const p=document.createElement('p');p.style.color='#b91c1c';p.textContent='कार्य प्रकार डेटा लोड नहीं हुआ: '+error.message;box.prepend(p);}});
 
 })();
+
+
+/* SRDM_GP_COLUMN_FIT_20261013 */
+(function(){
+ const id='srdm-gp-column-fit';
+ if(document.getElementById(id))return;
+ const style=document.createElement('style');style.id=id;
+ style.textContent=`
+ @media screen {
+ body #gpLabourMusterModule table:not(.janpad-short-summary) col:first-child {width:180px!important}
+ body #gpLabourMusterModule table:not(.janpad-short-summary) col:nth-child(2) {width:300px!important}
+ body #gpLabourMusterModule table:not(.janpad-short-summary) th:first-child,
+ body #gpLabourMusterModule table:not(.janpad-short-summary) td:first-child:not([colspan]) {width:180px!important;min-width:180px!important;max-width:180px!important;white-space:normal!important;overflow-wrap:break-word!important;word-break:normal!important;padding:8px!important;line-height:1.3!important;text-align:left!important}
+ body #gpLabourMusterModule table:not(.janpad-short-summary) th:nth-child(2),
+ body #gpLabourMusterModule table:not(.janpad-short-summary) td:nth-child(2) {width:300px!important;min-width:300px!important;max-width:300px!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;padding:8px!important;line-height:1.3!important;text-align:left!important}
+ }
+ `;document.head.appendChild(style);
+})();
