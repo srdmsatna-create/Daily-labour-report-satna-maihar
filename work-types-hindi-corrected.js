@@ -1,16 +1,24 @@
 /* Match the actual work name first; fall back to the official work type. */
 function hindiWorkType(v,name,mapping,code,sanction){
  if([24577,24961,25899,30899].includes(Number(String(sanction??'').replace(/[,₹\s]/g,''))))return 'ओपन डग वेल';
- const correctedWorks={"1712005003/AV/22012034653299":"खाद्यान्न भंडारण","1712004008/WC/22012035228726":"परकोलेशन टैंक","1712005080/IF/22012034993930":"खेत तालाब","1712008042/LD/22012034951218":"खेल मैदान","1712008001/LD/22012034939964":"नाली निर्माण","1712005058/LD/22012034590003":"खेल मैदान"};
+ const correctedWorks={"1712003024/LD/56":"कूप निर्माण","1712001061/WC/22012035195733":"खेत तालाब","1712005003/AV/22012034653299":"खाद्यान्न भंडारण","1712004008/WC/22012035228726":"परकोलेशन टैंक","1712005080/IF/22012034993930":"खेत तालाब","1712008042/LD/22012034951218":"खेल मैदान","1712008001/LD/22012034939964":"नाली निर्माण","1712005058/LD/22012034590003":"खेल मैदान"};
  if(correctedWorks[String(code||'').trim()])return correctedWorks[String(code||'').trim()];
 
- const normalize=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
+ const normalize=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/[\u200c\u200d]/g,'').replace(/\s+/g,' ').trim();
  const names=[
+ [/recharge[\s_-]*(?:structure|stucture|pit|fit)|rechrage[\s_-]*(?:structure|stucture|pit|fit)/,'ओपन डग वेल'],
+ [/\b(?:open|dug|dag)[\s_-]*well\b/,'ओपन डग वेल'],
+ [/kh(?:r|e|ee)?t[a]?[\s/_-]*a?ta[l]+ab|फ[ाॉ]र्म\s*(?:पॉन्ड|पौंड|तालाब)/,'खेत तालाब'],
+ [/laghu[\s/_-]*talab|लघु\s*तालाब|डग\s*(?:पौंड|पोंड|पॉन्ड)/,'डग पॉन्ड'],
+ [/\b(?:khetalab|khettalab|kheetalab)\b|खेत[\s/_-]*तालाब/,'खेत तालाब'],
+ [/\bearthen\b|ardan[\s_-]*(?:band|bund)|अर्दन\s*ब[ंण]ड|अर्डन\s*ब[ंण]ड/,'अर्दन बंड'],
+ [/loose[\s_-]*b[ou]+l?d?er|लूज\s*बोल्डर|लूस\s*बोल्डर/,'अन्य कार्य'],
+ [/f[ao]rm[\s/_-]*p(?:ond|ound|aund)|kh?[ea]*t[a]?[\s/_-]*ta[l]+ab/,'खेत तालाब'],
  [/\b(?:dug|duck|dag)[\s_-]*p(?:ond|ound|aund|and)s?\b|डग\s*पॉ[नण]्ड|डग\s*पोंड/,'डग पॉन्ड'],
- [/kapil[\s_-]*dhara.*recharge[\s_-]*(?:pit|fit)|कपिल\s*धारा.*(?:रिचार्ज|पुनर्भरण).*पि[टट्]/,'ओपन डग वेल'],
+ [/kapila?[\s_-]*dhara.*recharge[\s_-]*(?:pit|fit)|कपिल\s*धारा.*(?:रिचार्ज|पुनर्भरण).*पि[टट्]/,'ओपन डग वेल'],
  [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'ओपन डग वेल'],
  [/\b(?:pmay[\s_-]*g?|iay)\b|प्रधानमंत्री.*आवास|इंदिरा.*आवास/,'PMAY-G'],
- [/अमृ[तथ]\s*सरोवर|amr[iu]t[\s_-]*saro(?:var|war|ver)/,'अमृत सरोवर'],
+ [/अम[ृ़]?[तथ]\s*सरोवर|amr[iu]t[\s_-]*saro(?:var|war|ver|van|wan)/,'अमृत सरोवर'],
  [/gabion|g[aeo]+b[iy]+[ao]?n|ग[ेैो]ब[िी]य?न|गेबियन|गोबियन|गैबियन/,'गेबियन'],
  [/soak[\s_-]*pit|sok[\s_-]*pit|shok[\s_-]*pit|सो[खक]\s*पि[टट्]/,'सोख पिट'],
  [/khet[\s_-]*ta[l]+ab|farm[\s_-]*pond|खेत\s*तालाब/,'खेत तालाब'],
@@ -26,7 +34,7 @@ function hindiWorkType(v,name,mapping,code,sanction){
  [/(?:तालाब|talab|pond).*(?:जीर्ण|जिर्ण|गहरीकरण|सुधार|jirn|gehr|gahr|sudhar)|renov.*pond|desilting/,'तालाब जीर्णोद्धार'],
  [/मत्स्य.*तालाब|fisher.*pond/,'डग पॉन्ड'],
  [/dug[\s_-]*pond|नवीन\s*तालाब|तालाब\s*निर्माण|talab\s*(?:nirman|nirmaan)/,'तालाब निर्माण'],
- [/kapil[\s_-]*dhara|कपिल\s*धारा/,'कपिल धारा कूप'],
+ [/kapila?[\s_-]*dhara|कपिल\s*धारा/,'कपिल धारा कूप'],
  [/dug[\s_-]*well|open[\s_-]*well|koop|कूप|कुआँ|कुआ|कुए/,'कूप निर्माण'],
  [/stop[\s_-]*dam|स्टॉप\s*डैम|स्टाप\s*डेम/,'स्टॉप डैम'],
  [/check[\s_-]*dam|चेक\s*डैम|चेक\s*डेम/,'चेक डैम'],
@@ -36,7 +44,7 @@ function hindiWorkType(v,name,mapping,code,sanction){
  [/trench|ट्रेंच/,'कंटूर ट्रेंच'],
  [/play[\s_-]*(?:ground|field)|khel[\s_-]*ma[iy]?d[a]+n|खेल\s*मैदान/,'खेल मैदान'],
  [/bagiya|बगिया/,'एक बगिया'],
- [/plantation|vriksh|वृक्षारोपण|वृक्षारोपड|पौधरोपण|वृक्षारोपण/,'वृक्षारोपण'],
+ [/plant(?:ation|esion|asion|etion|aion)|vriksh|वृक्षारोपण|वृक्षारोपड|पौधरोपण|वृक्षारोपण/,'वृक्षारोपण'],
  [/(?:cc|pcc|सीसी|सी\.सी|सी सी).*?(?:road|sadak|मार्ग|रोड|सड़क)|cement.*concrete.*road/,'सीमेंट कंक्रीट सड़क'],
  [/interlocking|इंटरलॉक/,'इंटरलॉकिंग सड़क'],
  [/gr[ae]v[ae]?[l]|grewal|greval|ग्रेवल|ग्रेवाल/,'ग्रेवल रोड'],
