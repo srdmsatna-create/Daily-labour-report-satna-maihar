@@ -5,6 +5,7 @@ function hindiWorkType(v,name,mapping,code){
 
  const normalize=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
  const names=[
+ [/kapil[\s_-]*dhara.*recharge[\s_-]*(?:pit|fit)|कपिल\s*धारा.*(?:रिचार्ज|पुनर्भरण).*पि[टट्]/,'Open Dug Well'],
  [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'Open Dug Well'],
  [/\b(?:pmay[\s_-]*g?|iay)\b|प्रधानमंत्री.*आवास|इंदिरा.*आवास/,'PMAY-G'],
  [/अमृ[तथ]\s*सरोवर|amr[iu]t[\s_-]*saro(?:var|war|ver)/,'अमृत सरोवर'],
