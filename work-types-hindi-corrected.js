@@ -1,12 +1,13 @@
 /* Match the actual work name first; fall back to the official work type. */
-function hindiWorkType(v,name,mapping,code){
+function hindiWorkType(v,name,mapping,code,sanction){
+ if(Number(String(sanction??'').replace(/[,₹\s]/g,''))===25899)return 'ओपन डग वेल';
  const correctedWorks={"1712004008/WC/22012035228726":"परकोलेशन टैंक","1712005080/IF/22012034993930":"खेत तालाब","1712008042/LD/22012034951218":"खेल मैदान","1712008001/LD/22012034939964":"नाली निर्माण","1712005058/LD/22012034590003":"खेल मैदान"};
  if(correctedWorks[String(code||'').trim()])return correctedWorks[String(code||'').trim()];
 
  const normalize=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
  const names=[
- [/kapil[\s_-]*dhara.*recharge[\s_-]*(?:pit|fit)|कपिल\s*धारा.*(?:रिचार्ज|पुनर्भरण).*पि[टट्]/,'Open Dug Well'],
- [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'Open Dug Well'],
+ [/kapil[\s_-]*dhara.*recharge[\s_-]*(?:pit|fit)|कपिल\s*धारा.*(?:रिचार्ज|पुनर्भरण).*पि[टट्]/,'ओपन डग वेल'],
+ [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'ओपन डग वेल'],
  [/\b(?:pmay[\s_-]*g?|iay)\b|प्रधानमंत्री.*आवास|इंदिरा.*आवास/,'PMAY-G'],
  [/अमृ[तथ]\s*सरोवर|amr[iu]t[\s_-]*saro(?:var|war|ver)/,'अमृत सरोवर'],
  [/gabion|g[aeo]b[iy]an|गेबियन|गोबियन|गैबियन/,'गेबियन'],
@@ -15,9 +16,9 @@ function hindiWorkType(v,name,mapping,code){
  [/m[eai]+[dḍ]h?[\s_-]*b[a]+n?dh?(?:an)?|मे[ड़ढडध]़?\s*(?:बंध|बन्ध)|farm\s*bunding/,'मेढ़ बंधान'],
  [/charagah|charagaah|चारागाह|silvi.?pasture|grass.?land/,'चारागाह विकास'],
  [/food.?grain|agri.*produce.*storage|खाद्यान्न.*भंडार|कृषि.*उपज.*भंडार/,'खाद्यान्न भंडारण'],
- [/bore[\s_-]*well[\s_-]*recharge|बोरवेल.*पुनर्भरण/,'Open Dug Well'],
- [/(?:open|dug)[\s_-]*well[\s_-]*recharge|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'Open Dug Well'],
- [/recharge\s*pit|रिचार्ज\s*पिट|पुनर्भरण\s*(?:गड्ढा|पिट)/,'Open Dug Well'],
+ [/bore[\s_-]*well[\s_-]*recharge|बोरवेल.*पुनर्भरण/,'ओपन डग वेल'],
+ [/(?:open|dug)[\s_-]*well[\s_-]*recharge|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'ओपन डग वेल'],
+ [/recharge\s*pit|रिचार्ज\s*पिट|पुनर्भरण\s*(?:गड्ढा|पिट)/,'ओपन डग वेल'],
  [/pul[iy]+a|culvert|पुलिया/,'पुलिया'],
  [/nali|grey.?water|drain|नाली/,'नाली निर्माण'],
  [/boundary[\s_-]*wall|compound[\s_-]*wall|cmp.?ond.*wall|बाउंड्री|चहारदीवारी/,'बाउंड्री वाल'],
@@ -68,8 +69,8 @@ function hindiWorkType(v,name,mapping,code){
  [/development.*land/,'भूमि विकास'],
  [/toilets.*school/,'विद्यालय शौचालय'],
  [/community.*pond/,'तालाब जीर्णोद्धार'],
- [/sand.*filter.*open.?well|open dug well/,'Open Dug Well'],
- [/sand.*filter.*bore.?well/,'Open Dug Well'],
+ [/sand.*filter.*open.?well|open dug well/,'ओपन डग वेल'],
+ [/sand.*filter.*bore.?well/,'ओपन डग वेल'],
  [/afforestation|pl[an]*tation|plntation|horticulture|for[e]?stry|shelter belt/,'वृक्षारोपण'],
  [/forest protection/,'वन संरक्षण'],
  [/raising.*nursery/,'पौधशाला'],
