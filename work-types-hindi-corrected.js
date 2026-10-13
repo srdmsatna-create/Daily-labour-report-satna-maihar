@@ -10,7 +10,7 @@ function hindiWorkType(v,name,mapping,code,sanction){
  [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'ओपन डग वेल'],
  [/\b(?:pmay[\s_-]*g?|iay)\b|प्रधानमंत्री.*आवास|इंदिरा.*आवास/,'PMAY-G'],
  [/अमृ[तथ]\s*सरोवर|amr[iu]t[\s_-]*saro(?:var|war|ver)/,'अमृत सरोवर'],
- [/gabion|g[aeo]b[iy]an|गेबियन|गोबियन|गैबियन/,'गेबियन'],
+ [/gabion|g[aeo]+b[iy]+[ao]?n|ग[ेैो]ब[िी]य?न|गेबियन|गोबियन|गैबियन/,'गेबियन'],
  [/soak[\s_-]*pit|sok[\s_-]*pit|shok[\s_-]*pit|सो[खक]\s*पि[टट्]/,'सोख पिट'],
  [/khet[\s_-]*ta[l]+ab|farm[\s_-]*pond|खेत\s*तालाब/,'खेत तालाब'],
  [/m[eai]+[dḍ]h?[\s_-]*b[a]+n?dh?(?:an)?|मे[ड़ढडध]़?\s*(?:बंध|बन्ध)|farm\s*bunding/,'मेढ़ बंधान'],
