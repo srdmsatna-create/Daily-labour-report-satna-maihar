@@ -5,7 +5,7 @@ function hindiWorkType(v,name,mapping,code){
 
  const normalize=x=>String(x||'').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim();
  const names=[
- [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'रिचार्ज पिट'],
+ [/^open dug well$|^पुनर्भरण पिट$|^रिचार्ज पिट$/,'Open Dug Well'],
  [/\b(?:pmay[\s_-]*g?|iay)\b|प्रधानमंत्री.*आवास|इंदिरा.*आवास/,'PMAY-G'],
  [/अमृ[तथ]\s*सरोवर|amr[iu]t[\s_-]*saro(?:var|war|ver)/,'अमृत सरोवर'],
  [/gabion|g[aeo]b[iy]an|गेबियन|गोबियन|गैबियन/,'गेबियन'],
@@ -14,9 +14,9 @@ function hindiWorkType(v,name,mapping,code){
  [/m[eai]+[dḍ]h?[\s_-]*b[a]+n?dh?(?:an)?|मे[ड़ढडध]़?\s*(?:बंध|बन्ध)|farm\s*bunding/,'मेढ़ बंधान'],
  [/charagah|charagaah|चारागाह|silvi.?pasture|grass.?land/,'चारागाह विकास'],
  [/food.?grain|agri.*produce.*storage|खाद्यान्न.*भंडार|कृषि.*उपज.*भंडार/,'खाद्यान्न भंडारण'],
- [/bore[\s_-]*well[\s_-]*recharge|बोरवेल.*पुनर्भरण/,'रिचार्ज पिट'],
- [/open[\s_-]*well[\s_-]*recharge|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'रिचार्ज पिट'],
- [/recharge\s*pit|रिचार्ज\s*पिट|पुनर्भरण\s*(?:गड्ढा|पिट)/,'रिचार्ज पिट'],
+ [/bore[\s_-]*well[\s_-]*recharge|बोरवेल.*पुनर्भरण/,'Open Dug Well'],
+ [/open[\s_-]*well[\s_-]*recharge|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'Open Dug Well'],
+ [/recharge\s*pit|रिचार्ज\s*पिट|पुनर्भरण\s*(?:गड्ढा|पिट)/,'Open Dug Well'],
  [/pul[iy]+a|culvert|पुलिया/,'पुलिया'],
  [/nali|grey.?water|drain|नाली/,'नाली निर्माण'],
  [/boundary[\s_-]*wall|compound[\s_-]*wall|cmp.?ond.*wall|बाउंड्री|चहारदीवारी/,'बाउंड्री वाल'],
@@ -67,8 +67,8 @@ function hindiWorkType(v,name,mapping,code){
  [/development.*land/,'भूमि विकास'],
  [/toilets.*school/,'विद्यालय शौचालय'],
  [/community.*pond/,'तालाब जीर्णोद्धार'],
- [/sand.*filter.*open.?well|open dug well/,'रिचार्ज पिट'],
- [/sand.*filter.*bore.?well/,'रिचार्ज पिट'],
+ [/sand.*filter.*open.?well|open dug well/,'Open Dug Well'],
+ [/sand.*filter.*bore.?well/,'Open Dug Well'],
  [/afforestation|pl[an]*tation|plntation|horticulture|for[e]?stry|shelter belt/,'वृक्षारोपण'],
  [/forest protection/,'वन संरक्षण'],
  [/raising.*nursery/,'पौधशाला'],
