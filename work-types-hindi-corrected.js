@@ -15,7 +15,7 @@ function hindiWorkType(v,name,mapping,code){
  [/charagah|charagaah|चारागाह|silvi.?pasture|grass.?land/,'चारागाह विकास'],
  [/food.?grain|agri.*produce.*storage|खाद्यान्न.*भंडार|कृषि.*उपज.*भंडार/,'खाद्यान्न भंडारण'],
  [/bore[\s_-]*well[\s_-]*recharge|बोरवेल.*पुनर्भरण/,'Open Dug Well'],
- [/open[\s_-]*well[\s_-]*recharge|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'Open Dug Well'],
+ [/(?:open|dug)[\s_-]*well[\s_-]*recharge|कूप.*पुनर्भरण|कुए.*पुनर्भरण/,'Open Dug Well'],
  [/recharge\s*pit|रिचार्ज\s*पिट|पुनर्भरण\s*(?:गड्ढा|पिट)/,'Open Dug Well'],
  [/pul[iy]+a|culvert|पुलिया/,'पुलिया'],
  [/nali|grey.?water|drain|नाली/,'नाली निर्माण'],
