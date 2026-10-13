@@ -33,3 +33,14 @@
  #reportTable.official-grid tbody {break-inside:avoid!important;page-break-inside:avoid!important}
  #reportTable.official-grid tr {break-inside:avoid!important;page-break-inside:avoid!important}
 }
+
+/* SRDM_DYS_NAMES_FIT_20261013 */
+@media screen {
+body[data-report-view="dysjanpad"] #reportTable {min-width:1050px!important;width:100%!important;table-layout:fixed!important}
+body[data-report-view="dysjanpad"] #reportTable th,body[data-report-view="dysjanpad"] #reportTable td {white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;line-height:1.3!important;vertical-align:middle!important;padding:8px!important;text-align:left!important}
+body[data-report-view="dysjanpad"] #reportTable th:first-child,body[data-report-view="dysjanpad"] #reportTable td:first-child:not([colspan]) {width:85px!important}
+body[data-report-view="dysjanpad"] #reportTable th:nth-child(2),body[data-report-view="dysjanpad"] #reportTable td:nth-child(2) {width:170px!important}
+body[data-report-view="dysjanpad"] #reportTable th:nth-child(3),body[data-report-view="dysjanpad"] #reportTable td:nth-child(3) {width:220px!important}
+body[data-report-view="dysjanpad"] #reportTable th:nth-child(4),body[data-report-view="dysjanpad"] #reportTable th:nth-child(5),body[data-report-view="dysjanpad"] #reportTable td:nth-child(4),body[data-report-view="dysjanpad"] #reportTable td:nth-child(5) {width:85px!important;text-align:center!important;white-space:nowrap!important}
+body[data-report-view="dysjanpad"] #reportTable th:nth-child(6),body[data-report-view="dysjanpad"] #reportTable td:nth-child(6) {min-width:0!important;width:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
+}
