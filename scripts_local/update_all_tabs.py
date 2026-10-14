@@ -61,10 +61,25 @@ def validate(group,root):
    if abs(r['mandays']-r['nregaMandays']-r['vbgMandays'])>0.000001 or abs(r['balanceMandays']-max(90-r['mandays'],0))>0.000001:raise ValueError('PMAY mandays arithmetic failed')
  elif group=='above75':
   d=data(root/'data/above75-latest.json');rr=d.get('rows',[])
-  if not rr or not d.get('allWorkYears') or len(rr)+len(d.get('unmatched',[]))!=d.get('nregaCount'):raise ValueError('Above75 source reconciliation failed')
+  if d.get('schemaVersion')!=3 or d.get('basis')!='r613-paid-validated' or not rr or d.get('detailedCount')!=len(rr):raise ValueError('Above75 R6.13 snapshot incomplete')
+  if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Current Above75 snapshot required')
   if len({r['code'] for r in rr})!=len(rr):raise ValueError('Duplicate Above75 work codes')
+  import math
+  key=lambda value: norm(value).replace(' ','').replace('SATNA','SOHAWAL')
+  expected={'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA'}
+  official=d.get('officialSummary',[]);checks=d.get('validation',[])
+  if len(official)!=8 or {key(r['janpad']) for r in official}!=expected or len(checks)!=8 or {key(r['janpad']) for r in checks}!=expected or not all(r.get('ok') is True for r in checks):raise ValueError('Above75 requires all 8 verified R6.13 Janpads')
   for r in rr:
-   if r['status']!='Ongoing' or abs(r['overallBooked']-r['nregaBooked']-r['vbgBooked'])>0.000001:raise ValueError('Invalid Above75 combined expenditure')
+   amounts=[r[k] for k in ('sanction','paidWages','paidMaterial','nregaBooked','overallBooked')]
+   if any(not math.isfinite(v) or v<0 for v in amounts) or r['status'] not in ('Ongoing','Suspended','Physically Completed') or key(r['janpad']) not in expected:raise ValueError('Invalid Above75 detail')
+   if abs(r['overallBooked']-r['paidWages']-r['paidMaterial'])>0.000001 or abs(r['nregaBooked']-r['overallBooked'])>0.000001:raise ValueError('Above75 paid arithmetic failed')
+  for o in official:
+   members=[r for r in rr if key(r['janpad'])==key(o['janpad']) and r['sanction']>0]
+   band=sum(r['overallBooked']*100>r['sanction']*75 and r['overallBooked']*100<r['sanction']*99 for r in members)
+   above=sum(r['overallBooked']>r['sanction'] for r in members)
+   c=next(r for r in checks if key(r['janpad'])==key(o['janpad']))
+   if (band,above)!=(o['band75to100'],o['above100']) or (band,above)!=(c['band'],c['above100']):raise ValueError('Above75 R6.13 reconciliation failed: '+o['janpad'])
+  if d['nregaCount']!=sum(r['incomplete'] for r in official) or d['bandCount']!=sum(r['band75to100'] for r in official) or d['above75Count']!=sum(r['overallBooked']*100>r['sanction']*75 for r in rr if r['sanction']>0):raise ValueError('Above75 summary totals failed')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
  elif group=='yuktdhara':
@@ -167,3 +182,4 @@ def main():
  # Keep failed sources visible to the scheduler while allowing fresh sources to publish.
  return 0 if payload['success'] else 1
 if __name__=='__main__':sys.exit(main())
+
