@@ -8,8 +8,8 @@ function visit(o,parentJanpad){
  if(!o||typeof o!=='object'||seen.has(o))return;seen.add(o);
  const janpad=o.janpad||o.block||o.Janpad||o['Janpad / Block Name']||parentJanpad;
  if(!Array.isArray(o)){
- const gp=o.panchayat||o.gp||o.Gram_Panchayat||o['Panchayat Name'];
- const cluster=o.cluster||o.Cluster||o.Sector||o.sector;
+ const gp=o.panchayat||o.gp||o.Gram_Panchayat||o['Panchayat Name']||o.GP||o.GPName||o.Panchayat;
+ const cluster=o.cluster||o.Cluster||o.Sector||o.sector||o.sectorName;
  const rule=rules.find(r=>r[0]===key(janpad)&&r[1]===key(cluster));
  const m=gps[key(janpad)+'|'+key(gp)];
  const engineer=m?m.engineer:rule?rule[2]:null;
@@ -20,7 +20,7 @@ function visit(o,parentJanpad){
 visit(root,'');return root;
 }
 window.SRDM_FIX_ALLOCATION=fix;
-for(const name of ['AUTO_REPORT','ONGOING_DETAILS','SHRAMIK_NIYOJAN','SHRAMIK_GP_PROGRESS','GP_EMUSTER','GP_EMUSTER_DATA','GP_WORK_TYPE_MUSTER_REPORT','YUKTDHARA_DATA','YUKTDHARA_RECEIVED','MUSTER_EMB_DATA','PLANNER_PORTAL_DATA']){
+for(const name of ['AUTO_REPORT','ONGOING_DETAILS','SHRAMIK_NIYOJAN','SHRAMIK_GP_PROGRESS','GP_EMUSTER','GP_EMUSTER_DATA','GP_WORK_TYPE_MUSTER_REPORT','YUKTDHARA_DATA','YUKTDHARA_RECEIVED','MUSTER_EMB_DATA','PLANNER_PORTAL_DATA','PLANNER_ENGINEER_SUMMARY','PLANNER_APPROVAL_SUMMARY','PLANNER_SIPRI_SOURCE']){
  const desc=Object.getOwnPropertyDescriptor(window,name);
  if(desc&&!desc.configurable){fix(window[name]);continue;}
  let value=fix(window[name]);

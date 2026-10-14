@@ -44,3 +44,14 @@ body[data-report-view="dysjanpad"] #reportTable th:nth-child(3),body[data-report
 body[data-report-view="dysjanpad"] #reportTable th:nth-child(4),body[data-report-view="dysjanpad"] #reportTable th:nth-child(5),body[data-report-view="dysjanpad"] #reportTable td:nth-child(4),body[data-report-view="dysjanpad"] #reportTable td:nth-child(5) {width:85px!important;text-align:center!important;white-space:nowrap!important}
 body[data-report-view="dysjanpad"] #reportTable th:nth-child(6),body[data-report-view="dysjanpad"] #reportTable td:nth-child(6) {min-width:0!important;width:auto!important;white-space:normal!important;overflow-wrap:anywhere!important}
 }
+
+/* Compact cluster names: override shared large-font rules. */
+@media screen{
+body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #yuktdharaSubEngineerApp table.yukt-se-table td:nth-child(4){
+font-size:12px!important;line-height:1.25!important;overflow-wrap:break-word!important;
+}
+body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #yuktdharaSubEngineerApp table.yukt-se-table th:nth-child(4),
+body:not(#srdm-font-reserved-a):not(#srdm-font-reserved-b):not(#srdm-font-reserved-c) #yuktdharaSubEngineerApp table.yukt-se-table th:nth-child(4) button{
+font-size:13px!important;line-height:1.25!important;
+}
+}
