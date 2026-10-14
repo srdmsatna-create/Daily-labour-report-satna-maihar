@@ -156,7 +156,7 @@ singlePrint.addEventListener('click',()=>{
   const source=originalWrap.querySelector('table');
   const copy=source.cloneNode(true);
   const hidden=[...source.tHead.rows[0].cells].map((c,i)=>getComputedStyle(c).display==='none'?i:-1).filter(i=>i>=0);
-  for(const row of copy.rows)for(const i of [...hidden].reverse())if(row.cells.length===source.tHead.rows[0].cells.length)row.cells[i].remove();
+  for(const row of copy.rows){if(row.cells.length!==source.tHead.rows[0].cells.length)continue;for(const i of [...hidden].reverse())row.cells[i].remove();}
   copy.querySelectorAll('colgroup').forEach(c=>c.remove());
   const count=copy.tHead.rows[0].cells.length;
   const identity=document.getElementById('snLevel').value==='engineer'?[3,5,9,12,10]:[3,5,10];
