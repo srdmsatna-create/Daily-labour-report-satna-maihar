@@ -4,12 +4,12 @@
     "MGNREGA": "https://mnregaweb4.dord.gov.in/netnregarep/dynamic_work_details.aspx?payload=4PmH2eRA9khYNUNqz1h5yt9D8POKLA7Afp0nercX3xt22K65u-hNco55SZiMHr78IufQr-Pyxw1-2tJEz-65UMtG5kOTBzCEHurJmRrAtoAIfVSTK-qhJdX02vLZMWrVbwM-oS9xX58g6SiO5ODhhFid9RqKvnwTnS-hLkXfa1-25phIp66JlphIcilUU7cK"
   },
   "sourceDates": {
-    "VBGRAMG": "12/10/2026",
-    "MGNREGA": "12/10/2026"
+    "VBGRAMG": "13/10/2026",
+    "MGNREGA": "13/10/2026"
   },
-  "sourceDate": "12/10/2026",
-  "retrievedDate": "13/10/2026",
-  "checkedAt": "2026-10-13T06:07:30.922947+00:00",
+  "sourceDate": "13/10/2026",
+  "retrievedDate": "14/10/2026",
+  "checkedAt": "2026-10-14T06:19:09.274574+00:00",
   "rows": [
     {
       "janpad": "AMARPATAN",
@@ -18,9 +18,9 @@
       "financialWorks": 109,
       "sw": 96.7491568,
       "sm": 141.96842859999998,
-      "bw": 5.7038272999999995,
-      "bm": 18.2151688,
-      "pw": 5.7038272999999995,
+      "bw": 5.759267299999999,
+      "bm": 19.3049614,
+      "pw": 5.759267299999999,
       "pm": 5.3513809
     },
     {
@@ -30,9 +30,9 @@
       "financialWorks": 86,
       "sw": 83.7720814,
       "sm": 119.58201,
-      "bw": 4.6729108,
+      "bw": 6.277016,
       "bm": 10.975486100000001,
-      "pw": 4.6729108,
+      "pw": 6.277016,
       "pm": 6.0115323
     },
     {
@@ -66,9 +66,9 @@
       "financialWorks": 100,
       "sw": 81.30703700000001,
       "sm": 122.0353727,
-      "bw": 12.5843543,
+      "bw": 12.5961743,
       "bm": 21.8684144,
-      "pw": 12.5843543,
+      "pw": 12.5961743,
       "pm": 5.5354814
     },
     {
@@ -90,9 +90,9 @@
       "financialWorks": 94,
       "sw": 77.1234234,
       "sm": 115.44953949999999,
-      "bw": 6.2849725,
+      "bw": 6.4411617,
       "bm": 14.667261100000001,
-      "pw": 6.2849725,
+      "pw": 6.4411617,
       "pm": 5.1229251
     },
     {
@@ -357,9 +357,9 @@
       "status": "Ongoing",
       "sw": 65343.13,
       "sm": 106328.97,
-      "bw": 16443.0,
+      "bw": 17487.0,
       "bm": 86419.49,
-      "pw": 16443.0,
+      "pw": 17487.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -372,12 +372,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 4698.0,
+          "bw": 5742.0,
           "bm": 86419.49,
-          "pw": 4698.0,
+          "pw": 5742.0,
           "pm": 0.0,
-          "mandaysTotal": 24.0,
-          "mandaysCurrentFY": 24.0,
+          "mandaysTotal": 28.0,
+          "mandaysCurrentFY": 28.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -385,7 +385,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 55.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 24.0,
+      "julyMandays": 28.0,
       "engineer": "अश्वनी पटेल",
       "cluster": "LALPUR",
       "district": "MAIHAR"
@@ -437,9 +437,9 @@
       "status": "Ongoing",
       "sw": 112860.07,
       "sm": 150307.15,
-      "bw": 32450.97,
+      "bw": 33350.97,
       "bm": 54733.24,
-      "pw": 32450.97,
+      "pw": 33350.97,
       "pm": 54733.24,
       "sources": {
         "MGNREGA": {
@@ -452,12 +452,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 8699.97,
+          "bw": 9599.97,
           "bm": 0.0,
-          "pw": 8699.97,
+          "pw": 9599.97,
           "pm": 0.0,
-          "mandaysTotal": 41.0,
-          "mandaysCurrentFY": 41.0,
+          "mandaysTotal": 44.0,
+          "mandaysCurrentFY": 44.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -465,7 +465,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 91.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 41.0,
+      "julyMandays": 44.0,
       "engineer": "सुनील मिश्रा",
       "cluster": "BELA",
       "district": "MAIHAR"
@@ -1317,9 +1317,9 @@
       "status": "Ongoing",
       "sw": 111502.46,
       "sm": 154488.02,
-      "bw": 23490.0,
+      "bw": 24090.0,
       "bm": 53993.48,
-      "pw": 23490.0,
+      "pw": 24090.0,
       "pm": 53993.48,
       "sources": {
         "MGNREGA": {
@@ -1332,12 +1332,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 7830.0,
+          "bw": 8430.0,
           "bm": 0.0,
-          "pw": 7830.0,
+          "pw": 8430.0,
           "pm": 0.0,
-          "mandaysTotal": 48.0,
-          "mandaysCurrentFY": 48.0,
+          "mandaysTotal": 54.0,
+          "mandaysCurrentFY": 54.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -1345,7 +1345,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 60.0,
       "nregaAprJunMandays": 24.0,
-      "julyMandays": 48.0,
+      "julyMandays": 54.0,
       "engineer": "अश्वनी पटेल",
       "cluster": "LALPUR",
       "district": "MAIHAR"
@@ -2757,9 +2757,9 @@
       "status": "Ongoing",
       "sw": 111528.16,
       "sm": 157857.87,
-      "bw": 5505.0,
-      "bm": 0.0,
-      "pw": 5505.0,
+      "bw": 7605.0,
+      "bm": 108979.26,
+      "pw": 7605.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -2772,9 +2772,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 4200.0,
-          "bm": 0.0,
-          "pw": 4200.0,
+          "bw": 6300.0,
+          "bm": 108979.26,
+          "pw": 6300.0,
           "pm": 0.0,
           "mandaysTotal": 21.0,
           "mandaysCurrentFY": 21.0,
@@ -3917,9 +3917,9 @@
       "status": "Ongoing",
       "sw": 114242.56,
       "sm": 152334.69,
-      "bw": 16791.0,
+      "bw": 17691.0,
       "bm": 53993.48,
-      "pw": 16791.0,
+      "pw": 17691.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -3932,9 +3932,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 7500.0,
+          "bw": 8400.0,
           "bm": 0.0,
-          "pw": 7500.0,
+          "pw": 8400.0,
           "pm": 0.0,
           "mandaysTotal": 28.0,
           "mandaysCurrentFY": 28.0,
@@ -5317,9 +5317,9 @@
       "status": "Ongoing",
       "sw": 68565.02,
       "sm": 100380.87,
-      "bw": 4403.98,
+      "bw": 4503.98,
       "bm": 0.0,
-      "pw": 4403.98,
+      "pw": 4503.98,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -5332,9 +5332,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 100.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 100.0,
           "pm": 0.0,
           "mandaysTotal": 1.0,
           "mandaysCurrentFY": 1.0,
@@ -5437,9 +5437,9 @@
       "status": "Ongoing",
       "sw": 68565.02,
       "sm": 100380.87,
-      "bw": 3120.0,
+      "bw": 30720.0,
       "bm": 43660.63,
-      "pw": 3120.0,
+      "pw": 30720.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -5452,9 +5452,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 27600.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 27600.0,
           "pm": 0.0,
           "mandaysTotal": 94.0,
           "mandaysCurrentFY": 94.0,
@@ -6232,9 +6232,9 @@
       "status": "Ongoing",
       "sw": 66529.31,
       "sm": 95990.65,
-      "bw": 900.0,
+      "bw": 8399.0,
       "bm": 21750.0,
-      "pw": 900.0,
+      "pw": 8399.0,
       "pm": 21750.0,
       "sources": {
         "MGNREGA": {
@@ -6247,12 +6247,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 7499.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 7499.0,
           "pm": 0.0,
-          "mandaysTotal": 19.0,
-          "mandaysCurrentFY": 19.0,
+          "mandaysTotal": 28.0,
+          "mandaysCurrentFY": 28.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -6260,7 +6260,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 6.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 19.0,
+      "julyMandays": 28.0,
       "engineer": "धनंजय त्रिपाठी",
       "cluster": "BADERA",
       "district": "MAIHAR"
@@ -6512,9 +6512,9 @@
       "status": "Ongoing",
       "sw": 60597.5,
       "sm": 99249.48,
-      "bw": 9361.32,
+      "bw": 9661.32,
       "bm": 90515.84,
-      "pw": 9361.32,
+      "pw": 9661.32,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -6527,9 +6527,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 300.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 300.0,
           "pm": 0.0,
           "mandaysTotal": 1.0,
           "mandaysCurrentFY": 1.0,
@@ -6552,9 +6552,9 @@
       "status": "Ongoing",
       "sw": 111528.16,
       "sm": 150219.07,
-      "bw": 1566.0,
+      "bw": 8166.0,
       "bm": 0.0,
-      "pw": 1566.0,
+      "pw": 8166.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -6567,9 +6567,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 6600.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 6600.0,
           "pm": 0.0,
           "mandaysTotal": 22.0,
           "mandaysCurrentFY": 22.0,
@@ -6974,9 +6974,9 @@
       "status": "Ongoing",
       "sw": 66634.67,
       "sm": 86019.82,
-      "bw": 28083.96,
+      "bw": 28382.86,
       "bm": 30783.08,
-      "pw": 28083.96,
+      "pw": 28382.86,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -6989,9 +6989,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 1500.0,
+          "bw": 1798.9,
           "bm": 0.0,
-          "pw": 1500.0,
+          "pw": 1798.9,
           "pm": 0.0,
           "mandaysTotal": 6.0,
           "mandaysCurrentFY": 6.0,
@@ -7574,9 +7574,9 @@
       "status": "Ongoing",
       "sw": 68565.02,
       "sm": 100380.87,
-      "bw": 8613.0,
+      "bw": 22545.0,
       "bm": 43651.84,
-      "pw": 8613.0,
+      "pw": 22545.0,
       "pm": 43651.84,
       "sources": {
         "MGNREGA": {
@@ -7589,9 +7589,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 3915.0,
+          "bw": 17847.0,
           "bm": 0.0,
-          "pw": 3915.0,
+          "pw": 17847.0,
           "pm": 0.0,
           "mandaysTotal": 63.0,
           "mandaysCurrentFY": 63.0,
@@ -8014,9 +8014,9 @@
       "status": "Ongoing",
       "sw": 62875.17,
       "sm": 96482.06,
-      "bw": 21521.96,
+      "bw": 21821.96,
       "bm": 43660.39,
-      "pw": 21521.96,
+      "pw": 21821.96,
       "pm": 43660.39,
       "sources": {
         "MGNREGA": {
@@ -8029,9 +8029,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 2244.0,
+          "bw": 2544.0,
           "bm": 0.0,
-          "pw": 2244.0,
+          "pw": 2544.0,
           "pm": 0.0,
           "mandaysTotal": 9.0,
           "mandaysCurrentFY": 9.0,
@@ -8174,9 +8174,9 @@
       "status": "Ongoing",
       "sw": 111528.16,
       "sm": 150219.07,
-      "bw": 1750.0,
+      "bw": 12546.04,
       "bm": 9881.28,
-      "pw": 1750.0,
+      "pw": 12546.04,
       "pm": 9881.28,
       "sources": {
         "MGNREGA": {
@@ -8189,9 +8189,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 10796.04,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 10796.04,
           "pm": 0.0,
           "mandaysTotal": 50.0,
           "mandaysCurrentFY": 50.0,
@@ -8214,9 +8214,9 @@
       "status": "Ongoing",
       "sw": 73203.17,
       "sm": 98443.76,
-      "bw": 2137.38,
+      "bw": 9335.94,
       "bm": 8431.28,
-      "pw": 2137.38,
+      "pw": 9335.94,
       "pm": 8431.28,
       "sources": {
         "MGNREGA": {
@@ -8229,9 +8229,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 7198.56,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 7198.56,
           "pm": 0.0,
           "mandaysTotal": 44.0,
           "mandaysCurrentFY": 44.0,
@@ -8934,9 +8934,9 @@
       "status": "Ongoing",
       "sw": 68565.02,
       "sm": 100380.87,
-      "bw": 14094.0,
+      "bw": 14394.0,
       "bm": 0.0,
-      "pw": 14094.0,
+      "pw": 14394.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -8949,9 +8949,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 300.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 300.0,
           "pm": 0.0,
           "mandaysTotal": 2.0,
           "mandaysCurrentFY": 2.0,
@@ -8974,9 +8974,9 @@
       "status": "Ongoing",
       "sw": 60597.3,
       "sm": 99248.98,
-      "bw": 18187.41,
+      "bw": 22396.65,
       "bm": 0.0,
-      "pw": 18187.41,
+      "pw": 22396.65,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -8989,9 +8989,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 2097.84,
+          "bw": 6307.08,
           "bm": 0.0,
-          "pw": 2097.84,
+          "pw": 6307.08,
           "pm": 0.0,
           "mandaysTotal": 31.0,
           "mandaysCurrentFY": 31.0,
@@ -9294,9 +9294,9 @@
       "status": "Ongoing",
       "sw": 60988.8,
       "sm": 100316.87,
-      "bw": 13003.56,
+      "bw": 16903.559999999998,
       "bm": 29828.0,
-      "pw": 13003.56,
+      "pw": 16903.559999999998,
       "pm": 29828.0,
       "sources": {
         "MGNREGA": {
@@ -9309,12 +9309,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 522.0,
+          "bw": 4422.0,
           "bm": 0.0,
-          "pw": 522.0,
+          "pw": 4422.0,
           "pm": 0.0,
-          "mandaysTotal": 19.0,
-          "mandaysCurrentFY": 19.0,
+          "mandaysTotal": 21.0,
+          "mandaysCurrentFY": 21.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -9322,7 +9322,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 48.0,
       "nregaAprJunMandays": 12.0,
-      "julyMandays": 19.0,
+      "julyMandays": 21.0,
       "engineer": "राज रंजन तिवारी अति0",
       "cluster": "PAKARIYA",
       "district": "MAIHAR"
@@ -9334,9 +9334,9 @@
       "status": "Ongoing",
       "sw": 60597.5,
       "sm": 99249.48,
-      "bw": 11153.16,
+      "bw": 12953.16,
       "bm": 0.0,
-      "pw": 11153.16,
+      "pw": 12953.16,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -9349,9 +9349,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 261.0,
+          "bw": 2061.0,
           "bm": 0.0,
-          "pw": 261.0,
+          "pw": 2061.0,
           "pm": 0.0,
           "mandaysTotal": 7.0,
           "mandaysCurrentFY": 7.0,
@@ -9374,9 +9374,9 @@
       "status": "Ongoing",
       "sw": 60597.5,
       "sm": 99249.48,
-      "bw": 11176.380000000001,
+      "bw": 50776.38,
       "bm": 0.0,
-      "pw": 11176.380000000001,
+      "pw": 50776.38,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -9389,12 +9389,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 3393.0,
+          "bw": 42993.0,
           "bm": 0.0,
-          "pw": 3393.0,
+          "pw": 42993.0,
           "pm": 0.0,
-          "mandaysTotal": 145.0,
-          "mandaysCurrentFY": 145.0,
+          "mandaysTotal": 157.0,
+          "mandaysCurrentFY": 157.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -9402,7 +9402,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 30.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 145.0,
+      "julyMandays": 157.0,
       "engineer": "राज रंजन तिवारी अति0",
       "cluster": "PAKARIYA",
       "district": "MAIHAR"
@@ -9485,9 +9485,9 @@
       "status": "Ongoing",
       "sw": 60597.3,
       "sm": 99248.98,
-      "bw": 6517.95,
+      "bw": 17309.19,
       "bm": 32906.2,
-      "pw": 6517.95,
+      "pw": 17309.19,
       "pm": 32906.2,
       "sources": {
         "MGNREGA": {
@@ -9500,9 +9500,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 10791.24,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 10791.24,
           "pm": 0.0,
           "mandaysTotal": 36.0,
           "mandaysCurrentFY": 36.0,
@@ -9525,9 +9525,9 @@
       "status": "Ongoing",
       "sw": 60597.3,
       "sm": 99248.98,
-      "bw": 6509.43,
+      "bw": 17300.67,
       "bm": 32906.2,
-      "pw": 6509.43,
+      "pw": 17300.67,
       "pm": 32906.2,
       "sources": {
         "MGNREGA": {
@@ -9540,9 +9540,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 10791.24,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 10791.24,
           "pm": 0.0,
           "mandaysTotal": 36.0,
           "mandaysCurrentFY": 36.0,
@@ -9725,9 +9725,9 @@
       "status": "Ongoing",
       "sw": 111528.56,
       "sm": 150220.01,
-      "bw": 11214.0,
+      "bw": 12414.0,
       "bm": 0.0,
-      "pw": 11214.0,
+      "pw": 12414.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -9740,9 +9740,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 8083.02,
+          "bw": 9283.02,
           "bm": 0.0,
-          "pw": 8083.02,
+          "pw": 9283.02,
           "pm": 0.0,
           "mandaysTotal": 31.0,
           "mandaysCurrentFY": 31.0,
@@ -9805,9 +9805,9 @@
       "status": "Ongoing",
       "sw": 61954.7,
       "sm": 100307.32,
-      "bw": 4115.56,
+      "bw": 8314.0,
       "bm": 0.0,
-      "pw": 4115.56,
+      "pw": 8314.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -9820,9 +9820,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 3594.36,
+          "bw": 7792.8,
           "bm": 0.0,
-          "pw": 3594.36,
+          "pw": 7792.8,
           "pm": 0.0,
           "mandaysTotal": 26.0,
           "mandaysCurrentFY": 26.0,
@@ -10125,9 +10125,9 @@
       "status": "Ongoing",
       "sw": 111528.16,
       "sm": 150219.07,
-      "bw": 2604.18,
+      "bw": 11600.04,
       "bm": 14500.0,
-      "pw": 2604.18,
+      "pw": 11600.04,
       "pm": 14500.0,
       "sources": {
         "MGNREGA": {
@@ -10140,9 +10140,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 8995.86,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 8995.86,
           "pm": 0.0,
           "mandaysTotal": 30.0,
           "mandaysCurrentFY": 30.0,
@@ -16885,9 +16885,9 @@
       "status": "Ongoing",
       "sw": 64837.98,
       "sm": 105397.23,
-      "bw": 17266.0,
+      "bw": 17566.0,
       "bm": 32072.0,
-      "pw": 17266.0,
+      "pw": 17566.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -16900,12 +16900,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 1800.0,
+          "bw": 2100.0,
           "bm": 0.0,
-          "pw": 1800.0,
+          "pw": 2100.0,
           "pm": 0.0,
-          "mandaysTotal": 6.0,
-          "mandaysCurrentFY": 6.0,
+          "mandaysTotal": 7.0,
+          "mandaysCurrentFY": 7.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -16913,7 +16913,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 61.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 6.0,
+      "julyMandays": 7.0,
       "engineer": "रितेश राजपूत",
       "cluster": "JASO",
       "district": "SATNA"
@@ -16925,9 +16925,9 @@
       "status": "Ongoing",
       "sw": 65418.42,
       "sm": 105473.16,
-      "bw": 25484.0,
+      "bw": 25784.0,
       "bm": 49963.46,
-      "pw": 25484.0,
+      "pw": 25784.0,
       "pm": 39298.46,
       "sources": {
         "MGNREGA": {
@@ -16940,12 +16940,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 300.0,
+          "bw": 600.0,
           "bm": 0.0,
-          "pw": 300.0,
+          "pw": 600.0,
           "pm": 0.0,
-          "mandaysTotal": 1.0,
-          "mandaysCurrentFY": 1.0,
+          "mandaysTotal": 2.0,
+          "mandaysCurrentFY": 2.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -16953,7 +16953,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 98.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 1.0,
+      "julyMandays": 2.0,
       "engineer": "रितेश राजपूत",
       "cluster": "JASO",
       "district": "SATNA"
@@ -19338,9 +19338,9 @@
       "status": "Ongoing",
       "sw": 111317.04,
       "sm": 149525.03,
-      "bw": 48314.86,
+      "bw": 48702.86,
       "bm": 25750.0,
-      "pw": 48314.86,
+      "pw": 48702.86,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -19353,9 +19353,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 388.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 388.0,
           "pm": 0.0,
           "mandaysTotal": 12.0,
           "mandaysCurrentFY": 12.0,
@@ -19378,9 +19378,9 @@
       "status": "Ongoing",
       "sw": 72013.96,
       "sm": 113160.51,
-      "bw": 43642.1,
+      "bw": 43836.1,
       "bm": 22400.0,
-      "pw": 43642.1,
+      "pw": 43836.1,
       "pm": 17400.0,
       "sources": {
         "MGNREGA": {
@@ -19393,9 +19393,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 500.0,
+          "bw": 694.0,
           "bm": 0.0,
-          "pw": 500.0,
+          "pw": 694.0,
           "pm": 0.0,
           "mandaysTotal": 17.0,
           "mandaysCurrentFY": 17.0,
@@ -19517,8 +19517,8 @@
           "bm": 0.0,
           "pw": 0.0,
           "pm": 0.0,
-          "mandaysTotal": 0.0,
-          "mandaysCurrentFY": 0.0,
+          "mandaysTotal": 1.0,
+          "mandaysCurrentFY": 1.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -19526,7 +19526,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 110.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 0.0,
+      "julyMandays": 1.0,
       "engineer": "निशा तिवारी",
       "cluster": "SITPURA",
       "district": "SATNA"
@@ -24197,8 +24197,8 @@
           "bm": 0.0,
           "pw": 3600.0,
           "pm": 0.0,
-          "mandaysTotal": 26.0,
-          "mandaysCurrentFY": 26.0,
+          "mandaysTotal": 27.0,
+          "mandaysCurrentFY": 27.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -24206,7 +24206,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 25.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 26.0,
+      "julyMandays": 27.0,
       "engineer": "राजा राम चंदेल अति0",
       "cluster": "MURTIHAI",
       "district": "MAIHAR"
@@ -24237,8 +24237,8 @@
           "bm": 0.0,
           "pw": 9000.0,
           "pm": 0.0,
-          "mandaysTotal": 43.0,
-          "mandaysCurrentFY": 43.0,
+          "mandaysTotal": 44.0,
+          "mandaysCurrentFY": 44.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -24246,7 +24246,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 49.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 43.0,
+      "julyMandays": 44.0,
       "engineer": "राजा राम चंदेल अति0",
       "cluster": "MURTIHAI",
       "district": "MAIHAR"
@@ -29810,8 +29810,8 @@
           "bm": 0.0,
           "pw": 0.0,
           "pm": 0.0,
-          "mandaysTotal": 0.0,
-          "mandaysCurrentFY": 0.0,
+          "mandaysTotal": 2.0,
+          "mandaysCurrentFY": 2.0,
           "workFinancialYear": "2026-2027"
         }
       },
@@ -29819,7 +29819,7 @@
       "financialYear": "2026-2027",
       "nregaTotalMandays": 18.0,
       "nregaAprJunMandays": 18.0,
-      "julyMandays": 0.0,
+      "julyMandays": 2.0,
       "engineer": "मनोज खम्परिया अति0",
       "cluster": "BIHRA NO. 2",
       "district": "SATNA"
@@ -29991,9 +29991,9 @@
       "status": "Ongoing",
       "sw": 64702.51,
       "sm": 103601.97,
-      "bw": 14918.0,
+      "bw": 15518.0,
       "bm": 38896.61,
-      "pw": 14918.0,
+      "pw": 15518.0,
       "pm": 38896.61,
       "sources": {
         "MGNREGA": {
@@ -30006,9 +30006,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 3000.0,
+          "bw": 3600.0,
           "bm": 0.0,
-          "pw": 3000.0,
+          "pw": 3600.0,
           "pm": 0.0,
           "mandaysTotal": 12.0,
           "mandaysCurrentFY": 12.0,
@@ -30191,9 +30191,9 @@
       "status": "Ongoing",
       "sw": 64702.72,
       "sm": 103602.48,
-      "bw": 20043.0,
+      "bw": 21843.0,
       "bm": 5800.0,
-      "pw": 20043.0,
+      "pw": 21843.0,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -30206,12 +30206,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 3600.0,
+          "bw": 5400.0,
           "bm": 0.0,
-          "pw": 3600.0,
+          "pw": 5400.0,
           "pm": 0.0,
-          "mandaysTotal": 12.0,
-          "mandaysCurrentFY": 12.0,
+          "mandaysTotal": 18.0,
+          "mandaysCurrentFY": 18.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -30219,7 +30219,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 63.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 12.0,
+      "julyMandays": 18.0,
       "engineer": "महेन्‍द्र पारधी",
       "cluster": "BARAKALA",
       "district": "SATNA"
@@ -30770,8 +30770,8 @@
           "bm": 20880.0,
           "pw": 2100.0,
           "pm": 0.0,
-          "mandaysTotal": 13.0,
-          "mandaysCurrentFY": 13.0,
+          "mandaysTotal": 19.0,
+          "mandaysCurrentFY": 19.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -30779,7 +30779,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 13.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 13.0,
+      "julyMandays": 19.0,
       "engineer": "महेन्‍द्र पारधी",
       "cluster": "BARAKALA",
       "district": "SATNA"
@@ -31551,9 +31551,9 @@
       "status": "Ongoing",
       "sw": 64677.23,
       "sm": 98812.83,
-      "bw": 3642.98,
+      "bw": 4015.94,
       "bm": 0.0,
-      "pw": 3642.98,
+      "pw": 4015.94,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -31566,12 +31566,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 372.96,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 372.96,
           "pm": 0.0,
-          "mandaysTotal": 0.0,
-          "mandaysCurrentFY": 0.0,
+          "mandaysTotal": 12.0,
+          "mandaysCurrentFY": 12.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -31579,7 +31579,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 14.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 0.0,
+      "julyMandays": 12.0,
       "engineer": "कुलदीप पयासी",
       "cluster": "SEMARIA",
       "district": "SATNA"
@@ -32031,9 +32031,9 @@
       "status": "Ongoing",
       "sw": 64702.72,
       "sm": 97579.58,
-      "bw": 12013.310000000001,
+      "bw": 16202.25,
       "bm": 26100.0,
-      "pw": 12013.310000000001,
+      "pw": 16202.25,
       "pm": 26100.0,
       "sources": {
         "MGNREGA": {
@@ -32046,9 +32046,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 4741.56,
+          "bw": 8930.5,
           "bm": 0.0,
-          "pw": 4741.56,
+          "pw": 8930.5,
           "pm": 0.0,
           "mandaysTotal": 33.0,
           "mandaysCurrentFY": 33.0,
@@ -32231,9 +32231,9 @@
       "status": "Ongoing",
       "sw": 114242.56,
       "sm": 152334.69,
-      "bw": 21276.800000000003,
+      "bw": 25433.82,
       "bm": 52200.0,
-      "pw": 21276.800000000003,
+      "pw": 25433.82,
       "pm": 52200.0,
       "sources": {
         "MGNREGA": {
@@ -32246,12 +32246,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 10522.19,
+          "bw": 14679.21,
           "bm": 0.0,
-          "pw": 10522.19,
+          "pw": 14679.21,
           "pm": 0.0,
-          "mandaysTotal": 39.0,
-          "mandaysCurrentFY": 39.0,
+          "mandaysTotal": 53.0,
+          "mandaysCurrentFY": 53.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -32259,7 +32259,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 43.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 39.0,
+      "julyMandays": 53.0,
       "engineer": "व्‍ही0के0मिश्रा",
       "cluster": "BHARJUNAKHUAD",
       "district": "SATNA"
@@ -33911,9 +33911,9 @@
       "status": "Ongoing",
       "sw": 111477.59,
       "sm": 148279.6,
-      "bw": 5440.98,
+      "bw": 5740.98,
       "bm": 2900.0,
-      "pw": 5440.98,
+      "pw": 5740.98,
       "pm": 0.0,
       "sources": {
         "MGNREGA": {
@@ -33926,9 +33926,9 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 1800.0,
+          "bw": 2100.0,
           "bm": 0.0,
-          "pw": 1800.0,
+          "pw": 2100.0,
           "pm": 0.0,
           "mandaysTotal": 7.0,
           "mandaysCurrentFY": 7.0,
@@ -33991,9 +33991,9 @@
       "status": "Ongoing",
       "sw": 64677.45,
       "sm": 98813.37,
-      "bw": 6786.06,
+      "bw": 10986.060000000001,
       "bm": 21750.0,
-      "pw": 6786.06,
+      "pw": 10986.060000000001,
       "pm": 14500.0,
       "sources": {
         "MGNREGA": {
@@ -34006,12 +34006,12 @@
           "workFinancialYear": "2025-2026"
         },
         "VBGRAMG": {
-          "bw": 0.0,
+          "bw": 4200.0,
           "bm": 0.0,
-          "pw": 0.0,
+          "pw": 4200.0,
           "pm": 0.0,
-          "mandaysTotal": 0.0,
-          "mandaysCurrentFY": 0.0,
+          "mandaysTotal": 14.0,
+          "mandaysCurrentFY": 14.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -34019,7 +34019,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 38.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 0.0,
+      "julyMandays": 14.0,
       "engineer": "धर्मेन्द्र कोरी",
       "cluster": "BARAHANA",
       "district": "SATNA"
@@ -35232,8 +35232,8 @@
           "bm": 0.0,
           "pw": 0.0,
           "pm": 0.0,
-          "mandaysTotal": 1.0,
-          "mandaysCurrentFY": 1.0,
+          "mandaysTotal": 2.0,
+          "mandaysCurrentFY": 2.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -35241,7 +35241,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 6.0,
       "nregaAprJunMandays": 1.0,
-      "julyMandays": 1.0,
+      "julyMandays": 2.0,
       "engineer": "राज कुमार पाण्डेय",
       "cluster": "ICHAUL",
       "district": "SATNA"
@@ -35272,8 +35272,8 @@
           "bm": 0.0,
           "pw": 0.0,
           "pm": 0.0,
-          "mandaysTotal": 1.0,
-          "mandaysCurrentFY": 1.0,
+          "mandaysTotal": 2.0,
+          "mandaysCurrentFY": 2.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -35281,7 +35281,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 6.0,
       "nregaAprJunMandays": 1.0,
-      "julyMandays": 1.0,
+      "julyMandays": 2.0,
       "engineer": "राज कुमार पाण्डेय",
       "cluster": "ICHAUL",
       "district": "SATNA"
@@ -35312,8 +35312,8 @@
           "bm": 0.0,
           "pw": 5400.0,
           "pm": 0.0,
-          "mandaysTotal": 66.0,
-          "mandaysCurrentFY": 66.0,
+          "mandaysTotal": 78.0,
+          "mandaysCurrentFY": 78.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -35321,7 +35321,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 24.0,
       "nregaAprJunMandays": 18.0,
-      "julyMandays": 66.0,
+      "julyMandays": 78.0,
       "engineer": "राज कुमार पाण्डेय अति 0",
       "cluster": "BIHATA",
       "district": "SATNA"
@@ -37974,8 +37974,8 @@
           "bm": 0.0,
           "pw": 4114.96,
           "pm": 0.0,
-          "mandaysTotal": 17.0,
-          "mandaysCurrentFY": 17.0,
+          "mandaysTotal": 18.0,
+          "mandaysCurrentFY": 18.0,
           "workFinancialYear": "2025-2026"
         }
       },
@@ -37983,7 +37983,7 @@
       "financialYear": "2025-2026",
       "nregaTotalMandays": 82.0,
       "nregaAprJunMandays": 0.0,
-      "julyMandays": 17.0,
+      "julyMandays": 18.0,
       "engineer": "राकेश ताम्रकार अति0",
       "cluster": "SHYAAMANAGAR",
       "district": "SATNA"
@@ -39760,5 +39760,5 @@
   ],
   "deduplication": "One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once",
   "basis": "Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG",
-  "mappingDate": "13-10-2026"
+  "mappingDate": "14-10-2026"
 }
