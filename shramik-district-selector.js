@@ -176,6 +176,12 @@ singlePrint.addEventListener('click',()=>{
  frame.contentWindow.onafterprint=()=>setTimeout(()=>frame.remove(),1000);
 });
 
+// Route the normal Print/PDF button through the same isolated local layout.
+const localPrintButton=document.getElementById('snReadablePrint');
+if(localPrintButton)localPrintButton.addEventListener('click',event=>{
+ if(select.value)return;
+ event.preventDefault();event.stopImmediatePropagation();singlePrint.click();
+},true);
 metricSelect.addEventListener('change',ranks);select.addEventListener('change',render);render();
 })();
 
