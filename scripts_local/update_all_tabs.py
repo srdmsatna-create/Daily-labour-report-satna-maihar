@@ -20,6 +20,7 @@ GROUPS=[
  ('pmayg',[['scripts_local/update_pmayg.py']],['data/pmayg-latest.json']),
  ('above75',[['scripts_local/update_above75.py']],['data/above75-latest.json']),
  ('planner',[['scripts/fetch_planner_portal_summary.py']],['planner-portal-data.js']),
+ ('secure_ts',[['scripts_local/update_secure_ts.py']],['secure-ts-data.js']),
  ('ek_bagiya_payment',[['scripts_local/update_ek_bagiya_payment.py']],['data/ek-bagiya-payment-latest.json']),
  ('rejected_wage',[['scripts/update_rejected_wage.py']],['data/rejected-wage-latest.json'])
 ]
@@ -28,7 +29,9 @@ def data(path):
  s=path.read_text(encoding='utf-8-sig').strip()
  return json.loads(s.split('=',1)[1].strip().rstrip(';') if path.suffix=='.js' else s)
 def validate(group,root):
- if group=='shramik_complete':
+ if group=='secure_ts':
+  runpy.run_path(str(root/'scripts_local/update_secure_ts.py'))['validate'](data(root/'secure-ts-data.js'))
+ elif group=='shramik_complete':
   validate_shramik(root)
  elif group=='shramik_59':
   d=data(root/'shramik-niyojan-data.js')
@@ -164,7 +167,7 @@ def refresh_group(group,commands,files,root=ROOT,executor=None,validator=validat
  try:
   for command in commands:
    if executor:executor(command,root)
-   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0]=='scripts_local/update_gp_emuster.py' else 900)
+   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py') else 900)
   runpy.run_path(str(root/'scripts_local/apply_sector_allocations.py'))['apply'](root,files)
   validator(group,root)
   return {'success':True,'files':files}

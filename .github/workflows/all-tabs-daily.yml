@@ -1,8 +1,8 @@
-name: Complete SRDM daily reports at 7:30 AM India
+name: Complete SRDM daily reports at 8 AM India
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * *'
+    - cron: '30 2 * * *'
   push:
     paths:
       - '.github/workflows/all-tabs-daily.yml'
@@ -32,6 +32,7 @@ jobs:
         run: |
           python scripts_local/test_vbgram_access.py
           python scripts_local/test_unified_daily.py
+          python scripts_local/test_secure_ts.py
       - name: Refresh, reconcile and publish complete reports together
         env:
           VBGRAM_COOKIE: ${{ secrets.VBGRAM_COOKIE }}
