@@ -84,6 +84,15 @@ localStyle.textContent+=`@media print{
 #shramikNiyojanReport .sn-table thead{display:table-header-group!important}
 #shramikNiyojanReport .sn-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
 }`;
+// Final local-table widths, after inherited state-table styles.
+localStyle.textContent+=`@media screen{
+#shramikNiyojanReport #snLocalDistrictReport .sn-table{min-width:1320px!important;table-layout:fixed!important}
+#shramikNiyojanReport #snLocalDistrictReport .sn-table th:nth-child(1),#shramikNiyojanReport #snLocalDistrictReport .sn-table td:nth-child(1){width:58px!important;min-width:58px!important;max-width:58px!important;white-space:nowrap!important;font-size:14px!important}
+#shramikNiyojanReport #snLocalDistrictReport .sn-table th:nth-child(2),#shramikNiyojanReport #snLocalDistrictReport .sn-table td:nth-child(2){width:78px!important;min-width:78px!important;max-width:78px!important;white-space:nowrap!important;font-size:16px!important}
+#shramikNiyojanReport #snLocalDistrictReport .sn-table th:nth-child(3),#shramikNiyojanReport #snLocalDistrictReport .sn-table td:nth-child(3){width:130px!important;min-width:130px!important;max-width:130px!important;font-size:16px!important;overflow-wrap:normal!important;word-break:normal!important}
+#shramikNiyojanReport #snLocalDistrictReport .sn-table th:nth-child(-n+3){overflow-wrap:normal!important;word-break:normal!important;line-height:1.35!important}
+#shramikNiyojanReport #snLocalDistrictReport .sn-table .sn-pct{box-sizing:border-box!important;min-width:0!important;max-width:100%!important;white-space:nowrap!important;font-size:14px!important;padding:3px!important}
+}`;
 section.appendChild(localStyle);
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -155,3 +164,4 @@ singlePrint.addEventListener('click',()=>{
 
 metricSelect.addEventListener('change',ranks);select.addEventListener('change',render);render();
 })();
+
