@@ -152,7 +152,21 @@ const singlePrint=document.createElement('button');
 singlePrint.type='button';singlePrint.textContent='एक पेज Print / PDF';singlePrint.style.cssText='padding:8px 12px;background:#075d46;color:white;border:0;border-radius:6px;font-weight:800';
 tools.appendChild(singlePrint);
 singlePrint.addEventListener('click',()=>{
- if(!select.value){window.print();return;}
+ if(!select.value){
+  const source=originalWrap.querySelector('table');
+  const copy=source.cloneNode(true);
+  const hidden=[...source.tHead.rows[0].cells].map((c,i)=>getComputedStyle(c).display==='none'?i:-1).filter(i=>i>=0);
+  for(const row of copy.rows)for(const i of [...hidden].reverse())if(row.cells.length===source.tHead.rows[0].cells.length)row.cells[i].remove();
+  copy.querySelectorAll('colgroup').forEach(c=>c.remove());
+  const count=copy.tHead.rows[0].cells.length;
+  const identity=document.getElementById('snLevel').value==='engineer'?[3,5,9,12,10]:[3,5,10];
+  const remainder=(100-identity.reduce((a,b)=>a+b,0))/(count-identity.length);
+  const cg=document.createElement('colgroup');for(let i=0;i<count;i++){const c=document.createElement('col');c.style.width=(identity[i]??remainder)+'%';cg.appendChild(c)}copy.prepend(cg);
+  const frame=document.createElement('iframe');frame.style.cssText='position:fixed;width:1100px;height:800px;left:-12000px;top:0;border:0';document.body.appendChild(frame);
+  const doc=frame.contentDocument;
+  doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><title>श्रमिक नियोजन</title><style>@page{size:A4 landscape;margin:5mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{margin:0;font-family:"Nirmala UI",Mangal,Arial,sans-serif}h2{font-size:13pt;margin:0 0 2mm}.date{text-align:right;font-size:8pt;margin:0 0 2mm}table{width:100%;table-layout:fixed;border-collapse:collapse}thead{display:table-header-group}tr{break-inside:avoid}th,td{border:.25mm solid #547c6f;padding:1.1mm .5mm;font-size:7pt;line-height:1.3;width:auto!important;min-width:0!important;max-width:none!important}th{background:#075d46;color:white;text-align:center;overflow-wrap:normal;word-break:normal}td{font-weight:800;text-align:center;white-space:nowrap}td:nth-child(3){white-space:normal;word-break:normal}span,button{font:inherit;min-width:0!important;max-width:100%;padding:0!important;border:0!important;background:transparent!important;color:inherit!important}.sn-sort-arrow{display:none}.sn-grand,.sn-total{background:#dcece5}.sn-shortage{background:#ffe0df;color:#8b1717}</style></head><body><h2>श्रमिक नियोजन — मानव दिवस लक्ष्य एवं उपलब्धि</h2><p class="date">'+esc(document.getElementById('snDate').textContent)+'</p>'+copy.outerHTML+'</body></html>');doc.close();
+  frame.contentWindow.focus();setTimeout(()=>frame.contentWindow.print(),300);frame.contentWindow.onafterprint=()=>setTimeout(()=>frame.remove(),1000);return;
+ }
  const frame=document.createElement('iframe');frame.style.cssText='position:fixed;width:1px;height:1px;left:-10000px;top:0;border:0';document.body.appendChild(frame);
  const doc=frame.contentDocument;
  const title=document.getElementById('snStateTitle').textContent;
