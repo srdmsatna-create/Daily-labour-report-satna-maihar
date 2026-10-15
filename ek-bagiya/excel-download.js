@@ -26,9 +26,11 @@
   window.downloadExcelWorkbook=async function(btn){
     const old=btn.textContent;btn.disabled=true;btn.textContent='Excel बन रहा है…';
     try{
-      const [rankText,workText]=await Promise.all(['upyantri_rank_full_table.csv','work_details.csv'].map(x=>fetch(x,{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error(x);return r.text()})));
-      const xml='<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#155F95" ss:Pattern="Solid"/></Style></Styles>'+sheetXML('Upyantri Ranking',parseCSV(rankText))+sheetXML('Work Details',parseCSV(workText))+'</Workbook>';
-      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+xml],{type:'application/vnd.ms-excel'}));a.download='Ek_Bagiya_Work_Details_756_09-09-2026.xls';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+      if(!window.EK_BAGIYA_LIVE_READY)throw new Error('Live ledger not loaded');
+      const toRows=records=>{const headers=[...new Set(records.flatMap(r=>Object.keys(r)))];return [headers,...records.map(r=>headers.map(k=>r[k]??''))]};
+      const rankRows=toRows(UPYANTRI_ROWS),workRows=toRows(WORK_DETAILS);
+      const xml='<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Header"><Font ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#155F95" ss:Pattern="Solid"/></Style></Styles>'+sheetXML('Upyantri Ranking',rankRows)+sheetXML('Work Details',workRows)+'</Workbook>';
+      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+xml],{type:'application/vnd.ms-excel'}));a.download='Ek_Bagiya_Latest_Work_Details.xls';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
     }catch(e){alert('Excel download तैयार नहीं हो पाया। कृपया दोबारा प्रयास करें।')}
     finally{btn.disabled=false;btn.textContent=old}
   };

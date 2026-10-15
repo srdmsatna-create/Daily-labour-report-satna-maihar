@@ -37,9 +37,18 @@ def is_bagiya(name,code,known):
  name=unicodedata.normalize('NFKD',name).replace('\u093c','')
  return code in known or bool(re.search(r'ब[ा]?ग[िी]य[ा]?|b(?:a|ai)[gk]i?(?:y|i)a',name,re.I))
 ALLOWED_FYS={'2025-2026','2026-2027'}
-PORTAL_FYS={'MGNREGA':('2025-2026','2026-2027'),'VBGRAMG':('2026-2027',)}
+PORTAL_FYS={'MGNREGA':('2025-2026','2026-2027'),'VBGRAMG':('2025-2026','2026-2027',)}
 # Official R-6.12 columns: Booked current FY 17/18; Paid since inception 23/24.
 PAYMENT_COLUMNS={'bw':17,'bm':18,'pw':23,'pm':24,'bsw':21,'bsm':22}
+LOGIC_VERSION='sabhi-reports-logic-v1'
+def ledger_amounts(c,system):
+ # User workbook: NREGA inception columns; VBG uses the larger of current/inception.
+ raw={str(i):number(c[i-1]) for i in range(17,27)}
+ amounts={k:raw[str(column)] for k,column in PAYMENT_COLUMNS.items()}
+ if system=='VBGRAMG':
+  for key,current in [('bsw',17),('bsm',18),('pw',19),('pm',20)]:
+   amounts[key]=max(amounts[key],raw[str(current)])
+ return amounts,raw
 def work_fy(value):
  value=value.strip().replace('/','-')
  return {'2025-26':'2025-2026','2026-27':'2026-2027'}.get(value,value)
@@ -47,7 +56,7 @@ def build(vbg,nrega,dates,urls,known=None):
  if known is None:known=scheme_codes()
  vbg=[c for c in vbg if work_fy(c[4]) in PORTAL_FYS['VBGRAMG']]
  nrega=[c for c in nrega if work_fy(c[4]) in ALLOWED_FYS]
- # Portal coverage differs: MGNREGA has two work-start FYs; VBGRAMG has one.
+ # Both work-start FYs are needed on both portals; the VBG ledger covers July onward.
  # Merge by work code, retaining one ledger per portal without requiring equal sets.
  master={}
  for system,rr in [('MGNREGA',nrega),('VBGRAMG',vbg)]:
@@ -66,8 +75,8 @@ def build(vbg,nrega,dates,urls,known=None):
     x['nregaTotalMandays']=number(c[24]);x['nregaAprJunMandays']=number(c[25])
     if x['nregaAprJunMandays']>x['nregaTotalMandays']:raise ValueError('NREGA manday periods invalid')
    x['sw']=max(x['sw'],number(c[13]));x['sm']=max(x['sm'],number(c[14]))
-   amounts={k:number(c[column-1]) for k,column in PAYMENT_COLUMNS.items()}
-   x['sources'][system]={**amounts,'mandaysTotal':number(c[24]),'mandaysCurrentFY':number(c[25]),'workFinancialYear':work_fy(c[4])}
+   amounts,raw=ledger_amounts(c,system)
+   x['sources'][system]={**amounts,'rawColumns':raw,'mandaysTotal':number(c[24]),'mandaysCurrentFY':number(c[25]),'workFinancialYear':work_fy(c[4])}
    for k,v in amounts.items():x[k]+=v
  if not master:raise ValueError('No Ek Bagiya work details')
  for w in master.values():
@@ -94,7 +103,9 @@ def attach_mapping(d,root=ROOT):
  return d
 def main():
  urls={'VBGRAMG':mis.URL,'MGNREGA':mis.URL.replace('https://vbgramgrep.dord.gov.in/VBGRAMG/','https://mnregaweb4.dord.gov.in/netnregarep/')}
- vbg,vd=fetch(urls['VBGRAMG'],fy='2026-2027');print('VBGRAMG source fetched',flush=True)
+ # This dropdown is Work Start FY, not the financial period of the VBG ledger.
+ # Fetch both allowed work-start years so old works with July-onward activity survive.
+ vbg,vd=fetch(urls['VBGRAMG'],fy='ALL');print('VBGRAMG source fetched (all work-start FYs)',flush=True)
  blocks={'AMARPATAN':'1712006','MAIHAR':'1712008','MAJHGAWAN':'1712001','NAGOD':'1712003','RAMNAGAR':'1712007','RAMPUR BAGHELAN':'1712005','SATNA':'1712002','UNCHAHARA':'1712004'}
  tasks=[(j,c,fy) for j,c in blocks.items() for fy in PORTAL_FYS['MGNREGA']]
  def read(task):
@@ -107,6 +118,7 @@ def main():
  nrega=[r for rr,_ in results for r in rr];nd=dates.pop();print('MGNREGA source fetched',flush=True)
  if not vd:raise ValueError('VBGRAMG official source date missing')
  d=attach_mapping(build(vbg,nrega,{'VBGRAMG':vd,'MGNREGA':nd},urls))
+ d.update(logicVersion=LOGIC_VERSION,logicSource='sabhi-reports-logic.xlsx',bookedBasis='MGNREGA columns 21/22 + VBGRAMG max(21,17)/max(22,18)',paidBasis='MGNREGA columns 23/24 + VBGRAMG max(23,19)/max(24,20)',pendingBasis='Combined Booked minus Combined Paid, separately for Wage and Material',sourceFinancialYears={'MGNREGA':['2025-2026','2026-2027'],'VBGRAMG':['2025-2026','2026-2027']},reportFinancialYears={'VBGRAMG':'2026-2027'})
  path=ROOT/'data/ek-bagiya-payment-latest.json';path.parent.mkdir(exist_ok=True)
  temp=path.with_suffix('.tmp');temp.write_text(json.dumps(d,ensure_ascii=False,indent=2),encoding='utf-8');temp.replace(path)
  print('Verified current payment snapshot: eight Janpads')
