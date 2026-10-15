@@ -14,6 +14,7 @@ GROUPS=[
     'shramik-gp-progress-data.js','gp-emuster-data.js','shramik-niyojan-data.js','shramik-district-reports.js',
     'shramik-state-refresh-status.js','shramik-refresh-status.js']),
  ('muster_emb',[['scripts_local/update_muster_emb_monitoring.py','--update-only']],['muster-emb-data.js']),
+ ('emb_pending',[['scripts_local/update_emb_pending.py']],['data/emb-pending-latest.json']),
  ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-data.js','yuktdhara-official-data.js','yuktdhara-received-data.js']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js']),
@@ -39,6 +40,10 @@ def validate(group,root):
  elif group=='shramik_52':
   d=data(root/'shramik-district-reports.js')
   if len(d.get('districts',{}))!=52:raise ValueError('Expected all 52 districts')
+ elif group=='emb_pending':
+  d=data(root/'data/emb-pending-latest.json')
+  runpy.run_path(str(root/'scripts_local/update_emb_pending.py'))['validate'](d)
+  if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Current pending e-MB detail required')
  elif group=='muster_emb':
   d=data(root/'muster-emb-data.js')
   if len(d.get('rows',[]))!=8 or len(d.get('gpRows',[]))!=695:raise ValueError('Expected 8 Janpads and 695 GPs')

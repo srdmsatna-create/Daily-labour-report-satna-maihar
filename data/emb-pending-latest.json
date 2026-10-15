@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "emb-lambit-logic-v1",
+  "available": false,
+  "message": "पंचायतवार विवरण की प्रतीक्षा है। स्थानीय Chrome से पहला स्वचालित डेटा अपडेट पूरा होने पर रिपोर्ट यहाँ दिखाई देगी।",
+  "source": "https://vbgramgrep.dord.gov.in/VBGRAMG/MusterRolle_EMBStatus.aspx?payload=ZXiXTJ0HzQl7fz4W7woa23KDguzp-Is4I63qmc6Kyc1jl3ibJtUhejzlAtv-fAxwYpqJyyVqtiJi6sPlWJ357Cb4q5KyW0qMVPUtVVbI2jF4KrNWijPnHjLZhYy2hn-IsDls6eL7mtZ3bO4TEFNgNLvBwskkuj-k-JBiAHVCc1URsDldWZBA_b0p11E4y43kiQmP7PzLsOsegcEuX8tvBUfVun1-KPT6ttJfedEcB7dCuEcZY6uUT99T_4E5JucKgEhkZbRWFH7ERjpKjdJv4w",
+  "sourceDate": null,
+  "thresholdDays": 5,
+  "zeroAttendanceVerified": false,
+  "gpRows": null,
+  "coverage": [],
+  "checkedGP": null,
+  "totalPending": null,
+  "affectedGP": null,
+  "failedGP": null
+}
