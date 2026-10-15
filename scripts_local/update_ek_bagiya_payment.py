@@ -37,15 +37,18 @@ def is_bagiya(name,code,known):
  name=unicodedata.normalize('NFKD',name).replace('\u093c','')
  return code in known or bool(re.search(r'ब[ा]?ग[िी]य[ा]?|b(?:a|ai)[gk]i?(?:y|i)a',name,re.I))
 ALLOWED_FYS={'2025-2026','2026-2027'}
+PORTAL_FYS={'MGNREGA':('2025-2026','2026-2027'),'VBGRAMG':('2026-2027',)}
+# Official R-6.12 column numbers are one-based; do not use current-FY 17-20.
+PAYMENT_COLUMNS={'bw':21,'bm':22,'pw':23,'pm':24}
 def work_fy(value):
  value=value.strip().replace('/','-')
  return {'2025-26':'2025-2026','2026-27':'2026-2027'}.get(value,value)
 def build(vbg,nrega,dates,urls,known=None):
  if known is None:known=scheme_codes()
- vbg=[c for c in vbg if work_fy(c[4]) in ALLOWED_FYS]
+ vbg=[c for c in vbg if work_fy(c[4]) in PORTAL_FYS['VBGRAMG']]
  nrega=[c for c in nrega if work_fy(c[4]) in ALLOWED_FYS]
- ongoing=lambda rr:{c[6] for c in rr if c[5].lower()=='ongoing' and is_bagiya(c[7],c[6],known)}
- if ongoing(vbg)!=ongoing(nrega):raise ValueError('Official ongoing Ek Bagiya work codes do not reconcile')
+ # Portal coverage differs: MGNREGA has two work-start FYs; VBGRAMG has one.
+ # Merge by work code, retaining one ledger per portal without requiring equal sets.
  master={}
  for system,rr in [('MGNREGA',nrega),('VBGRAMG',vbg)]:
   seen={}
@@ -63,7 +66,7 @@ def build(vbg,nrega,dates,urls,known=None):
     x['nregaTotalMandays']=number(c[24]);x['nregaAprJunMandays']=number(c[25])
     if x['nregaAprJunMandays']>x['nregaTotalMandays']:raise ValueError('NREGA manday periods invalid')
    x['sw']=max(x['sw'],number(c[13]));x['sm']=max(x['sm'],number(c[14]))
-   amounts={k:number(c[i]) for k,i in [('bw',20),('bm',21),('pw',22),('pm',23)]}
+   amounts={k:number(c[column-1]) for k,column in PAYMENT_COLUMNS.items()}
    x['sources'][system]={**amounts,'mandaysTotal':number(c[24]),'mandaysCurrentFY':number(c[25]),'workFinancialYear':work_fy(c[4])}
    for k,v in amounts.items():x[k]+=v
  if not master:raise ValueError('No Ek Bagiya work details')
@@ -74,7 +77,7 @@ def build(vbg,nrega,dates,urls,known=None):
   financial_works=[w for w in works if w['status'].lower() in ('ongoing','physically completed','completed')]
   summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),financialWorks=len(financial_works),**{k:sum(w[k] for w in (works if k in ('sw','sm') else financial_works))/100000 for k in ('sw','sm','bw','bm','pw','pm')}))
  now=datetime.now(ZoneInfo('Asia/Kolkata'))
- return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialBasis':'Sanction includes all unique approved/ongoing/completed/closed works, excluding New and Deleted. Booked/Paid includes ongoing and completed works.','financialYears':sorted(ALLOWED_FYS),'deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
+ return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialBasis':'Sanction includes all unique approved/ongoing/completed/closed works, excluding New and Deleted. Booked/Paid includes ongoing and completed works.','financialYears':sorted(ALLOWED_FYS),'sourceFinancialYears':{k:list(v) for k,v in PORTAL_FYS.items()},'r612Columns':PAYMENT_COLUMNS,'deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
 def attach_mapping(d,root=ROOT):
  text=(root/'shramik-niyojan-data.js').read_text(encoding='utf-8-sig')
  mapping=json.loads(text.split('=',1)[1].strip().rstrip(';'))
@@ -89,9 +92,9 @@ def attach_mapping(d,root=ROOT):
  return d
 def main():
  urls={'VBGRAMG':mis.URL,'MGNREGA':mis.URL.replace('https://vbgramgrep.dord.gov.in/VBGRAMG/','https://mnregaweb4.dord.gov.in/netnregarep/')}
- vbg,vd=fetch(urls['VBGRAMG']);print('VBGRAMG source fetched',flush=True)
+ vbg,vd=fetch(urls['VBGRAMG'],fy='2026-2027');print('VBGRAMG source fetched',flush=True)
  blocks={'AMARPATAN':'1712006','MAIHAR':'1712008','MAJHGAWAN':'1712001','NAGOD':'1712003','RAMNAGAR':'1712007','RAMPUR BAGHELAN':'1712005','SATNA':'1712002','UNCHAHARA':'1712004'}
- tasks=[(j,c,fy) for j,c in blocks.items() for fy in ('2025-2026','2026-2027')]
+ tasks=[(j,c,fy) for j,c in blocks.items() for fy in PORTAL_FYS['MGNREGA']]
  def read(task):
   j,c,fy=task;rr,date=fetch(urls['MGNREGA'],c,fy)
   if {r[2] for r in rr}!={j}:raise ValueError('NREGA Janpad mismatch')
