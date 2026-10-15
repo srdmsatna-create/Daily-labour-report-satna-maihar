@@ -39,7 +39,7 @@ def is_bagiya(name,code,known):
 ALLOWED_FYS={'2025-2026','2026-2027'}
 PORTAL_FYS={'MGNREGA':('2025-2026','2026-2027'),'VBGRAMG':('2026-2027',)}
 # Official R-6.12 columns: Booked current FY 17/18; Paid since inception 23/24.
-PAYMENT_COLUMNS={'bw':17,'bm':18,'pw':23,'pm':24}
+PAYMENT_COLUMNS={'bw':17,'bm':18,'pw':23,'pm':24,'bsw':21,'bsm':22}
 def work_fy(value):
  value=value.strip().replace('/','-')
  return {'2025-26':'2025-2026','2026-27':'2026-2027'}.get(value,value)
@@ -59,7 +59,7 @@ def build(vbg,nrega,dates,urls,known=None):
     if seen[code]!=c:raise ValueError('Conflicting duplicate official work code')
     continue
    seen[code]=c
-   x=master.setdefault(code,{'code':code,'janpad':c[2],'name':c[7],'status':c[5],'sw':0,'sm':0,'bw':0,'bm':0,'pw':0,'pm':0,'sources':{},'panchayat':c[3],'financialYear':work_fy(c[4]),'nregaTotalMandays':0,'nregaAprJunMandays':0,'julyMandays':0})
+   x=master.setdefault(code,{'code':code,'janpad':c[2],'name':c[7],'status':c[5],'sw':0,'sm':0,'bw':0,'bm':0,'pw':0,'pm':0,'bsw':0,'bsm':0,'sources':{},'panchayat':c[3],'financialYear':work_fy(c[4]),'nregaTotalMandays':0,'nregaAprJunMandays':0,'julyMandays':0})
    if x['janpad']!=c[2] or x['financialYear']!=work_fy(c[4]):raise ValueError('Work Janpad/FY mismatch')
    if system=='VBGRAMG':x['status']=c[5];x['julyMandays']=number(c[25])
    else:
@@ -70,14 +70,16 @@ def build(vbg,nrega,dates,urls,known=None):
    x['sources'][system]={**amounts,'mandaysTotal':number(c[24]),'mandaysCurrentFY':number(c[25]),'workFinancialYear':work_fy(c[4])}
    for k,v in amounts.items():x[k]+=v
  if not master:raise ValueError('No Ek Bagiya work details')
+ for w in master.values():
+  if w['pw']>w['bsw']+0.01 or w['pm']>w['bsm']+0.01:raise ValueError('Paid exceeds since-inception Booked: '+w['code'])
  summary=[]
  for j in JANPADS:
   works=[w for w in master.values() if w['janpad']==j and w['status'].lower() not in ('new','deleted')]
   if not works:raise ValueError('No sanctioned works for '+j)
   financial_works=[w for w in works if w['status'].lower() in ('ongoing','physically completed','completed')]
-  summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),financialWorks=len(financial_works),**{k:sum(w[k] for w in (works if k in ('sw','sm') else financial_works))/100000 for k in ('sw','sm','bw','bm','pw','pm')}))
+  summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),financialWorks=len(financial_works),**{k:sum(w[k] for w in (works if k in ('sw','sm') else financial_works))/100000 for k in ('sw','sm','bw','bm','pw','pm','bsw','bsm')}))
  now=datetime.now(ZoneInfo('Asia/Kolkata'))
- return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialBasis':'Sanction includes all unique approved/ongoing/completed/closed works, excluding New and Deleted. Booked/Paid includes ongoing and completed works.','financialYears':sorted(ALLOWED_FYS),'sourceFinancialYears':{k:list(v) for k,v in PORTAL_FYS.items()},'r612Columns':PAYMENT_COLUMNS,'bookedBasis':'Amount Booked in current Fin Year (columns 17/18)','paidBasis':'Amount paid since inception (columns 23/24)','deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
+ return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialBasis':'Sanction includes all unique approved/ongoing/completed/closed works, excluding New and Deleted. Booked/Paid includes ongoing and completed works.','financialYears':sorted(ALLOWED_FYS),'sourceFinancialYears':{k:list(v) for k,v in PORTAL_FYS.items()},'r612Columns':PAYMENT_COLUMNS,'pendingBasis':'Since-inception booked minus since-inception paid: Wages col21-col23; Material col22-col24','bookedBasis':'Amount Booked in current Fin Year (columns 17/18)','paidBasis':'Amount paid since inception (columns 23/24)','deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
 def attach_mapping(d,root=ROOT):
  text=(root/'shramik-niyojan-data.js').read_text(encoding='utf-8-sig')
  mapping=json.loads(text.split('=',1)[1].strip().rstrip(';'))
