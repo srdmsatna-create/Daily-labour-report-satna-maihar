@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-14T12:31:27.551350+00:00",
+  "checkedAt": "2026-10-15T05:21:46.043317+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -24,8 +24,7 @@
       ]
     },
     "yuktdhara": {
-      "success": false,
-      "message": "Current verified Yuktdhara GP/engineer detail required: AMARPATAN: AMARPATAN attempt 1: GP detail does not reconcile: received GPs 12/12, received works 17/17, created works 5/4, created column True; AMARPATAN attempt 2: GP detail does not reconcile: received GPs 12/12, received works 17/17, created works 5/4, created column True; AMARPATAN attempt 3: GP detail does not reconcile: received GPs 12/12, received works 17/17, created works 5/4, created column True",
+      "success": true,
       "files": [
         "yuktdhara-data.js",
         "yuktdhara-official-data.js",
