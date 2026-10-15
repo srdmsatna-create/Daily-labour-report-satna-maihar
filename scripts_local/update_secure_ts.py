@@ -7,6 +7,17 @@ from html.parser import HTMLParser
 import http.cookiejar
 import json
 import os
+
+# Use Windows native certificate validation, including its issuer-chain lookup.
+# Certificate and hostname verification remain enabled.
+if os.name == 'nt':
+    try:
+        import truststore
+    except ImportError as exc:
+        raise RuntimeError(
+            'SECURE on Windows requires truststore. Run: py -m pip install truststore'
+        ) from exc
+    truststore.inject_into_ssl()
 from pathlib import Path
 import threading
 import time
