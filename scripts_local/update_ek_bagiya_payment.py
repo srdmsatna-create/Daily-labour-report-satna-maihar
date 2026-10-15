@@ -38,8 +38,8 @@ def is_bagiya(name,code,known):
  return code in known or bool(re.search(r'ब[ा]?ग[िी]य[ा]?|b(?:a|ai)[gk]i?(?:y|i)a',name,re.I))
 ALLOWED_FYS={'2025-2026','2026-2027'}
 PORTAL_FYS={'MGNREGA':('2025-2026','2026-2027'),'VBGRAMG':('2026-2027',)}
-# Official R-6.12 column numbers are one-based; do not use current-FY 17-20.
-PAYMENT_COLUMNS={'bw':21,'bm':22,'pw':23,'pm':24}
+# Official R-6.12 columns: Booked current FY 17/18; Paid since inception 23/24.
+PAYMENT_COLUMNS={'bw':17,'bm':18,'pw':23,'pm':24}
 def work_fy(value):
  value=value.strip().replace('/','-')
  return {'2025-26':'2025-2026','2026-27':'2026-2027'}.get(value,value)
@@ -77,7 +77,7 @@ def build(vbg,nrega,dates,urls,known=None):
   financial_works=[w for w in works if w['status'].lower() in ('ongoing','physically completed','completed')]
   summary.append(dict(janpad=j,works=len(works),ongoing=sum(w['status'].lower()=='ongoing' for w in works),financialWorks=len(financial_works),**{k:sum(w[k] for w in (works if k in ('sw','sm') else financial_works))/100000 for k in ('sw','sm','bw','bm','pw','pm')}))
  now=datetime.now(ZoneInfo('Asia/Kolkata'))
- return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialBasis':'Sanction includes all unique approved/ongoing/completed/closed works, excluding New and Deleted. Booked/Paid includes ongoing and completed works.','financialYears':sorted(ALLOWED_FYS),'sourceFinancialYears':{k:list(v) for k,v in PORTAL_FYS.items()},'r612Columns':PAYMENT_COLUMNS,'deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
+ return {'source':urls,'sourceDates':dates,'sourceDate':min(dates.values(),key=lambda d:datetime.strptime(d,'%d/%m/%Y')),'retrievedDate':now.strftime('%d/%m/%Y'),'checkedAt':datetime.now(timezone.utc).isoformat(),'rows':summary,'workCount':len(master),'works':list(master.values()),'financialBasis':'Sanction includes all unique approved/ongoing/completed/closed works, excluding New and Deleted. Booked/Paid includes ongoing and completed works.','financialYears':sorted(ALLOWED_FYS),'sourceFinancialYears':{k:list(v) for k,v in PORTAL_FYS.items()},'r612Columns':PAYMENT_COLUMNS,'bookedBasis':'Amount Booked in current Fin Year (columns 17/18)','paidBasis':'Amount paid since inception (columns 23/24)','deduplication':'One work per code; one ledger entry per code per portal; NREGA and VBGRAMG Booked/Paid ledger amounts added; sanction counted once','basis':'Verified master work codes plus normalized Hindi/English scheme spelling variants; sanctioned excludes New; Booked/Paid is MGNREGA plus VBGRAMG'}
 def attach_mapping(d,root=ROOT):
  text=(root/'shramik-niyojan-data.js').read_text(encoding='utf-8-sig')
  mapping=json.loads(text.split('=',1)[1].strip().rstrip(';'))
