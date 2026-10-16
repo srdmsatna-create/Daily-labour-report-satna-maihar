@@ -10,6 +10,14 @@ th button{background:transparent;color:inherit;border:0;padding:0;font:inherit;f
 
 .table-wrap{border:2px solid #536d85}table th,table td{border:1.2px solid #71869b}table th{border-color:#7c9eb8}.janpad-total td{background:#e6f0fb!important;color:#173f65;font-weight:800;border-top:2px solid #587b9b;border-bottom:2px solid #587b9b}.district-total td{background:#cfe2f6!important;color:#123d68;font-weight:900;border-top:2px solid #315e88;border-bottom:2px solid #315e88}.grand-total td{background:#163f6d!important;color:#fff!important;font-weight:900;border-top:3px solid #123451;border-bottom:3px solid #123451}table tr.janpad-total,table tr.district-total,table tr.grand-total{break-inside:avoid}@media print{table th,table td{border:1px solid #435d76}.janpad-total,.district-total,.grand-total{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 #warningControls[hidden],.cards[hidden],#warningMeta[hidden]{display:none!important}#warningMeta{border:2px solid #173f65;background:#eef5fd;padding:12px;margin:12px 0;line-height:1.8;font-weight:bold}.warning-table th,.warning-table td{font-size:12px;padding:7px}.warning-table th{background:#dce9f6;color:#173f65}.warning-table td{font-weight:600}.warning-table tr{break-inside:avoid}@media print{#warningControls{display:none!important}.warning-table{width:100%;min-width:0;table-layout:auto}.warning-table th,.warning-table td{font-size:8pt;padding:3px;overflow-wrap:anywhere}.warning-table thead{display:table-header-group}#warningMeta{font-size:10pt;padding:6px}#title{font-size:15pt}.warning-table,#warningMeta{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Give Janpad and engineer names enough room in report and print. */
+table th:has(button[data-sort="block"]){min-width:130px;width:130px}
+table th:has(button[data-sort="engineer"]){min-width:210px;width:210px}
+@media print{
+ table th:has(button[data-sort="block"]){min-width:0!important;width:24mm!important}
+ table th:has(button[data-sort="engineer"]){min-width:0!important;width:38mm!important}
+}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
