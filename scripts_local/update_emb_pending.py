@@ -1,5 +1,5 @@
 """e-MB pending ledger from official R4.4 details; rules: emb-lambit-logic.xlsx."""
-import html,json,re,sys,urllib.parse
+import html,json,re,sys,time,urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime,date,timezone
 from html.parser import HTMLParser
@@ -47,30 +47,63 @@ def count(s):
  if not re.fullmatch(r'\d+',s):raise ValueError('Invalid official count')
  return int(s)
 def zero_mrs(rr,expected):
+ # Match semantic headers despite punctuation, line breaks and abbreviations.
+ # Never guess a numeric column when the report header cannot be identified.
+ observed=[]
  for i,r in enumerate(rr):
-  hits=[j for j,c in enumerate(r) if re.fullmatch(r'(?:e[- ]?)?(?:muster\s*(?:roll)?|MR)\s*(?:no\.?|number)',c['text'],re.I)]
+  hits=[]
+  for j,c in enumerate(r):
+   label=re.sub(r'[^a-z0-9]','',c['text'].lower())
+   if re.fullmatch(r'(?:e)?(?:muster(?:roll)?|mr)(?:no|number)(?:s)?',label):hits.append(j)
   if len(hits)!=1:continue
   ci=hits[0];out=set()
-  for r in rr[i+1:]:
-   if len(r)<=ci:continue
-   v=clean(r[ci]['text'])
+  for detail in rr[i+1:]:
+   # Official detail records have a numeric serial; ignore totals, legends
+   # and the numeric column-number row immediately below the header.
+   if len(detail)<=ci or not detail or not detail[0]['text'].isdigit():continue
+   if len(detail)>2 and all(re.fullmatch(r'\d+',c['text']) for c in detail):continue
+   v=clean(detail[ci]['text'])
    if re.fullmatch(r'\d+(?:[/-]\d+)*',v):out.add(v)
+  observed.append(len(out))
   if len(out)==expected:return out
- raise ValueError('Zero Attendance detail count/header mismatch')
+ raise ValueError(f'Zero Attendance detail count/header mismatch: expected={expected}; observed={observed}; headers='+repr([[c['text'] for c in r] for r in rr[:8]]))
+
+def zero_tasks(rr,base,block):
+ tasks=[];gpseen=set()
+ for r in rr:
+  if len(r)<10 or not r[0]['text'].isdigit() or r[1]['text'].isdigit() or key(r[1]['text'])=='TOTAL':continue
+  gp=key(r[1]['text']);gpseen.add((block,gp))
+  for ci in (5,9):
+   n=count(r[ci]['text'])
+   if n:
+    if len(r[ci]['links'])!=1:raise ValueError('Missing Zero Attendance link: '+block+' '+gp)
+    tasks.append((block,gp,urllib.parse.urljoin(base,r[ci]['links'][0]),n,ci))
+ return tasks,gpseen
+
 def load_zero_attendance():
  root,base=get(R42_URL);links=block_links(root,base);tasks=[];gpseen=set()
  for block,url in links.items():
-  rr,base=get(url)
-  for r in rr:
-   if len(r)<10 or not r[0]['text'].isdigit() or r[1]['text'].isdigit() or key(r[1]['text'])=='TOTAL':continue
-   gp=key(r[1]['text']);gpseen.add((block,gp))
-   for ci in (5,9):
-    n=count(r[ci]['text'])
-    if n:
-     if len(r[ci]['links'])!=1:raise ValueError('Missing Zero Attendance link: '+block+' '+gp)
-     tasks.append((block,gp,urllib.parse.urljoin(base,r[ci]['links'][0]),n))
+  rr,base=get(url);part,seen=zero_tasks(rr,base,block)
+  tasks.extend(part);gpseen.update(seen)
  def one(t):
-  b,g,u,n=t;rr,_=get(u);return {(b,g,mr) for mr in zero_mrs(rr,n)}
+  b,g,u,n,ci=t
+  for attempt in range(3):
+   try:
+    if attempt:
+     # Refresh the parent too: counts and detail links can change mid-run.
+     parent,pbase=get(links[b]);fresh,_=zero_tasks(parent,pbase,b)
+     matches=[x for x in fresh if x[1]==g and x[4]==ci]
+     if not matches:
+      if (b,g) not in zero_tasks(parent,pbase,b)[1]:raise ValueError('GP missing from refreshed summary')
+      return set()
+     if len(matches)!=1:raise ValueError('Duplicate Zero Attendance GP summary')
+     _,_,u,n,_=matches[0]
+    rr,_=get(u)
+    return {(b,g,mr) for mr in zero_mrs(rr,n)}
+   except Exception as exc:
+    if attempt==2:raise ValueError(f'{b}/{g} Zero Attendance column {ci+1}: {exc}') from exc
+    print(f'Retrying Zero Attendance {b}/{g} ({attempt+2}/3): {exc}',flush=True)
+    time.sleep(2*(attempt+1))
  result=set()
  with ThreadPoolExecutor(max_workers=5) as pool:
   for part in pool.map(one,tasks):result.update(part)

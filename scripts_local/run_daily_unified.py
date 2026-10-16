@@ -91,7 +91,8 @@ def main():
             raise RuntimeError('Cannot check prepared report changes')
         cleanup = True
         if not status['success']:
-            print('PARTIAL: validated groups published; failed groups kept at their previous source dates.', flush=True)
+            failed = ', '.join(name for name, state in states.items() if not state['success'])
+            print('PARTIAL: validated reports published. Pending reports: ' + failed + '; previous verified data retained.', flush=True)
             return 1
         print('SUCCESS: every report validated; one complete publication.', flush=True)
         return 0
