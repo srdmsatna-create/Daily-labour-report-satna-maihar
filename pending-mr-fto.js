@@ -50,6 +50,7 @@ function renderWarning(){
  $('source').textContent='उपयंत्री / क्लस्टर: पंचायत की निर्धारित मैपिंग। “कर्मचारी” स्रोत का Technical Staff है।';
  const dims=[['district','जिला'],...(level!=='district'?[['block','जनपद']]:[]),...(['engineer','gp','details'].includes(level)?[['engineer','Engineer / उपयंत्री'],['cluster','क्लस्टर']]:[]),...(['gp','details'].includes(level)?[['panchayat','ग्राम पंचायत']]:[])];
  const metrics=level==='details'?[['workCode','कार्य कोड'],['mr','मस्टर रोल संख्या'],['closureDate','बंद दिनांक'],['days','मस्टर रोल लंबित दिन (Number of Days)'],['warning','चेतावनी'],['staff','कर्मचारी']]:[['gps','पंचायतें'],['pending','कुल लंबित'],['filling','e-MR भरना शेष'],['wage','वेजलिस्ट शेष'],['first','प्रथम हस्ताक्षर'],['second','द्वितीय हस्ताक्षर'],['over3','3 दिवस से ऊपर'],['oldest','मस्टर रोल लंबित दिन (अधिकतम)'],['average','औसत लंबित दिन']];
+ const table=$('head').closest('table');table.classList.toggle('warning-detail',level==='details');table.querySelector('colgroup')?.remove();if(level==='details')table.insertAdjacentHTML('afterbegin','<colgroup>'+[3,4,7,11,7,8,16,4,7,6,7,10].map(w=>'<col style="width:'+w+'%">').join('')+'</colgroup>');
  const cols=[...dims,...metrics],heads=['क्र.',...cols.map(c=>c[1])];exportRows=[heads];$('head').innerHTML='<tr><th>क्र.</th>'+cols.map(([id,label])=>'<th><button data-sort="'+id+'">'+esc(label)+' <span class="sortmark">'+(sort.key===id?(sort.direction===1?'↑':'↓'):'↕')+'</span></button></th>').join('')+'</tr>';
  const groups=new Map();for(const r of items){const id=JSON.stringify(level==='details'?[r.block,r.panchayat,r.workCode,r.mr]:level==='district'?[district(r.block)]:level==='block'?[r.block]:level==='gp'?[r.block,r.engineer,r.cluster,r.panchayat]:[r.block,r.engineer,r.cluster]);if(!groups.has(id))groups.set(id,[]);groups.get(id).push(r)}
  let display=[...groups.values()].map(rr=>({...rr[0],...warningStats(rr),_items:rr}));
@@ -63,7 +64,7 @@ function renderWarning(){
 
 function render(resetPage=true){
  if(resetPage)page=1;
- const warning=$('view').value==='warning';$('warningControls').hidden=!warning;$('warningMeta').hidden=true;document.querySelector('.cards').hidden=warning;$('head').closest('table').classList.remove('warning-table');
+ const warning=$('view').value==='warning';$('warningControls').hidden=!warning;$('warningMeta').hidden=true;document.querySelector('.cards').hidden=warning;$('head').closest('table').classList.remove('warning-table','warning-detail');$('head').closest('table').querySelector('colgroup')?.remove();
  if(warning){renderWarning();return}
  const report=data.reports[key]||{},valid=report.available===true,view=$('view').value,rows=filter(['details','numeric','numericDetails','musterFilling'].includes(view)?(data.details||[]).filter(r=>key==='mr'||r[key+'Pending']):(report.rows||[]));
  $('title').textContent=view==='musterFilling'?'MR भरना लंबित — जनपदवार उपयंत्री / क्लस्टर':titles[key];$('date').textContent='प्राप्त दिनांक: '+(valid?report.sourceDate:'उपलब्ध नहीं');
