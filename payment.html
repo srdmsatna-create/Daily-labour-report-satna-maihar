@@ -85,6 +85,19 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 .portal-since{padding:14px}.portal-since h3{color:#0b3159}.since-table{border-collapse:collapse;width:100%;min-width:900px}.since-table th,.since-table td{border:2px solid #33485c;padding:9px;text-align:right;font-size:17px;font-weight:800;white-space:nowrap}.since-table th{background:#deedf8;text-align:center;white-space:normal}.since-table td:first-child{text-align:left}.since-table tbody tr:last-child{background:#d5e7f5;font-weight:950}@media print{body.notice-print #portalSinceDetails{display:none!important}body:not(.notice-print) #portalSinceDetails{break-before:page}.portal-since{break-inside:avoid;padding:0;margin:0 0 8mm}.since-table{min-width:0}.since-table th,.since-table td{font-size:12pt;padding:2mm}.since-table thead{display:table-header-group}}
 
 .tbl{width:100%;min-width:1388px}.tbl th,.tbl td{border:1.5px solid #263e54;padding:6px 3px}.tbl tbody td{font-size:18px;font-weight:900}.tbl td:first-child{font-size:15px;white-space:normal;overflow-wrap:anywhere;padding-left:5px}.tbl td:last-child{font-size:14px;white-space:normal;overflow-wrap:anywhere}.tbl .pct,.tbl .pending-cell,.tbl .pending-total{font-size:18px!important}.tbl thead tr:first-child th{font-size:14px}.tbl thead tr:nth-child(2) th{font-size:12px;white-space:normal}.tbl .district td,.tbl .grand td{font-weight:950}@media print{.tbl col{width:auto!important}.tbl col:nth-child(1){width:24mm!important}.tbl col:nth-child(18){width:25mm!important}.tbl th,.tbl td{border:1.2px solid #263e54!important;padding:1.2mm .4mm!important;overflow-wrap:normal!important}.tbl tbody td,.tbl .pct,.tbl .pending-cell,.tbl .pending-total{font-size:9.5pt!important;font-weight:900!important;white-space:nowrap!important}.tbl thead tr:first-child th{font-size:8.5pt!important;line-height:1.2!important}.tbl thead tr:nth-child(2) th{font-size:8pt!important;line-height:1.2!important}.tbl td:first-child,.tbl td:last-child{font-size:8.5pt!important;white-space:normal!important;overflow-wrap:anywhere!important}.tbl thead{display:table-header-group}.tbl tr{break-inside:avoid}}
+
+/* Print the displayed payment summary as one landscape sheet. */
+@media print{
+ body:not(.notice-print) #portalSinceDetails,body:not(.notice-print) main>.card>.note{display:none!important}
+ body:not(.notice-print) main>.card{break-inside:avoid;page-break-inside:avoid}
+ body:not(.notice-print){-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ body:not(.notice-print) .tbl col:nth-child(n){width:auto!important}
+ body:not(.notice-print) .tbl col:first-child{width:26mm!important}
+ body:not(.notice-print) .tbl col:last-child{width:28mm!important}
+ body:not(.notice-print) .tbl th,body:not(.notice-print) .tbl td{padding:1.5mm .45mm!important}
+ body:not(.notice-print) .head{background:#cfe6f8!important}
+ body:not(.notice-print) .tbl{break-inside:avoid}
+}
 </style>
 </head>
 <body>
