@@ -48,7 +48,7 @@ def count(s):
  return int(s)
 def zero_mrs(rr,expected):
  for i,r in enumerate(rr):
-  hits=[j for j,c in enumerate(r) if re.fullmatch(r'(?:e[- ]?)?muster\s*(?:roll)?\s*(?:no\.?|number)|MR\s*(?:no\.?|number)',c['text'],re.I)]
+  hits=[j for j,c in enumerate(r) if re.fullmatch(r'(?:e[- ]?)?(?:muster\s*(?:roll)?|MR)\s*(?:no\.?|number)',c['text'],re.I)]
   if len(hits)!=1:continue
   ci=hits[0];out=set()
   for r in rr[i+1:]:
