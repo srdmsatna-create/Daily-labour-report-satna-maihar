@@ -92,7 +92,7 @@ main{max-width:1720px;margin:22px auto 34px;padding:0 16px}
 <main>
 <div class="actions"><button class="primary" onclick="window.print()">Payment Table Print / PDF</button><button onclick="downloadCSV()">CSV Download</button><button onclick="document.getElementById('paymentNotice').scrollIntoView({behavior:'smooth'})" style="background:#0b5f94;color:#fff;border-color:#0b5f94">जनपदवार कारण बताओ सूचना पत्र</button></div>
 <section class="card">
-<div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति) — रिपोर्ट दिनांक <span id="paymentSourceDate">26/09/2026</span> <small id="paymentRetrievedDate"></small></div>
+<div class="head">एक बगिया माँ के नाम (भुगतान की स्थिति) — रिपोर्ट दिनांक <span id="paymentSourceDate">26/09/2026</span></div>
 <div class="sub">दोनों स्रोतों में अद्वितीय स्वीकृत/पूर्ण कार्य: <b style="color:#0b5f94;font-size:14px" id="paymentWorkCount">821</b> • राशि ₹ लाख में • वित्तीय विवरण: <b id="paymentFinancialWorkCount">756</b> प्रगतिरत/पूर्ण कार्य</div>
 <div class="wrap"><table class="tbl" id="paymentTable"><tbody><tr><td class="status">डेटा लोड हो रहा है…</td></tr></tbody></table></div>
 <div class="note"><b>sabhi-reports-logic.xlsx के अनुसार:</b> MGNREGA Booked Wage/Material = कॉलम 21/22, Paid = 23/24। VBGRAMG Booked Wage = max(21,17), Material = max(22,18); Paid Wage = max(23,19), Material = max(24,20)। दोनों पोर्टल की राशि कार्य कोड से जोड़कर कुल निकाला गया है। Pending = कुल Booked − कुल Paid; % Paid = कुल Paid ÷ कुल Booked × 100। FY फ़िल्टर कार्य प्रारंभ वर्ष है; 2025–26 में शुरू हुए कार्यों की VBGRAMG booking भी शामिल है। राशियाँ ₹ लाख में।</div>
@@ -303,7 +303,7 @@ async function loadPayment(){
   if(d.logicVersion!=='sabhi-reports-logic-v1'||!d.sourceDate||!Array.isArray(d.rows)||d.rows.length!==8||d.r612Columns?.bsw!==21||d.r612Columns?.bsm!==22||d.rows.some(r=>!Number.isFinite(r.bsw)||!Number.isFinite(r.bsm)||r.pw>r.bsw+0.000001||r.pm>r.bsm+0.000001))throw Error('Verified same-period Pending snapshot required');
   paymentSourceDate=d.retrievedDate;
   paymentSourceDates=d.sourceDates;
-  document.getElementById("paymentRetrievedDate").textContent=" • प्राप्ति दिनांक "+d.retrievedDate+" • MGNREGA "+d.sourceDates.MGNREGA+" • VB G RAM G "+d.sourceDates.VBGRAMG;
+
   document.getElementById('paymentSourceDate').textContent=paymentSourceDate;
   renderPortalSince(d);
   render(d.rows);
