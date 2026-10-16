@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "reports": {
+    "mr": {"available": false, "sourceDate": null, "source": null, "rows": []},
+    "first": {"available": false, "sourceDate": null, "source": null, "rows": []},
+    "second": {"available": false, "sourceDate": null, "source": null, "rows": []}
+  }
+}
