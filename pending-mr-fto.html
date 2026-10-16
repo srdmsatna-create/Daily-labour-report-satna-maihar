@@ -39,6 +39,11 @@ table th,table td{border:1.5px solid #355873!important}
 .numeric-summary .grand-total td{color:#fff!important}
 @media screen and (max-width:1000px){.numeric-summary{min-width:1100px!important}}
 @media print{.table-wrap{overflow:visible!important}table th,table td{border:1px solid #244866!important}.numeric-summary{min-width:0!important;width:100%!important}.numeric-summary th,.numeric-summary td{font-size:7.5pt!important;padding:3px 2px!important}.numeric-summary th:has(button[data-sort]){min-width:0!important;width:auto!important}}
+
+/* Clear blue report headings on screen and paper. */
+header h1{color:#124c98!important;font-weight:800}
+#title{color:#155e89!important;font-weight:800}
+@media print{header h1,#title{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
