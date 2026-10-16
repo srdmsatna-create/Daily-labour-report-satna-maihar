@@ -14,6 +14,7 @@ GROUPS=[
     'shramik-gp-progress-data.js','gp-emuster-data.js','shramik-niyojan-data.js','shramik-district-reports.js',
     'shramik-state-refresh-status.js','shramik-refresh-status.js']),
  ('muster_emb',[['scripts_local/update_muster_emb_monitoring.py','--update-only']],['muster-emb-data.js']),
+ ('pending_mr_fto',[['scripts_local/update_pending_mr_fto.py']],['data/pending-mr-fto.json']),
  ('emb_pending',[['scripts_local/update_emb_pending.py']],['data/emb-pending-latest.json']),
  ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-data.js','yuktdhara-official-data.js','yuktdhara-received-data.js']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
@@ -40,6 +41,10 @@ def validate(group,root):
  elif group=='shramik_52':
   d=data(root/'shramik-district-reports.js')
   if len(d.get('districts',{}))!=52:raise ValueError('Expected all 52 districts')
+ elif group=='pending_mr_fto':
+  d=data(root/'data/pending-mr-fto.json')
+  runpy.run_path(str(root/'scripts_local/update_pending_mr_fto.py'))['validate'](d)
+  if any(datetime.fromisoformat(r['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date() for r in d['reports'].values()):raise ValueError('Current pending MR/FTO snapshot required')
  elif group=='emb_pending':
   d=data(root/'data/emb-pending-latest.json')
   runpy.run_path(str(root/'scripts_local/update_emb_pending.py'))['validate'](d)
@@ -172,7 +177,7 @@ def refresh_group(group,commands,files,root=ROOT,executor=None,validator=validat
  try:
   for command in commands:
    if executor:executor(command,root)
-   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py') else 900)
+   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py','scripts_local/update_pending_mr_fto.py') else 900)
   runpy.run_path(str(root/'scripts_local/apply_sector_allocations.py'))['apply'](root,files)
   validator(group,root)
   return {'success':True,'files':files}
