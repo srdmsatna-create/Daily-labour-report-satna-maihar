@@ -14,6 +14,11 @@ class TrackingTests(unittest.TestCase):
  def test_signed_rows_are_not_signature_pending(self):
   d=summarize(fixture([['FTO1','03-10-2026','03-10-2026','04-10-2026']]))['groups']['GP']
   self.assertEqual((d['mr'],d['first'],d['second']),(1,0,0))
+ def test_dates_and_pending_text_are_preserved(self):
+  result=summarize(fixture([['FTO1','03-10-2026','04-10-2026','Pending for signature of 2nd Signatory since 5 days']]))
+  row=result['details'][0]
+  self.assertEqual([row[k] for k in ('closureDate','wageListDate','ftoDate','firstSignDate','secondSignDate')],['01-10-2026','02-10-2026','03-10-2026','04-10-2026','Pending for signature of 2nd Signatory since 5 days'])
+  self.assertTrue(row['secondPending'])
  def test_missing_table_and_incomplete_coverage_fail(self):
   with self.assertRaises(ValueError):summarize(rows('<p>No report</p>'))
   with self.assertRaises(ValueError):build({'AMARPATAN':{'groups':{}}})

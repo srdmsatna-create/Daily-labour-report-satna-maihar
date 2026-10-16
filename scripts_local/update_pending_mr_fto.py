@@ -1,5 +1,5 @@
 """Read S5.26, payment-pending mode, all eight Satna/Maihar blocks."""
-import asyncio,json,re,sys
+import asyncio,gzip,json,re,sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -11,7 +11,7 @@ BLOCKS={'AMARPATAN':75,'MAIHAR':115,'MAJHGAWAN':96,'NAGOD':94,'RAMNAGAR':55,'RAM
 def summarize(rr):
  start=next((i for i,r in enumerate(rr) if len(r)==14 and r[2]['text'].lower()=='muster roll number' and r[10]['text'].lower()=='fto no.'),None)
  if start is None:raise ValueError('S5.26 tracking table/header missing; not treated as zero')
- groups={};serial=[]
+ groups={};serial=[];details=[];seen_details=set()
  for row in rr[start+1:]:
   c=[x['text'] for x in row]
   if not c or not c[0].isdigit():continue
@@ -22,13 +22,17 @@ def summarize(rr):
   date=lambda s:bool(re.fullmatch(r'\d{1,2}[-/]\d{1,2}[-/]\d{4}',s))
   first='pending' in c[12].lower() or (bool(c[10]) and not date(c[12]))
   second=not first and date(c[12]) and not date(c[13])
+  identity=tuple(c[1:])
+  if identity not in seen_details:
+   seen_details.add(identity)
+   details.append(dict(zip(('panchayat','mr','staff','recordNo','workCode','closureDate','fillingStatus','wageListDate','wageListNo','ftoNo','ftoDate','firstSignDate','secondSignDate'),c[1:]),firstPending=first,secondPending=second))
   for stage,active in [('First',first),('Second',second)]:
    if active:
     g[stage.lower()].add(k)
     if c[10]:g['known'+stage].add(c[10])
     else:g['missingFto'+stage].add(k)
  if serial and serial!=list(range(1,len(serial)+1)):raise ValueError('Missing/repeated serials; complete source required')
- return {'rawRows':len(serial),'groups':{gp:{k:len(v) for k,v in g.items()} for gp,g in groups.items()}}
+ return {'rawRows':len(serial),'details':details,'groups':{gp:{k:len(v) for k,v in g.items()} for gp,g in groups.items()}}
 def build(blocks,source=SOURCE):
  if set(blocks)!=set(BLOCKS):raise ValueError('All eight blocks must be fetched before publication')
  stamp=datetime.now(ZoneInfo('Asia/Kolkata'));reports={}
@@ -37,10 +41,10 @@ def build(blocks,source=SOURCE):
   for block,part in blocks.items():
    for gp,g in part['groups'].items():result.append({'block':block,'panchayat':gp,'pending':g[stage]})
   reports[stage]={'available':True,'sourceDate':stamp.strftime('%d/%m/%Y'),'fetchedAt':stamp.isoformat(),'source':source,'unit':'musterRoll','coverage':list(BLOCKS),'rows':result}
- d={'schemaVersion':1,'reports':reports,'sourceMode':'payment-pending','counts':'Distinct work code + muster roll per GP; first/second are associated muster rolls, not unique FTO orders','sourceSummary':blocks}
+ d={'schemaVersion':1,'reports':reports,'sourceMode':'payment-pending','counts':'Distinct work code + muster roll per GP; first/second are associated muster rolls, not unique FTO orders','sourceSummary':{b:{k:v for k,v in p.items() if k!='details'} for b,p in blocks.items()},'details':[dict(r,block=b) for b,p in blocks.items() for r in p.get('details',[])],'filterVerified':True}
  validate(d);return d
 def validate(d):
- if d.get('schemaVersion')!=1 or d.get('sourceMode')!='payment-pending':raise ValueError('Invalid tracking snapshot')
+ if d.get('schemaVersion')!=1 or d.get('sourceMode')!='payment-pending' or d.get('filterVerified') is not True:raise ValueError('Invalid tracking snapshot')
  for stage in ('mr','first','second'):
   r=d['reports'][stage]
   if not r.get('available') or set(r.get('coverage',[]))!=set(BLOCKS):raise ValueError('Incomplete block coverage')
@@ -49,6 +53,20 @@ def validate(d):
    k=(row['block'],row['panchayat'])
    if k in seen or k[0] not in BLOCKS or not k[1] or type(row['pending']) is not int or row['pending']<0:raise ValueError('Invalid/duplicate GP count')
    seen.add(k)
+ details=d.get('details')
+ if details is None:
+  if d.get('detailsFile')!='data/pending-mr-fto-details.json.gz':raise ValueError('Datewise detail file missing')
+  details=json.loads(gzip.decompress((ROOT/d['detailsFile']).read_bytes()))
+  if len(details)!=d.get('detailCount'):raise ValueError('Detail count mismatch')
+ if set(r['block'] for r in details)!=set(BLOCKS):raise ValueError('All eight blocks require datewise details')
+ for stage in ('mr','first','second'):
+  counts={}
+  for r in details:
+   if stage!='mr' and not r[stage+'Pending']:continue
+   counts.setdefault((r['block'],r['panchayat']),set()).add((r['workCode'],r['mr']))
+  for r in d['reports'][stage]['rows']:
+   if r['pending']!=len(counts.get((r['block'],r['panchayat']),set())):raise ValueError('Detail/summary reconciliation failed')
+
 async def fetch(context):
  page=await context.new_page();result={}
  async def select(selector,label):
@@ -82,6 +100,8 @@ def main():
  reader=BrowserReader()
  try:d=asyncio.run_coroutine_threadsafe(fetch(reader.context),reader.loop).result(timeout=3600)
  finally:reader.close()
+ details=d.pop('details');d['detailsFile']='data/pending-mr-fto-details.json.gz';d['detailCount']=len(details)
+ dp=ROOT/d['detailsFile'];dt=dp.with_suffix('.tmp');dt.write_bytes(gzip.compress(json.dumps(details,ensure_ascii=False,separators=(',',':')).encode('utf-8')));dt.replace(dp)
  p=ROOT/'data/pending-mr-fto.json';tmp=p.with_suffix('.tmp');tmp.write_text(json.dumps(d,ensure_ascii=False,separators=(',',':')),encoding='utf-8');tmp.replace(p)
  print('SUCCESS: S5.26 pending MR/FTO stages, eight blocks, 695 GPs')
 if __name__=='__main__':
