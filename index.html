@@ -1808,8 +1808,9 @@ body[data-report-view="ekbagiya"] #ekPrintScope{display:inline-flex!important}
 body:not([data-report-view="ekbagiya"]) #ekPrintScope{display:none!important}
 </style><style id="srdm-crystal-login-20261017">
 /* Crystal login — scoped to the entry screen, independent of report typography. */
-#loginScreen{overflow:auto;padding:32px 22px;background:radial-gradient(ellipse at 12% 15%,#1c6589 0,transparent 48%),radial-gradient(ellipse at 90% 85%,#23548b 0,transparent 48%),linear-gradient(135deg,#081b35,#102c50 60%,#122744);isolation:isolate}
-#loginScreen::before,#loginScreen::after{content:"";position:absolute;pointer-events:none;z-index:-1;border:1px solid #b4edff26;background:linear-gradient(135deg,#b6f4ff1f,#b2c9ff06);transform:rotate(-28deg);border-radius:52px}
+html:has(body.login-locked){overflow:hidden}
+#loginScreen{overflow:auto;overflow-x:hidden;padding:32px 22px;background:radial-gradient(ellipse at 12% 15%,#1c6589 0,transparent 48%),radial-gradient(ellipse at 90% 85%,#23548b 0,transparent 48%),linear-gradient(135deg,#081b35,#102c50 60%,#122744);isolation:isolate}
+#loginScreen::before,#loginScreen::after{content:"";position:fixed;pointer-events:none;z-index:-1;border:1px solid #b4edff26;background:linear-gradient(135deg,#b6f4ff1f,#b2c9ff06);transform:rotate(-28deg);border-radius:52px}
 #loginScreen::before{width:390px;height:390px;left:4%;top:-170px;box-shadow:0 0 100px #69dbff13,inset 0 1px 0 #ffffff26}
 #loginScreen::after{width:340px;height:340px;right:3%;bottom:-150px;transform:rotate(28deg)}
 #loginScreen .login-shell{position:relative;width:min(1020px,100%);grid-template-columns:1.08fr 1fr;border-radius:28px;border:1px solid #d2eeff66;background:#d8edff12;box-shadow:0 32px 90px #0007,inset 0 1px 0 #fff5;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
