@@ -67,6 +67,28 @@ def validate(d):
   for r in d['reports'][stage]['rows']:
    if r['pending']!=len(counts.get((r['block'],r['panchayat']),set())):raise ValueError('Detail/summary reconciliation failed')
 
+def gp_key(value):
+ return re.sub(r'[^\w]','',value.upper(),flags=re.UNICODE)
+
+def canonical_rows(rr,options,block):
+ # Match only within the selected block. A work's GP code is stronger than
+ # display spelling, but conflicting names/codes must never be guessed.
+ by_name={};by_code={}
+ for option in options:
+  by_name.setdefault(gp_key(option['text']),set()).add(option['text'])
+  if re.fullmatch(r'\d{10}',option['value']):by_code.setdefault(option['value'],set()).add(option['text'])
+ start=next((i for i,r in enumerate(rr) if len(r)==14 and r[2]['text'].lower()=='muster roll number'),None)
+ if start is None:return rr # summarize supplies the missing-header error
+ for row in rr[start+1:]:
+  if len(row)!=14 or not row[0]['text'].isdigit():continue
+  name=row[1]['text'];code=row[5]['text'].split('/')[0]
+  names=by_name.get(gp_key(name),set());coded=by_code.get(code,set())
+  if len(names)==1 and (not coded or names==coded):chosen=next(iter(names))
+  elif not names and len(coded)==1:chosen=next(iter(coded))
+  else:raise ValueError(f'Unrecognized/conflicting GP in {block}: name={name!r}, workCode={row[5]["text"]!r}; dropdown={options!r}')
+  row[1]['text']=chosen
+ return rr
+
 async def postback(page,action,step,timeout=90000):
  # ASP.NET may use a full navigation OR an UpdatePanel POST. A response
  # wait handles both, without waiting for a navigation that never occurs.
@@ -74,7 +96,6 @@ async def postback(page,action,step,timeout=90000):
   async with page.expect_response(lambda r:r.request.method=='POST' and r.url.split('?')[0]==page.url.split('?')[0],timeout=timeout) as pending:
    await action()
   response=await pending.value
-  await response.finished()
   if response.status>=400:raise ValueError(f'HTTP {response.status}')
   await page.wait_for_load_state('domcontentloaded',timeout=timeout)
   await page.wait_for_function("() => document.readyState !== 'loading' && !(window.Sys && Sys.WebForms && Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack())",timeout=timeout)
@@ -86,7 +107,11 @@ async def select_report_option(page,selector,label):
  selected=await control.locator('option:checked').all_text_contents()
  if selected and selected[0].strip()==label:return
  async def action():await control.select_option(label=label)
- await postback(page,action,selector+' -> '+label)
+ onchange=await control.get_attribute('onchange') or ''
+ if '__doPostBack' in onchange or 'WebForm_DoPostBack' in onchange:
+  await postback(page,action,selector+' -> '+label)
+ else:
+  await action()
  await page.wait_for_function("([selector,label]) => { const e=document.querySelector(selector); return e && e.selectedOptions.length && e.selectedOptions[0].textContent.trim()===label; }",arg=[selector,label],timeout=30000)
 
 async def fetch_block(context,block,n):
@@ -98,18 +123,21 @@ async def fetch_block(context,block,n):
   await select('#ContentPlaceHolder1_ddl_state','MADHYA PRADESH')
   await select('#ContentPlaceHolder1_ddl_dist','SATNA')
   await select('#ContentPlaceHolder1_ddl_blk',block)
-  gps=await page.locator('#ContentPlaceHolder1_ddl_pan option').all_text_contents();gps=[g.strip() for g in gps if g.strip() not in ('Select','ALL','')]
+  options=await page.locator('#ContentPlaceHolder1_ddl_pan option').evaluate_all('(options) => options.map(o => ({text:o.textContent.trim(),value:o.value}))')
+  options=[o for o in options if o['text'].upper() not in ('SELECT','ALL','')]
+  gps=[o['text'] for o in options]
   if len(gps)!=n:raise ValueError('GP coverage mismatch: '+block)
   await select('#ContentPlaceHolder1_ddl_pan','ALL')
   radio=page.locator('#ContentPlaceHolder1_Rbtn_pay_1')
   if not await radio.is_checked():
-   await postback(page,radio.check,'payment-pending filter')
+   onclick=await radio.get_attribute('onclick') or ''
+   if '__doPostBack' in onclick or 'WebForm_DoPostBack' in onclick:await postback(page,radio.check,'payment-pending filter')
+   else:await radio.check()
   await postback(page,page.locator('#ContentPlaceHolder1_Button1').click,'generate '+block,180000)
   if not await page.locator('#ContentPlaceHolder1_Rbtn_pay_1').is_checked():raise ValueError('Payment pending filter not retained')
   body=await page.content()
   if re.search(r'Page\$\d+',body):raise ValueError('Paginated tracking report requires all pages')
-  part=summarize(rows(body))
-  if not set(part['groups']).issubset(set(gps)):raise ValueError('Unrecognized GP in report: '+block)
+  part=summarize(canonical_rows(rows(body),options,block))
   fields=('mr','first','second','missingFtoFirst','missingFtoSecond','knownFirst','knownSecond')
   for gp in gps:part['groups'].setdefault(gp,dict.fromkeys(fields,0))
   print('S5.26 verified:',block,'GPs',n,'source rows',part['rawRows'],flush=True)

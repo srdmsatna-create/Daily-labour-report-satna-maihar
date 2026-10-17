@@ -41,7 +41,7 @@ class PostbackTests(unittest.IsolatedAsyncioTestCase):
   page.expect_response.return_value=manager
   page.wait_for_load_state=AsyncMock();page.wait_for_function=AsyncMock();action=AsyncMock()
   await tracking.postback(page,action,'select state')
-  action.assert_awaited_once();response.finished.assert_awaited_once()
+  action.assert_awaited_once();response.finished.assert_not_awaited()
   page.expect_navigation.assert_not_called()
  async def test_transient_failure_retries_only_failed_block(self):
   async def block(context,b,n):
@@ -52,5 +52,38 @@ class PostbackTests(unittest.IsolatedAsyncioTestCase):
   with patch.object(tracking,'BLOCKS',{'SATNA':93,'MAIHAR':115}),patch.object(tracking,'fetch_block',side_effect=block),patch.object(tracking.asyncio,'sleep',new_callable=AsyncMock),patch.object(tracking,'build',side_effect=lambda x:x):
    result=await tracking.fetch(object())
   self.assertEqual(calls,['SATNA','MAIHAR','MAIHAR']);self.assertEqual(set(result),{'SATNA','MAIHAR'})
+
+class CanonicalGPTests(unittest.TestCase):
+ def test_spelling_and_spacing_use_same_dropdown_name(self):
+  rr=fixture([['','','Pending','']]);rr[1][1]['text']=' G. P. '
+  normalized=tracking.canonical_rows(rr,[{'text':'GP','value':'1712001001'}],'NAGOD')
+  self.assertEqual(summarize(normalized)['details'][0]['panchayat'],'GP')
+ def test_official_gp_code_resolves_display_alias(self):
+  rr=fixture([['','','Pending','']]);rr[1][1]['text']='Old spelling'
+  normalized=tracking.canonical_rows(rr,[{'text':'Official GP','value':'1712001001'}],'NAGOD')
+  self.assertEqual(summarize(normalized)['details'][0]['panchayat'],'Official GP')
+ def test_unknown_gp_or_conflicting_code_is_rejected(self):
+  rr=fixture([['','','Pending','']])
+  with self.assertRaises(ValueError):tracking.canonical_rows(rr,[{'text':'Another GP','value':'1712001002'}],'NAGOD')
+  with self.assertRaises(ValueError):tracking.canonical_rows(rr,[{'text':'GP','value':'1712001002'},{'text':'Other GP','value':'1712001001'}],'NAGOD')
+
+class ClientOnlyControlTests(unittest.IsolatedAsyncioTestCase):
+ async def test_all_selection_without_autopostback(self):
+  page=MagicMock();control=page.locator.return_value
+  control.locator.return_value.all_text_contents=AsyncMock(return_value=['Select'])
+  control.get_attribute=AsyncMock(return_value=None);control.select_option=AsyncMock()
+  page.wait_for_function=AsyncMock()
+  with patch.object(tracking,'postback',new_callable=AsyncMock) as wait:
+   await tracking.select_report_option(page,'#pan','ALL')
+   wait.assert_not_awaited()
+  control.select_option.assert_awaited_once_with(label='ALL')
+ async def test_cascading_dropdown_with_autopostback(self):
+  page=MagicMock();control=page.locator.return_value
+  control.locator.return_value.all_text_contents=AsyncMock(return_value=['Select'])
+  control.get_attribute=AsyncMock(return_value="__doPostBack('state','')")
+  page.wait_for_function=AsyncMock()
+  with patch.object(tracking,'postback',new_callable=AsyncMock) as wait:
+   await tracking.select_report_option(page,'#state','MADHYA PRADESH')
+   wait.assert_awaited_once()
 
 if __name__=='__main__':unittest.main()

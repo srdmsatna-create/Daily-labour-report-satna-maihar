@@ -27,6 +27,14 @@ class ZeroAttendanceTests(unittest.TestCase):
   details,_=m.pending_rows(m.rows(source),'SATNA','GP',{('SATNA','GP','1712001001/WC/88','123')},date(2026,10,17))
   self.assertEqual(len(details),1)
 
+ def test_missing_work_code_uses_verified_mr_count(self):
+  rr=m.rows('<tr><th>S No.</th><th>Project</th><th>E-MR No.</th></tr><tr><td>1</td><td>Work without printed code</td><td>123</td></tr>')
+  self.assertEqual(m.zero_mrs(rr,1),{(None,'123')})
+  with self.assertRaises(ValueError):m.zero_mrs(rr,2)
+ def test_work_code_in_link_is_used(self):
+  rr=m.rows('<tr><th>S No.</th><th>Project</th><th>E-MR No.</th></tr><tr><td>1</td><td><a href="/report?work_code=1712001001%2FWC%2F99">Work</a></td><td>123</td></tr>')
+  self.assertEqual(m.zero_mrs(rr,1),{('1712001001/WC/99','123')})
+
  def test_refreshes_summary_before_retry(self):
   parent='<tr><td>1</td><td>AHIRGAON</td><td>0</td><td>0</td><td>0</td><td><a href="/detail">1</a></td><td>0</td><td>0</td><td>0</td><td>0</td></tr>'
   root=object()

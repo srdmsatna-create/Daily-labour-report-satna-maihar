@@ -66,6 +66,8 @@ def main():
             bundle = failure_root / 'daily-update-diagnostics.zip'
             with zipfile.ZipFile(bundle, 'w', zipfile.ZIP_DEFLATED) as archive:
                 archive.write(failure, failure.name)
+                log = failure_root / 'daily-all-reports.log'
+                if log.is_file():archive.write(log, log.name)
                 for folder in ('gp-emuster-debug','yuktdhara-received-debug'):
                     debug = stage / 'data' / folder
                     if debug.exists():
