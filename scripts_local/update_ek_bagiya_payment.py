@@ -1,5 +1,5 @@
 """Fetch Ek Bagiya Booked/Paid amounts from both official work reports."""
-import html,json,re,urllib.parse,unicodedata,csv
+import html,json,re,urllib.parse,urllib.error,unicodedata,csv,time,socket,http.client
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime,timezone
 from zoneinfo import ZoneInfo
@@ -11,7 +11,7 @@ def cells(source):
  for row in re.findall(r'<tr\b[^>]*>(.*?)</tr>',source,re.S|re.I):
   c=[html.unescape(re.sub('<[^>]+>',' ',v)).strip() for v in re.findall(r'<t[hd]\b[^>]*>(.*?)</t[hd]>',row,re.S|re.I)]
   if len(c)>=32 and c[0].isdigit() and c[1]=='SATNA' and '/' in c[6]:yield c
-def fetch(url,block="ALL",fy="ALL"):
+def fetch_once(url,block="ALL",fy="ALL"):
  opener=mis.session_opener()
  source,base=mis.open_text(opener,url,timeout=90)
  fields=mis.hidden_fields(source);mis.selected_values(source,fields)
@@ -27,6 +27,17 @@ def fetch(url,block="ALL",fy="ALL"):
  if block=='ALL' and set(r[2] for r in rows)!=set(JANPADS):raise ValueError('Incomplete eight-Janpad source')
  date=re.search(r'Report last Updated on:\s*(\d{2}/\d{2}/\d{4})',source)
  return rows,date.group(1) if date else None
+def fetch(url,block="ALL",fy="ALL"):
+ # Retry the complete read-only form flow, not just a POST with stale
+ # viewstate/cookies after the remote server resets the connection.
+ for attempt in range(3):
+  try:return fetch_once(url,block,fy)
+  except (ConnectionError,TimeoutError,socket.timeout,urllib.error.URLError,http.client.HTTPException) as exc:
+   if isinstance(exc,urllib.error.HTTPError) and exc.code not in (408,429,500,502,503,504):raise
+   if attempt==2:raise RuntimeError(f'Payment source transport failed after 3 fresh sessions: block={block}, FY={fy}: {exc}') from exc
+   print(f'Retrying payment source with fresh session ({attempt+2}/3), block={block}, FY={fy}: {exc}',flush=True)
+   time.sleep(2*(attempt+1))
+
 def number(value):
  value=value.replace(',','').strip()
  if not re.fullmatch(r'\d+(?:\.\d+)?',value):raise ValueError('Missing/invalid official amount')
