@@ -7,6 +7,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 import zipfile
 from datetime import datetime, timezone
 
@@ -29,7 +30,36 @@ def publish(stage):
         print('Publication failed; fetching latest main before retry ' + str(attempt + 1), flush=True)
     raise RuntimeError('Publication failed after 3 attempts. Validated commit retained at ' + str(stage))
 
+def prevent_console_pause():
+    # Quick Edit selection pauses a Windows console process until Esc.
+    if os.name != 'nt':return
+    try:
+        import ctypes
+        kernel = ctypes.windll.kernel32
+        mode = ctypes.c_uint()
+        handle = kernel.GetStdHandle(-10)
+        if kernel.GetConsoleMode(handle, ctypes.byref(mode)):
+            kernel.SetConsoleMode(handle, (mode.value | 0x0080) & ~0x0040)
+    except (AttributeError, OSError):pass
+
+def refresh_reports(feeds, stage, sleep=time.sleep):
+    states = {}
+    for attempt in range(1, 4):
+        pending = [(g,c,f) for g,c,f in feeds.GROUPS if not states.get(g,{}).get('success')]
+        if not pending:break
+        if attempt > 1:
+            print('Automatic recovery: retrying only failed reports: ' + ', '.join(g for g,_,_ in pending), flush=True)
+            sleep(5 * (attempt - 1))
+        for group, commands, files in pending:
+            print(f'[{group}] attempt {attempt}/3', flush=True)
+            state = feeds.refresh_group(group, commands, files, root=stage)
+            state['attempts'] = attempt
+            states[group] = state
+            print(group + ': ' + ('VERIFIED' if state['success'] else 'FAILED; previous verified group retained'), flush=True)
+    return states
+
 def main():
+    prevent_console_pause()
     os.environ.setdefault('PMAY_FETCH_CACHE_DIR', str(ROOT / 'data' / 'pmayg-fetch-cache'))
     parser = argparse.ArgumentParser()
     parser.add_argument('--publish', action='store_true')
@@ -50,11 +80,7 @@ def main():
         spec = importlib.util.spec_from_file_location('daily_feeds', stage / 'scripts_local/update_all_tabs.py')
         feeds = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(feeds)
-        states = {}
-        for index, (group, commands, files) in enumerate(feeds.GROUPS, 1):
-            print(f'[{index}/{len(feeds.GROUPS)}] {group}', flush=True)
-            states[group] = feeds.refresh_group(group, commands, files, root=stage)
-            print(group + ': ' + ('VERIFIED' if states[group]['success'] else 'FAILED; complete previous group retained'), flush=True)
+        states = refresh_reports(feeds, stage)
         status = {'checkedAt':datetime.now(timezone.utc).isoformat(), 'schedule':'08:00 Asia/Kolkata',
                   'reports':states, 'success':all(x['success'] for x in states.values())}
         (stage / 'all-tabs-auto-status.json').write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
@@ -68,7 +94,7 @@ def main():
                 archive.write(failure, failure.name)
                 log = failure_root / 'daily-all-reports.log'
                 if log.is_file():archive.write(log, log.name)
-                for folder in ('gp-emuster-debug','yuktdhara-received-debug'):
+                for folder in ('gp-emuster-debug','yuktdhara-received-debug','daily-run-logs'):
                     debug = stage / 'data' / folder
                     if debug.exists():
                         for item in sorted(debug.glob('*')):

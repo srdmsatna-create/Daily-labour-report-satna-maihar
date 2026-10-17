@@ -1,5 +1,5 @@
 """Refresh each dashboard data feed independently; roll back failed partial writes."""
-import csv,json,os,subprocess,sys,runpy
+import csv,json,os,subprocess,sys,runpy,time,codecs
 from pathlib import Path
 from datetime import datetime,timezone
 from zoneinfo import ZoneInfo
@@ -172,19 +172,49 @@ def restore(root,saved):
   if content is None:
    if p.exists():p.unlink()
   else:p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(content)
+def run_logged(command,root,group,timeout):
+ # Keep child errors even when the outer BAT log is unavailable. Stream
+ # progress to the console while storing an exact per-report log on disk.
+ log=root/'data/daily-run-logs'/f'{group}.log'
+ log.parent.mkdir(parents=True,exist_ok=True)
+ with log.open('ab') as output:
+  output.write(('\nCOMMAND '+repr(command)+'\n').encode('utf-8'));output.flush()
+  offset=output.tell()
+  with log.open('rb') as reader:
+   reader.seek(offset)
+   decoder=codecs.getincrementaldecoder('utf-8')(errors='replace')
+   args=[sys.executable,'-u']+command
+   with subprocess.Popen(args,cwd=root,stdout=output,stderr=subprocess.STDOUT) as process:
+    deadline=time.monotonic()+timeout
+    while True:
+     try:process.wait(timeout=min(0.25,max(0.001,deadline-time.monotonic())))
+     except subprocess.TimeoutExpired:pass
+     text=decoder.decode(reader.read())
+     if text:print(text,end='',flush=True)
+     if process.poll() is not None:
+      text=decoder.decode(reader.read(),final=True)
+      if text:print(text,end='',flush=True)
+      if process.returncode:raise subprocess.CalledProcessError(process.returncode,args)
+      return
+     if time.monotonic()>=deadline:
+      process.kill();process.wait()
+      raise subprocess.TimeoutExpired(args,timeout)
+
 def refresh_group(group,commands,files,root=ROOT,executor=None,validator=validate):
  saved={f:(root/f).read_bytes() if (root/f).exists() else None for f in files}
  try:
   for command in commands:
    if executor:executor(command,root)
-   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py','scripts_local/update_pending_mr_fto.py','scripts_local/update_ek_bagiya_payment.py') else 900)
+   else:run_logged(command,root,group,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py','scripts_local/update_pending_mr_fto.py','scripts_local/update_ek_bagiya_payment.py','scripts_local/update_emb_pending.py') else 900)
   runpy.run_path(str(root/'scripts_local/apply_sector_allocations.py'))['apply'](root,files)
   validator(group,root)
   return {'success':True,'files':files}
  except Exception as e:
   restore(root,saved)
   print(group + ': validation/fetch failed: ' + str(e), flush=True)
-  return {'success':False,'message':str(e),'files':files}
+  log=root/'data/daily-run-logs'/f'{group}.log'
+  tail=log.read_bytes()[-6000:].decode('utf-8','replace') if log.exists() else ''
+  return {'success':False,'message':str(e),'errorTail':tail,'files':files}
 def main():
  states={}
  for i,(group,commands,files) in enumerate(GROUPS,1):

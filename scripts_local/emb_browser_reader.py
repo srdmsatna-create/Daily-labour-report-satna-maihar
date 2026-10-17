@@ -43,15 +43,32 @@ class BrowserReader:
   parsed=urlparse(url)
   if parsed.scheme!='https' or parsed.hostname!='vbgramgrep.dord.gov.in':raise ValueError('Official VBGRAMG report URL required')
   async with self.slots:
-   page=await self.context.new_page()
-   try:
-    response=await page.goto(url,wait_until='domcontentloaded',timeout=90000)
-    if response is not None and response.status>=400:
-     raise RuntimeError('पोर्टल का स्थानीय Chrome सेशन रिपोर्ट नहीं खोल पाया; पिछला डेटा सुरक्षित है।')
-    await page.locator('table').first.wait_for(state='visible',timeout=30000)
-    return await page.content(),page.url
-   finally:await page.close()
- def get(self,url):return asyncio.run_coroutine_threadsafe(self.read(url),self.loop).result(timeout=150)
+   for attempt in range(3):
+    try:return await self.read_once(url)
+    except ValueError:raise # bad URL or a permanent HTTP refusal
+    except Exception as exc:
+     if attempt==2:raise
+     print(f'Retrying official report page ({attempt+2}/3): {exc}',flush=True)
+     await asyncio.sleep(2*(attempt+1))
+ async def read_once(self,url):
+  page=await self.context.new_page()
+  try:
+   response=await page.goto(url,wait_until='domcontentloaded',timeout=90000)
+   if response is not None and response.status>=400:
+    error=f'Official report HTTP {response.status}; previous data retained'
+    if response.status in (408,429,500,502,503,504):raise RuntimeError(error)
+    raise ValueError(error)
+   await page.locator('table').first.wait_for(state='visible',timeout=30000)
+   return await page.content(),page.url
+  finally:
+   try:await page.close()
+   except Exception:pass
+ def get(self,url):
+  future=asyncio.run_coroutine_threadsafe(self.read(url),self.loop)
+  try:return future.result(timeout=420)
+  except TimeoutError:
+   future.cancel()
+   raise
  async def shutdown(self):
   if self.owned and hasattr(self,'context'):await self.context.close()
   if hasattr(self,'p'):await self.p.stop()
