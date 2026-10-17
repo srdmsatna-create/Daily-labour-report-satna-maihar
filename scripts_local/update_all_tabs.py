@@ -177,7 +177,7 @@ def refresh_group(group,commands,files,root=ROOT,executor=None,validator=validat
  try:
   for command in commands:
    if executor:executor(command,root)
-   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py','scripts_local/update_pending_mr_fto.py') else 900)
+   else:subprocess.run([sys.executable,'-u']+command,cwd=root,check=True,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py','scripts_local/update_pending_mr_fto.py','scripts_local/update_ek_bagiya_payment.py') else 900)
   runpy.run_path(str(root/'scripts_local/apply_sector_allocations.py'))['apply'](root,files)
   validator(group,root)
   return {'success':True,'files':files}
