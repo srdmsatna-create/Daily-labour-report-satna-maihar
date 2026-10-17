@@ -67,34 +67,67 @@ def validate(d):
   for r in d['reports'][stage]['rows']:
    if r['pending']!=len(counts.get((r['block'],r['panchayat']),set())):raise ValueError('Detail/summary reconciliation failed')
 
-async def fetch(context):
- page=await context.new_page();result={}
- async def select(selector,label):
-  async with page.expect_navigation(wait_until='domcontentloaded',timeout=90000):await page.locator(selector).select_option(label=label)
+async def postback(page,action,step,timeout=90000):
+ # ASP.NET may use a full navigation OR an UpdatePanel POST. A response
+ # wait handles both, without waiting for a navigation that never occurs.
+ try:
+  async with page.expect_response(lambda r:r.request.method=='POST' and r.url.split('?')[0]==page.url.split('?')[0],timeout=timeout) as pending:
+   await action()
+  response=await pending.value
+  await response.finished()
+  if response.status>=400:raise ValueError(f'HTTP {response.status}')
+  await page.wait_for_load_state('domcontentloaded',timeout=timeout)
+  await page.wait_for_function("() => document.readyState !== 'loading' && !(window.Sys && Sys.WebForms && Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack())",timeout=timeout)
+ except Exception as exc:raise RuntimeError(f'S5.26 {step}: {exc}') from exc
+
+async def select_report_option(page,selector,label):
+ control=page.locator(selector)
+ # Selecting the already selected state/GP does not fire a postback.
+ selected=await control.locator('option:checked').all_text_contents()
+ if selected and selected[0].strip()==label:return
+ async def action():await control.select_option(label=label)
+ await postback(page,action,selector+' -> '+label)
+ await page.wait_for_function("([selector,label]) => { const e=document.querySelector(selector); return e && e.selectedOptions.length && e.selectedOptions[0].textContent.trim()===label; }",arg=[selector,label],timeout=30000)
+
+async def fetch_block(context,block,n):
+ page=await context.new_page()
+ async def select(selector,label):await select_report_option(page,selector,label)
  try:
   response=await page.goto(SOURCE,wait_until='domcontentloaded',timeout=90000)
   if response is not None and response.status>=400:raise ValueError('Official portal refused report')
   await select('#ContentPlaceHolder1_ddl_state','MADHYA PRADESH')
   await select('#ContentPlaceHolder1_ddl_dist','SATNA')
-  for block,n in BLOCKS.items():
-   await select('#ContentPlaceHolder1_ddl_blk',block)
-   gps=await page.locator('#ContentPlaceHolder1_ddl_pan option').all_text_contents();gps=[g.strip() for g in gps if g.strip() not in ('Select','ALL','')]
-   if len(gps)!=n:raise ValueError('GP coverage mismatch: '+block)
-   await select('#ContentPlaceHolder1_ddl_pan','ALL')
-   radio=page.locator('#ContentPlaceHolder1_Rbtn_pay_1')
-   if not await radio.is_checked():
-    async with page.expect_navigation(wait_until='domcontentloaded',timeout=90000):await radio.check()
-   async with page.expect_navigation(wait_until='domcontentloaded',timeout=180000):await page.locator('#ContentPlaceHolder1_Button1').click()
-   if not await page.locator('#ContentPlaceHolder1_Rbtn_pay_1').is_checked():raise ValueError('Payment pending filter not retained')
-   body=await page.content()
-   if re.search(r'Page\$\d+',body):raise ValueError('Paginated tracking report requires all pages')
-   part=summarize(rows(body))
-   if not set(part['groups']).issubset(set(gps)):raise ValueError('Unrecognized GP in report: '+block)
-   fields=('mr','first','second','missingFtoFirst','missingFtoSecond','knownFirst','knownSecond')
-   for gp in gps:part['groups'].setdefault(gp,dict.fromkeys(fields,0))
-   result[block]=part;print('S5.26 verified:',block,'GPs',n,'source rows',part['rawRows'],flush=True)
-  return build(result)
+  await select('#ContentPlaceHolder1_ddl_blk',block)
+  gps=await page.locator('#ContentPlaceHolder1_ddl_pan option').all_text_contents();gps=[g.strip() for g in gps if g.strip() not in ('Select','ALL','')]
+  if len(gps)!=n:raise ValueError('GP coverage mismatch: '+block)
+  await select('#ContentPlaceHolder1_ddl_pan','ALL')
+  radio=page.locator('#ContentPlaceHolder1_Rbtn_pay_1')
+  if not await radio.is_checked():
+   await postback(page,radio.check,'payment-pending filter')
+  await postback(page,page.locator('#ContentPlaceHolder1_Button1').click,'generate '+block,180000)
+  if not await page.locator('#ContentPlaceHolder1_Rbtn_pay_1').is_checked():raise ValueError('Payment pending filter not retained')
+  body=await page.content()
+  if re.search(r'Page\$\d+',body):raise ValueError('Paginated tracking report requires all pages')
+  part=summarize(rows(body))
+  if not set(part['groups']).issubset(set(gps)):raise ValueError('Unrecognized GP in report: '+block)
+  fields=('mr','first','second','missingFtoFirst','missingFtoSecond','knownFirst','knownSecond')
+  for gp in gps:part['groups'].setdefault(gp,dict.fromkeys(fields,0))
+  print('S5.26 verified:',block,'GPs',n,'source rows',part['rawRows'],flush=True)
+  return part
  finally:await page.close()
+
+async def fetch(context):
+ result={}
+ for block,n in BLOCKS.items():
+  for attempt in range(3):
+   try:
+    result[block]=await fetch_block(context,block,n)
+    break
+   except Exception as exc:
+    if attempt==2:raise RuntimeError(f'{block} failed after 3 fresh-page attempts: {exc}') from exc
+    print(f'Retrying S5.26 {block} ({attempt+2}/3): {exc}',flush=True)
+    await asyncio.sleep(2*(attempt+1))
+ return build(result)
 def main():
  from emb_browser_reader import BrowserReader
  reader=BrowserReader()

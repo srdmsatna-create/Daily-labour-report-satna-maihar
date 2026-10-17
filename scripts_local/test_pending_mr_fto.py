@@ -22,4 +22,35 @@ class TrackingTests(unittest.TestCase):
  def test_missing_table_and_incomplete_coverage_fail(self):
   with self.assertRaises(ValueError):summarize(rows('<p>No report</p>'))
   with self.assertRaises(ValueError):build({'AMARPATAN':{'groups':{}}})
+
+from unittest.mock import AsyncMock, MagicMock, patch
+import update_pending_mr_fto as tracking
+class PostbackTests(unittest.IsolatedAsyncioTestCase):
+ async def test_already_selected_option_does_not_wait_for_nonexistent_request(self):
+  page=MagicMock();control=page.locator.return_value
+  control.locator.return_value.all_text_contents=AsyncMock(return_value=[' MADHYA PRADESH '])
+  with patch.object(tracking,'postback',new_callable=AsyncMock) as wait:
+   await tracking.select_report_option(page,'#state','MADHYA PRADESH')
+   wait.assert_not_awaited()
+  control.select_option.assert_not_called()
+ async def test_updatepanel_response_does_not_require_navigation(self):
+  page=MagicMock();page.url='https://example.test/report.aspx?x=1'
+  response=MagicMock();response.status=200;response.finished=AsyncMock()
+  future=__import__('asyncio').get_running_loop().create_future();future.set_result(response)
+  manager=MagicMock();manager.__aenter__=AsyncMock(return_value=type('Pending',(),{'value':future})());manager.__aexit__=AsyncMock(return_value=False)
+  page.expect_response.return_value=manager
+  page.wait_for_load_state=AsyncMock();page.wait_for_function=AsyncMock();action=AsyncMock()
+  await tracking.postback(page,action,'select state')
+  action.assert_awaited_once();response.finished.assert_awaited_once()
+  page.expect_navigation.assert_not_called()
+ async def test_transient_failure_retries_only_failed_block(self):
+  async def block(context,b,n):
+   calls.append(b)
+   if b=='MAIHAR' and calls.count(b)==1:raise TimeoutError('temporary')
+   return b
+  calls=[]
+  with patch.object(tracking,'BLOCKS',{'SATNA':93,'MAIHAR':115}),patch.object(tracking,'fetch_block',side_effect=block),patch.object(tracking.asyncio,'sleep',new_callable=AsyncMock),patch.object(tracking,'build',side_effect=lambda x:x):
+   result=await tracking.fetch(object())
+  self.assertEqual(calls,['SATNA','MAIHAR','MAIHAR']);self.assertEqual(set(result),{'SATNA','MAIHAR'})
+
 if __name__=='__main__':unittest.main()

@@ -56,16 +56,26 @@ def zero_mrs(rr,expected):
    label=re.sub(r'[^a-z0-9]','',c['text'].lower())
    if re.fullmatch(r'(?:e)?(?:muster(?:roll)?|mr)(?:no|number)(?:s)?',label):hits.append(j)
   if len(hits)!=1:continue
-  ci=hits[0];out=set()
+  ci=hits[0];out=set();works=set();serials=[];identities=set()
   for detail in rr[i+1:]:
    # Official detail records have a numeric serial; ignore totals, legends
    # and the numeric column-number row immediately below the header.
    if len(detail)<=ci or not detail or not detail[0]['text'].isdigit():continue
    if len(detail)>2 and all(re.fullmatch(r'\d+',c['text']) for c in detail):continue
    v=clean(detail[ci]['text'])
-   if re.fullmatch(r'\d+(?:[/-]\d+)*',v):out.add(v)
+   if re.fullmatch(r'\d+(?:[/-]\d+)*',v):
+    codes=re.findall(r'\d+/[A-Za-z]+/\d+',' '.join(c['text'] for c in detail))
+    if len(set(codes))!=1:raise ValueError('Zero Attendance work identity missing/ambiguous')
+    code=codes[0];identity=(code,v)
+    if identity in identities:raise ValueError('Repeated Zero Attendance detail record')
+    identities.add(identity);serials.append(int(detail[0]['text']));works.add(code);out.add((code,v))
   observed.append(len(out))
-  if len(out)==expected:return out
+  if serials!=list(range(1,len(serials)+1)):raise ValueError('Incomplete Zero Attendance detail serials')
+  # R4.2 summary links can count works, while their detail lists MRs.
+  # Reconcile either unit using complete, identified detail records.
+  if len(out)==expected or (out and len(works)==expected):
+   if len(out)!=expected:print(f'Zero Attendance reconciled: {expected} works / {len(out)} MRs',flush=True)
+   return out
  raise ValueError(f'Zero Attendance detail count/header mismatch: expected={expected}; observed={observed}; headers='+repr([[c['text'] for c in r] for r in rr[:8]]))
 
 def zero_tasks(rr,base,block):
@@ -99,7 +109,7 @@ def load_zero_attendance():
      if len(matches)!=1:raise ValueError('Duplicate Zero Attendance GP summary')
      _,_,u,n,_=matches[0]
     rr,_=get(u)
-    return {(b,g,mr) for mr in zero_mrs(rr,n)}
+    return {(b,g,code,mr) for code,mr in zero_mrs(rr,n)}
    except Exception as exc:
     if attempt==2:raise ValueError(f'{b}/{g} Zero Attendance column {ci+1}: {exc}') from exc
     print(f'Retrying Zero Attendance {b}/{g} ({attempt+2}/3): {exc}',flush=True)
@@ -117,7 +127,7 @@ def pending_rows(rr,block,gp,zero,today):
   name,mr,raw,measured=c[2:6]
   if not mr:raise ValueError('MR number missing')
   if re.search(r'IAY|PMAY',code+' '+name,re.I):continue
-  if (block,key(gp),mr) in zero or measured:continue
+  if (block,key(gp),code,mr) in zero or measured:continue
   try:ended=datetime.strptime(raw,'%d/%m/%Y').date()
   except ValueError:
    try:ended=datetime.strptime(raw,'%d-%m-%Y').date()
