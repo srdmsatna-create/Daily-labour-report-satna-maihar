@@ -1,9 +1,10 @@
 {
-  "checkedAt": "2026-10-17T03:18:00.899119+00:00",
+  "checkedAt": "2026-10-17T05:48:55.150419+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/local_auto_update.py']' returned non-zero exit status 1.",
       "files": [
         "auto-data.js",
         "auto-status.js",
@@ -18,14 +19,15 @@
       ]
     },
     "muster_emb": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_muster_emb_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "muster-emb-data.js"
       ]
     },
     "pending_mr_fto": {
       "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_pending_mr_fto.py']' returned non-zero exit status 1.",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_pending_mr_fto.py']' returned non-zero exit status 1.",
       "files": [
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
@@ -33,13 +35,14 @@
     },
     "emb_pending": {
       "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_emb_pending.py']' returned non-zero exit status 1.",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_emb_pending.py']' returned non-zero exit status 1.",
       "files": [
         "data/emb-pending-latest.json"
       ]
     },
     "yuktdhara": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--update-only']' returned non-zero exit status 1.",
       "files": [
         "yuktdhara-data.js",
         "yuktdhara-official-data.js",
@@ -47,13 +50,15 @@
       ]
     },
     "block_statistics": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_satna_block_statistics.py']' returned non-zero exit status 1.",
       "files": [
         "vbg-block-stats.js"
       ]
     },
     "mis_612": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
       "files": [
         "data/Ongoing_Works_dynamic_work_details_latest.csv",
         "data/mis-6.12-status.json",
@@ -61,13 +66,15 @@
       ]
     },
     "pmayg": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_pmayg.py']' returned non-zero exit status 1.",
       "files": [
         "data/pmayg-latest.json"
       ]
     },
     "above75": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_above75.py']' returned non-zero exit status 1.",
       "files": [
         "data/above75-latest.json"
       ]
@@ -79,19 +86,22 @@
       ]
     },
     "secure_ts": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_secure_ts.py']' returned non-zero exit status 1.",
       "files": [
         "secure-ts-data.js"
       ]
     },
     "ek_bagiya_payment": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts_local/update_ek_bagiya_payment.py']' returned non-zero exit status 1.",
       "files": [
         "data/ek-bagiya-payment-latest.json"
       ]
     },
     "rejected_wage": {
-      "success": true,
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.17/x64/bin/python', '-u', 'scripts/update_rejected_wage.py']' returned non-zero exit status 1.",
       "files": [
         "data/rejected-wage-latest.json"
       ]
