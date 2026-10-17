@@ -1843,6 +1843,35 @@ html:has(body.login-locked){overflow:hidden}
 @supports not (backdrop-filter:blur(1px)){#loginScreen .login-shell{background:#163f63}#loginScreen .login-card{background:#f4f9fd}}
 @media(max-width:760px){#loginScreen{padding:20px 14px;align-items:flex-start}#loginScreen .login-shell{grid-template-columns:1fr;max-width:480px;margin:auto;border-radius:22px}#loginScreen .login-brand{min-height:0;padding:25px;border-right:0;border-bottom:1px solid #e3f5ff40}#loginScreen .login-emblem{width:48px;height:48px;border-radius:14px;font-size:19px;margin-bottom:16px}#loginScreen .login-brand h1{font-size:25px;max-width:350px;margin-top:10px}#loginScreen .login-coverage{margin-top:20px;gap:8px}#loginScreen .login-coverage span{padding:7px 12px;min-width:78px}#loginScreen .login-coverage strong{font-size:18px}#loginScreen .login-card{padding:28px 25px}#loginScreen .login-card-head{margin-bottom:23px}}
 @media(prefers-reduced-motion:reduce){#loginScreen *{transition:none!important}}
+</style><style id="srdm-official-report-menu-20261017">
+/* Report launcher styled to the supplied official report menu. */
+@media screen{
+#srdmApplications{background:#fff!important;border:1px solid #e1eaf3!important;border-radius:18px!important;padding:18px!important;box-shadow:0 8px 30px #164e7d08!important;margin-top:18px!important}
+#srdmApplications .srdm-app-launcher-head{padding:0 0 14px!important;margin-bottom:0!important;border:0!important;gap:12px}
+#srdmApplications .srdm-app-launcher-title{font-size:20px!important;line-height:1.4!important;padding:0!important;margin:0!important;color:#123f6c!important}
+#srdmApplications .srdm-app-launcher-title::after{display:none!important}
+#srdmApplications .srdm-app-launcher-note{font-size:12px!important;background:transparent!important;padding:0!important;color:#667d92!important}
+#srdmApplications .report-menu-tools{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:8px;margin-bottom:16px;background:#f7f8fa;border:1px solid #dbe2e9}
+#srdmApplications .report-menu-tools input{width:50%;min-width:160px;flex:0 1 50%;height:42px;padding:0 12px;border:1px solid #d5dfef;border-radius:12px;background:#fff;color:#173f65;font-size:14px!important;outline:none}
+#srdmApplications .report-menu-tools input:focus{border-color:#377bb4;box-shadow:0 0 0 3px #377bb41a}
+#srdmApplications .report-menu-tools button{min-height:42px;padding:8px 13px;border:0;border-radius:12px;background:linear-gradient(100deg,#06467f,#30659d);color:#fff;font-size:12px!important;font-weight:600;cursor:pointer;white-space:nowrap}
+#srdmApplications .srdm-app-grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px 24px!important;align-items:start}
+#srdmApplications .srdm-app-card{display:flex!important;align-items:center!important;position:relative;min-height:52px!important;height:auto!important;padding:14px 42px 14px 17px!important;border:0!important;border-radius:17px!important;background:linear-gradient(100deg,#06467f,#30639b)!important;color:#fff!important;box-shadow:0 5px 12px #204c7810!important;transform:none!important;text-align:left!important;gap:0!important;width:100%;text-decoration:none!important;cursor:pointer}
+#srdmApplications .srdm-app-card::before{content:"";position:absolute;inset:0 auto 0 0;width:4px;background:#eea03f!important;opacity:1!important}
+#srdmApplications .srdm-app-card::after{content:"";position:absolute;right:22px;top:20px;width:10px;height:10px;border-right:1.5px solid #e3edff;border-bottom:1.5px solid #e3edff;transform:rotate(45deg)}
+#srdmApplications .srdm-app-card:hover{background:linear-gradient(100deg,#063a6b,#245589)!important;box-shadow:0 6px 14px #204c7820!important;transform:none!important}
+#srdmApplications .srdm-app-card:focus-visible{outline:3px solid #76afdf!important;outline-offset:3px}
+#srdmApplications .srdm-app-card .srdm-app-icon,#srdmApplications .srdm-app-card .srdm-app-new{display:none!important}
+#srdmApplications .srdm-app-copy{min-width:0;display:block!important}
+#srdmApplications .srdm-app-copy strong{font-size:14px!important;line-height:1.5!important;font-weight:650!important;color:#fff!important;white-space:normal!important}
+#srdmApplications .srdm-app-copy>span{display:none!important;font-size:12px!important;color:#dce9f7!important;line-height:1.5!important;font-weight:400!important;margin-top:6px!important}
+#srdmApplications .srdm-report-code{display:inline!important;font-size:inherit!important;font-weight:inherit!important;padding:0!important;border:0!important;border-radius:0!important;margin-right:4px;background:transparent!important;color:#fff!important}
+#srdmApplications.show-report-details .srdm-app-copy>span{display:block!important}
+#srdmApplications.show-report-details .srdm-app-card::after{transform:rotate(225deg);top:24px}
+#srdmApplications .srdm-app-card[hidden]{display:none!important}
+#reportMenuEmpty{font-size:14px;color:#60778d;padding:12px;margin:0}
+@media(max-width:680px){#srdmApplications{padding:12px!important}#srdmApplications .srdm-app-grid{grid-template-columns:1fr!important;gap:12px!important}#srdmApplications .srdm-app-launcher-head{flex-direction:column;align-items:flex-start}#srdmApplications .report-menu-tools input{width:100%;flex:1;min-width:0}#srdmApplications .srdm-app-card{border-radius:14px!important}}
+}
 </style></head>
 <body>
 <div class="login-screen" id="loginScreen">
@@ -1892,7 +1921,9 @@ html:has(body.login-locked){overflow:hidden}
     <h2 class="srdm-app-launcher-title">SRDM Applications</h2>
     <div class="srdm-app-launcher-note">Quick access • SATNA &amp; MAIHAR</div>
   </div>
-  <div class="srdm-app-grid">
+  <div class="report-menu-tools"><input id="reportMenuSearch" type="search" placeholder="Search reports… / रिपोर्ट खोजें" aria-label="Search reports"><button id="reportMenuExpand" type="button" aria-expanded="false" aria-controls="reportMenuGrid">↕ Expand All</button></div>
+  <p id="reportMenuEmpty" role="status" hidden>कोई रिपोर्ट नहीं मिली।</p>
+  <div class="srdm-app-grid" id="reportMenuGrid">
     <a class="srdm-app-card" id="embPendingLauncher" href="emb-pending.html" style="text-decoration:none;--app-accent:#a52620;--app-soft:#fff1f0;--app-shadow:#a5262033;border-color:#a52620;background:linear-gradient(135deg,#fff1f0,#fff 75%)">
       <span class="srdm-app-icon" style="background:#a52620;color:#fff">e-MB</span><span class="srdm-app-copy"><strong>लंबित e-MB (&gt;5 दिन) उपयंत्री वार</strong><span>गैर PMAY-G/IAY · Zero Attendance हटाकर · पंचायतवार विवरण</span></span><span class="srdm-app-new">New</span>
     </a>
@@ -4132,4 +4163,9 @@ if(scheduled)return;scheduled=true;queueMicrotask(()=>{scheduled=false;label();}
 })();</script>
 <!-- SRDM_REPORT_CODES_END -->
 
-<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit"></body></html>
+<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit"><script id="srdm-report-menu-controls">(()=>{
+const root=document.getElementById('srdmApplications'),search=document.getElementById('reportMenuSearch'),toggle=document.getElementById('reportMenuExpand'),empty=document.getElementById('reportMenuEmpty');
+if(!root||!search||!toggle)return;
+search.addEventListener('input',()=>{const q=search.value.trim().toLocaleLowerCase();let shown=0;root.querySelectorAll('.srdm-app-card').forEach(card=>{card.hidden=!card.textContent.toLocaleLowerCase().includes(q);if(!card.hidden)shown++});empty.hidden=shown>0});
+toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-report-details');toggle.setAttribute('aria-expanded',String(expanded));toggle.textContent=expanded?'↕ Collapse All':'↕ Expand All'});
+})();</script></body></html>
