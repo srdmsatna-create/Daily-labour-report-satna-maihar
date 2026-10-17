@@ -42,7 +42,25 @@ body.print-analysis .meta{display:none!important}
 body.print-analysis #analysisSection,
 body.print-janpad #janpadSection{break-before:auto!important;page-break-before:auto!important}
 }
-</style></head><body><header><div class="head"><div><h1>Planner Portal</h1><div class="sub">Number Of New Works Taken In Planner Portal • SIPRI Progress • Category • Sub Engineer • Cluster • FY 2026-27</div></div><a class="back" href="./">← SRDM Applications</a></div></header><main>
+</style><style id="planner-stable-fonts-20261017">
+/* Stable Planner screen typography; kept separate from daily data imports. */
+@media screen {
+body#plannerDashboard{font-size:14px;line-height:1.4}
+body#plannerDashboard header h1{font-size:22px}
+body#plannerDashboard .sub,body#plannerDashboard .note,body#plannerDashboard .section-note,body#plannerDashboard .tools :is(select,input,button){font-size:13px!important}
+body#plannerDashboard .kpi small{font-size:13px!important}
+body#plannerDashboard .kpi strong{font-size:24px!important}
+body#plannerDashboard .kpi strong span{font-size:13px!important}
+body#plannerDashboard main .box h2{font-size:17px}
+body#plannerDashboard main table th,
+body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection) table th{font-size:13px!important;line-height:1.4!important;padding:6px 5px!important}
+body#plannerDashboard main table td,
+body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection) table td{font-size:14px!important;line-height:1.35!important;padding:5px!important}
+body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection) table td :is(b,a,span){font-size:inherit!important}
+body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection) table :is(.progress-badge,.weekly-badge){font-size:13px!important;min-height:24px!important;height:auto!important;width:auto!important;padding:3px 5px!important}
+body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection) table :is(small,.work-type-name,.work-type-count){font-size:12px!important}
+}
+</style></head><body id="plannerDashboard"><header><div class="head"><div><h1>Planner Portal</h1><div class="sub">Number Of New Works Taken In Planner Portal • SIPRI Progress • Category • Sub Engineer • Cluster • FY 2026-27</div></div><a class="back" href="./">← SRDM Applications</a></div></header><main>
 <div class="tools print-toolbar" style="margin-bottom:10px">
   <select id="printScope">
     <option value="all">PDF / Print — पूरी रिपोर्ट</option>
@@ -125,4 +143,4 @@ function printSelected(){
   else if(sort==='progressDesc')r.sort((a,b)=>progress(b)-progress(a)||nameKey(a).localeCompare(nameKey(b),'hi'));
   let p=0,s=0;
   $('analysisBody').innerHTML=r.map((x,i)=>{p+=x.planner;s+=x.sipri;const pend=Math.max(0,x.planner-x.sipri),pct=x.planner?100*x.sipri/x.planner:0;return `<tr><td>${i+1}</td><td>${esc(x.district)}</td><td>${esc(x.janpad)}</td><td><b>${esc(x.category)}</b></td><td>${esc(x.engineer)}</td><td>${esc(x.cluster)}</td><td class="good">${n(x.planner)}</td><td>${n(x.sipri)}</td><td class="bad">${n(pend)}</td><td class="bad">${pct.toFixed(1)}%</td></tr>`}).join('')+`<tr class="total"><td></td><td colspan="5">Mapped Category Detail Total</td><td>${n(p)}</td><td>${n(s)}</td><td>${n(Math.max(0,p-s))}</td><td>${p?(100*s/p).toFixed(1):'0.0'}%</td></tr>`;
-}function initA(){fillA('aDistrict',R.map(x=>x.district),'सभी District');cascadeA();renderA();$('aDistrict').onchange=()=>{cascadeA();renderA()};$('aJanpad').onchange=()=>{cascadeA();renderA()};['aEngineer','aCluster','aCategory','aSort'].forEach(id=>$(id).onchange=renderA);$('aQ').oninput=renderA}loadA().catch(e=>{$('analysisBody').innerHTML=`<tr><td colspan="10" style="text-align:center;color:#c62828">Data load error: ${esc(e.message)}</td></tr>`});})();</script><link rel="stylesheet" href="srdm-report-fonts.css?v=20261012-large"></body></html>
+}function initA(){fillA('aDistrict',R.map(x=>x.district),'सभी District');cascadeA();renderA();$('aDistrict').onchange=()=>{cascadeA();renderA()};$('aJanpad').onchange=()=>{cascadeA();renderA()};['aEngineer','aCluster','aCategory','aSort'].forEach(id=>$(id).onchange=renderA);$('aQ').oninput=renderA}loadA().catch(e=>{$('analysisBody').innerHTML=`<tr><td colspan="10" style="text-align:center;color:#c62828">Data load error: ${esc(e.message)}</td></tr>`});})();</script><link rel="stylesheet" href="srdm-report-fonts.css?v=20261017-stable"></body></html>
