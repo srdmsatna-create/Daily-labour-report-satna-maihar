@@ -48,6 +48,7 @@ def validate(group,root):
  elif group=='emb_pending':
   d=data(root/'data/emb-pending-latest.json')
   runpy.run_path(str(root/'scripts_local/update_emb_pending.py'))['validate'](d)
+  if d.get('failedGP',0):raise ValueError(f"Incomplete e-MB coverage: {d['failedGP']} unread GPs; not a fully verified report")
   if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Current pending e-MB detail required')
  elif group=='muster_emb':
   d=data(root/'muster-emb-data.js')

@@ -69,6 +69,11 @@ class BrowserReader:
   except TimeoutError:
    future.cancel()
    raise
+ async def restart_session(self):
+  await self.shutdown()
+  await self.start()
+ def restart(self):
+  asyncio.run_coroutine_threadsafe(self.restart_session(),self.loop).result(timeout=120)
  async def shutdown(self):
   if self.owned and hasattr(self,'context'):await self.context.close()
   if hasattr(self,'p'):await self.p.stop()

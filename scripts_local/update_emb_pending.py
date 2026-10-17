@@ -149,6 +149,24 @@ def validate(d):
  for r in d['gpRows']:
   if r['pending']!=len(r['details']) or any(v['days']<5 for v in r['details']):raise ValueError('Invalid pending details')
  if d['totalPending']!=sum(r['pending'] for r in d['gpRows']):raise ValueError('Summary mismatch')
+def read_gp_jobs(jobs,one,restart=None):
+ # Preserve successful GP reads. Retry just unavailable pages, with fewer
+ # parallel tabs after a timeout/crash, and a fresh browser session.
+ pending=list(jobs);result=[];failures=[]
+ for attempt in range(3):
+  failures=[]
+  if attempt:
+   print(f'Recovering {len(pending)} unread GPs, attempt {attempt+1}/3',flush=True)
+   if restart:restart()
+  with ThreadPoolExecutor(max_workers=5 if attempt==0 else 2) as pool:
+   fs=[(t,pool.submit(one,t)) for t in pending]
+   for t,f in fs:
+    try:result.append(f.result())
+    except Exception as exc:failures.append((t,exc))
+  if not failures:break
+  pending=[t for t,_ in failures]
+ return result,failures
+
 def main():
  mapping=read_js(ROOT/'muster-emb-data.js');gpmap={(key(r['block']),key(r['panchayat'])):r for r in mapping['gpRows']}
  if len(gpmap)!=695:raise ValueError('695 GP mappings required')
@@ -176,12 +194,12 @@ def main():
   if not re.search(r'muster|\bMR\b',headers,re.I) or not re.search(r'measure|e.?mb|माप',headers,re.I):raise ValueError('GP detail header missing; not counted as zero')
   details,invalid=pending_rows(rr,b,g,zero,today);m=gpmap[(b,g)]
   return {'block':b,'district':'MAIHAR' if b in {'AMARPATAN','MAIHAR','RAMNAGAR'} else 'SATNA','panchayat':g,'engineer':m.get('engineer') if m.get('engineer') not in (None,'','Unmapped') else '—','cluster':m.get('cluster') or '—','pending':len(details),'details':details,'invalidDates':invalid}
- result=[];failures=[]
- with ThreadPoolExecutor(max_workers=5) as pool:
-  fs=[(t,pool.submit(one,t)) for t in jobs]
-  for t,f in fs:
-   try:result.append(f.result());next(c for c in coverage if c['block']==t[0])['checked']+=1
-   except Exception as e:failures.append({'block':t[0],'panchayat':t[1],'engineer':gpmap[(t[0],t[1])].get('engineer') or '—','district':'MAIHAR' if t[0] in {'AMARPATAN','MAIHAR','RAMNAGAR'} else 'SATNA','reason':str(e)});next(c for c in coverage if c['block']==t[0])['failed']+=1
+ result,unread=read_gp_jobs(jobs,one,restart=_BROWSER.restart)
+ failures=[]
+ for row in result:next(c for c in coverage if c['block']==row['block'])['checked']+=1
+ for t,e in unread:
+  failures.append({'block':t[0],'panchayat':t[1],'engineer':gpmap[(t[0],t[1])].get('engineer') or '—','district':'MAIHAR' if t[0] in {'AMARPATAN','MAIHAR','RAMNAGAR'} else 'SATNA','reason':str(e) or repr(e)})
+  next(c for c in coverage if c['block']==t[0])['failed']+=1
  if not result:raise ValueError('No GP detail could be read; previous report retained')
  d={'schemaVersion':SCHEMA,'available':True,'source':mapping['source'],'zeroSource':R42_URL,'sourceDate':None,'fetchedAt':datetime.now(timezone.utc).isoformat(),'thresholdDays':5,'zeroAttendanceVerified':True,'zeroCount':len(zero),'coverage':coverage,'gpRows':result,'totalPending':sum(r['pending'] for r in result),'checkedGP':len(result),'affectedGP':sum(r['pending']>0 for r in result),'failedGP':len(failures),'failedPages':failures}
  validate(d);p=ROOT/'data/emb-pending-latest.json';tmp=p.with_suffix('.tmp');tmp.write_text(json.dumps(d,ensure_ascii=False,indent=2),encoding='utf-8');tmp.replace(p)
