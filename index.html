@@ -1806,6 +1806,42 @@ body[data-report-view="category"] #reportTable tbody tr.total-row td{font-size:2
 <meta name="srdm-build" content="SRDM_EK_SANCTION_FIX_20260926"><style id="SRDM_EK_PRINT_SELECTOR_VISIBILITY_V1">
 body[data-report-view="ekbagiya"] #ekPrintScope{display:inline-flex!important}
 body:not([data-report-view="ekbagiya"]) #ekPrintScope{display:none!important}
+</style><style id="srdm-crystal-login-20261017">
+/* Crystal login — scoped to the entry screen, independent of report typography. */
+#loginScreen{overflow:auto;padding:32px 22px;background:radial-gradient(ellipse at 12% 15%,#1c6589 0,transparent 48%),radial-gradient(ellipse at 90% 85%,#23548b 0,transparent 48%),linear-gradient(135deg,#081b35,#102c50 60%,#122744);isolation:isolate}
+#loginScreen::before,#loginScreen::after{content:"";position:absolute;pointer-events:none;z-index:-1;border:1px solid #b4edff26;background:linear-gradient(135deg,#b6f4ff1f,#b2c9ff06);transform:rotate(-28deg);border-radius:52px}
+#loginScreen::before{width:390px;height:390px;left:4%;top:-170px;box-shadow:0 0 100px #69dbff13,inset 0 1px 0 #ffffff26}
+#loginScreen::after{width:340px;height:340px;right:3%;bottom:-150px;transform:rotate(28deg)}
+#loginScreen .login-shell{position:relative;width:min(1020px,100%);grid-template-columns:1.08fr 1fr;border-radius:28px;border:1px solid #d2eeff66;background:#d8edff12;box-shadow:0 32px 90px #0007,inset 0 1px 0 #fff5;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px)}
+#loginScreen .login-brand{position:relative;display:block;overflow:hidden;min-height:460px;padding:44px 38px;background:linear-gradient(140deg,#c5f2ff12,#1a72a02b 65%,#6da6ed24);border-right:1px solid #e3f5ff40}
+#loginScreen .login-brand::before{content:"";position:absolute;width:260px;height:340px;right:-130px;bottom:-140px;transform:rotate(30deg);border:1px solid #dbf5ff55;background:linear-gradient(140deg,#d5f6ff30,#94dcff03 55%,#d5e5ff20);box-shadow:inset 18px 0 50px #b9ecff15;pointer-events:none}
+#loginScreen .login-emblem{width:64px;height:64px;border-radius:19px;margin-bottom:25px;font-size:23px;background:linear-gradient(145deg,#fff0b2,#f6c763);border:1px solid #fff2bf;box-shadow:0 8px 28px #0002,inset 0 2px 3px #fff9;color:#173450}
+#loginScreen .login-kicker{display:block;font-size:11px;line-height:1.7;font-weight:600;color:#b9dbef;letter-spacing:.02em;max-width:350px}
+#loginScreen .login-brand h1{position:relative;max-width:390px;font-size:32px;line-height:1.22;letter-spacing:-.035em;font-weight:800;margin:14px 0 14px;color:#f8fcff;text-shadow:0 2px 18px #b9e7ff12}
+#loginScreen .login-brand p{font-size:13px;line-height:1.7;color:#c1daec;max-width:350px}
+#loginScreen .login-coverage{display:flex;gap:10px;margin-top:34px;position:relative;flex-wrap:wrap}
+#loginScreen .login-coverage span{min-width:85px;padding:12px 14px;border:1px solid #d9f0ff30;border-radius:12px;background:linear-gradient(130deg,#ecf9ff15,#b2dfff08);box-shadow:inset 0 1px 0 #fff2;color:#bad9eb;font-size:11px;line-height:1.5}
+#loginScreen .login-coverage strong{display:block;font-size:21px;color:#effaff;font-weight:700;letter-spacing:-.02em}
+#loginScreen .login-card{padding:44px 38px;background:linear-gradient(140deg,#fffffff5,#edf6fff0);border-top:1px solid #fff8}
+#loginScreen .login-card-head{gap:13px;margin-bottom:29px;align-items:flex-start}
+#loginScreen .login-lock{flex:0 0 44px;width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#fff,#d8eafa);border:1px solid #fff;box-shadow:0 4px 12px #194a7210;color:#21669a}
+#loginScreen .login-lock svg{width:22px;height:22px}
+#loginScreen .login-card h2{font-size:25px;letter-spacing:-.035em;color:#153b5c;font-weight:750;line-height:1.2}
+#loginScreen .login-card-head p{font-size:12px;color:#647c92;line-height:1.65;margin-top:6px}
+#loginScreen .login-card label{font-size:12px;font-weight:650;letter-spacing:.01em;color:#36536b;gap:8px;margin-bottom:18px}
+#loginScreen .login-card input{width:100%;height:49px;border:1px solid #b8cede;border-radius:11px;background:#ffffffb3;color:#163b59;padding:0 14px;font-size:14px;box-shadow:inset 0 1px 3px #103c5810,0 1px 0 #fff;transition:border-color .18s,box-shadow .18s}
+#loginScreen .login-card input:focus{background:#fff;border-color:#2786ba;box-shadow:0 0 0 3px #2786ba20}
+#loginScreen .login-card input::placeholder{color:#8599aa}
+#loginScreen #loginBtn{position:relative;display:flex;align-items:center;justify-content:center;gap:15px;height:50px;margin-top:4px;border:1px solid #66b9e577;border-radius:11px;background:linear-gradient(110deg,#146496,#237fae);box-shadow:0 8px 19px #176da62a,inset 0 1px 0 #fff4;font-size:14px;font-weight:750;letter-spacing:.01em;transition:transform .18s,box-shadow .18s,filter .18s}
+#loginScreen #loginBtn::after{content:"→";font-size:20px;font-weight:400;line-height:1}
+#loginScreen #loginBtn:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 11px 24px #176da638,inset 0 1px 0 #fff4}
+#loginScreen #loginBtn:active{transform:translateY(0)}
+#loginScreen #loginBtn:focus-visible{outline:3px solid #63badb;outline-offset:3px}
+#loginScreen .login-help{color:#6b8396;font-size:9px;letter-spacing:.09em;line-height:1.6;margin-top:18px}
+#loginScreen .login-error{font-size:12px;line-height:1.5;border:1px solid #efcecb}
+@supports not (backdrop-filter:blur(1px)){#loginScreen .login-shell{background:#163f63}#loginScreen .login-card{background:#f4f9fd}}
+@media(max-width:760px){#loginScreen{padding:20px 14px;align-items:flex-start}#loginScreen .login-shell{grid-template-columns:1fr;max-width:480px;margin:auto;border-radius:22px}#loginScreen .login-brand{min-height:0;padding:25px;border-right:0;border-bottom:1px solid #e3f5ff40}#loginScreen .login-emblem{width:48px;height:48px;border-radius:14px;font-size:19px;margin-bottom:16px}#loginScreen .login-brand h1{font-size:25px;max-width:350px;margin-top:10px}#loginScreen .login-coverage{margin-top:20px;gap:8px}#loginScreen .login-coverage span{padding:7px 12px;min-width:78px}#loginScreen .login-coverage strong{font-size:18px}#loginScreen .login-card{padding:28px 25px}#loginScreen .login-card-head{margin-bottom:23px}}
+@media(prefers-reduced-motion:reduce){#loginScreen *{transition:none!important}}
 </style></head>
 <body>
 <div class="login-screen" id="loginScreen">
@@ -1815,12 +1851,13 @@ body:not([data-report-view="ekbagiya"]) #ekPrintScope{display:none!important}
       <div>
         <span class="login-kicker">मध्यप्रदेश शासन • पंचायत एवं ग्रामीण विकास विभाग</span>
         <h1>VB-G RAM G Daily Monitoring Portal</h1>
-        <p>District Satna & Maihar • 8 Janpad • srdmsatna.online</p>
+        <p>District Satna &amp; Maihar<br>srdmsatna.online</p>
+        <div class="login-coverage" aria-label="Portal coverage"><span><strong>02</strong>Districts</span><span><strong>08</strong>Janpads</span><span><strong>695</strong>Gram Panchayats</span></div>
       </div>
     </div>
     <div class="login-card">
       <div class="login-card-head">
-        <span class="login-lock">🔐</span>
+        <span class="login-lock" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg></span>
         <div><h2>Secure Login</h2><p>Portal खोलने के लिए Username और Password दर्ज करें</p></div>
       </div>
       <label>Username<input id="loginUsername" type="text" autocomplete="username" placeholder="Username"></label>
