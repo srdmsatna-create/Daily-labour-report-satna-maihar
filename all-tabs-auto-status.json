@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-17T09:02:35.310281+00:00",
+  "checkedAt": "2026-10-17T09:40:06.595964+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -83,8 +83,7 @@
       ]
     },
     "ek_bagiya_payment": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_ek_bagiya_payment.py']' returned non-zero exit status 1.",
+      "success": true,
       "files": [
         "data/ek-bagiya-payment-latest.json"
       ]
@@ -96,5 +95,5 @@
       ]
     }
   },
-  "success": false
+  "success": true
 }
