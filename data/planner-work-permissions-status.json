@@ -1,0 +1,431 @@
+{
+  "letter": {
+    "letter": "I/1368365/2026",
+    "date": "12-10-2026",
+    "pages": "1–9"
+  },
+  "sourceDate": "17/10/2026",
+  "totals": {
+    "allowed": 410,
+    "outside": 0,
+    "pending": 243
+  },
+  "types": [
+    {
+      "label": "Repair & Maintenance of Cement Concrete Road for Community",
+      "count": 11,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Soak Pit for Community",
+      "count": 80,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.36; 3.31, पृष्ठ 3,8",
+      "note": "परिषद के परिशिष्ट-6 अनुसार स्थल चयन और निर्माण आवश्यक है।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of NADEP Compost Pit for Community",
+      "count": 69,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Roof Top Rain Water Harvesting Structure for Community",
+      "count": 66,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.2; 3.10, पृष्ठ 1,6",
+      "note": "SIPRI तथा निर्धारित तकनीकी दिशानिर्देश लागू हैं।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Recharge Pit for Community",
+      "count": 31,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Cement Concrete Road for Community",
+      "count": 125,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.19; 3.21, पृष्ठ 2,7",
+      "note": "अभिसरण अनिवार्य; VB-G RAM G से केवल मजदूरी अंश; मानक प्राक्कलन लागू।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Culvert for Community",
+      "count": 51,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.22; 3.23, पृष्ठ 2,7",
+      "note": "सामान्यतः 1/2-row ह्यूम पाइप, प्रति जनपद अधिकतम 10 (2026-27); अन्य बड़े कलवर्ट अभिसरण से।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Rejuvenation of Pond for Community",
+      "count": 18,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Repair & Maintenance of Culvert for Community",
+      "count": 2,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Play Ground for Government School for Community",
+      "count": 10,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.14,20,26,27,30,37; 3.16, पृष्ठ 2–3,6–7",
+      "note": "शिक्षा विभाग की प्राथमिकता/प्रस्ताव तथा वित्तीय अभिसरण के अनुसार।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Gravel / Mitti Murram Road for Community",
+      "count": 9,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Percolation Tank for Community",
+      "count": 6,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.7; 3.9, पृष्ठ 2,6",
+      "note": "परिशिष्ट-5 अनुसार स्थल चयन तथा SIPRI आवश्यक है।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of NADEP Compost pit for Individual",
+      "count": 7,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Crematorium for Community",
+      "count": 8,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Repair & Maintenance of Play Ground for Government School for Community",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Masonry Check Dam for Community",
+      "count": 7,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.6; 3.8, पृष्ठ 2,5–6",
+      "note": "SIPRI/राज्य स्थल परीक्षण तथा पृथक दिशानिर्देशों के उपरांत स्वीकृति लागू।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Community Sanitary Complex for Community",
+      "count": 5,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Soak Pit for Individual",
+      "count": 14,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Kitchen Shed for Government School for Community",
+      "count": 19,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.14,20,26,27,30,37; 3.16, पृष्ठ 2–3,6–7",
+      "note": "शिक्षा विभाग की प्राथमिकता/प्रस्ताव तथा वित्तीय अभिसरण के अनुसार।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Goat Shelter for Community",
+      "count": 5,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.9; 3.33, पृष्ठ 1,8",
+      "note": "लघु पशु शेड; हितग्राही पात्रता तथा मानक प्राक्कलन की शर्तें लागू।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Compound Wall for Government School for Community",
+      "count": 22,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.14,20,26,27,30,37; 3.16, पृष्ठ 2–3,6–7",
+      "note": "शिक्षा विभाग की प्राथमिकता/प्रस्ताव तथा वित्तीय अभिसरण के अनुसार।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Vermi Compost Structure for Community",
+      "count": 8,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Avenue Plantation for Community",
+      "count": 2,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Compost Pit for Community",
+      "count": 10,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Repair & Maintenance of Fishery Pond for Community",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Irrigation Well for Individual",
+      "count": 4,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.1,4,5; 3.3,3.7, पृष्ठ 2,5",
+      "note": "Farm Pond केवल व्यक्तिगत; सिंचाई कूप व्यक्तिगत/समुदाय; SIPRI और स्थल-पात्रता आवश्यक।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Irrigation Well for Groups",
+      "count": 2,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Sand-Filled Groundwater Recharge in Dug Well for Community",
+      "count": 2,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.3; पृष्ठ 1",
+      "note": "कूप पुनर्भरण; तकनीकी स्थल-पात्रता और निर्धारित जल-संबंधी शर्तें लागू हैं।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Cattle Shelter for Individual",
+      "count": 5,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of NADEP Compost Pit for Groups",
+      "count": 3,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Kharanja Road for Community",
+      "count": 3,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Cattle Shelter for Community",
+      "count": 4,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Irrigation Well for Community",
+      "count": 1,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.1,4,5; 3.3,3.7, पृष्ठ 2,5",
+      "note": "Farm Pond केवल व्यक्तिगत; सिंचाई कूप व्यक्तिगत/समुदाय; SIPRI और स्थल-पात्रता आवश्यक।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Sand-Filled Groundwater Recharge in Borewell for Community",
+      "count": 4,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Sand-Filled Groundwater Recharge in Borewell for Individual",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Along the coast Line Plantation of Forestry Trees for Community",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Boulder Check Dam for Individual",
+      "count": 1,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.1; 3.1, पृष्ठ 1,5",
+      "note": "नाले/ढलान का उपयुक्त स्थल तथा SIPRI/मानक प्राक्कलन जाँचना आवश्यक है।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Block Plantation of Horticulture Trees in fields for Individual",
+      "count": 5,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Compost Pit for Individual",
+      "count": 5,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Sand-Filled Groundwater Recharge in Dug Well for Individual",
+      "count": 3,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.3; पृष्ठ 1",
+      "note": "कूप पुनर्भरण; तकनीकी स्थल-पात्रता और निर्धारित जल-संबंधी शर्तें लागू हैं।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Goat Shelter for Individual",
+      "count": 3,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.9; 3.33, पृष्ठ 1,8",
+      "note": "लघु पशु शेड; हितग्राही पात्रता तथा मानक प्राक्कलन की शर्तें लागू।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Recharge Pit for Individual",
+      "count": 6,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Fishery Pond for Community",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Repair & Maintenance of Boulder Check Dam for Community",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Masonry Check Dam for Individual",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Farm Roads for Community",
+      "count": 2,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Boulder Check Dam for Community",
+      "count": 1,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.1; 3.1, पृष्ठ 1,5",
+      "note": "नाले/ढलान का उपयुक्त स्थल तथा SIPRI/मानक प्राक्कलन जाँचना आवश्यक है।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Continuous Contour Trench for Community",
+      "count": 1,
+      "status": "allowed",
+      "reference": "तालिका 1 क्र.1; 3.2, पृष्ठ 1,5",
+      "note": "SIPRI स्थल चयन और निर्धारित मानक/लागत की शर्तें लागू हैं।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Farm Pond for Individual",
+      "count": 3,
+      "status": "allowed",
+      "reference": "तालिका 2 क्र.1,4,5; 3.3,3.7, पृष्ठ 2,5",
+      "note": "Farm Pond केवल व्यक्तिगत; सिंचाई कूप व्यक्तिगत/समुदाय; SIPRI और स्थल-पात्रता आवश्यक।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Plantation in Institutions for Community",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Block Plantation of Sericulture Trees in fields for Community",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    },
+    {
+      "label": "Construction of Vermi Compost structure for Individual",
+      "count": 1,
+      "status": "pending",
+      "reference": "2.8; पृष्ठ 4",
+      "note": "नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।",
+      "source": "I/1368365/2026 दिनांक 12-10-2026"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+/* Dashboard work-type eligibility: MP letter I/1368365/2026, 12-10-2026.
+   This classifies work TYPES, not financial/technical/administrative sanctions.
+   References are PDF page numbers in the user-supplied combined letter. */
+(function(root){
+'use strict';
+const source={letter:'I/1368365/2026',date:'12-10-2026',pages:'1–9'};
+const rules=[
+ ['outside',/\b(?:kutcha|katcha|unlined|earthen)\b.*\b(?:drain|channel|canal)\b|कच्ची?\s*(?:नाली|चैनल)/i,'3.5; पृष्ठ 5','कच्ची नाली/कच्चे चैनल का निर्माण स्पष्ट रूप से अनुमत नहीं है।'],
+ ['outside',/(?:gravel|ग्रेवल).*(?:not under|other than|outside|गैर|से बाहर).*(?:sugam|सुगम)/i,'3.25; पृष्ठ 8','सुगम संपर्कता के अतिरिक्त अन्य ग्रेवल सड़क स्वीकृत नहीं की जाएगी।'],
+ ['allowed',/\bconstruction\b.*(?:continuous|staggered).*contour trench|कंटूर\s*(?:ट्रेंच|खाई)/i,'तालिका 1 क्र.1; 3.2, पृष्ठ 1,5','SIPRI स्थल चयन और निर्धारित मानक/लागत की शर्तें लागू हैं।'],
+ ['allowed',/^construction of boulder check dam for (?:community|individual|groups)$/i,'तालिका 1 क्र.1; 3.1, पृष्ठ 1,5','नाले/ढलान का उपयुक्त स्थल तथा SIPRI/मानक प्राक्कलन जाँचना आवश्यक है।'],
+ ['allowed',/construction of (?:gabion|gabbion).*check dam/i,'तालिका 1 क्र.1; 3.6, पृष्ठ 1,5','SIPRI स्थल चयन और मानक प्राक्कलन लागू हैं।'],
+ ['allowed',/^construction of roof top rain water harvesting structure for community$/i,'तालिका 1 क्र.2; 3.10, पृष्ठ 1,6','SIPRI तथा निर्धारित तकनीकी दिशानिर्देश लागू हैं।'],
+ ['allowed',/construction of sand-filled groundwater recharge in dug well for (?:community|individual|groups)/i,'तालिका 1 क्र.3; पृष्ठ 1','कूप पुनर्भरण; तकनीकी स्थल-पात्रता और निर्धारित जल-संबंधी शर्तें लागू हैं।'],
+ ['allowed',/(?:soak|recharge) pit.*(?:near|adjacent to).*(?:borewell|hand.?pump)|बोरवेल.*(?:सोख|रिचार्ज).*पिट/i,'तालिका 1 क्र.4; पृष्ठ 1','बोरवेल/हैंडपंप के समीप होने का मिलान कार्य विवरण में आवश्यक है।'],
+ ['allowed',/^construction of soak pit for community$/i,'तालिका 2 क्र.36; 3.31, पृष्ठ 3,8','परिषद के परिशिष्ट-6 अनुसार स्थल चयन और निर्माण आवश्यक है।'],
+ ['allowed',/(?:ek bagi(?:y)?a|bagiya maa|एक बगिया|बगिया माँ)/i,'तालिका 1 क्र.5; 3.12, पृष्ठ 1,6','हितग्राही वृक्षारोपण केवल एक बगिया माँ के नाम परियोजना; SIPRI/परिशिष्ट-7 लागू।'],
+ ['allowed',/(?:gangotri.*harit|गंगोत्री.*हरित)/i,'तालिका 1 क्र.6; पृष्ठ 1','निर्धारित परियोजना दिशानिर्देश लागू हैं।'],
+ ['allowed',/(?:avenue|plantation|वृक्षारोपण).*(?:narmada.*parikrama|नर्मदा.*परिक्रमा)/i,'तालिका 1 क्र.7; पृष्ठ 1','माँ नर्मदा परिक्रमा पथ का स्थल सत्यापित होना चाहिए।'],
+ ['allowed',/nursery.*(?:forest department|वन विभाग)|वन विभाग.*नर्सरी/i,'तालिका 1 क्र.8; पृष्ठ 1','वन विभाग द्वारा नर्सरी तैयार करना; संबंधित विभागीय प्रस्ताव लागू।'],
+ ['allowed',/^construction of (?:goat|poultry|sheep|pig) shelter for (?:individual|community|groups)$/i,'तालिका 1 क्र.9; 3.33, पृष्ठ 1,8','लघु पशु शेड; हितग्राही पात्रता तथा मानक प्राक्कलन की शर्तें लागू।'],
+ ['allowed',/^construction of buffalo shelter for individual$/i,'3.33; पृष्ठ 8','भैंस आश्रय के मानक प्राक्कलन और हितग्राही पात्रता लागू हैं।'],
+ ['allowed',/construction of (?:farm pond|irrigation well) for (?:individual|community)$/i,'तालिका 2 क्र.1,4,5; 3.3,3.7, पृष्ठ 2,5','Farm Pond केवल व्यक्तिगत; सिंचाई कूप व्यक्तिगत/समुदाय; SIPRI और स्थल-पात्रता आवश्यक।'],
+ ['allowed',/^construction of masonry check dam for community$/i,'तालिका 2 क्र.6; 3.8, पृष्ठ 2,5–6','SIPRI/राज्य स्थल परीक्षण तथा पृथक दिशानिर्देशों के उपरांत स्वीकृति लागू।'],
+ ['allowed',/^construction of percolation tank for community$/i,'तालिका 2 क्र.7; 3.9, पृष्ठ 2,6','परिशिष्ट-5 अनुसार स्थल चयन तथा SIPRI आवश्यक है।'],
+ ['allowed',/construction of (?:flood diversion|lined grey.?water|storm water).*?(?:drain|channel|canal).*for community/i,'तालिका 2 क्र.2,3,8,29; 3.5, पृष्ठ 2,5','अभिसरण के साथ केवल पक्की नाली/चैनल; कच्ची नाली/चैनल निषिद्ध।'],
+ ['allowed',/(?:construction of gravel.*sugam|sugam.*(?:gravel|road)|सुगम संपर्कता.*(?:ग्रेवल|सड़क))/i,'तालिका 1 क्र.10; 3.25, पृष्ठ 1,8','सुगम संपर्कता परियोजना और उसके दिशानिर्देशों में चयनित सड़क होना आवश्यक है।'],
+ ['allowed',/^construction of water harvesting pond for community$/i,'तालिका 2 क्र.9; 3.11, पृष्ठ 2,6','SIPRI/राज्य स्थल परीक्षण तथा पृथक दिशानिर्देशों के उपरांत स्वीकृति लागू।'],
+ ['allowed',/construction of (?:bitumen|black.?top).*road for community/i,'तालिका 2 क्र.17; 3.19, पृष्ठ 2,7','लाइन विभाग की प्राथमिकता/वित्तीय अभिसरण; योजना से केवल पात्र earthwork अंश; SIPRI आवश्यक।'],
+ ['allowed',/(?:construction|repair.*maintenance) of (?:compound|boundary) wall for government institution/i,'तालिका 2 क्र.18,41; 3.20, पृष्ठ 2–3,7','संबंधित सरकारी विभाग की प्राथमिकता और वित्तीय अभिसरण आवश्यक।'],
+ ['allowed',/repair.*maintenance of (?:additional class ?room|compound wall) for government school/i,'तालिका 2 क्र.38,42; 3.16, पृष्ठ 3,6–7','शिक्षा विभाग के पात्र प्रस्ताव/वित्तीय अभिसरण के अनुसार।'],
+ ['allowed',/repair.*maintenance of (?:anganwadi.*(?:building|toilet)|gram panchayat building)/i,'तालिका 2 क्र.39,40,44; 3.18,3.24, पृष्ठ 3,7','संबंधित विभाग के वित्तीय अभिसरण तथा प्रस्ताव की शर्तें लागू।'],
+ ['allowed',/(?:repair.*maintenance|post.disaster restoration).*(?:community building|community asset|rural road).*disaster/i,'तालिका 2 क्र.51–53; 2.17, पृष्ठ 3,5','श्रेणी 04 में राज्य द्वारा आपदा घोषित होने की शर्त अनिवार्य है।'],
+ ['allowed',/^construction of cement concrete road for community$/i,'तालिका 2 क्र.19; 3.21, पृष्ठ 2,7','अभिसरण अनिवार्य; VB-G RAM G से केवल मजदूरी अंश; मानक प्राक्कलन लागू।'],
+ ['allowed',/^construction of culvert for community$/i,'तालिका 2 क्र.22; 3.23, पृष्ठ 2,7','सामान्यतः 1/2-row ह्यूम पाइप, प्रति जनपद अधिकतम 10 (2026-27); अन्य बड़े कलवर्ट अभिसरण से।'],
+ ['allowed',/construction of (?:play ?ground|kitchen shed|compound wall|additional class ?room|laboratory|toilet).*for government school for community/i,'तालिका 2 क्र.14,20,26,27,30,37; 3.16, पृष्ठ 2–3,6–7','शिक्षा विभाग की प्राथमिकता/प्रस्ताव तथा वित्तीय अभिसरण के अनुसार।'],
+ ['allowed',/construction of (?:magic drain|anganwadi toilet|rural library|bench).*for community/i,'3.17,3.18,3.28,3.30; पृष्ठ 7–8','संबंधित विभाग/अभिसरण/मानक प्राक्कलन की शर्तें कार्यानुसार लागू हैं।'],
+ ['allowed',/construction of (?:rural health cent(?:er|re)|community hall|rural park|gram panchayat building).*for community/i,'3.24,3.26,3.27,3.29; पृष्ठ 7–8','अभिसरण/विभागीय प्रस्ताव लागू; पंचायत/सामुदायिक भवन के लिए पूर्व स्वीकृत/निर्मित भवन न होने की शर्त।'],
+ ['allowed',/(?:rejuvenation|renovation).*traditional.*(?:pond|water|step.?well)|पारंपरिक.*(?:तालाब|बावड़ी).*(?:मरम्मत|जीर्णोद्धार)/i,'तालिका 2 क्र.12,13; 3.15, पृष्ठ 2,6','केवल पुराने पारंपरिक जल निकाय; मनरेगा/अन्य योजना में निर्मित संरचना का जीर्णोद्धार नहीं।'],
+ ['allowed',/(?:plantation).*government institution/i,'तालिका 2 क्र.10; 3.13, पृष्ठ 2,6','प्रति सरकारी संस्था अधिकतम 50 पौधे; चारदीवारी और पानी की व्यवस्था आवश्यक।'],
+ ['allowed',/(?:construction|strengthening).*(?:animal shelter trench|flood protection wall|masonry retaining wall|rcc retaining wall|gabion protection wall|embankment).*for community/i,'तालिका 2 क्र.46–50,54; 2.17, पृष्ठ 3,5','आपदा-सम्बंधी श्रेणी 04: राज्य द्वारा आपदा घोषित होने पर ही स्वीकृति।']
+];
+function classify(label){
+ const text=String(label||'').replace(/\s+/g,' ').trim();
+ // Broad names do not establish the mandatory site, scheme or beneficiary.
+ if(/^construction of farm pond for community$/i.test(text))return result('pending','3.3; पृष्ठ 5','इस पत्र में Farm Pond व्यक्तिगत हेतु है; समुदाय/विशेष अनुमति का सत्यापन आवश्यक।');
+ for(const [status,pattern,reference,note] of rules)if(pattern.test(text))return result(status,reference,note);
+ return result('pending','2.8; पृष्ठ 4','नाम से पत्र के अनुमत्य प्रकार/शर्तों का निश्चित मिलान नहीं हुआ। विस्तृत कार्य, स्थल, परियोजना या परिषद की विशेष अनुमति जाँचें।');
+}
+function result(status,reference,note){return {status,reference,note,source:source.letter+' दिनांक '+source.date};}
+const api={source,classify};
+root.SRDM_WORK_PERMISSION=api;
+if(typeof module!=='undefined'&&module.exports)module.exports=api;
+})(typeof window!=='undefined'?window:globalThis);
