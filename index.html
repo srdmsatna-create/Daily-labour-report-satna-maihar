@@ -4258,7 +4258,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   if(!compensationFeed)for(const key of ['compPayableDays','compPayableAmount','compNotDueDays'])result[key]=null;
   result.activeWorkerPct=result.totalWorkers?100*result.activeWorkers/result.totalWorkers:0;
   result.womenPct=result.personDays?rows.reduce((total,row)=>total+Number(row.personDays||0)*Number(row.womenPct||0),0)/result.personDays:0;
-  result.timelyFtoPct=rows.length===8&&timelyFeed?timelyFeed.totals.timelyFtoPct:null;
+  result.timelyFtoPct=timelyFeed?(rows.length===8?timelyFeed.totals.timelyFtoPct:rows.every(row=>Number.isFinite(row.timelyFtoPct))?rows.reduce((total,row)=>total+row.timelyFtoPct,0)/rows.length:null):null;
   return result;
  };
  function add(label,row,cls){
@@ -4279,7 +4279,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  if(compensationFeed){const link=document.createElement('a');link.href=compensationFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • R14.1 आधिकारिक रिपोर्ट';compSource.appendChild(link)}
  panel.appendChild(compSource);
  const timelySource=document.createElement('p');timelySource.style.fontSize='12px';
- timelySource.textContent=timelyFeed?'समय पर मजदूरी भुगतान: आधिकारिक T+8 दिनों में FTO generation %. जिला प्रतिशत का आधार स्रोत में नहीं है, इसलिए जिला योग में — है; महायोग में पोर्टल का आधिकारिक प्रतिशत है। प्राप्ति: '+new Date(timelyFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'समय पर भुगतान डेटा उपलब्ध नहीं; इसे शून्य नहीं माना गया है।';
+ timelySource.textContent=timelyFeed?'समय पर मजदूरी भुगतान: आधिकारिक T+8 दिनों में FTO generation %. जिला योग में संबंधित जनपदों के प्रतिशत का साधारण औसत है; महायोग में पोर्टल का आधिकारिक प्रतिशत है। प्राप्ति: '+new Date(timelyFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'समय पर भुगतान डेटा उपलब्ध नहीं; इसे शून्य नहीं माना गया है।';
  if(timelyFeed){const link=document.createElement('a');link.href=timelyFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • आधिकारिक Payment Status';timelySource.appendChild(link)}
  panel.appendChild(timelySource);
 })();
