@@ -4415,4 +4415,22 @@ body #vbgStatistics table tbody tr.r12-maihar-total td:not(:first-child),
 body #vbgStatistics table tbody tr.r12-satna-total td:not(:first-child),
 body #vbgStatistics table tbody tr.r12-grand td:not(:first-child){font-size:17px!important;font-weight:900!important}
 </style>
+
+<style>
+#r12BackToMenu{display:inline-block;margin:0 10px 8px 0;padding:9px 16px;border:1px solid #164a7b;border-radius:6px;background:#eef5fd;color:#164a7b;font-size:13px;font-weight:800;cursor:pointer}
+@media print{#r12BackToMenu{display:none!important}}
+</style>
+<script>
+(function(){
+ const panel=document.getElementById('vbgStatistics');if(!panel)return;
+ const button=document.createElement('button');button.id='r12BackToMenu';button.type='button';button.textContent='← मुख्य मेनू पर वापस';
+ function place(){if(!panel.contains(button))panel.insertBefore(button,panel.querySelector('#r12PrintButton')||panel.firstChild)}
+ place();new MutationObserver(place).observe(panel,{childList:true});
+ button.addEventListener('click',function(){
+  const menu=document.getElementById('srdmApplications');
+  if(menu){menu.scrollIntoView({behavior:'smooth',block:'start'});const focus=document.getElementById('reportMenuSearch')||menu.querySelector('button,a');if(focus)focus.focus({preventScroll:true})}
+  else window.scrollTo({top:0,behavior:'smooth'});
+ });
+})();
+</script>
 </body></html>
