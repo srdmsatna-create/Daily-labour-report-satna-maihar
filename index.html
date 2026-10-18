@@ -4246,9 +4246,13 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   if(feed.schemaVersion!==1||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete timely payment coverage');
   timelyFeed=feed;
  }catch(error){console.warn('Timely payment feed unavailable');}
- data.rows.forEach(row=>row.timelyFtoPct=timelyFeed?.rows.find(item=>item.block===row.block)?.timelyFtoPct??null);
- const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct'];
- const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %'];
+ data.rows.forEach(row=>{
+  const payment=timelyFeed?.rows.find(item=>item.block===row.block);
+  row.timelyFtoPct=payment?.timelyFtoPct??null;
+  row.pendingWageAmount=typeof payment?.amount==='number'&&typeof payment?.totalProcessedAmount==='number'?Number((payment.amount-payment.totalProcessedAmount).toFixed(2)):null;
+ });
+ const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct','pendingWageAmount'];
+ const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','लंबित मजदूरी भुगतान ₹'];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
  const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
  let r12Sort={key:null,direction:1};
@@ -4257,7 +4261,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   if(index>0)th.classList.add('r12-'+key);
   th.setAttribute('aria-sort','none');
   const button=document.createElement('button');button.type='button';button.className='r12-sort-button';button.dataset.sort=key;
-  button.textContent=label+' ↕';button.title=label+' — आरोही / अवरोही क्रम';
+  button.textContent=label+' ↕';button.title=label+' — आरोही / अवरोही क्रम'+(key==='pendingWageAmount'?' • Amount (In Rs.) − Total Processed Amount (In Rs.)':'');
   button.addEventListener('click',()=>{
    r12Sort={key,direction:r12Sort.key===key?-r12Sort.direction:1};
    Array.from(head.cells).forEach((cell,i)=>{
@@ -4275,6 +4279,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   if(!compensationFeed)for(const key of ['compPayableDays','compPayableAmount','compNotDueDays'])result[key]=null;
   result.activeWorkerPct=result.totalWorkers?100*result.activeWorkers/result.totalWorkers:0;
   result.womenPct=result.personDays?rows.reduce((total,row)=>total+Number(row.personDays||0)*Number(row.womenPct||0),0)/result.personDays:0;
+  result.pendingWageAmount=rows.every(row=>Number.isFinite(row.pendingWageAmount))?rows.reduce((total,row)=>total+row.pendingWageAmount,0):null;
   result.timelyFtoPct=timelyFeed?(rows.length===8?timelyFeed.totals.timelyFtoPct:rows.every(row=>Number.isFinite(row.timelyFtoPct))?rows.reduce((total,row)=>total+row.timelyFtoPct,0)/rows.length:null):null;
   return result;
  };
