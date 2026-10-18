@@ -84,6 +84,21 @@ table tbody tr.district-total td{font-size:14px!important;font-weight:900!import
 /* Stronger district-total emphasis requested by the user. */
 table tbody tr.district-total td{font-size:17px!important;font-weight:900!important;line-height:1.5;padding-top:11px!important;padding-bottom:11px!important}
 @media print{table tbody tr.district-total td{font-size:10.5pt!important;font-weight:900!important;padding-top:5px!important;padding-bottom:5px!important}}
+
+/* Allow the browser to paginate the table and repeat all column labels. */
+@media print{
+ html,body,main.dashboard-container{height:auto!important;max-height:none!important;overflow:visible!important;display:block!important}
+ main.dashboard-container{width:100%!important;max-width:none!important;margin:0!important}
+ .table-wrap{display:block!important;overflow:visible!important;height:auto!important;max-height:none!important;contain:none!important;transform:none!important;break-inside:auto!important;border:0!important}
+ .table-wrap>table{display:table!important;overflow:visible!important;height:auto!important;break-inside:auto!important}
+ #head{display:table-header-group!important;position:static!important;break-inside:avoid!important;break-after:avoid!important}
+ #head tr{display:table-row!important;break-inside:avoid!important}
+ #head th{display:table-cell!important;position:static!important}
+ #body{display:table-row-group!important;overflow:visible!important;break-inside:auto!important}
+ #body tr{break-inside:avoid!important}
+ #head th button{display:block!important}
+ .print-report-heading{display:table-row!important}
+}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
