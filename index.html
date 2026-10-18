@@ -4238,22 +4238,32 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   const values=compensationFeed?.rows.find(item=>item.block===row.block);
   for(const key of ['compPayableDays','compPayableAmount','compNotDueDays'])row[key]=values?.[key]??null;
  });
- const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays'];
- const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन (3)','विलंब क्षतिपूर्ति: देय राशि ₹ (4)','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन (10)'];
+ let timelyFeed=null;
+ try{
+  const response=await fetch('data/timely-payment-latest.json?t='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('Timely payment unavailable');
+  const feed=await response.json();
+  if(feed.schemaVersion!==1||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete timely payment coverage');
+  timelyFeed=feed;
+ }catch(error){console.warn('Timely payment feed unavailable');}
+ data.rows.forEach(row=>row.timelyFtoPct=timelyFeed?.rows.find(item=>item.block===row.block)?.timelyFtoPct??null);
+ const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct'];
+ const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन (3)','विलंब क्षतिपूर्ति: देय राशि ₹ (4)','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन (10)','समय पर मजदूरी भुगतान — FTO T+8 %'];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
  const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
  labels.forEach(label=>{const th=document.createElement('th');th.textContent=label;head.appendChild(th)});
  const sum=rows=>{
   const result={};
-  keys.filter(k=>!['activeWorkerPct','womenPct'].includes(k)).forEach(k=>result[k]=rows.reduce((total,row)=>total+Number(row[k]||0),0));
+  keys.filter(k=>!['activeWorkerPct','womenPct','timelyFtoPct'].includes(k)).forEach(k=>result[k]=rows.reduce((total,row)=>total+Number(row[k]||0),0));
   if(!compensationFeed)for(const key of ['compPayableDays','compPayableAmount','compNotDueDays'])result[key]=null;
   result.activeWorkerPct=result.totalWorkers?100*result.activeWorkers/result.totalWorkers:0;
   result.womenPct=result.personDays?rows.reduce((total,row)=>total+Number(row.personDays||0)*Number(row.womenPct||0),0)/result.personDays:0;
+  result.timelyFtoPct=rows.length===8&&timelyFeed?timelyFeed.totals.timelyFtoPct:null;
   return result;
  };
  function add(label,row,cls){
   const tr=body.insertRow();if(cls)tr.className=cls;tr.insertCell().textContent=label;
-  keys.forEach(key=>{const value=Number(row[key]);tr.insertCell().textContent=row[key]!==null&&row[key]!==undefined&&Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh'].includes(key)?2:0,maximumFractionDigits:2}):'—'});
+  keys.forEach(key=>{const value=Number(row[key]);tr.insertCell().textContent=row[key]!==null&&row[key]!==undefined&&Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh','timelyFtoPct'].includes(key)?2:0,maximumFractionDigits:2}):'—'});
  }
  for(const district of ['MAIHAR','SATNA']){
   const rows=data.rows.filter(row=>maihar.has(row.block)===(district==='MAIHAR'));
@@ -4268,6 +4278,10 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  compSource.textContent=compensationFeed?'विलंब क्षतिपूर्ति स्रोत प्राप्ति: '+new Date(compensationFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'विलंब क्षतिपूर्ति डेटा उपलब्ध नहीं; इसे शून्य नहीं माना गया है।';
  if(compensationFeed){const link=document.createElement('a');link.href=compensationFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • R14.1 आधिकारिक रिपोर्ट';compSource.appendChild(link)}
  panel.appendChild(compSource);
+ const timelySource=document.createElement('p');timelySource.style.fontSize='12px';
+ timelySource.textContent=timelyFeed?'समय पर मजदूरी भुगतान: आधिकारिक T+8 दिनों में FTO generation %. जिला प्रतिशत का आधार स्रोत में नहीं है, इसलिए जिला योग में — है; महायोग में पोर्टल का आधिकारिक प्रतिशत है। प्राप्ति: '+new Date(timelyFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'समय पर भुगतान डेटा उपलब्ध नहीं; इसे शून्य नहीं माना गया है।';
+ if(timelyFeed){const link=document.createElement('a');link.href=timelyFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • आधिकारिक Payment Status';timelySource.appendChild(link)}
+ panel.appendChild(timelySource);
 })();
 </script>
 </body></html>
