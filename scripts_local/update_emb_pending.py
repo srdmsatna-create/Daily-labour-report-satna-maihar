@@ -63,6 +63,7 @@ def zero_mrs(rr,expected,allow_detail_count=False):
    if len(detail)<=ci or not detail or not detail[0]['text'].isdigit():continue
    if len(detail)>2 and all(re.fullmatch(r'\d+',c['text']) for c in detail):continue
    v=clean(detail[ci]['text'])
+   if not re.fullmatch(r'\d+(?:[/-]\d+)*',v):raise ValueError('Invalid Zero Attendance MR record')
    if re.fullmatch(r'\d+(?:[/-]\d+)*',v):
     source=' '.join(c['text']+' '+' '.join(c['links']) for c in detail)
     source=re.sub(r'\s*/\s*','/',urllib.parse.unquote(source))
@@ -79,8 +80,8 @@ def zero_mrs(rr,expected,allow_detail_count=False):
   if len(out)==expected or (out and all(code is not None for code,mr in out) and len(works)==expected):
    if len(out)!=expected:print(f'Zero Attendance reconciled: {expected} works / {len(out)} MRs',flush=True)
    return out
-  # User-confirmed Narayanpur column 6: its complete identified detail
-  # is authoritative when the summary count differs.
+  # After fresh-parent retries, complete identified MR details are authoritative.
+  # The portal summary can lag behind details in more than one GP.
   if allow_detail_count and out and all(code is not None for code,mr in out):
    print(f'Zero Attendance detail accepted: summary={expected}; verified detail={len(out)} MRs',flush=True)
    return out
@@ -117,7 +118,17 @@ def load_zero_attendance():
      if len(matches)!=1:raise ValueError('Duplicate Zero Attendance GP summary')
      _,_,u,n,_=matches[0]
     rr,_=get(u)
-    return {(b,g,code,mr) for code,mr in zero_mrs(rr,n,allow_detail_count=(b=='RAMNAGAR' and g=='NARAYANPUR' and ci==5))}
+    # Reject detail links that resolve to a different block or panchayat.
+    for i,row in enumerate(rr):
+     labels=[re.sub(r'[^a-z]','',c['text'].lower()) for c in row]
+     if 'block' in labels and 'gp' in labels:
+      bi,gi=labels.index('block'),labels.index('gp')
+      for detail in rr[i+1:]:
+       if detail and detail[0]['text'].isdigit() and len(detail)>max(bi,gi):
+        if all(c['text'].isdigit() for c in detail):continue
+        if key(detail[bi]['text']).replace(' ','')!=b.replace(' ','') or key(detail[gi]['text'])!=g:
+         raise ValueError('Zero Attendance detail belongs to a different GP')
+    return {(b,g,code,mr) for code,mr in zero_mrs(rr,n,allow_detail_count=(attempt==2))}
    except Exception as exc:
     if attempt==2:raise ValueError(f'{b}/{g} Zero Attendance column {ci+1}: {exc}') from exc
     print(f'Retrying Zero Attendance {b}/{g} ({attempt+2}/3): {exc}',flush=True)
