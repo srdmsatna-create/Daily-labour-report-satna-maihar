@@ -46,7 +46,7 @@ def count(s):
  s=s.replace(',','')
  if not re.fullmatch(r'\d+',s):raise ValueError('Invalid official count')
  return int(s)
-def zero_mrs(rr,expected):
+def zero_mrs(rr,expected,allow_detail_count=False):
  # Match semantic headers despite punctuation, line breaks and abbreviations.
  # Never guess a numeric column when the report header cannot be identified.
  observed=[]
@@ -78,6 +78,11 @@ def zero_mrs(rr,expected):
   # Reconcile either unit using complete, identified detail records.
   if len(out)==expected or (out and all(code is not None for code,mr in out) and len(works)==expected):
    if len(out)!=expected:print(f'Zero Attendance reconciled: {expected} works / {len(out)} MRs',flush=True)
+   return out
+  # User-confirmed Narayanpur column 6: its complete identified detail
+  # is authoritative when the summary count differs.
+  if allow_detail_count and out and all(code is not None for code,mr in out):
+   print(f'Zero Attendance detail accepted: summary={expected}; verified detail={len(out)} MRs',flush=True)
    return out
  raise ValueError(f'Zero Attendance detail count/header mismatch: expected={expected}; observed={observed}; headers='+repr([[c['text'] for c in r] for r in rr[:8]]))
 
@@ -112,7 +117,7 @@ def load_zero_attendance():
      if len(matches)!=1:raise ValueError('Duplicate Zero Attendance GP summary')
      _,_,u,n,_=matches[0]
     rr,_=get(u)
-    return {(b,g,code,mr) for code,mr in zero_mrs(rr,n)}
+    return {(b,g,code,mr) for code,mr in zero_mrs(rr,n,allow_detail_count=(b=='RAMNAGAR' and g=='NARAYANPUR' and ci==5))}
    except Exception as exc:
     if attempt==2:raise ValueError(f'{b}/{g} Zero Attendance column {ci+1}: {exc}') from exc
     print(f'Retrying Zero Attendance {b}/{g} ({attempt+2}/3): {exc}',flush=True)
