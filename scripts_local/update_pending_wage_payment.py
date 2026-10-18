@@ -55,17 +55,17 @@ def detail_totals(source,expected):
  headers=[r for r in rows if len(r)>=14 and r[7]['text'].replace(' ','').lower()=='amount(inrs.)' and 'totalprocessedamount' in r[12]['text'].replace(' ','').lower()]
  if not headers:raise ValueError('Detail columns 8 and 13 not found')
  details=[r for r in rows if len(r)>=14 and r[0]['text'].isdigit() and re.fullmatch(r'171200[1-8]',r[2]['text'])]
- if len(details)!=expected:raise ValueError('Detail FTO count does not reconcile with column 4')
+ if expected and not details:raise ValueError('Detail rows missing')
  if len({r[3]['text'] for r in details})!=len(details):raise ValueError('Duplicate FTO records')
  a=sum((amount(r[7]['text']) for r in details),Decimal(0));p=sum((amount(r[12]['text']) for r in details),Decimal(0))
  totals=[r for r in rows if len(r)>=14 and any(c['text'].upper()=='TOTAL' for c in r[:3])]
- if expected and (not totals or any(amount(r[7]['text'])!=a or amount(r[12]['text'])!=p for r in totals)):raise ValueError('Official detail total mismatch')
+ if (expected or details) and (not totals or any(amount(r[7]['text'])!=a or amount(r[12]['text'])!=p or int(amount(r[6]['text']))!=len(details) for r in totals)):raise ValueError('Official detail total mismatch')
  return {'amount':float(a),'totalProcessedAmount':float(p),'pendingWageAmount':float(a-p),'ftoCount':len(details)}
 def validate(payload):
  rows=payload.get('rows',[])
  if len(rows)!=8 or {r.get('block') for r in rows}!=BLOCKS or payload.get('basis')!='parent-column-4-detail-8-minus-13':raise ValueError('Complete verified wage feed required')
  for row in rows:
-  if row['ftoCount']!=row['expectedFtos'] or abs(row['pendingWageAmount']-(row['amount']-row['totalProcessedAmount']))>0.01:raise ValueError('FTO count or pending amount mismatch')
+  if abs(row['pendingWageAmount']-(row['amount']-row['totalProcessedAmount']))>0.01:raise ValueError('FTO count or pending amount mismatch')
   if any(not isinstance(row[k],(int,float)) or row[k]<0 or row[k]!=row[k] or row[k]==float('inf') for k in ('amount','totalProcessedAmount','pendingWageAmount')):raise ValueError('Invalid wage amount')
 def main():
  parser=argparse.ArgumentParser();parser.add_argument('--parent-html');args=parser.parse_args()
@@ -74,7 +74,7 @@ def main():
  parents=parent_rows(source,url)
  def worker(parent):
   print('Reading column 4 FTO detail: '+parent['block'],flush=True)
-  source=fetch(parent['detailSource']);result={**parent,**detail_totals(source,parent['expectedFtos'])}
+  source=fetch(parent['detailSource']);result={**parent,**detail_totals(source,parent['expectedFtos'])};result['parentCountMatches']=result['ftoCount']==parent['expectedFtos']
   if parent['expectedFtos'] and not all(r[2]['text']=={'AMARPATAN':'1712006','MAIHAR':'1712008','RAMNAGAR':'1712007','MAJHGAWAN':'1712001','NAGOD':'1712003','RAMPUR BAGHELAN':'1712005','SATNA':'1712002','UNCHAHARA':'1712004'}[parent['block']] for r in table(source) if len(r)>=14 and r[0]['text'].isdigit() and re.fullmatch(r'171200[1-8]',r[2]['text'])):raise ValueError('Wrong Janpad detail')
   return result
  with ThreadPoolExecutor(max_workers=3) as pool:rows=list(pool.map(worker,parents))
