@@ -99,6 +99,23 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
  #head th button{display:block!important}
  .print-report-heading{display:table-row!important}
 }
+
+#printPages{display:none}
+#printPages .print-sheet{width:1045px;background:white;padding:0}
+#printPages h2{font-size:15px;line-height:1.4;margin:0 0 6px;color:#155e89}
+#printPages .sheet-meta{font-size:11px;line-height:1.4;margin-bottom:6px}
+#printPages table{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse}
+#printPages th,#printPages td{font-size:10px!important;line-height:1.3!important;padding:4px 3px!important;overflow-wrap:anywhere;border:1px solid #355873!important}
+#printPages th{background:#dce9f6;color:#173f65;font-weight:800}
+#printPages tr.district-total td{font-size:13px!important;font-weight:900!important;padding:5px 3px!important}
+#printPages .sheet-number{font-size:10px;text-align:right;margin:5px 0}
+@media print{
+ body.explicit-print-pages>header,body.explicit-print-pages>main{display:none!important}
+ body.explicit-print-pages>#printPages{display:block!important}
+ #printPages .print-sheet{width:100%!important;break-after:page!important;page-break-after:always!important}
+ #printPages .print-sheet:last-child{break-after:auto!important;page-break-after:auto!important}
+ #printPages,#printPages *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
@@ -176,6 +193,44 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
  function updateTableHeading(){caption.textContent=title.textContent}
  new MutationObserver(updateTableHeading).observe(title,{childList:true,subtree:true,characterData:true});
  updateTableHeading();
+})();
+</script>
+
+<script>
+(function(){
+ function clean(){document.getElementById('printPages')?.remove();document.body.classList.remove('explicit-print-pages')}
+ window.addEventListener('beforeprint',function(){
+  clean();
+  const source=document.getElementById('head')?.closest('table');
+  if(!source)return;
+  const labels=Array.from(document.querySelectorAll('#head tr')).find(row=>row.querySelector('button[data-sort]'));
+  if(!labels)return;
+  const root=document.createElement('div');root.id='printPages';
+  root.style.cssText='display:block;position:absolute;left:-20000px;top:0;width:1045px';
+  document.body.appendChild(root);
+  let sheet,tbody,table;
+  function newSheet(){
+   sheet=document.createElement('section');sheet.className='print-sheet';
+   const title=document.createElement('h2');title.textContent=document.getElementById('title').textContent;sheet.appendChild(title);
+   const meta=document.createElement('div');meta.className='sheet-meta';
+   const warning=document.getElementById('warningMeta');
+   meta.textContent=warning&&!warning.hidden?warning.innerText:document.getElementById('date').textContent;sheet.appendChild(meta);
+   table=document.createElement('table');table.className=source.className;
+   const cg=source.querySelector('colgroup');if(cg)table.appendChild(cg.cloneNode(true));
+   const thead=table.createTHead(),row=thead.insertRow();
+   Array.from(labels.cells).forEach(cell=>{const th=document.createElement('th');th.textContent=cell.textContent.replace(/[↕↑↓]/g,'').trim();row.appendChild(th)});
+   tbody=table.createTBody();sheet.appendChild(table);root.appendChild(sheet);
+  }
+  newSheet();
+  Array.from(document.getElementById('body').rows).forEach(original=>{
+   const row=original.cloneNode(true);tbody.appendChild(row);
+   if(sheet.getBoundingClientRect().height>630&&tbody.rows.length>1){row.remove();newSheet();tbody.appendChild(row)}
+  });
+  const pages=Array.from(root.children);
+  pages.forEach((page,i)=>{const number=document.createElement('div');number.className='sheet-number';number.textContent='पृष्ठ '+(i+1)+' / '+pages.length;page.appendChild(number)});
+  root.removeAttribute('style');document.body.classList.add('explicit-print-pages');
+ });
+ window.addEventListener('afterprint',clean);
 })();
 </script>
 </html>
