@@ -17,6 +17,7 @@ GROUPS=[
  ('pending_mr_fto',[['scripts_local/update_pending_mr_fto.py']],['data/pending-mr-fto.json','data/pending-mr-fto-details.json.gz']),
  ('emb_pending',[['scripts_local/update_emb_pending.py']],['data/emb-pending-latest.json']),
  ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-data.js','yuktdhara-official-data.js','yuktdhara-received-data.js']),
+ ('pending_wage_payment',[['scripts_local/update_pending_wage_payment.py']],['data/pending-wage-payment-latest.json']),
  ('timely_payment',[['scripts_local/update_timely_payment.py']],['data/timely-payment-latest.json']),
  ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
@@ -103,6 +104,10 @@ def validate(group,root):
   received=data(root/'yuktdhara-received-data.js')
   today=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
   if not received.get('success') or received.get('officialDate','').replace('/','-')!=today or not received.get('rows'):raise ValueError('Current verified Yuktdhara GP/engineer detail required: '+str(received.get('message','stale or empty detail')))
+ elif group=='pending_wage_payment':
+  d=data(root/'data/pending-wage-payment-latest.json')
+  runpy.run_path(str(root/'scripts_local/update_pending_wage_payment.py'))['validate'](d)
+  if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Today verified pending wage payment required')
  elif group=='timely_payment':
   d=data(root/'data/timely-payment-latest.json')
   runpy.run_path(str(root/'scripts_local/update_timely_payment.py'))['validate'](d)
