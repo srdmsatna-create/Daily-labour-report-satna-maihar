@@ -4251,7 +4251,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %'];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
  const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
- labels.forEach(label=>{const th=document.createElement('th');th.textContent=label;head.appendChild(th)});
+ labels.forEach((label,index)=>{const th=document.createElement('th');th.textContent=label;if(index>0)th.classList.add('r12-'+keys[index-1]);head.appendChild(th)});
  const sum=rows=>{
   const result={};
   keys.filter(k=>!['activeWorkerPct','womenPct','timelyFtoPct'].includes(k)).forEach(k=>result[k]=rows.reduce((total,row)=>total+Number(row[k]||0),0));
@@ -4263,7 +4263,20 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  };
  function add(label,row,cls){
   const tr=body.insertRow();if(cls)tr.className=cls;tr.insertCell().textContent=label;
-  keys.forEach(key=>{const value=Number(row[key]);tr.insertCell().textContent=row[key]!==null&&row[key]!==undefined&&Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh','timelyFtoPct'].includes(key)?2:0,maximumFractionDigits:2}):'—'});
+  keys.forEach(key=>{
+   const cell=tr.insertCell(),value=Number(row[key]);cell.classList.add('r12-'+key);
+   cell.textContent=row[key]!==null&&row[key]!==undefined&&Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh','timelyFtoPct'].includes(key)?2:0,maximumFractionDigits:2}):'—';
+   if(key==='timelyFtoPct'&&!cls&&row.block&&Number.isFinite(row.timelyFtoPct)){
+    const members=data.rows.filter(item=>maihar.has(item.block)===maihar.has(row.block));
+    if(members.length&&members.every(item=>Number.isFinite(item.timelyFtoPct))){
+     const average=members.reduce((total,item)=>total+item.timelyFtoPct,0)/members.length;
+     if(value<average){
+      cell.classList.add('r12-payment-alert');cell.textContent='⚠ '+cell.textContent;
+      cell.title='जिला औसत '+average.toFixed(2)+'% से कम';cell.setAttribute('aria-label',cell.textContent+' प्रतिशत, '+cell.title);
+     }
+    }
+   }
+  });
  }
  for(const district of ['MAIHAR','SATNA']){
   const rows=data.rows.filter(row=>maihar.has(row.block)===(district==='MAIHAR'));
@@ -4316,6 +4329,7 @@ body #vbgStatistics .r12-grand td{background:#163f6d!important;color:#fff!import
   const meta=doc.createElement('meta');meta.charset='utf-8';doc.head.appendChild(meta);
   const style=doc.createElement('style');
   style.textContent='@page{size:A4 landscape;margin:8mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#16334c}h2{font-size:15pt;color:#164a7b;margin:0 0 3mm}p{font-size:9pt;margin:0 0 3mm}table{width:100%;table-layout:fixed;border-collapse:collapse;border:1.5px solid #244866}th,td{border:1px solid #355873;padding:2mm 1mm;vertical-align:middle;overflow-wrap:break-word;line-height:1.25}th{font-size:7.5pt;background:#164a7b;color:white;text-align:center}td{font-size:8pt;text-align:right;font-variant-numeric:tabular-nums}th:first-child,td:first-child{width:14%;text-align:left}thead{display:table-header-group}tr{break-inside:avoid}.r12-maihar-total td{background:#ede0fa;color:#59287d;font-weight:900}.r12-satna-total td{background:#d8ecff;color:#124d7a;font-weight:900}.r12-grand td{background:#163f6d;color:white;font-weight:900}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}';
+  style.textContent+=' .r12-compPayableDays{color:#6b21a8!important;font-weight:800}.r12-compPayableAmount{color:#a34400!important;font-weight:800}.r12-compNotDueDays{color:#b42332!important;font-weight:800}.r12-timelyFtoPct{color:#087546!important;font-weight:800}th.r12-compPayableDays,.r12-grand .r12-compPayableDays{background:#efe5ff!important}th.r12-compPayableAmount,.r12-grand .r12-compPayableAmount{background:#fff0d9!important}th.r12-compNotDueDays,.r12-grand .r12-compNotDueDays{background:#ffe4e8!important}th.r12-timelyFtoPct,.r12-grand .r12-timelyFtoPct{background:#dcf7e9!important}.r12-payment-alert{color:#a71926!important;background:#fff0d9!important;font-weight:900}';
   doc.head.appendChild(style);
   for(const node of [panel.querySelector('h2'),panel.querySelector('p'),table])if(node)doc.body.appendChild(doc.importNode(node,true));
   frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});
@@ -4324,4 +4338,23 @@ body #vbgStatistics .r12-grand td{background:#163f6d!important;color:#fff!import
  });
 })();
 </script>
+
+<style id="r12-column-colours-alerts">
+body #vbgStatistics table .r12-compPayableDays{color:#6b21a8!important;font-weight:800!important}
+body #vbgStatistics table .r12-compPayableAmount{color:#a34400!important;font-weight:800!important}
+body #vbgStatistics table .r12-compNotDueDays{color:#b42332!important;font-weight:800!important}
+body #vbgStatistics table .r12-timelyFtoPct{color:#087546!important;font-weight:800!important}
+body #vbgStatistics table th.r12-compPayableDays{background:#efe5ff!important}
+body #vbgStatistics table th.r12-compPayableAmount{background:#fff0d9!important}
+body #vbgStatistics table th.r12-compNotDueDays{background:#ffe4e8!important}
+body #vbgStatistics table th.r12-timelyFtoPct{background:#dcf7e9!important}
+body #vbgStatistics table .r12-grand .r12-compPayableDays{background:#efe5ff!important}
+body #vbgStatistics table .r12-grand .r12-compPayableAmount{background:#fff0d9!important}
+body #vbgStatistics table .r12-grand .r12-compNotDueDays{background:#ffe4e8!important}
+body #vbgStatistics table .r12-grand .r12-timelyFtoPct{background:#dcf7e9!important}
+body #vbgStatistics table td.r12-payment-alert{background:#fff0d9!important;color:#a71926!important;font-weight:900!important;animation:r12-payment-pulse 1.8s ease-in-out infinite}
+@keyframes r12-payment-pulse{0%,100%{background:#fff0d9;color:#a71926}50%{opacity:.55}}
+@media(prefers-reduced-motion:reduce){body #vbgStatistics table td.r12-payment-alert{animation:none!important}}
+@media print{body #vbgStatistics table td.r12-payment-alert{animation:none!important;opacity:1!important}}
+</style>
 </body></html>
