@@ -4284,4 +4284,44 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  panel.appendChild(timelySource);
 })();
 </script>
+
+<style id="r12-table-layout">
+body #vbgStatistics{box-sizing:border-box;max-width:100%;padding:16px;margin:18px 0;background:#fff;border:1px solid #b5c8d9;border-radius:10px}
+body #vbgStatistics h2{font-size:18px!important;line-height:1.4!important;margin:0 0 8px!important;color:#164a7b}
+body #vbgStatistics>p,body #vbgStatistics>a{font-size:12px!important;line-height:1.5!important}
+body #vbgStatistics .r12-table-wrap{width:100%;overflow:auto!important;border:2px solid #244866;border-radius:0;margin:12px 0}
+body #vbgStatistics table{width:100%!important;min-width:1050px;table-layout:fixed!important;border-collapse:collapse!important}
+body #vbgStatistics table th,body #vbgStatistics table td{border:1px solid #355873!important;vertical-align:middle!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;padding:7px 4px!important}
+body #vbgStatistics table th{font-size:11px!important;line-height:1.35!important;background:#164a7b!important;color:#fff!important;text-align:center!important}
+body #vbgStatistics table td{font-size:12px!important;line-height:1.3!important;font-weight:600;text-align:right!important;font-variant-numeric:tabular-nums}
+body #vbgStatistics table th:first-child,body #vbgStatistics table td:first-child{width:14%!important;text-align:left!important}
+body #vbgStatistics .r12-maihar-total td{background:#ede0fa!important;color:#59287d!important;font-weight:900!important;border-top:2px solid #784c97!important}
+body #vbgStatistics .r12-satna-total td{background:#d8ecff!important;color:#124d7a!important;font-weight:900!important;border-top:2px solid #326b95!important}
+body #vbgStatistics .r12-grand td{background:#163f6d!important;color:#fff!important;font-weight:900!important;border-top:2px solid #123451!important}
+#r12PrintButton{padding:8px 16px;background:#164a7b;color:white;border:0;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer}
+</style>
+<script>
+(function(){
+ const panel=document.getElementById('vbgStatistics');if(!panel)return;
+ const button=document.createElement('button');button.id='r12PrintButton';button.type='button';button.textContent='Print / PDF';
+ function place(){if(!panel.contains(button))panel.insertBefore(button,panel.querySelector('.r12-table-wrap')||panel.firstChild)}
+ new MutationObserver(place).observe(panel,{childList:true});place();
+ button.addEventListener('click',function(){
+  const table=panel.querySelector('table');
+  if(!table){alert('रिपोर्ट लोड होने के बाद प्रिंट करें।');return}
+  document.getElementById('r12PrintFrame')?.remove();
+  const frame=document.createElement('iframe');frame.id='r12PrintFrame';frame.title='R-12 Print';frame.style.cssText='position:fixed;left:-20000px;top:0;width:1100px;height:750px;border:0';document.body.appendChild(frame);
+  const doc=frame.contentDocument;
+  doc.documentElement.lang='hi';doc.title='R-12 सतना एवं मैहर Statistics';
+  const meta=doc.createElement('meta');meta.charset='utf-8';doc.head.appendChild(meta);
+  const style=doc.createElement('style');
+  style.textContent='@page{size:A4 landscape;margin:8mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#16334c}h2{font-size:15pt;color:#164a7b;margin:0 0 3mm}p{font-size:9pt;margin:0 0 3mm}table{width:100%;table-layout:fixed;border-collapse:collapse;border:1.5px solid #244866}th,td{border:1px solid #355873;padding:2mm 1mm;vertical-align:middle;overflow-wrap:break-word;line-height:1.25}th{font-size:7.5pt;background:#164a7b;color:white;text-align:center}td{font-size:8pt;text-align:right;font-variant-numeric:tabular-nums}th:first-child,td:first-child{width:14%;text-align:left}thead{display:table-header-group}tr{break-inside:avoid}.r12-maihar-total td{background:#ede0fa;color:#59287d;font-weight:900}.r12-satna-total td{background:#d8ecff;color:#124d7a;font-weight:900}.r12-grand td{background:#163f6d;color:white;font-weight:900}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}';
+  doc.head.appendChild(style);
+  for(const node of [panel.querySelector('h2'),panel.querySelector('p'),table])if(node)doc.body.appendChild(doc.importNode(node,true));
+  frame.contentWindow.addEventListener('afterprint',()=>frame.remove(),{once:true});
+  const ready=doc.fonts?.ready||Promise.resolve();
+  ready.then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},150));
+ });
+})();
+</script>
 </body></html>
