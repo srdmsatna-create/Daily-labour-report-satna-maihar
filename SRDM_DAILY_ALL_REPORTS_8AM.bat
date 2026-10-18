@@ -2,6 +2,8 @@
 setlocal EnableExtensions DisableDelayedExpansion
 set "PYTHONUTF8=1"
 set "PYTHONIOENCODING=utf-8"
+set "PYTHONUNBUFFERED=1"
+title SRDM Daily 6AM - LIVE Report Progress
 set "SRDM_DAILY_BAT=%~f0"
 set "SRDM_DAILY_REPO=%~dp0"
 if not exist "%SRDM_DAILY_REPO%.git" set "SRDM_DAILY_REPO=%USERPROFILE%\Daily-labour-report-satna-maihar"
@@ -26,12 +28,15 @@ if errorlevel 1 goto failed
 set "SRDM_DAILY_BOOT=%TEMP%\SRDM_BOOT_%RANDOM%_%RANDOM%"
 git worktree add --detach "%SRDM_DAILY_BOOT%" origin/main
 if errorlevel 1 goto failed
-%SRDM_DAILY_PY% -m pip install -r "%SRDM_DAILY_BOOT%\requirements.txt" requests beautifulsoup4 >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
+echo [1/3] Checking Python requirements - live output below...
+powershell.exe -NoProfile -Command "$ErrorActionPreference='Continue'; [Console]::OutputEncoding=New-Object System.Text.UTF8Encoding; & $env:SRDM_DAILY_PY -u -m pip install -r (Join-Path $env:SRDM_DAILY_BOOT 'requirements.txt') requests beautifulsoup4 2>&1 | Tee-Object -FilePath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Append; exit $LASTEXITCODE"
 if errorlevel 1 goto failed
-%SRDM_DAILY_PY% -m playwright install chromium >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
+echo [2/3] Checking browser installation - live output below...
+powershell.exe -NoProfile -Command "$ErrorActionPreference='Continue'; [Console]::OutputEncoding=New-Object System.Text.UTF8Encoding; & $env:SRDM_DAILY_PY -u -m playwright install chromium 2>&1 | Tee-Object -FilePath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Append; exit $LASTEXITCODE"
 if errorlevel 1 goto failed
 echo Refreshing all reports. Details: daily-all-reports.log
-%SRDM_DAILY_PY% -u "%SRDM_DAILY_BOOT%\scripts_local\run_daily_unified.py" --publish >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
+echo [3/3] LIVE REPORT UPDATE - each report name, progress and errors will appear below.
+powershell.exe -NoProfile -Command "$ErrorActionPreference='Continue'; [Console]::OutputEncoding=New-Object System.Text.UTF8Encoding; & $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish 2>&1 | Tee-Object -FilePath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Append; exit $LASTEXITCODE"
 if errorlevel 1 goto failed
 git worktree remove "%SRDM_DAILY_BOOT%"
 echo SUCCESS: Complete verified reports published together.
