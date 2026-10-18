@@ -4217,7 +4217,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
 #vbgStatistics .r12-grand{background:#163f6d;color:white;font-weight:900}
 </style>
 <script>
-(function(){
+(async function(){
  const panel=document.getElementById('vbgStatistics'),data=window.VBG_BLOCK_STATS;
  if(!panel)return;
  panel.replaceChildren();
@@ -4226,8 +4226,18 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  if(!Array.isArray(data?.rows)||data.rows.length!==8){note.textContent+=' • सभी 8 जनपदों की डेटा फाइल नहीं पढ़ी जा सकी।';return}
  const names={AMARPATAN:'अमरपाटन',MAIHAR:'मैहर',RAMNAGAR:'रामनगर',MAJHGAWAN:'मझगवां',NAGOD:'नागौद','RAMPUR BAGHELAN':'रामपुर बघेलान',SATNA:'सोहावल',UNCHAHARA:'उचेहरा'};
  const maihar=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']);
- const compensation={AMARPATAN:[12893,21819,0],MAIHAR:[18184,27511,18139],MAJHGAWAN:[3444,3406,787],NAGOD:[2015,1328,1820],RAMNAGAR:[3999,3517,1703],'RAMPUR BAGHELAN':[7987,10857,6428],SATNA:[39,82,5],UNCHAHARA:[3656,4850,71]};
- data.rows.forEach(row=>{const values=compensation[row.block];if(values)Object.assign(row,{compPayableDays:values[0],compPayableAmount:values[1],compNotDueDays:values[2]})});
+ let compensationFeed=null;
+ try{
+  const response=await fetch('data/delayed-compensation-latest.json?t='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('Compensation source unavailable');
+  const feed=await response.json();
+  if(feed.schemaVersion!==1||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete compensation coverage');
+  compensationFeed=feed;
+ }catch(error){console.warn('Delayed compensation feed unavailable');}
+ data.rows.forEach(row=>{
+  const values=compensationFeed?.rows.find(item=>item.block===row.block);
+  for(const key of ['compPayableDays','compPayableAmount','compNotDueDays'])row[key]=values?.[key]??null;
+ });
  const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays'];
  const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन (3)','विलंब क्षतिपूर्ति: देय राशि ₹ (4)','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन (10)'];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
@@ -4236,13 +4246,14 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  const sum=rows=>{
   const result={};
   keys.filter(k=>!['activeWorkerPct','womenPct'].includes(k)).forEach(k=>result[k]=rows.reduce((total,row)=>total+Number(row[k]||0),0));
+  if(!compensationFeed)for(const key of ['compPayableDays','compPayableAmount','compNotDueDays'])result[key]=null;
   result.activeWorkerPct=result.totalWorkers?100*result.activeWorkers/result.totalWorkers:0;
   result.womenPct=result.personDays?rows.reduce((total,row)=>total+Number(row.personDays||0)*Number(row.womenPct||0),0)/result.personDays:0;
   return result;
  };
  function add(label,row,cls){
   const tr=body.insertRow();if(cls)tr.className=cls;tr.insertCell().textContent=label;
-  keys.forEach(key=>{const value=Number(row[key]);tr.insertCell().textContent=Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh'].includes(key)?2:0,maximumFractionDigits:2}):'—'});
+  keys.forEach(key=>{const value=Number(row[key]);tr.insertCell().textContent=row[key]!==null&&row[key]!==undefined&&Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh'].includes(key)?2:0,maximumFractionDigits:2}):'—'});
  }
  for(const district of ['MAIHAR','SATNA']){
   const rows=data.rows.filter(row=>maihar.has(row.block)===(district==='MAIHAR'));
@@ -4252,7 +4263,11 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  add('महायोग — सतना एवं मैहर',sum(data.rows),'r12-grand');
  wrap.appendChild(table);panel.appendChild(wrap);
  const source=document.createElement('a');source.href=data.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='आधिकारिक स्रोत खोलें';panel.appendChild(source);
- const help=document.createElement('p');help.style.fontSize='12px';help.textContent='विलंब क्षतिपूर्ति के कॉलम 3, 4 और 10: आपके भेजे R14.1 FY 2026-2027 स्क्रीनशॉट से; इनका लाइव अपडेट अभी नहीं जुड़ा है। प्रतिशतों का योग नहीं किया गया है। सक्रिय श्रमिक प्रतिशत कुल श्रमिकों से तथा संयुक्त महिला सहभागिता मानव दिवस के भार से निकाली गई है।';panel.appendChild(help);
+ const help=document.createElement('p');help.style.fontSize='12px';help.textContent='विलंब क्षतिपूर्ति कॉलम 3, 4 और 10 आधिकारिक R14.1 पोर्टल से दैनिक अपडेट होते हैं। प्रतिशतों का योग नहीं किया गया है। सक्रिय श्रमिक प्रतिशत कुल श्रमिकों से तथा संयुक्त महिला सहभागिता मानव दिवस के भार से निकाली गई है।';panel.appendChild(help);
+ const compSource=document.createElement('p');compSource.style.fontSize='12px';
+ compSource.textContent=compensationFeed?'विलंब क्षतिपूर्ति स्रोत प्राप्ति: '+new Date(compensationFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'विलंब क्षतिपूर्ति डेटा उपलब्ध नहीं; इसे शून्य नहीं माना गया है।';
+ if(compensationFeed){const link=document.createElement('a');link.href=compensationFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • R14.1 आधिकारिक रिपोर्ट';compSource.appendChild(link)}
+ panel.appendChild(compSource);
 })();
 </script>
 </body></html>
