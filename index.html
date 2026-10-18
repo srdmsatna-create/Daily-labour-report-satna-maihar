@@ -4246,10 +4246,19 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   if(feed.schemaVersion!==1||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete timely payment coverage');
   timelyFeed=feed;
  }catch(error){console.warn('Timely payment feed unavailable');}
+ let wageFeed=null;
+ try{
+  const response=await fetch('data/pending-wage-payment-latest.json?t='+Date.now(),{cache:'no-store'});
+  if(!response.ok)throw Error('Pending wage feed unavailable');
+  const feed=await response.json();
+  if(feed.basis!=='parent-column-4-detail-8-minus-13'||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete pending wage coverage');
+  wageFeed=feed;
+ }catch(error){console.warn('Pending wage feed unavailable');}
  data.rows.forEach(row=>{
   const payment=timelyFeed?.rows.find(item=>item.block===row.block);
   row.timelyFtoPct=payment?.timelyFtoPct??null;
-  row.pendingWageAmount=typeof payment?.amount==='number'&&typeof payment?.totalProcessedAmount==='number'?Number((payment.amount-payment.totalProcessedAmount).toFixed(2)):null;
+  const wage=wageFeed?.rows.find(item=>item.block===row.block);
+  row.pendingWageAmount=typeof wage?.amount==='number'&&typeof wage?.totalProcessedAmount==='number'?Number((wage.amount-wage.totalProcessedAmount).toFixed(2)):null;
  });
  const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct','pendingWageAmount'];
  const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','लंबित मजदूरी भुगतान ₹'];
@@ -4327,6 +4336,9 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  timelySource.textContent=timelyFeed?'समय पर मजदूरी भुगतान: आधिकारिक T+8 दिनों में FTO generation %. जिला योग में संबंधित जनपदों के प्रतिशत का साधारण औसत है; महायोग में पोर्टल का आधिकारिक प्रतिशत है। प्राप्ति: '+new Date(timelyFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'समय पर भुगतान डेटा उपलब्ध नहीं; इसे शून्य नहीं माना गया है।';
  if(timelyFeed){const link=document.createElement('a');link.href=timelyFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • आधिकारिक Payment Status';timelySource.appendChild(link)}
  panel.appendChild(timelySource);
+ const wageSource=document.createElement('p');wageSource.style.fontSize='12px';wageSource.textContent=wageFeed?'लंबित मजदूरी भुगतान = जिला FTO रिपोर्ट के कॉलम 4 के प्रत्येक जनपद लिंक में कॉलम 8 − कॉलम 13। प्राप्ति: '+new Date(wageFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'लंबित मजदूरी भुगतान की सभी 8 जनपदों वाली सत्यापित रिपोर्ट उपलब्ध नहीं; — को शून्य नहीं मानें।';
+ if(wageFeed){const link=document.createElement('a');link.href=wageFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • FTO स्रोत';wageSource.appendChild(link)}
+ panel.appendChild(wageSource);
 })();
 </script>
 
