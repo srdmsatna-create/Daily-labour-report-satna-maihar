@@ -4261,7 +4261,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   row.pendingWageAmount=typeof wage?.amount==='number'&&typeof wage?.totalProcessedAmount==='number'?Number((wage.amount-wage.totalProcessedAmount).toFixed(2)):null;
  });
  const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct','pendingWageAmount'];
- const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','लंबित मजदूरी भुगतान ₹'];
+ const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','लंबित मजदूरी भुगतान ₹ लाख'];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
  const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
  let r12Sort={key:null,direction:1};
@@ -4296,7 +4296,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
   const tr=body.insertRow();if(cls)tr.className=cls;tr.insertCell().textContent=label;
   keys.forEach(key=>{
    const cell=tr.insertCell(),value=Number(row[key]);cell.classList.add('r12-'+key);
-   cell.textContent=row[key]!==null&&row[key]!==undefined&&Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh','timelyFtoPct'].includes(key)?2:0,maximumFractionDigits:2}):'—';
+   cell.textContent=row[key]!==null&&row[key]!==undefined&&Number.isFinite(value)?(key==='pendingWageAmount'?value/100000:value).toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh','timelyFtoPct','pendingWageAmount'].includes(key)?2:0,maximumFractionDigits:2}):'—';
    if(key==='timelyFtoPct'&&!cls&&row.block&&Number.isFinite(row.timelyFtoPct)){
     const members=data.rows.filter(item=>maihar.has(item.block)===maihar.has(row.block));
     if(members.length&&members.every(item=>Number.isFinite(item.timelyFtoPct))){
