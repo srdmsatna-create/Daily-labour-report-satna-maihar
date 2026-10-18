@@ -103,4 +103,47 @@ body:not(#above-a):not(#above-b):not(#above-c):not(#above-d) td.num{white-space:
 .district-summary td,.district-summary th{text-align:center;padding:7px}
 h1{font-size:28px;margin:10px 0}
 @media print{body:not(#above-a):not(#above-b):not(#above-c):not(#above-d) .works-detail{min-width:0;width:100%}body:not(#above-a):not(#above-b):not(#above-c):not(#above-d) .works-detail th{font-size:8pt!important}body:not(#above-a):not(#above-b):not(#above-c):not(#above-d) .works-detail td{font-size:9pt!important}}
-</style><style>.summary-table{table-layout:auto!important;min-width:900px}@media print{.summary-table{min-width:0!important;font-size:8pt}#summaryViews{display:none}}.summary-table td,.summary-table th{padding:7px;text-align:center}.active{background:#123f70;color:#fff}#summaryViews{margin:10px 0}</style><style id="above75-cascade-layout">#filters{margin:12px 0;padding:10px;background:#fff;border:1px solid #8da1b7;gap:7px}#filters select,#filters input,#filters button{font-size:16px;padding:7px 8px;max-width:240px}#filters select:first-child{min-width:120px}.summary-table th:first-child{width:70px}.summary-table td:first-child{text-align:center}@media print{#filters{display:none}}</style><script src="above75-sort.js?v=20261013"></script></html>
+</style><style>.summary-table{table-layout:auto!important;min-width:900px}@media print{.summary-table{min-width:0!important;font-size:8pt}#summaryViews{display:none}}.summary-table td,.summary-table th{padding:7px;text-align:center}.active{background:#123f70;color:#fff}#summaryViews{margin:10px 0}</style><style id="above75-cascade-layout">#filters{margin:12px 0;padding:10px;background:#fff;border:1px solid #8da1b7;gap:7px}#filters select,#filters input,#filters button{font-size:16px;padding:7px 8px;max-width:240px}#filters select:first-child{min-width:120px}.summary-table th:first-child{width:70px}.summary-table td:first-child{text-align:center}@media print{#filters{display:none}}</style><script src="above75-sort.js?v=20261013"></script><style>.percent-category .janpad-total{background:#edf3fc;font-weight:900}.percent-category .district-total{background:#d5e5f8;font-weight:900}.percent-category .grand-total{background:#bed4ef;font-weight:900}.percent-category .band-0{color:#7c3aed}.percent-category .band-1{color:#0369a1}.percent-category .band-2{color:#0f766e}.percent-category .band-3{color:#b45309}.percent-category .band-4{color:#b91c1c}@media print{.percent-category tr{break-inside:avoid}.percent-category thead{display:table-header-group}}</style><script>(()=>{
+ const bands=['75 से 79%','80 से 85%','86 से 90%','91 से 95%','95% से अधिक'];
+ const blocks=[['AMARPATAN','अमरपाटन','मैहर'],['MAIHAR','मैहर','मैहर'],['RAMNAGAR','रामनगर','मैहर'],['MAJHGAWAN','मझगवाँ','सतना'],['NAGOD','नागौद','सतना'],['RAMPURBAGHELAN','रामपुर बघेलान','सतना'],['SOHAWAL','सोहावल','सतना'],['UNCHAHARA','उचेहरा','सतना']];
+ const key=v=>{const k=String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return k==='SATNA'?'SOHAWAL':k};
+ function aggregate(records){
+  const out=blocks.map(([code,label,district])=>({code,label,district,types:new Map(),counts:[0,0,0,0,0]}));
+  for(const r of records){
+   if(!Number.isFinite(r.san)||r.san<=0||!Number.isFinite(r.cost))throw Error('अमान्य व्यय / स्वीकृत राशि');
+   const p=r.cost/r.san*100;if(p<75)continue;
+   const b=out.find(b=>b.code===key(r.janpad));if(!b)throw Error('जनपद मिलान नहीं: '+r.janpad);
+   const i=p<80?0:p<86?1:p<91?2:p<=95?3:4,type=r.type||'प्रकार उपलब्ध नहीं';
+   if(!b.types.has(type))b.types.set(type,[0,0,0,0,0]);b.types.get(type)[i]++;b.counts[i]++;
+  }return out;
+ }
+ window.above75PercentAggregate=aggregate;
+ const button=document.createElement('button');button.dataset.summaryView='percentCategory';button.textContent='% / जनपद / कार्य-श्रेणी गोशवारा';
+ button.onclick=()=>{reportView='percentCategory';sourceMode.value='allAbove75';applyOtherWorkGrouping();refreshFilters()};
+ document.getElementById('summaryViews').append(button);
+ const previous=renderSummary;renderSummary=function(){
+  if(reportView!=='percentCategory')return previous();
+  const target=document.getElementById('summaryReport');target.style.display='block';document.getElementById('workReport').style.display='none';
+  document.querySelectorAll('[data-summary-view]').forEach(b=>b.classList.toggle('active',b.dataset.summaryView===reportView));
+  try{
+   const groups=aggregate(shown),grand=[0,0,0,0,0];let body='',serial=0;
+   const cells=xs=>xs.map((v,i)=>'<td class="num band-'+i+'">'+n(v)+'</td>').join('')+'<td class="num">'+n(xs.reduce((a,b)=>a+b,0))+'</td>';
+   const total=(label,xs,kind)=>'<tr class="'+kind+'"><th colspan="4">'+esc(label)+'</th>'+cells(xs)+'</tr>';
+   for(const district of ['मैहर','सतना']){
+    const totals=[0,0,0,0,0];
+    for(const b of groups.filter(b=>b.district===district)){
+     if(!b.types.size)continue;
+     for(const [type,xs] of [...b.types].sort((a,b)=>a[0].localeCompare(b[0],'hi'))){
+      body+='<tr><td class="num">'+n(++serial)+'</td><td>'+esc(district)+'</td><td>'+esc(b.label)+'</td><td>'+esc(type)+'</td>'+cells(xs)+'</tr>';
+     }
+     body+=total(b.label+' — जनपद योग',b.counts,'janpad-total');
+     b.counts.forEach((v,i)=>totals[i]+=v);
+    }
+    body+=total(district+' — जिला योग',totals,'district-total');totals.forEach((v,i)=>grand[i]+=v);
+   }
+   body+=total('महायोग',grand,'grand-total');
+   if(grand.reduce((a,b)=>a+b,0)!==shown.length)throw Error('गोशवारा और कार्य सूची का योग अलग है');
+   target.innerHTML='<h2>व्यय प्रतिशत / जनपद / कार्य-श्रेणी गोशवारा — कार्य संख्या</h2><p>प्रतिशत = भुगतान व्यय ÷ स्वीकृत राशि × 100। दशमलव सीमाएँ: 75 से कम 80, 80 से कम 86, 86 से कम 91, 91 से 95 तक, तथा 95 से अधिक। चुने हुए फिल्टर लागू हैं।</p><table class="summary-table percent-category"><thead><tr><th>क्र.</th><th>जिला</th><th>जनपद</th><th>कार्य की श्रेणी</th>'+bands.map((s,i)=>'<th class="band-'+i+'">'+s+'</th>').join('')+'<th>कुल कार्य</th></tr></thead><tbody>'+body+'</tbody></table>';
+  }catch(e){target.textContent='गोशवारा नहीं बना: '+e.message}
+ };
+})();</script></html>
