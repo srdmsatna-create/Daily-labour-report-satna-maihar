@@ -4154,6 +4154,56 @@ function srdmPrintEkBagiyaOnly(){
  launcher.addEventListener('click',function(){panel.style.setProperty('display','block','important');panel.scrollIntoView({behavior:'smooth',block:'start'})});
 })();
 </script>
+
+<!-- R12 district/block statistics from the daily updated official data file. -->
+<script src="vbg-block-stats.js?v=20261018"></script>
+<style>
+#vbgStatistics .r12-table-wrap{overflow:auto}
+#vbgStatistics table{border-collapse:collapse;width:100%;font-size:13px}
+#vbgStatistics th,#vbgStatistics td{border:1px solid #7890a6;padding:8px;text-align:right}
+#vbgStatistics th{background:#164a7b;color:#fff}
+#vbgStatistics th:first-child,#vbgStatistics td:first-child{text-align:left}
+#vbgStatistics .r12-maihar-total{background:#ede0fa;font-weight:900}
+#vbgStatistics .r12-satna-total{background:#d8ecff;font-weight:900}
+#vbgStatistics .r12-grand{background:#163f6d;color:white;font-weight:900}
+</style>
+<script>
+(function(){
+ const panel=document.getElementById('vbgStatistics'),data=window.VBG_BLOCK_STATS;
+ if(!panel)return;
+ panel.replaceChildren();
+ const title=document.createElement('h2');title.textContent='VB-GRAM G Statistics — सतना एवं मैहर • सभी 8 जनपद';panel.appendChild(title);
+ const note=document.createElement('p');note.textContent='वित्तीय वर्ष '+(data?.financialYear||'2026-2027')+' • स्रोत दिनांक: '+(data?.officialDate||'उपलब्ध नहीं');panel.appendChild(note);
+ if(!Array.isArray(data?.rows)||data.rows.length!==8){note.textContent+=' • सभी 8 जनपदों की डेटा फाइल नहीं पढ़ी जा सकी।';return}
+ const names={AMARPATAN:'अमरपाटन',MAIHAR:'मैहर',RAMNAGAR:'रामनगर',MAJHGAWAN:'मझगवां',NAGOD:'नागौद','RAMPUR BAGHELAN':'रामपुर बघेलान',SATNA:'सोहावल',UNCHAHARA:'उचेहरा'};
+ const maihar=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']);
+ const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh'];
+ const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख'];
+ const wrap=document.createElement('div');wrap.className='r12-table-wrap';
+ const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
+ labels.forEach(label=>{const th=document.createElement('th');th.textContent=label;head.appendChild(th)});
+ const sum=rows=>{
+  const result={};
+  keys.filter(k=>!['activeWorkerPct','womenPct'].includes(k)).forEach(k=>result[k]=rows.reduce((total,row)=>total+Number(row[k]||0),0));
+  result.activeWorkerPct=result.totalWorkers?100*result.activeWorkers/result.totalWorkers:0;
+  result.womenPct=result.personDays?rows.reduce((total,row)=>total+Number(row.personDays||0)*Number(row.womenPct||0),0)/result.personDays:0;
+  return result;
+ };
+ function add(label,row,cls){
+  const tr=body.insertRow();if(cls)tr.className=cls;tr.insertCell().textContent=label;
+  keys.forEach(key=>{const value=Number(row[key]);tr.insertCell().textContent=Number.isFinite(value)?value.toLocaleString('en-IN',{minimumFractionDigits:['activeWorkerPct','womenPct','totalExpenditureLakh'].includes(key)?2:0,maximumFractionDigits:2}):'—'});
+ }
+ for(const district of ['MAIHAR','SATNA']){
+  const rows=data.rows.filter(row=>maihar.has(row.block)===(district==='MAIHAR'));
+  rows.forEach(row=>add(names[row.block]||row.block,row));
+  add('जिला '+(district==='MAIHAR'?'मैहर':'सतना')+' — योग',sum(rows),district==='MAIHAR'?'r12-maihar-total':'r12-satna-total');
+ }
+ add('महायोग — सतना एवं मैहर',sum(data.rows),'r12-grand');
+ wrap.appendChild(table);panel.appendChild(wrap);
+ const source=document.createElement('a');source.href=data.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='आधिकारिक स्रोत खोलें';panel.appendChild(source);
+ const help=document.createElement('p');help.style.fontSize='12px';help.textContent='प्रतिशतों का योग नहीं किया गया है। सक्रिय श्रमिक प्रतिशत कुल श्रमिकों से तथा संयुक्त महिला सहभागिता मानव दिवस के भार से निकाली गई है।';panel.appendChild(help);
+})();
+</script>
 </body></html>');
   doc.close();
 
