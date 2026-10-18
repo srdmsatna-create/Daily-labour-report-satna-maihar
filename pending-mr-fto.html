@@ -67,6 +67,12 @@ th button[data-sort="oldest"],th button[data-sort="fillingDays"]{color:#a61b29!i
 /* Maximum pending days: highlight numeric values, including summary totals. */
 table tbody td.pending-days-value{color:#a61b29!important;font-weight:900!important;background:#fff0f1!important}
 @media print{table tbody td.pending-days-value{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Distinct district totals on screen and paper. */
+table tbody tr.district-total.district-maihar td{background:#ede0fa!important;color:#59287d!important}
+table tbody tr.district-total.district-satna td{background:#d8ecff!important;color:#124d7a!important}
+table tbody tr.district-total td.pending-days-value{color:#a61b29!important;font-weight:900!important;background:#fff0f1!important}
+@media print{tr.district-maihar,tr.district-satna{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
@@ -117,6 +123,22 @@ table tbody td.pending-days-value{color:#a61b29!important;font-weight:900!import
  if(head)observer.observe(head,{childList:true,subtree:true});
  if(body)observer.observe(body,{childList:true,subtree:true});
  highlightPendingDays();
+})();
+</script>
+
+<script>
+(function(){
+ const body=document.getElementById('body');
+ function colourDistrictTotals(){
+  if(!body)return;
+  body.querySelectorAll('tr.district-total').forEach(row=>{
+   const label=row.cells[0]?.textContent||'';
+   row.classList.toggle('district-maihar',/मैहर|MAIHAR/i.test(label));
+   row.classList.toggle('district-satna',/सतना|SATNA/i.test(label));
+  });
+ }
+ if(body)new MutationObserver(colourDistrictTotals).observe(body,{childList:true,subtree:true});
+ colourDistrictTotals();
 })();
 </script>
 </html>
