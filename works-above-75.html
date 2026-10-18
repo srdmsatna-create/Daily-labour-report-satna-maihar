@@ -145,7 +145,7 @@ h1{font-size:28px;margin:10px 0}
    }
    body+=total('महायोग',grand,'grand-total');
    if(grand.reduce((a,b)=>a+b,0)!==shown.length)throw Error('गोशवारा और कार्य सूची का योग अलग है');
-   target.innerHTML='<h2>व्यय प्रतिशत / जनपद / कार्य-श्रेणी गोशवारा — कार्य संख्या</h2><p>प्रतिशत = भुगतान व्यय ÷ स्वीकृत राशि × 100। दशमलव सीमाएँ: 75 से कम 80, 80 से कम 86, 86 से कम 91, 91 से 95 तक, तथा 95 से अधिक। चुने हुए फिल्टर लागू हैं।</p><table class="summary-table percent-category"><thead><tr><th>क्र.</th><th>जिला</th><th>जनपद</th><th>कार्य की श्रेणी</th>'+bands.map((s,i)=>'<th class="band-'+i+'">'+s+'</th>').join('')+'<th>कुल कार्य</th></tr></thead><tbody>'+body+'</tbody></table>';
+   target.innerHTML='<h2>व्यय प्रतिशत / जनपद / कार्य-श्रेणी गोशवारा — कार्य संख्या</h2><table class="summary-table percent-category"><thead><tr><th>क्र.</th><th>जिला</th><th>जनपद</th><th>कार्य की श्रेणी</th>'+bands.map((s,i)=>'<th class="band-'+i+'">'+s+'</th>').join('')+'<th>कुल कार्य</th></tr></thead><tbody>'+body+'</tbody></table>';
   }catch(e){target.textContent='गोशवारा नहीं बना: '+e.message}
  };
 })();</script><script>(()=>{
