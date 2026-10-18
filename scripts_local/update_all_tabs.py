@@ -17,6 +17,7 @@ GROUPS=[
  ('pending_mr_fto',[['scripts_local/update_pending_mr_fto.py']],['data/pending-mr-fto.json','data/pending-mr-fto-details.json.gz']),
  ('emb_pending',[['scripts_local/update_emb_pending.py']],['data/emb-pending-latest.json']),
  ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-data.js','yuktdhara-official-data.js','yuktdhara-received-data.js']),
+ ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js']),
  ('pmayg',[['scripts_local/update_pmayg.py']],['data/pmayg-latest.json']),
@@ -101,6 +102,10 @@ def validate(group,root):
   received=data(root/'yuktdhara-received-data.js')
   today=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d-%m-%Y')
   if not received.get('success') or received.get('officialDate','').replace('/','-')!=today or not received.get('rows'):raise ValueError('Current verified Yuktdhara GP/engineer detail required: '+str(received.get('message','stale or empty detail')))
+ elif group=='delayed_compensation':
+  d=data(root/'data/delayed-compensation-latest.json')
+  runpy.run_path(str(root/'scripts_local/update_delayed_compensation.py'))['validate'](d)
+  if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Today official delayed compensation snapshot required')
  elif group=='block_statistics':
   if len(data(root/'vbg-block-stats.js').get('rows',[]))!=8:raise ValueError('Block statistics incomplete')
 def norm(value):return ' '.join(str(value or '').split()).upper()
