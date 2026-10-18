@@ -4126,7 +4126,35 @@ function srdmPrintEkBagiyaOnly(){
     '#reportTable{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin-top:3mm}'+
     '#reportTable th,#reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}'+
     '#reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}#reportTable thead,#ekBlockTable thead{display:table-header-group!important}#reportTable tr,#ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}.district-total td,.grand-total td,.total-row td{font-weight:900!important;background:#dbe9fb!important}'+
-    '</style></head><body>'+body+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit"></body></html>');
+    '</style></head><body>'+body+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit">
+<!-- R12 statistics: reveal the existing data panel and show supplied national snapshot. -->
+<style>
+#vbgNationalSnapshot{margin:0 0 20px;padding:16px;background:#eef0ff;border-radius:16px}
+#vbgNationalSnapshot h3{margin:0 0 12px;color:#073e73;font-size:22px}
+#vbgNationalSnapshot .national-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+#vbgNationalSnapshot .national-card{padding:18px;background:#fff5e9;border-radius:16px;color:#162d44}
+#vbgNationalSnapshot .national-card:nth-child(even){background:white}
+#vbgNationalSnapshot strong{display:block;font-size:27px;margin-bottom:8px}
+#vbgNationalSnapshot small{display:block;margin-top:12px;font-size:12px;color:#536578}
+@media(max-width:650px){#vbgNationalSnapshot .national-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style>
+<script>
+(function(){
+ const panel=document.getElementById('vbgStatistics'),launcher=document.getElementById('vbgStatisticsLauncher');
+ if(!panel||!launcher)return;
+ const national=document.createElement('div');national.id='vbgNationalSnapshot';
+ const entries=[['10.93 Cr','Active Workers (2026-27)'],['3.715 Lakh','Assets Created — since 1st July 2026'],['3671.75 Lakh','Person Days Generated — since 1st July 2026'],['62.14%','Women’s Participation (2026-27)'],['193.94 Lakh','Households Benefitted — since 1st July 2026'],['543.19 Lakh','DBT Transactions — since 1st July 2026']];
+ const heading=document.createElement('h3');heading.textContent='Statistics — राष्ट्रीय स्तर';national.appendChild(heading);
+ const grid=document.createElement('div');grid.className='national-grid';
+ entries.forEach(([value,label])=>{const card=document.createElement('div');card.className='national-card';const number=document.createElement('strong');number.textContent=value;const text=document.createElement('span');text.textContent=label;card.append(number,text);grid.appendChild(card)});
+ national.appendChild(grid);
+ const note=document.createElement('small');note.textContent='स्रोत: उपयोगकर्ता द्वारा 18/10/2026 को भेजा गया आधिकारिक पोर्टल का स्क्रीनशॉट • राष्ट्रीय आँकड़े; सतना/मैहर के आँकड़ों से अलग।';national.appendChild(note);
+ panel.prepend(national);
+ const localHeading=document.createElement('h3');localHeading.textContent='सतना एवं मैहर — जिला / जनपद Statistics';national.insertAdjacentElement('afterend',localHeading);
+ launcher.addEventListener('click',function(){panel.style.setProperty('display','block','important');panel.scrollIntoView({behavior:'smooth',block:'start'})});
+})();
+</script>
+</body></html>');
   doc.close();
 
   setTimeout(function(){
