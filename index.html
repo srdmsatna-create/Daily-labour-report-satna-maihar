@@ -4248,7 +4248,7 @@ toggle.addEventListener('click',()=>{const expanded=root.classList.toggle('show-
  }catch(error){console.warn('Timely payment feed unavailable');}
  data.rows.forEach(row=>row.timelyFtoPct=timelyFeed?.rows.find(item=>item.block===row.block)?.timelyFtoPct??null);
  const keys=['totalWorkers','activeWorkers','activeWorkerPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct'];
- const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन (3)','विलंब क्षतिपूर्ति: देय राशि ₹ (4)','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन (10)','समय पर मजदूरी भुगतान — FTO T+8 %'];
+ const labels=['जनपद / जिला','कुल श्रमिक','सक्रिय श्रमिक','सक्रिय श्रमिक %','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %'];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
  const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
  labels.forEach(label=>{const th=document.createElement('th');th.textContent=label;head.appendChild(th)});
