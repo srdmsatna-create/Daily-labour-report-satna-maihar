@@ -116,6 +116,13 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
  #printPages .print-sheet:last-child{break-after:auto!important;page-break-after:auto!important}
  #printPages,#printPages *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
+
+/* More space for engineer names, compact numeric columns and printed rows. */
+#printPages th,#printPages td{font-size:9px!important;line-height:1.2!important;padding:2px 3px!important}
+#printPages tr.district-total td{font-size:12px!important;padding:4px 3px!important}
+#printPages h2{font-size:13px;margin-bottom:4px}
+#printPages .sheet-meta{font-size:10px;line-height:1.25;margin-bottom:4px}
+.warning-table:not(.warning-detail) td{padding:5px 4px}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
@@ -224,13 +231,34 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
   newSheet();
   Array.from(document.getElementById('body').rows).forEach(original=>{
    const row=original.cloneNode(true);tbody.appendChild(row);
-   if(sheet.getBoundingClientRect().height>630&&tbody.rows.length>1){row.remove();newSheet();tbody.appendChild(row)}
+   if(sheet.getBoundingClientRect().height>675&&tbody.rows.length>1){row.remove();newSheet();tbody.appendChild(row)}
   });
   const pages=Array.from(root.children);
   pages.forEach((page,i)=>{const number=document.createElement('div');number.className='sheet-number';number.textContent='पृष्ठ '+(i+1)+' / '+pages.length;page.appendChild(number)});
   root.removeAttribute('style');document.body.classList.add('explicit-print-pages');
  });
  window.addEventListener('afterprint',clean);
+})();
+</script>
+
+<script>
+(function(){
+ const head=document.getElementById('head');
+ function balanceWarningColumns(){
+  const table=head?.closest('table');
+  if(!table||!table.classList.contains('warning-table')||table.classList.contains('warning-detail'))return;
+  const row=Array.from(head.rows).find(row=>row.querySelector('button[data-sort]'));
+  if(!row)return;
+  const weights={district:4,block:7,engineer:18,cluster:9,panchayat:10,gps:4,pending:5,filling:5,wage:5,first:6,second:6,over3:5,oldest:10,average:6};
+  const widths=Array.from(row.cells).map((cell,i)=>i===0?2:weights[cell.querySelector('button')?.dataset.sort]||6);
+  const sum=widths.reduce((a,b)=>a+b,0);
+  table.querySelector('colgroup')?.remove();
+  const group=document.createElement('colgroup');
+  widths.forEach(width=>{const col=document.createElement('col');col.style.width=100*width/sum+'%';group.appendChild(col)});
+  table.prepend(group);table.style.tableLayout='fixed';
+ }
+ if(head)new MutationObserver(balanceWarningColumns).observe(head,{childList:true,subtree:true});
+ balanceWarningColumns();
 })();
 </script>
 </html>
