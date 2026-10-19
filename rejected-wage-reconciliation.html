@@ -105,6 +105,16 @@
 
 #progressDate{display:inline-block;font-size:22px!important;font-weight:900;color:#6b21a8!important;background:#f3e8ff;border:2px solid #c084fc;border-radius:8px;padding:7px 12px;line-height:1.35}
 @media print{#progressDate{font-size:13pt!important;padding:2mm 3mm}}
+
+/* Fit daily progress columns to the available page width. */
+#progressCard .tablewrap table{width:100%!important;min-width:0!important;max-width:100%!important}
+#progressCard .tablewrap th{white-space:normal!important;overflow-wrap:anywhere!important;font-size:15px!important}
+#progressCard .tablewrap td{font-size:17px!important}
+#progressCard .tablewrap th:nth-child(1),#progressCard .tablewrap td:nth-child(1){width:20%!important;white-space:normal!important}
+#progressCard .tablewrap th:nth-child(n+2):nth-child(-n+4),#progressCard .tablewrap td:nth-child(n+2):nth-child(-n+4){width:10%!important}
+#progressCard .tablewrap th:nth-child(n+5):nth-child(-n+7),#progressCard .tablewrap td:nth-child(n+5):nth-child(-n+7){width:12%!important}
+#progressCard .tablewrap th:nth-child(8),#progressCard .tablewrap td:nth-child(8){width:14%!important}
+@media print{#progressCard .tablewrap th{font-size:10px!important}#progressCard .tablewrap td{font-size:12px!important}}
 </style></head><body>
 <header class="top"><div class="topin"><div><h1>Rejected Wage Reconciliation — Janpad-wise</h1><p>R8.1.5 • Wage • FY 2024-25 से 2026-27 • SATNA &amp; MAIHAR</p></div><a class="back" href="./">← एसआरडीएम अनुप्रयोग पर वापस जाएँ</a></div></header>
 <main class="wrap"><div class="toolbar">
@@ -165,19 +175,20 @@ let h='',serial=1;if(d.value==='ALL'&&j.value==='ALL'&&a.length>1){['MAIHAR','SA
 const breakdown=document.getElementById('schemeBreakdown');breakdown.style.display=combinedData&&a.some(r=>r.fy==='2026-27')?'':'none';if(breakdown.style.display!=='none'){const keys=new Set(a.filter(r=>r.fy==='2026-27').map(r=>r.janpad));breakdown.textContent=sourceLinks.filter(s=>s.fy==='2026-27').map(s=>{const x=s.rows.filter(r=>keys.has(r.janpad));return s.scheme+': '+nf.format(sum(x,'pending'))+' लंबित / ₹'+nf.format(sum(x,'pendingAmount'))}).join('  +  ')+'  =  संयुक्त: '+nf.format(sum(a.filter(r=>r.fy==='2026-27'),'pending'))+' लंबित / ₹'+nf.format(sum(a.filter(r=>r.fy==='2026-27'),'pendingAmount'));}
 const rc={};a.forEach(r=>Object.entries(r.reasons).forEach(([k,v])=>rc[k]=(rc[k]||0)+v));const rr=Object.entries(rc).sort((x,y)=>y[1]-x[1]);renderProgress(a);const detailKnown=a.filter(r=>r.muster!=null).length;reasonCoverage.textContent=detailKnown<a.length?`सत्यापित detail ${detailKnown}/${a.length} जनपद; शेष कारण और Muster/FTO उपलब्ध नहीं`:'चयनित Janpad/FY के सत्यापित detail transactions';reasons.innerHTML=rr.length?rr.map(([k,v])=>'<div class="reason"><b>'+nf.format(v)+' Transactions</b><span>'+k+'</span></div>').join('') :'<div class="empty">'+(sum(a,'pending')?'नए स्रोत से कारणवार विवरण उपलब्ध नहीं है।':'Pending Regeneration transaction नहीं है।')+'</div>'}
 function renderProgress(a){
+ const lakh=v=>new Intl.NumberFormat("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2}).format(Number(v||0)/100000);
  const visibleKeys=new Set(a.filter(r=>r.fy==='2026-27').map(r=>r.janpad));
  const target=combinedData?(sourceLinks.find(s=>s.fy==='2026-27'&&s.scheme==='VBGRAMG')?.rows||[]).filter(r=>visibleKeys.has(r.janpad)):a.filter(r=>r.fy==='2026-27'), base=new Map(BASELINE.map(r=>[r.janpad,r])), prev=new Map((previousSnapshot||[]).map(r=>[r.janpad,r]));
  progressCard.style.display=target.length?'':'none';
  progressCard.querySelector('h2').textContent=combinedData?'VBGRAMG दैनिक प्रगति — 22.09.2026 का स्थिर आधार':'दैनिक प्रगति — 22.09.2026 का स्थिर आधार';
  progressDate.textContent=refreshDate?'वर्तमान स्रोत: '+refreshDate:'22.09.2026 का स्थिर आधार; नया डेटा अभी उपलब्ध नहीं';
  const baseRows=target.map(r=>base.get(r.janpad)), bp=sum(baseRows,'pending'), cp=sum(target,'pending'), ba=sum(baseRows,'pendingAmount'), ca=sum(target,'pendingAmount');
- document.getElementById('baselineStatus').textContent='22.09.2026 (स्थिर): '+nf.format(bp)+' लंबित • ₹'+nf.format(ba)+'  |  '+(refreshDate?refreshDate+' (वर्तमान): '+nf.format(cp)+' लंबित • ₹'+nf.format(ca)+'  |  आधार से शुद्ध कमी: '+nf.format(bp-cp)+' प्रकरण • ₹'+nf.format(ba-ca):'नया स्रोत उपलब्ध होने पर तुलना दिखाई जाएगी');
+ document.getElementById('baselineStatus').textContent='22.09.2026 (स्थिर): '+nf.format(bp)+' लंबित • ₹'+lakh(ba)+' लाख | '+(refreshDate?refreshDate+' (वर्तमान): '+nf.format(cp)+' लंबित • ₹'+lakh(ca)+' लाख | आधार से शुद्ध कमी: '+nf.format(bp-cp)+' प्रकरण • ₹'+lakh(ba-ca)+' लाख':'नया स्रोत उपलब्ध होने पर तुलना दिखाई जाएगी');
  const item=r=>{const b=base.get(r.janpad),p=prev.get(r.janpad),diff=(b?.pending||0)-r.pending,amount=(b?.pendingAmount||0)-r.pendingAmount;
- return `<tr><td>${r.janpad}</td><td>${nf.format(b.pending)}</td><td>${nf.format(r.pending)}</td><td>${nf.format(diff)}</td><td>₹${nf.format(b.pendingAmount)}</td><td>₹${nf.format(r.pendingAmount)}</td><td>₹${nf.format(amount)}</td><td>${p?nf.format(p.pending-r.pending):'—'}</td></tr>`};
- const subtotal=(x,label)=>`<tr class="district-total"><td>${label}</td><td>${nf.format(sum(x.map(r=>base.get(r.janpad)),'pending'))}</td><td>${nf.format(sum(x,'pending'))}</td><td>${nf.format(sum(x.map(r=>base.get(r.janpad)),'pending')-sum(x,'pending'))}</td><td>₹${nf.format(sum(x.map(r=>base.get(r.janpad)),'pendingAmount'))}</td><td>₹${nf.format(sum(x,'pendingAmount'))}</td><td>₹${nf.format(sum(x.map(r=>base.get(r.janpad)),'pendingAmount')-sum(x,'pendingAmount'))}</td><td>${previousSnapshot?nf.format(sum(x.map(r=>prev.get(r.janpad)||r),'pending')-sum(x,'pending')):'—'}</td></tr>`;
- const head='<thead><tr><th>Janpad</th><th>22.09 लंबित</th><th>वर्तमान लंबित</th><th>लंबित में कमी</th><th>22.09 राशि</th><th>वर्तमान राशि</th><th>राशि में कमी</th><th>पिछले अपडेट से कमी</th></tr></thead>';
+ return `<tr><td>${r.janpad}</td><td>${nf.format(b.pending)}</td><td>${nf.format(r.pending)}</td><td>${nf.format(diff)}</td><td>₹${lakh(b.pendingAmount)}</td><td>₹${lakh(r.pendingAmount)}</td><td>₹${lakh(amount)}</td><td>${p?nf.format(p.pending-r.pending):'—'}</td></tr>`};
+ const subtotal=(x,label)=>`<tr class="district-total"><td>${label}</td><td>${nf.format(sum(x.map(r=>base.get(r.janpad)),'pending'))}</td><td>${nf.format(sum(x,'pending'))}</td><td>${nf.format(sum(x.map(r=>base.get(r.janpad)),'pending')-sum(x,'pending'))}</td><td>₹${lakh(sum(x.map(r=>base.get(r.janpad)),'pendingAmount'))}</td><td>₹${lakh(sum(x,'pendingAmount'))}</td><td>₹${lakh(sum(x.map(r=>base.get(r.janpad)),'pendingAmount')-sum(x,'pendingAmount'))}</td><td>${previousSnapshot?nf.format(sum(x.map(r=>prev.get(r.janpad)||r),'pending')-sum(x,'pending')):'—'}</td></tr>`;
+ const head='<thead><tr><th>Janpad</th><th>22.09 लंबित</th><th>वर्तमान लंबित</th><th>लंबित में कमी</th><th>22.09 राशि<br>(₹ लाख)</th><th>वर्तमान राशि<br>(₹ लाख)</th><th>राशि में कमी<br>(₹ लाख)</th><th>पिछले अपडेट से कमी</th></tr></thead>';
  const sections=[];for(const name of ['MAIHAR','SATNA']){const group=target.filter(r=>r.district===name);if(!group.length)continue;sections.push(`<section class="progress-district"><h3>${name==='MAIHAR'?'मैहर जिला':'सतना जिला'}</h3><div class="tablewrap"><table>${head}<tbody>${group.map(item).join('')}${subtotal(group,name==='MAIHAR'?'मैहर योग':'सतना योग')}</tbody></table></div></section>`)}
- progressTables.innerHTML=sections.join('')+(target.length>1?`<div class="progress-grand">मैहर + सतना कुल योग: <b>22.09 लंबित ${nf.format(bp)}</b> → <b>वर्तमान ${nf.format(cp)}</b> • <b>कमी ${nf.format(bp-cp)}</b> • राशि में कमी <b>₹${nf.format(ba-ca)}</b></div>`:'');
+ progressTables.innerHTML=sections.join('')+(target.length>1?`<div class="progress-grand">मैहर + सतना कुल योग: <b>22.09 लंबित ${nf.format(bp)}</b> → <b>वर्तमान ${nf.format(cp)}</b> • <b>कमी ${nf.format(bp-cp)}</b> • राशि में कमी <b>₹${lakh(ba-ca)} लाख</b></div>`:'');
 }
 async function loadCurrent(){try{
  const response=await fetch('./data/rejected-wage-latest.json?ts='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('missing');
