@@ -540,4 +540,41 @@ const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html lang=
 frame.contentWindow.onafterprint=()=>frame.remove();
 Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},300));
 }
-function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd.textContent=window.PLANNER_IMPORT_DATE||'अनुपलब्ध';const yd=document.getElementById('yuktdharaOfficialDate');if(yd)yd.textContent='Yuktdhara GP / प्राप्त कार्य / VB-G RAM G कार्य — दिनांक: '+String(window.YUKTDHARA_RECEIVED?.officialDate||'अनुपलब्ध').replaceAll('/','-');document.getElementById('engineerReportDate').textContent=window.PLANNER_SIPRI_SOURCE?.uploadedDate||'अनुपलब्ध';fill('district',ER.map(x=>x[0]),'सभी District');updateCascade();render();$('district').onchange=()=>{updateCascade();render()};$('janpad').onchange=()=>{updateCascade();render()};$('engineer').onchange=render;$('progressSort').onchange=render;$('sortAscending').onclick=()=>{$('progressSort').value='asc';render()};$('sortDescending').onclick=()=>{$('progressSort').value='desc';render()};$('csv').onclick=()=>{const r=filtered(),lines=[['District','Janpad','Sub Engineer','Planner Excel Work','SIPRI Planned','SIPRI Pending','Progress %'],...r.map(x=>[x[0],x[1],x[2],x[3]??'',x[4]??'',x[3]===null?'':Math.max(0,x[3]-x[4]),x[3]===null?'':x[3]?(100*x[4]/x[3]).toFixed(2):'0.00'])].map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([lines],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='Planner_SIPRI_SubEngineer_Summary_'+(window.PLANNER_IMPORT_DATE||'latest')+'.csv';a.click();URL.revokeObjectURL(u)}}init();</script><link rel="stylesheet" href="srdm-report-fonts.css?v=20261017-stable"></body></html>
+function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd.textContent=window.PLANNER_IMPORT_DATE||'अनुपलब्ध';const yd=document.getElementById('yuktdharaOfficialDate');if(yd)yd.textContent='Yuktdhara GP / प्राप्त कार्य / VB-G RAM G कार्य — दिनांक: '+String(window.YUKTDHARA_RECEIVED?.officialDate||'अनुपलब्ध').replaceAll('/','-');document.getElementById('engineerReportDate').textContent=window.PLANNER_SIPRI_SOURCE?.uploadedDate||'अनुपलब्ध';fill('district',ER.map(x=>x[0]),'सभी District');updateCascade();render();$('district').onchange=()=>{updateCascade();render()};$('janpad').onchange=()=>{updateCascade();render()};$('engineer').onchange=render;$('progressSort').onchange=render;$('sortAscending').onclick=()=>{$('progressSort').value='asc';render()};$('sortDescending').onclick=()=>{$('progressSort').value='desc';render()};$('csv').onclick=()=>{const r=filtered(),lines=[['District','Janpad','Sub Engineer','Planner Excel Work','SIPRI Planned','SIPRI Pending','Progress %'],...r.map(x=>[x[0],x[1],x[2],x[3]??'',x[4]??'',x[3]===null?'':Math.max(0,x[3]-x[4]),x[3]===null?'':x[3]?(100*x[4]/x[3]).toFixed(2):'0.00'])].map(a=>a.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n'),b=new Blob([lines],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='Planner_SIPRI_SubEngineer_Summary_'+(window.PLANNER_IMPORT_DATE||'latest')+'.csv';a.click();URL.revokeObjectURL(u)}}init();</script><link rel="stylesheet" href="srdm-report-fonts.css?v=20261017-stable"><style>.column-sort-toggle{display:block;margin:3px auto 0;padding:1px 8px;border:1px solid #7894b1;border-radius:4px;background:white;color:#123f73;font-size:13px;font-weight:900;cursor:pointer}@media print{.column-sort-toggle{display:none!important}}</style>
+<script>
+(function(){
+ const table=document.querySelector('#officialSection table.official-merged');
+ if(!table)return;
+ let active=-1,direction=1;
+ const heads=[...table.tHead.rows[0].cells];
+ heads.forEach((th,index)=>{
+  const label=th.textContent.trim();
+  const button=document.createElement('button');
+  button.type='button';button.className='column-sort-toggle';button.textContent='↕';
+  button.title=label+' — Ascending / Descending';
+  button.setAttribute('aria-label',label+' — Ascending / Descending');
+  th.appendChild(button);
+  button.addEventListener('click',()=>{
+   direction=active===index?-direction:1;active=index;
+   heads.forEach((h,i)=>{h.setAttribute('aria-sort',i===index?(direction===1?'ascending':'descending'):'none');h.querySelector('.column-sort-toggle').textContent=i===index?(direction===1?'▲':'▼'):'↕'});
+   const body=table.tBodies[0];let group=[];
+   function sortGroup(anchor){
+    group.sort((a,b)=>{
+     const av=a.cells[index]?.textContent.trim()||'',bv=b.cells[index]?.textContent.trim()||'';
+     const missing=v=>!v||v==='—';
+     if(missing(av)||missing(bv))return Number(missing(av))-Number(missing(bv));
+     if(index<2)return direction*av.localeCompare(bv,'hi',{numeric:true});
+     const an=Number(av.replace(/[^0-9.-]/g,'')),bn=Number(bv.replace(/[^0-9.-]/g,''));
+     return direction*(an-bn);
+    });
+    group.forEach(row=>body.insertBefore(row,anchor));group=[];
+   }
+   [...body.rows].forEach(row=>{
+    if(row.classList.contains('district-total')||row.classList.contains('grand-total'))sortGroup(row);else group.push(row);
+   });
+   if(group.length)sortGroup(null);
+  });
+ });
+})();
+</script>
+</body></html>
