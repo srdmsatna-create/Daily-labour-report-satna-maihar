@@ -291,6 +291,18 @@ main table tr.total td,main table tr.janpad-total td,main table tr.grand-total t
 @media print{#officialSection table.official-merged{min-width:0!important}#officialSection table.official-merged thead th{font-size:7.5pt!important;padding:1.5mm .6mm!important;line-height:1.2!important}}
 
 #officialSection .yuktdhara-date-banner{background:#15803d;color:#fff;font-size:20px;font-weight:900;line-height:1.4;padding:12px 16px;border:2px solid #166534;border-radius:8px;margin:0 0 12px}#secureTSStatus{display:none!important}@media print{#officialSection .yuktdhara-date-banner{font-size:13pt!important;background:#15803d!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Larger numeric values across planner summary tables. */
+#officialSection table.official-merged td.num,
+#engineerSection table.engineer-summary td.num{font-size:24px!important;font-weight:900!important;line-height:1.25!important;padding:8px 4px!important;font-variant-numeric:tabular-nums;white-space:nowrap!important}
+#officialSection table.official-merged .progress-badge,
+#engineerSection table.engineer-summary .progress-badge{font-size:20px!important;font-weight:900!important;min-width:0!important;width:auto!important;height:auto!important;padding:5px 3px!important}
+@media print{
+#officialSection table.official-merged td.num,
+#engineerSection table.engineer-summary td.num{font-size:11pt!important;padding:1.5mm .6mm!important}
+#officialSection table.official-merged .progress-badge,
+#engineerSection table.engineer-summary .progress-badge{font-size:10pt!important}
+}
 </style><style id="planner-stable-fonts-20261017">
 /* Stable Planner screen typography; kept separate from daily data imports. */
 @media screen {
