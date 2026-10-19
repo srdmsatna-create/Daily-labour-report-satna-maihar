@@ -324,6 +324,29 @@ main table tr.total td,main table tr.janpad-total td,main table tr.grand-total t
 #officialSection table.official-merged thead th:nth-child(14) small,
 #officialSection table.official-merged thead th:nth-child(14) .column-sort-toggle{color:#0754b8!important;font-weight:900!important}
 @media print{#officialSection table.official-merged thead th:nth-child(14){background:#dbeafe!important;color:#0754b8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Readable planner page: adequate width for large headings and numbers. */
+body#plannerDashboard main{max-width:1900px;width:100%;padding:0 14px}
+#officialSection .wrap{overflow-x:auto!important}
+#officialSection table.official-merged{min-width:1700px!important;width:100%!important}
+#officialSection table.official-merged thead th{font-size:17px!important;font-weight:900!important;line-height:1.35!important;padding:12px 5px!important}
+#officialSection table.official-merged td.num,
+#engineerSection table.engineer-summary td.num{font-size:32px!important;font-weight:900!important;line-height:1.25!important;padding:10px 5px!important;white-space:nowrap!important;font-variant-numeric:tabular-nums}
+#officialSection table.official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(-n+2){font-size:17px!important;font-weight:800!important;line-height:1.35!important;white-space:normal!important}
+#officialSection table.official-merged .progress-badge{font-size:24px!important;font-weight:900!important}
+#engineerSection table.engineer-summary thead th{font-size:17px!important;font-weight:900!important;line-height:1.35!important}
+#officialSection .yuktdhara-date-banner{font-size:24px!important;font-weight:900!important}
+@media print{
+body#plannerDashboard main{max-width:none!important;padding:0!important}
+#officialSection table.official-merged{min-width:0!important;width:100%!important}
+#officialSection table.official-merged thead th,
+#engineerSection table.engineer-summary thead th{font-size:9pt!important;padding:2mm .6mm!important;line-height:1.2!important}
+#officialSection table.official-merged td.num,
+#engineerSection table.engineer-summary td.num{font-size:12pt!important;padding:2mm .6mm!important}
+#officialSection table.official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(-n+2){font-size:9pt!important}
+#officialSection table.official-merged .progress-badge{font-size:11pt!important}
+#officialSection .yuktdhara-date-banner{font-size:14pt!important}
+}
 </style><style id="planner-stable-fonts-20261017">
 /* Stable Planner screen typography; kept separate from daily data imports. */
 @media screen {
