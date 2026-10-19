@@ -318,6 +318,12 @@ main table tr.total td,main table tr.janpad-total td,main table tr.grand-total t
 .column-sort-toggle[data-direction="asc"],.column-sort-toggle[data-direction="desc"]{opacity:1!important}
 .column-sort-toggle[data-direction="asc"] .sort-down,.column-sort-toggle[data-direction="desc"] .sort-up{opacity:.2}
 @media print{#officialSection table.official-merged thead th .column-sort-toggle{display:none!important}}
+
+#officialSection table.official-merged thead th:nth-child(14){background:#dbeafe!important;color:#0754b8!important;font-weight:900!important}
+#officialSection table.official-merged thead th:nth-child(14) a,
+#officialSection table.official-merged thead th:nth-child(14) small,
+#officialSection table.official-merged thead th:nth-child(14) .column-sort-toggle{color:#0754b8!important;font-weight:900!important}
+@media print{#officialSection table.official-merged thead th:nth-child(14){background:#dbeafe!important;color:#0754b8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style><style id="planner-stable-fonts-20261017">
 /* Stable Planner screen typography; kept separate from daily data imports. */
 @media screen {
