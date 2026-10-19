@@ -212,7 +212,12 @@ function printJanpadWageOnly(){
  const table=section.querySelector('table').outerHTML;
  const source=section.querySelector('.note')?.outerHTML||'';
  const css='@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{margin:0;color:#112d49;font-family:"Nirmala UI",Arial,sans-serif}h1{font-size:15pt;margin:0 0 2mm}.date{font-size:9pt;margin-bottom:3mm}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:.3mm solid #426c96;padding:2mm 1mm;font-size:9pt;line-height:1.2;overflow-wrap:anywhere;vertical-align:middle}th{background:#cfe1f5;font-weight:800;text-align:center}td{font-weight:700}th:nth-child(1){width:4%}th:nth-child(2){width:8%}th:nth-child(3){width:12%}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}tbody tr:nth-child(even){background:#f4f8fd}.total,.subtotal,.grand,.grand-total,.district-total{background:#d8e8f8;font-weight:900}.note{font-size:8pt;line-height:1.3;margin-top:3mm}button{display:none}';
- const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+escape(title)+'</title><style>'+css+'</style></head><body><h1>'+escape(title)+'</h1><div class="date">'+escape(currentDate)+'</div>'+table+source+'
+ const doc=frame.contentDocument;doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+escape(title)+'</title><style>'+css+'</style></head><body><h1>'+escape(title)+'</h1><div class="date">'+escape(currentDate)+'</div>'+table+source+'</body></html>');doc.close();
+ frame.contentWindow.onafterprint=()=>frame.remove();
+ Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},300));
+}
+</script>
+
 <script>
 function printDailyProgressOnly(){
  const section=document.getElementById('progressCard');
@@ -222,11 +227,6 @@ function printDailyProgressOnly(){
  const css='@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}body{margin:0;color:#172033;font-family:"Nirmala UI",Arial,sans-serif}h2{font-size:16pt;margin:0 0 2mm;color:#123f73}.cardhead{display:flex;align-items:center;justify-content:space-between}.cardhead span{font-size:9pt}.cardhead button{display:none}.note{font-size:9pt;line-height:1.3;padding:2mm!important;margin:0 0 2mm;border:1px solid #d8c79e!important;background:#fffdf5}.progress-district{margin:0 0 3mm;border:1px solid #7898b8;break-inside:avoid}.progress-district h3{margin:0;padding:2mm 3mm;background:#123f73;color:white;font-size:12pt}.tablewrap{padding:0}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #7898b8;padding:2mm 1mm;font-size:10pt;line-height:1.2;text-align:right;white-space:nowrap}th{background:#dbeafe;text-align:center;font-size:9pt;white-space:normal}th:first-child,td:first-child{width:18%;text-align:left}th:nth-child(n+5):nth-child(-n+7){width:14%}.district-total{background:#e8f3ff;font-weight:900}.progress-grand{background:#dcfce7;border:2px solid #16a34a;color:#14532d;padding:3mm;font-size:12pt;margin:2mm 0;break-inside:avoid}thead{display:table-header-group}tr{break-inside:avoid}';
  const doc=frame.contentDocument;
  doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>दैनिक प्रगति — मैहर एवं सतना</title><style>'+css+'</style></head><body>'+section.innerHTML+'</body></html>');doc.close();
- frame.contentWindow.onafterprint=()=>frame.remove();
- Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},300));
-}
-</script>
-</body></html>');doc.close();
  frame.contentWindow.onafterprint=()=>frame.remove();
  Promise.resolve(doc.fonts?.ready).then(()=>setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print()},300));
 }
