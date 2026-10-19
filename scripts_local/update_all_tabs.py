@@ -22,6 +22,7 @@ GROUPS=[
  ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js']),
+ ('pmayg_physical',[['scripts_local/update_pmayg_physical.py']],['data/pmayg-physical-latest.json']),
  ('pmayg',[['scripts_local/update_pmayg.py']],['data/pmayg-latest.json']),
  ('above75',[['scripts_local/update_above75.py']],['data/above75-latest.json']),
  ('planner',[['scripts/fetch_planner_portal_summary.py']],['planner-portal-data.js']),
@@ -69,6 +70,8 @@ def validate(group,root):
  elif group=='ek_bagiya_payment':
   d=data(root/'data/ek-bagiya-payment-latest.json')
   if d.get('logicVersion')!='sabhi-reports-logic-v1' or len(d.get('rows',[]))!=8 or d.get('retrievedDate')!=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d/%m/%Y') or not d.get('sourceDates') or not d.get('works'):raise ValueError('Current complete payment source required')
+ elif group=='pmayg_physical':
+  runpy.run_path(str(root/'scripts_local/update_pmayg_physical.py'))['validate'](data(root/'data/pmayg-physical-latest.json'))
  elif group=='pmayg':
   d=data(root/'data/pmayg-latest.json');rows=d.get('rows',[])
   if not d.get('allYears') or not rows or not d.get('nregaRows') or not d.get('vbgRows'):raise ValueError('Both PMAY sources and all work-start years required')
