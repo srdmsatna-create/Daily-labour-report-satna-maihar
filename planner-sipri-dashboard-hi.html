@@ -311,6 +311,13 @@ main table tr.total td,main table tr.janpad-total td,main table tr.grand-total t
 #officialSection table.official-merged thead th:nth-child(16){background:#7e22ce!important;color:#fff!important;font-weight:900!important}
 #officialSection table.official-merged thead th:nth-child(16) .column-sort-toggle{background:#faf5ff;color:#6b21a8;border-color:#d8b4fe}
 @media print{#officialSection table.official-merged thead th:nth-child(16){background:#7e22ce!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+
+/* Compact column sorting controls. */
+#officialSection table.official-merged thead th .column-sort-toggle{display:inline-flex!important;flex-direction:column;vertical-align:middle;align-items:center;justify-content:center;gap:1px;margin:2px 0 2px 5px!important;padding:3px!important;width:18px;min-width:18px;border:0!important;border-radius:3px;background:transparent!important;color:inherit!important;opacity:.55;font-size:9px!important;line-height:1!important;cursor:pointer;box-shadow:none}
+#officialSection table.official-merged thead th .column-sort-toggle:hover,#officialSection table.official-merged thead th .column-sort-toggle:focus-visible{opacity:1;background:#ffffff33!important;outline:1px solid currentColor}
+.column-sort-toggle[data-direction="asc"],.column-sort-toggle[data-direction="desc"]{opacity:1!important}
+.column-sort-toggle[data-direction="asc"] .sort-down,.column-sort-toggle[data-direction="desc"] .sort-up{opacity:.2}
+@media print{#officialSection table.official-merged thead th .column-sort-toggle{display:none!important}}
 </style><style id="planner-stable-fonts-20261017">
 /* Stable Planner screen typography; kept separate from daily data imports. */
 @media screen {
@@ -558,13 +565,13 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
  heads.forEach((th,index)=>{
   const label=th.textContent.trim();
   const button=document.createElement('button');
-  button.type='button';button.className='column-sort-toggle';button.textContent='↕';
+  button.type='button';button.className='column-sort-toggle';button.innerHTML='<span class="sort-up">▲</span><span class="sort-down">▼</span>';
   button.title=label+' — Ascending / Descending';
   button.setAttribute('aria-label',label+' — Ascending / Descending');
   th.appendChild(button);
   button.addEventListener('click',()=>{
    direction=active===index?-direction:1;active=index;
-   heads.forEach((h,i)=>{h.setAttribute('aria-sort',i===index?(direction===1?'ascending':'descending'):'none');h.querySelector('.column-sort-toggle').textContent=i===index?(direction===1?'▲':'▼'):'↕'});
+   heads.forEach((h,i)=>{h.setAttribute('aria-sort',i===index?(direction===1?'ascending':'descending'):'none');h.querySelector('.column-sort-toggle').dataset.direction=i===index?(direction===1?'asc':'desc'):''});
    const body=table.tBodies[0];let group=[];
    function sortGroup(anchor){
     group.sort((a,b)=>{
