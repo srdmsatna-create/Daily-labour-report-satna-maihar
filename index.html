@@ -4240,7 +4240,8 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
  const note=document.createElement('small');note.textContent='स्रोत: उपयोगकर्ता द्वारा 18/10/2026 को भेजा गया आधिकारिक पोर्टल का स्क्रीनशॉट • राष्ट्रीय आँकड़े; सतना/मैहर के आँकड़ों से अलग।';national.appendChild(note);
  panel.prepend(national);
  const localHeading=document.createElement('h3');localHeading.textContent='सतना एवं मैहर — जिला / जनपद Statistics';national.insertAdjacentElement('afterend',localHeading);
- launcher.addEventListener('click',function(){panel.style.setProperty('display','block','important');panel.scrollIntoView({behavior:'smooth',block:'start'})});
+ panel.classList.remove('srdm-statistics-open');panel.style.removeProperty('display');
+ launcher.addEventListener('click',function(){panel.classList.add('srdm-statistics-open');panel.scrollIntoView({behavior:'smooth',block:'start'})});
 })();
 </script>
 
@@ -4383,6 +4384,8 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
 </script>
 
 <style id="r12-table-layout">
+body #vbgStatistics:not(.srdm-statistics-open){display:none!important}
+body #vbgStatistics.srdm-statistics-open{display:block!important}
 body #vbgStatistics{box-sizing:border-box;max-width:100%;padding:16px;margin:18px 0;background:#fff;border:1px solid #b5c8d9;border-radius:10px}
 body #vbgStatistics h2{font-size:18px!important;line-height:1.4!important;margin:0 0 8px!important;color:#164a7b}
 body #vbgStatistics>p,body #vbgStatistics>a{font-size:12px!important;line-height:1.5!important}
@@ -4467,6 +4470,7 @@ body #vbgStatistics table tbody tr.r12-grand td:not(:first-child){font-size:17px
  function place(){if(!panel.contains(button))panel.insertBefore(button,panel.querySelector('#r12PrintButton')||panel.firstChild)}
  place();new MutationObserver(place).observe(panel,{childList:true});
  button.addEventListener('click',function(){
+  panel.classList.remove('srdm-statistics-open');panel.style.removeProperty('display');
   const menu=document.getElementById('srdmApplications');
   if(menu){menu.scrollIntoView({behavior:'smooth',block:'start'});const focus=document.getElementById('reportMenuSearch')||menu.querySelector('button,a');if(focus)focus.focus({preventScroll:true})}
   else window.scrollTo({top:0,behavior:'smooth'});
