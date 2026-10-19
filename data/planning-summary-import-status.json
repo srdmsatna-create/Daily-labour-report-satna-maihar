@@ -1,21 +1,21 @@
 {
-  "date": "2026-10-17",
+  "date": "2026-10-19",
   "source": {
-    "uploadedDate": "17-10-2026",
+    "uploadedDate": "19-10-2026",
     "files": [
-      "Planning_Summary_Report (2).xlsx",
-      "Planning_Summary_Report (3).xlsx"
+      "Planning_Summary_Report (5)(2).xlsx",
+      "Planning_Summary_Report (4)(2).xlsx"
     ],
     "sourceRows": 8569,
     "mappingSource": "gp-sector-engineer-master-25-09-2026.csv",
     "sourceFiles": [
       {
-        "file": "Planning_Summary_Report (2).xlsx",
-        "sha256": "0e8b2f10c5a463be453f00284ec15e7846309d7c89175dc29f113f02a6b1d000",
+        "file": "Planning_Summary_Report (5)(2).xlsx",
+        "sha256": "ca79af4bf0359c339f9952e299748a85c9941adcbafd416d6096f2c05498e905",
         "rows": 5103
       },
       {
-        "file": "Planning_Summary_Report (3).xlsx",
+        "file": "Planning_Summary_Report (4)(2).xlsx",
         "sha256": "dcb152f655a11933c0cd7d7085d3bef6a8967a32c0e83181b43799f5cf39b015",
         "rows": 3466
       }
@@ -23,15 +23,15 @@
     "mappedRows": 8569,
     "unmappedRows": 0,
     "districtLabelsNormalized": 423,
-    "sipriAbovePlannerRows": 71
+    "sipriAbovePlannerRows": 73
   },
   "totals": {
     "plannerDetail": 30404,
-    "sipri": 1661,
-    "aeApproved": 763,
-    "aePending": 898,
+    "sipri": 1711,
+    "aeApproved": 779,
+    "aePending": 932,
     "stateReviewed": 411,
-    "statePending": 419
+    "statePending": 435
   },
   "blocks": [
     [
@@ -61,20 +61,20 @@
       "Majhgawan",
       "Assistant Engineer - Majhgawan",
       2466,
-      286,
-      137,
-      149,
+      328,
+      153,
+      175,
       38,
-      99
+      115
     ],
     [
       "Satna",
       "Nagod",
       "Assistant Engineer - Nagod",
       2639,
-      270,
+      275,
       145,
-      125,
+      130,
       35,
       110
     ],
@@ -116,9 +116,9 @@
       "Unchahara",
       "Assistant Engineer - Unchahara",
       1087,
-      181,
+      184,
       134,
-      47,
+      50,
       9,
       125
     ]
@@ -199,6 +199,13 @@
       "sipri": 4
     },
     {
+      "block": "Majhgawan",
+      "panchayat": "Amiriti",
+      "structure": "Percolation tank",
+      "planner": 5,
+      "sipri": 6
+    },
+    {
       "block": "Nagod",
       "panchayat": "Dewari",
       "structure": "Recharge pit",
@@ -259,6 +266,13 @@
       "panchayat": "Didaundh",
       "structure": "Recharge pit",
       "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Nagod",
+      "panchayat": "Amiliya",
+      "structure": "Recharge pit",
+      "planner": 1,
       "sipri": 3
     },
     {
