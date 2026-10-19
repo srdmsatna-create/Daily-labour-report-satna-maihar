@@ -4154,21 +4154,29 @@ function srdmPrintEkBagiyaOnly(){
 <script>document.write('<script src="gp-emuster-data.js?live='+Date.now()+'"><\/script>');</script><script src="gp-labour-muster-module.js?v=20261013-column-fit"></script>
 <!-- SRDM_REPORT_CODES_START -->
 <style id="srdm-hierarchical-report-menu">
-#srdmApplications #reportMenuGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:18px!important;align-items:start!important}
-#srdmApplications #reportMenuGrid .srdm-report-group{min-width:0;border:1px solid #d4e2f1;border-radius:14px;overflow:hidden;background:#fff;box-shadow:0 4px 16px #123f7210}
-#srdmApplications #reportMenuGrid .srdm-report-group>summary{display:flex;align-items:center;gap:9px;list-style:none;cursor:pointer;background:linear-gradient(110deg,#07508d,#2d6096);color:#fff;padding:15px 17px;font-size:15px;font-weight:800;border-left:5px solid #ee963b;min-height:56px}
+/* Compact portal menu: 2026-10-19 */
+#srdmApplications{box-sizing:border-box;max-width:1240px!important;margin:12px auto!important;padding:12px!important;border-radius:6px!important;box-shadow:none!important}
+#srdmApplications .srdm-app-launcher-head{padding-bottom:8px!important;gap:6px!important}
+#srdmApplications .report-menu-tools{padding:6px!important;gap:8px!important;margin-bottom:8px!important}
+#srdmApplications .report-menu-tools input{height:32px!important;border-radius:4px!important;padding:0 8px!important}
+#srdmApplications .report-menu-tools button{min-height:32px!important;padding:5px 10px!important;border-radius:4px!important}
+#srdmApplications #reportMenuGrid .srdm-report-group .srdm-app-card::before,#srdmApplications #reportMenuGrid .srdm-report-group .srdm-app-card::after{display:none!important}
+
+#srdmApplications #reportMenuGrid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px 12px!important;align-items:start!important}
+#srdmApplications #reportMenuGrid .srdm-report-group{min-width:0;border:1px solid #d4e2f1;border-radius:5px;overflow:hidden;background:#fff;box-shadow:none}
+#srdmApplications #reportMenuGrid .srdm-report-group>summary{display:flex;align-items:center;gap:6px;list-style:none;cursor:pointer;background:linear-gradient(110deg,#07508d,#2d6096);color:#fff;padding:8px 11px;font-size:13px;font-weight:800;border-left:5px solid #ee963b;min-height:36px;box-sizing:border-box;line-height:1.45}
 #srdmApplications #reportMenuGrid summary::-webkit-details-marker{display:none}
-#srdmApplications #reportMenuGrid summary:after{content:'⌄';margin-left:auto;font-size:22px;font-weight:400;line-height:1;transition:transform .15s}
+#srdmApplications #reportMenuGrid summary:after{content:'⌄';margin-left:auto;font-size:18px;font-weight:400;line-height:1;transition:transform .15s}
 #srdmApplications #reportMenuGrid details:not([open])>summary:after{transform:rotate(-90deg)}
 #srdmApplications .srdm-group-code{white-space:nowrap;font-weight:900}
-#srdmApplications #reportMenuGrid .srdm-report-links{padding:7px 14px 9px}
-#srdmApplications #reportMenuGrid .srdm-report-group .srdm-app-card{display:flex!important;position:static!important;align-items:flex-start!important;gap:0!important;width:100%!important;max-width:none!important;min-width:0!important;min-height:0!important;height:auto!important;margin:0!important;padding:12px 2px!important;border:0!important;border-bottom:1px solid #e5edf5!important;border-radius:0!important;background:#fff!important;color:#084e89!important;box-shadow:none!important;text-align:left!important;transform:none!important;animation:none!important;text-decoration:none}
+#srdmApplications #reportMenuGrid .srdm-report-links{padding:2px 10px 4px}
+#srdmApplications #reportMenuGrid .srdm-report-group .srdm-app-card{display:flex!important;position:static!important;align-items:flex-start!important;gap:0!important;width:100%!important;max-width:none!important;min-width:0!important;min-height:0!important;height:auto!important;margin:0!important;padding:6px 2px!important;border:0!important;border-bottom:1px solid #e5edf5!important;border-radius:0!important;background:#fff!important;color:#084e89!important;box-shadow:none!important;text-align:left!important;transform:none!important;animation:none!important;text-decoration:none}
 #srdmApplications #reportMenuGrid .srdm-report-group .srdm-app-card:last-child{border-bottom:0!important}
 #srdmApplications #reportMenuGrid .srdm-report-group .srdm-app-card:hover{background:#f2f7fd!important}
 #srdmApplications #reportMenuGrid .srdm-app-icon,#srdmApplications #reportMenuGrid .srdm-app-new{display:none!important}
 #srdmApplications #reportMenuGrid .srdm-app-copy{display:block!important;min-width:0!important;width:100%!important}
-#srdmApplications #reportMenuGrid .srdm-app-copy strong{display:block!important;font-size:14px!important;line-height:1.55!important;color:#084e89!important;text-decoration:underline;font-weight:700!important;white-space:normal!important}
-#srdmApplications #reportMenuGrid .srdm-app-copy>span{display:block!important;font-size:12px!important;line-height:1.5!important;color:#59718a!important;margin-top:3px!important}
+#srdmApplications #reportMenuGrid .srdm-app-copy strong{display:block!important;font-size:13px!important;line-height:1.4!important;color:#084e89!important;text-decoration:underline;font-weight:700!important;white-space:normal!important}
+#srdmApplications #reportMenuGrid .srdm-app-copy>span{display:block!important;font-size:12px!important;line-height:1.35!important;color:#59718a!important;margin-top:1px!important}
 #srdmApplications .srdm-report-code{display:inline-block!important;font:inherit!important;font-weight:900!important;white-space:nowrap;padding:0!important;margin-right:5px;border:0!important;background:none!important;color:inherit!important}
 #srdmApplications #reportMenuGrid [hidden],#srdmApplications #reportMenuGrid .srdm-report-group .srdm-app-card[hidden]{display:none!important}
 @media(max-width:800px){#srdmApplications #reportMenuGrid{grid-template-columns:minmax(0,1fr)!important}}
