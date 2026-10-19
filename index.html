@@ -4139,7 +4139,37 @@ function srdmPrintEkBagiyaOnly(){
     '#reportTable{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin-top:3mm}'+
     '#reportTable th,#reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}'+
     '#reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}#reportTable thead,#ekBlockTable thead{display:table-header-group!important}#reportTable tr,#ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}.district-total td,.grand-total td,.total-row td{font-weight:900!important;background:#dbe9fb!important}'+
-    '</style></head><body>'+body+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit"></body></html>');
+    '</style></head><body>'+body+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit">
+<style id="srdm-main-report-navigation">
+body:not(.srdm-main-report-open) .shell>.compact-controls,
+body:not(.srdm-main-report-open) .shell>.report-card{display:none!important}
+#srdmMainReportBack{margin:0 0 10px;padding:8px 14px;border:1px solid #164a7b;border-radius:5px;background:#eef5fd;color:#164a7b;font-size:13px;font-weight:800;cursor:pointer}
+@media print{#srdmMainReportBack{display:none!important}}
+</style>
+<script id="srdm-main-report-navigation-script">
+(function(){
+ const menu=document.getElementById('srdmApplications');
+ const controls=document.querySelector('.shell>.compact-controls');
+ if(!menu||!controls)return;
+ const back=document.createElement('button');back.type='button';back.id='srdmMainReportBack';back.textContent='← मुख्य मेनू पर वापस';controls.prepend(back);
+ function close(){document.body.classList.remove('srdm-main-report-open')}
+ back.addEventListener('click',()=>{close();menu.scrollIntoView({behavior:'smooth',block:'start'});document.getElementById('reportMenuSearch')?.focus({preventScroll:true})});
+ document.addEventListener('click',event=>{
+  const card=event.target.closest('#srdmApplications .srdm-app-card');
+  if(!card)return;
+  close();
+  const statistics=document.getElementById('vbgStatistics');
+  statistics?.classList.remove('srdm-statistics-open');statistics?.style.removeProperty('display');
+  if(card.matches('.tab[data-view]')){
+   document.body.classList.remove('srdm-report-focus');
+   document.body.classList.add('srdm-main-report-open');
+   requestAnimationFrame(()=>controls.scrollIntoView({behavior:'smooth',block:'start'}));
+  }
+ },true);
+ close();
+})();
+</script>
+</body></html>');
   doc.close();
 
   setTimeout(function(){
