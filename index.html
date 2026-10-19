@@ -2708,14 +2708,25 @@ function renderJanpadDysfunctional(){
   const embedded=Array.isArray(window.SRDM_ZERO_FORCE_DATA)?window.SRDM_ZERO_FORCE_DATA:[];
   const liveRows=Array.isArray(window.SHRAMIK_NIYOJAN?.gpMandaysRows)
     ? window.SHRAMIK_NIYOJAN.gpMandaysRows.filter(r=>clean(r.panchayat)!=='2') : [];
-  const liveMap=new Map(liveRows.map(r=>[[clean(r.janpad),clean(r.panchayat)].join('¦'),r]));
+  const monthKey=(j,p)=>[clean(j).replace('RAMPOR BAGHELAN','RAMPUR BAGHELAN'),clean(p)].join('¦');
+  const liveMap=new Map(liveRows.map(r=>[monthKey(r.janpad,r.panchayat),r]));
+  const periodMonths=['April','May','June','July','August','September','October'];
+  const months=[...periodMonths,'All Month'];
   const source=embedded.map(r=>{
-    const live=liveMap.get([clean(r.janpad),clean(r.gp)].join('¦'));
-    return live?{...r,engineer:live.engineer||r.engineer,cluster:live.cluster||r.cluster,
-      July:num(live.july),August:num(live.august),September:num(live.september)}:r;
+    const live=liveMap.get(monthKey(r.janpad,r.gp));
+    const row={...r,October:null};
+    if(live){
+      row.engineer=live.engineer||r.engineer;row.cluster=live.cluster||r.cluster;
+      ['July','August','September','October'].forEach(m=>{
+        const value=live[m.toLowerCase()];
+        row[m]=value!==null&&value!==undefined&&value!==''&&Number.isFinite(Number(value))?Number(value):null;
+      });
+    }
+    const values=periodMonths.map(m=>row[m]);
+    row['All Month']=values.every(Number.isFinite)?values.reduce((sum,value)=>sum+value,0):null;
+    return row;
   });
-  const months=['April','May','June','July','August','September'];
-  const month=months.includes(window.GP_NO_EMP_MONTH)?window.GP_NO_EMP_MONTH:'September';
+  const month=months.includes(window.GP_NO_EMP_MONTH)?window.GP_NO_EMP_MONTH:'October';
   window.GP_NO_EMP_MONTH=month;
 
   const d=$('districtFilter')?.value||'ALL';
@@ -2730,7 +2741,7 @@ function renderJanpadDysfunctional(){
     (cl==='ALL'||clean(r.cluster)===cl)
   );
 
-  const noEmp=base.filter(r=>num(r[month])===0).sort((a,b)=>
+  const noEmp=base.filter(r=>Number.isFinite(r[month])&&r[month]===0).sort((a,b)=>
     clean(a.district).localeCompare(clean(b.district)) ||
     clean(a.janpad).localeCompare(clean(b.janpad)) ||
     clean(a.engineer).localeCompare(clean(b.engineer),'hi') ||
@@ -2748,12 +2759,12 @@ function renderJanpadDysfunctional(){
     <select id="gpNoEmpMonth" style="margin-left:8px;padding:6px 9px;border:1px solid #b9cce0;border-radius:8px;font-weight:800">
       ${months.map(m=>`<option value="${m}" ${m===month?'selected':''}>${m}</option>`).join('')}
     </select>
-    • चयनित माह में Persondays = 0`;
+    • ${month==='All Month'?'अप्रैल–अक्टूबर के कुल मानव दिवस':'चयनित माह में Persondays'} = 0${base.some(r=>!Number.isFinite(r[month]))?' • डेटा उपलब्ध नहीं: '+base.filter(r=>!Number.isFinite(r[month])).length+' GP':''}`;
 
   const sel=document.getElementById('gpNoEmpMonth');
   if(sel)sel.onchange=()=>{window.GP_NO_EMP_MONTH=sel.value;renderJanpadDysfunctional();};
 
-  const totalGP=base.length,totalNo=noEmp.length,active=Math.max(0,totalGP-totalNo);
+  const totalGP=base.length,totalNo=noEmp.length,active=base.filter(r=>Number.isFinite(r[month])&&r[month]>0).length;
   const satnaGP=base.filter(r=>clean(r.district)==='SATNA').length;
   const maiharGP=base.filter(r=>clean(r.district)==='MAIHAR').length;
   $('kpis').innerHTML=[
