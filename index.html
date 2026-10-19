@@ -4166,21 +4166,21 @@ function srdmPrintEkBagiyaOnly(){
 const root=document.getElementById('srdmApplications'),grid=document.getElementById('reportMenuGrid');if(!root||!grid)return;
 const groups=[
  ['1','मस्टरोल, e-MB एवं FTO',['#embPendingLauncher','a[href="pending-mr-fto.html"]','a[href="rejected-wage-reconciliation.html"]','#musterEmbLauncher']],
- ['2','एक बगिया — भुगतान एवं प्रगति',['a[href="payment.html"]']],
+ ['2','एक बगिया — भुगतान एवं प्रगति',['a[href="payment.html"]','[data-view="ekbagiya"]']],
  ['3','कार्य योजना — Planner / SIPRI / Yuktdhara',['a[href="planner-portal-dashboard.html"]','a[href^="planner-sipri-dashboard-hi.html"]','#yuktdharaLauncher']],
  ['4','जल गंगा संवर्धन अभियान — JGSA',['a[href="https://jgsa.nregsmp.org/"]']],
  ['5','सुगम संपर्कता परियोजना — RIMS',['a[href="rims-roads.html"]']],
  ['6','ग्राम पंचायत / सेक्टर / उपयंत्री मास्टर',['a[href="gp-sector-engineer-master.html"]']],
  ['7','PMAY-G — मानव दिवस एवं भौतिक पूर्ण कार्य',['a[href="pmayg-physical.html"]','a[href="pmayg.html"]']],
- ['8','कार्य विश्लेषण एवं व्यय',['a[href="works-above-75.html"]','[data-srdm-view="category"]']],
- ['9','दैनिक श्रमिक एवं जनपद मॉनिटरिंग',['[data-srdm-view="mandaysgen"]','#srdmZeroLauncher','[data-srdm-view="dysfunctional"]','[data-srdm-view="engineer"]','[data-srdm-view="official"]','[data-srdm-view="state"]','#shramikNiyojanLauncher']],
+ ['8','कार्य विश्लेषण एवं व्यय',['a[href="works-above-75.html"]',':is([data-srdm-view="category"],[data-view="category"])','[data-view="categorysubeng"]','[data-view="categoryworks"]','[data-view="incomplete"]','[data-view="recovery"]']],
+ ['9','दैनिक श्रमिक एवं जनपद मॉनिटरिंग',[':is([data-srdm-view="mandaysgen"],[data-view="mandaysgen"])','#srdmZeroLauncher',':is([data-srdm-view="dysfunctional"],[data-view="dysfunctional"])',':is([data-srdm-view="engineer"],[data-view="engineer"])',':is([data-srdm-view="official"],[data-view="official"])',':is([data-srdm-view="state"],[data-view="state"])','#shramikNiyojanLauncher','[data-view="dysjanpad"]']],
  ['10','Statistics — सांख्यिकीय विवरण',['#vbgStatisticsLauncher']]
 ];
 const codes=new Map(),done=new WeakSet(),sections=new Map();let other=0;
 function key(el){const v=el.getAttribute('data-srdm-view')||el.getAttribute('data-view');if(v)return 'view:'+v;if(el.id)return 'id:'+el.id;return 'url:'+el.getAttribute('href')}
 function section(number,title){if(sections.has(number))return sections.get(number);const group=document.createElement('details');group.className='srdm-report-group';group.open=true;group.dataset.reportGroup=number;const summary=document.createElement('summary'),code=document.createElement('span'),name=document.createElement('span');code.className='srdm-group-code';code.textContent='R-'+number;name.textContent=title;summary.append(code,name);const list=document.createElement('div');list.className='srdm-report-links';group.append(summary,list);grid.append(group);sections.set(number,group);group.addEventListener('toggle',buttonState);return group}
 function label(el,code){el.dataset.reportCode=code;const h=el.querySelector('.srdm-app-copy strong,.module-title,strong')||el;let badge=el.querySelector('.srdm-report-code');if(!badge){badge=document.createElement('span');badge.className='srdm-report-code';h.prepend(badge,document.createTextNode(' '))}badge.textContent=code;badge.setAttribute('aria-label','Report '+code.slice(2))}
-for(const [number,title,selectors] of groups){for(const [index,selector] of selectors.entries()){const card=root.querySelector('.srdm-app-card'+selector.replace(/^a/,''));if(!card||card.hidden||card.style.display==='none')continue;const code='R-'+number+'.'+(index+1);codes.set(key(card),code);card.dataset.reportCodeFixed=code.slice(2);label(card,code);section(number,title).querySelector('.srdm-report-links').append(card);done.add(card)}}
+for(const [number,title,selectors] of groups){for(const [index,selector] of selectors.entries()){const card=[...root.querySelectorAll('.srdm-app-card')].find(card=>card.matches(selector));if(!card||card.hidden||card.style.display==='none')continue;const code='R-'+number+'.'+(index+1);codes.set(key(card),code);card.dataset.reportCodeFixed=code.slice(2);label(card,code);section(number,title).querySelector('.srdm-report-links').append(card);done.add(card)}}
 // The old hidden Ek Bagiya shortcut stays hidden and is not made searchable.
 for(const card of root.querySelectorAll('.srdm-app-card[hidden],.ekbagiya-launcher'))done.add(card);
 function refresh(){for(const card of root.querySelectorAll('.srdm-app-card')){if(done.has(card)||card.hidden)continue;let number='11',title='अन्य रिपोर्ट',sub=null;for(const [n,t,selectors] of groups){const i=selectors.findIndex(selector=>card.matches(selector));if(i>=0){number=n;title=t;sub=i+1;break}}const code='R-'+number+'.'+(sub===null?++other:sub);codes.set(key(card),code);label(card,code);section(number,title).querySelector('.srdm-report-links').append(card);done.add(card)}for(const tab of document.querySelectorAll('.tab[data-view]')){const code=codes.get(key(tab));if(code)label(tab,code)}}
