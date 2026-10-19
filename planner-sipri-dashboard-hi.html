@@ -347,6 +347,24 @@ body#plannerDashboard main{max-width:none!important;padding:0!important}
 #officialSection table.official-merged .progress-badge{font-size:11pt!important}
 #officialSection .yuktdhara-date-banner{font-size:14pt!important}
 }
+
+/* Keep the complete official table inside the viewport. */
+html,body#plannerDashboard{max-width:100%;margin:0}
+body#plannerDashboard main{width:100%!important;max-width:100%!important;margin-left:auto;margin-right:auto;padding-left:8px!important;padding-right:8px!important;min-width:0}
+#officialSection{width:100%;min-width:0;max-width:100%;padding:6px}
+#officialSection .wrap{width:100%!important;max-width:100%!important;min-width:0!important}
+#officialSection table.official-merged{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important}
+#officialSection table.official-merged thead th{font-size:clamp(11px,.86vw,17px)!important;padding:8px 3px!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;line-height:1.3!important}
+#officialSection table.official-merged td.num{font-size:clamp(15px,1.35vw,26px)!important;padding:8px 2px!important;white-space:nowrap!important}
+#officialSection table.official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(-n+2){font-size:clamp(10px,.8vw,16px)!important;padding:6px 3px!important;overflow-wrap:break-word!important}
+#officialSection table.official-merged .progress-badge{font-size:clamp(12px,1vw,20px)!important;padding:4px 1px!important}
+#officialSection table.official-merged thead th .column-sort-toggle{width:12px;min-width:12px;margin-left:1px!important;padding:1px!important;font-size:8px!important}
+@media print{
+#officialSection table.official-merged thead th{font-size:8pt!important;padding:1.5mm .5mm!important}
+#officialSection table.official-merged td.num{font-size:11pt!important;padding:1.5mm .5mm!important}
+#officialSection table.official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(-n+2){font-size:8pt!important}
+#officialSection table.official-merged .progress-badge{font-size:10pt!important}
+}
 </style><style id="planner-stable-fonts-20261017">
 /* Stable Planner screen typography; kept separate from daily data imports. */
 @media screen {
