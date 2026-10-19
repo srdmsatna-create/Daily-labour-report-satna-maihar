@@ -4154,6 +4154,10 @@ function srdmPrintEkBagiyaOnly(){
 <script>document.write('<script src="gp-emuster-data.js?live='+Date.now()+'"><\/script>');</script><script src="gp-labour-muster-module.js?v=20261013-column-fit"></script>
 <!-- SRDM_REPORT_CODES_START -->
 <style id="srdm-hierarchical-report-menu">
+/* Keep application navigation static; legacy module dots escape moved cards. */
+#srdmApplications .module-indicator{display:none!important;animation:none!important}
+#srdmApplications .srdm-app-card,#srdmApplications .srdm-app-icon,#srdmApplications .srdm-app-new,#srdmApplications .srdm-app-card::before,#srdmApplications .srdm-app-card::after{animation:none!important}
+
 /* Compact portal menu: 2026-10-19 */
 #srdmApplications{box-sizing:border-box;max-width:1240px!important;margin:12px auto!important;padding:12px!important;border-radius:6px!important;box-shadow:none!important}
 #srdmApplications .srdm-app-launcher-head{padding-bottom:8px!important;gap:6px!important}
