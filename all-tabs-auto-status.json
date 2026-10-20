@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-10-19T15:31:05.603884+00:00",
+  "checkedAt": "2026-10-20T06:07:22.485698+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -16,14 +16,18 @@
         "shramik-state-refresh-status.js",
         "shramik-refresh-status.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "muster_emb": {
       "success": true,
       "files": [
         "muster-emb-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "pending_mr_fto": {
       "success": true,
@@ -31,14 +35,9 @@
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1
-    },
-    "emb_pending": {
-      "success": true,
-      "files": [
-        "data/emb-pending-latest.json"
-      ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "yuktdhara": {
       "success": true,
@@ -47,35 +46,45 @@
         "yuktdhara-official-data.js",
         "yuktdhara-received-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "pending_wage_payment": {
       "success": true,
       "files": [
         "data/pending-wage-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "timely_payment": {
       "success": true,
       "files": [
         "data/timely-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "delayed_compensation": {
       "success": true,
       "files": [
         "data/delayed-compensation-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "block_statistics": {
       "success": true,
       "files": [
         "vbg-block-stats.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "mis_612": {
       "success": true,
@@ -84,47 +93,77 @@
         "data/mis-6.12-status.json",
         "ongoing-details.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
+    },
+    "pmayg_physical": {
+      "success": true,
+      "files": [
+        "data/pmayg-physical-latest.json"
+      ],
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "pmayg": {
       "success": true,
       "files": [
         "data/pmayg-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "above75": {
       "success": true,
       "files": [
         "data/above75-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "planner": {
       "success": true,
       "files": [
         "planner-portal-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "secure_ts": {
       "success": true,
       "files": [
         "secure-ts-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "ek_bagiya_payment": {
       "success": true,
       "files": [
         "data/ek-bagiya-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
     },
     "rejected_wage": {
       "success": true,
       "files": [
         "data/rejected-wage-latest.json"
+      ],
+      "attempts": 1,
+      "reused": true,
+      "reusedFrom": "C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_e7oteomx\\report"
+    },
+    "emb_pending": {
+      "success": true,
+      "files": [
+        "data/emb-pending-latest.json"
       ],
       "attempts": 1
     }
