@@ -16,6 +16,7 @@ GROUPS=[
  ('muster_emb',[['scripts_local/update_muster_emb_monitoring.py','--update-only']],['muster-emb-data.js']),
  ('pending_mr_fto',[['scripts_local/update_pending_mr_fto.py']],['data/pending-mr-fto.json','data/pending-mr-fto-details.json.gz']),
  ('emb_pending',[['scripts_local/update_emb_pending.py']],['data/emb-pending-latest.json']),
+ ('yuktdhara_state',[['scripts_local/update_yuktdhara_state.py']],['data/yuktdhara-state-latest.json']),
  ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-data.js','yuktdhara-official-data.js','yuktdhara-received-data.js']),
  ('pending_wage_payment',[['scripts_local/update_pending_wage_payment.py']],['data/pending-wage-payment-latest.json']),
  ('timely_payment',[['scripts_local/update_timely_payment.py']],['data/timely-payment-latest.json']),
@@ -102,6 +103,11 @@ def validate(group,root):
   if d['nregaCount']!=sum(r['incomplete'] for r in official) or d['bandCount']!=sum(r['band75to100'] for r in official) or d['above75Count']!=sum(r['overallBooked']*100>r['sanction']*75 for r in rr if r['sanction']>0):raise ValueError('Above75 summary totals failed')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
+ elif group=='yuktdhara_state':
+  d=data(root/'data/yuktdhara-state-latest.json');rr=d.get('rows',[])
+  if len(rr)!=52 or len({r['district'] for r in rr})!=52:raise ValueError('52 unique Yuktdhara districts required')
+  if any(sum(r[k] for r in rr)!=v for k,v in d['totals'].items()):raise ValueError('Yuktdhara state totals mismatch')
+  if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Today verified state snapshot required')
  elif group=='yuktdhara':
   if len(data(root/'yuktdhara-official-data.js').get('rows',[]))!=8:raise ValueError('Yuktdhara Janpads incomplete')
   received=data(root/'yuktdhara-received-data.js')
