@@ -55,7 +55,7 @@
   report.setAttribute('aria-label', 'Bhuvan Yuktdhara Sub Engineer-wise Report');
   report.innerHTML = `<div class="yukt-shell">
     <header class="yukt-head"><div><h1>Bhuvan Yuktdhara — Sub Engineer-wise Report</h1><p>District Satna (5 Janpad) • District Maihar (3 Janpad) • Official status as on ${esc(DATA.asOf)}</p></div>
-      <div class="yukt-actions"><button class="yukt-btn secondary" id="yuktOfficial">Official Bhuvan</button><button class="yukt-btn" id="yuktExcel">Excel Download</button><button class="yukt-btn" id="yuktPrint">Print / PDF</button><button class="yukt-btn close" id="yuktClose">Dashboard पर वापस</button></div></header>
+      <div class="yukt-actions"><a class="yukt-btn secondary" href="yuktdhara-state.html">मध्यप्रदेश — 52 जिले</a><button class="yukt-btn secondary" id="yuktOfficial">Official Bhuvan</button><button class="yukt-btn" id="yuktExcel">Excel Download</button><button class="yukt-btn" id="yuktPrint">Print / PDF</button><button class="yukt-btn close" id="yuktClose">Dashboard पर वापस</button></div></header>
     <div class="yukt-kpis" id="yuktKpis"></div>
     <div class="yukt-controls">
       <label>District<select id="yuktDistrict"><option value="ALL">Satna + Maihar</option><option value="SATNA">SATNA</option><option value="MAIHAR">MAIHAR</option></select></label>
