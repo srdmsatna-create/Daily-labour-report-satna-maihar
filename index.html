@@ -4585,4 +4585,16 @@ function printEkAllWorksList(){
 }
 </script>
 
+
+<style id="jgsa-main-official-links-style">#jgsaMainOfficialLinks{display:flex;gap:8px;flex-wrap:wrap;padding:12px;background:#e9f2fb;border-bottom:1px solid #9cbad5}#jgsaMainOfficialLinks a{display:inline-flex;align-items:center;padding:10px 14px;background:#175b97;color:#fff!important;border-radius:6px;font-size:14px;font-weight:800;text-decoration:none;min-height:42px}#jgsaMainOfficialLinks a:hover{background:#103f6b}#jgsaMainOfficialLinks small{display:block;flex-basis:100%;color:#254e76;font-weight:700}@media print{#jgsaMainOfficialLinks{display:none!important}}</style>
+<script id="jgsa-main-official-links-script">
+(function(){
+ const group=document.querySelector('[data-report-group="4"]');if(!group||document.getElementById('jgsaMainOfficialLinks'))return;
+ const nav=document.createElement('nav');nav.id='jgsaMainOfficialLinks';nav.setAttribute('aria-label','JGSA Official Portal');
+ const entries=[['📊 Overview','https://jgsa.nregsmp.org/?date=2026-07-02'],['Rankings','https://jgsa.nregsmp.org/rankings.php?date=2026-07-02'],['Work Monitor','https://jgsa.nregsmp.org/work-monitor.php?date=2026-07-02'],['📢 Alerts & Announcements','https://jgsa.nregsmp.org/alerts.php?date=2026-07-02']];
+ for(const [label,url]of entries){const a=document.createElement('a');a.textContent=label;a.href=url;a.target='_blank';a.rel='noopener noreferrer';nav.appendChild(a);}
+ const date=document.createElement('small');date.textContent='JGSA पोर्टल • दिनांक 02-07-2026';nav.appendChild(date);
+ group.querySelector('summary').insertAdjacentElement('afterend',nav);
+})();
+</script>
 </body></html>
