@@ -2033,6 +2033,71 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
   </div>
   <div id="yuktdharaSubEngineerApp"></div>
 </section>
+<script id="srdm-fast-login">
+const PORTAL_LOGIN_USER='srdmsatna';
+const PORTAL_DEFAULT_PASS='SRDM@2026';
+const PORTAL_PASS_KEY='srdmPortalPassword';
+function getPortalPassword(){return localStorage.getItem(PORTAL_PASS_KEY)||PORTAL_DEFAULT_PASS;}
+function setPortalPassword(v){localStorage.setItem(PORTAL_PASS_KEY,v);}
+function openPortal(){
+  const s=document.getElementById('loginScreen'); if(s)s.classList.add('hidden');
+  document.body.classList.remove('login-locked');
+  sessionStorage.setItem('srdmPortalLogin','1');
+}
+function closePortal(){
+  sessionStorage.removeItem('srdmPortalLogin');
+  const s=document.getElementById('loginScreen'); if(s)s.classList.remove('hidden');
+  document.body.classList.add('login-locked');
+  const p=document.getElementById('loginPassword'); if(p)p.value='';
+}
+function tryPortalLogin(){
+  const u=(document.getElementById('loginUsername')?.value||'').trim();
+  const p=document.getElementById('loginPassword')?.value||'';
+  const e=document.getElementById('loginError');
+  if(u===PORTAL_LOGIN_USER && p===getPortalPassword()){ if(e)e.classList.remove('show'); openPortal(); }
+  else { if(e)e.classList.add('show'); document.getElementById('loginPassword')?.focus(); }
+}
+function showPasswordModal(){
+  const m=document.getElementById('passwordModal'); if(!m)return;
+  ['currentPassword','newPassword','confirmPassword'].forEach(id=>{const x=document.getElementById(id);if(x)x.value='';});
+  const msg=document.getElementById('passwordMessage');if(msg){msg.textContent='';msg.className='password-message';}
+  m.classList.remove('hidden');
+  setTimeout(()=>document.getElementById('currentPassword')?.focus(),20);
+}
+function hidePasswordModal(){ document.getElementById('passwordModal')?.classList.add('hidden'); }
+function savePortalPassword(){
+  const current=document.getElementById('currentPassword')?.value||'';
+  const next=document.getElementById('newPassword')?.value||'';
+  const confirm=document.getElementById('confirmPassword')?.value||'';
+  const msg=document.getElementById('passwordMessage');
+  const fail=t=>{if(msg){msg.textContent=t;msg.className='password-message error';}};
+  if(current!==getPortalPassword())return fail('Current Password गलत है।');
+  if(next.length<6)return fail('New Password कम से कम 6 characters का रखें।');
+  if(next!==confirm)return fail('New Password और Confirm Password match नहीं कर रहे हैं।');
+  if(next===current)return fail('New Password पुराने password से अलग रखें।');
+  setPortalPassword(next);
+  if(msg){msg.textContent='Password successfully changed.';msg.className='password-message success';}
+  setTimeout(hidePasswordModal,800);
+}
+function initPortalLogin(){
+  if(sessionStorage.getItem('srdmPortalLogin')==='1') openPortal(); else closePortal();
+  document.getElementById('loginBtn')?.addEventListener('click',tryPortalLogin);
+  document.getElementById('logoutBtn')?.addEventListener('click',closePortal);
+  document.getElementById('changePasswordBtn')?.addEventListener('click',showPasswordModal);
+  document.getElementById('closePasswordBtn')?.addEventListener('click',hidePasswordModal);
+  document.getElementById('cancelPasswordBtn')?.addEventListener('click',hidePasswordModal);
+  document.getElementById('savePasswordBtn')?.addEventListener('click',savePortalPassword);
+  document.getElementById('passwordModal')?.addEventListener('click',e=>{if(e.target===document.getElementById('passwordModal'))hidePasswordModal();});
+  ['currentPassword','newPassword','confirmPassword'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')savePortalPassword();}));
+  ['loginUsername','loginPassword'].forEach(id=>document.getElementById(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')tryPortalLogin()}));
+}
+
+
+
+document.getElementById('loginBtn')?.addEventListener('click',tryPortalLogin);
+for(const id of ['loginUsername','loginPassword'])document.getElementById(id)?.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();tryPortalLogin();}});
+if(sessionStorage.getItem('srdmPortalLogin')==='1')openPortal();
+</script>
 <script src="yuktdhara-data.js?v=20260925"></script>
 <script src="yuktdhara-subengineer.js?v=20261021-r34-menu"></script>
 <script>
@@ -2177,7 +2242,23 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
     </div>
   </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script src="vendor/pptxgen.bundle.js?v=49"></script><script src="ek-bagiya/data.js?v=20260925"></script><script>try{window.EK_BAGIYA_WORK_DETAILS=(typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS))?WORK_DETAILS:[];}catch(e){window.EK_BAGIYA_WORK_DETAILS=[];}</script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');document.write('<script src="ongoing-details.js?live='+Date.now()+'"><\/script>');</script><script>
+<script id="srdm-on-demand-exports">
+(function(){
+ const loading={};
+ function library(kind){
+  if(kind==='excel'?typeof XLSX!=='undefined':typeof PptxGenJS!=='undefined')return Promise.resolve();
+  if(loading[kind])return loading[kind];
+  loading[kind]=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src=kind==='excel'?'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js':'vendor/pptxgen.bundle.js?v=49';script.onload=resolve;script.onerror=()=>{delete loading[kind];script.remove();reject(new Error('Export library unavailable'));};document.head.appendChild(script);});return loading[kind];
+ }
+ document.addEventListener('click',async event=>{
+  const button=event.target.closest('#allWorksExcelBtn,#generateBtn,#pptBtn,#screenPptBtn');if(!button)return;
+  const kind=button.id==='pptBtn'||button.id==='screenPptBtn'?'ppt':'excel';
+  if(kind==='excel'?typeof XLSX!=='undefined':typeof PptxGenJS!=='undefined')return;
+  event.preventDefault();event.stopImmediatePropagation();const label=button.textContent;button.disabled=true;button.textContent='फ़ाइल सुविधा लोड हो रही है…';
+  try{await library(kind);button.disabled=false;button.textContent=label;button.click();}catch(error){button.disabled=false;button.textContent=label;alert('Excel/PPT सुविधा लोड नहीं हुई। दोबारा बटन दबाएँ।');}
+ },true);
+})();
+</script><script src="ek-bagiya/data.js?v=20260925"></script><script>try{window.EK_BAGIYA_WORK_DETAILS=(typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS))?WORK_DETAILS:[];}catch(e){window.EK_BAGIYA_WORK_DETAILS=[];}</script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');document.write('<script src="auto-data.js?live='+Date.now()+'"><\/script>');document.write('<script src="ongoing-details.js?live='+Date.now()+'"><\/script>');</script><script>
 /* Embedded ongoing-details.js - EXCEL FINAL CATEGORY V8 */
 window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
 </script><script src="ongoing-vbg-25-09-2026.js?v=20260925"></script><script src="gp-sector-mapping-overrides.js?v=20260925b"></script><script>
@@ -3214,65 +3295,7 @@ function initPremiumUI(){
 }
 
 
-const PORTAL_LOGIN_USER='srdmsatna';
-const PORTAL_DEFAULT_PASS='SRDM@2026';
-const PORTAL_PASS_KEY='srdmPortalPassword';
-function getPortalPassword(){return localStorage.getItem(PORTAL_PASS_KEY)||PORTAL_DEFAULT_PASS;}
-function setPortalPassword(v){localStorage.setItem(PORTAL_PASS_KEY,v);}
-function openPortal(){
-  const s=$('loginScreen'); if(s)s.classList.add('hidden');
-  document.body.classList.remove('login-locked');
-  sessionStorage.setItem('srdmPortalLogin','1');
-}
-function closePortal(){
-  sessionStorage.removeItem('srdmPortalLogin');
-  const s=$('loginScreen'); if(s)s.classList.remove('hidden');
-  document.body.classList.add('login-locked');
-  const p=$('loginPassword'); if(p)p.value='';
-}
-function tryPortalLogin(){
-  const u=($('loginUsername')?.value||'').trim();
-  const p=$('loginPassword')?.value||'';
-  const e=$('loginError');
-  if(u===PORTAL_LOGIN_USER && p===getPortalPassword()){ if(e)e.classList.remove('show'); openPortal(); }
-  else { if(e)e.classList.add('show'); $('loginPassword')?.focus(); }
-}
-function showPasswordModal(){
-  const m=$('passwordModal'); if(!m)return;
-  ['currentPassword','newPassword','confirmPassword'].forEach(id=>{const x=$(id);if(x)x.value='';});
-  const msg=$('passwordMessage');if(msg){msg.textContent='';msg.className='password-message';}
-  m.classList.remove('hidden');
-  setTimeout(()=>$('currentPassword')?.focus(),20);
-}
-function hidePasswordModal(){ $('passwordModal')?.classList.add('hidden'); }
-function savePortalPassword(){
-  const current=$('currentPassword')?.value||'';
-  const next=$('newPassword')?.value||'';
-  const confirm=$('confirmPassword')?.value||'';
-  const msg=$('passwordMessage');
-  const fail=t=>{if(msg){msg.textContent=t;msg.className='password-message error';}};
-  if(current!==getPortalPassword())return fail('Current Password गलत है।');
-  if(next.length<6)return fail('New Password कम से कम 6 characters का रखें।');
-  if(next!==confirm)return fail('New Password और Confirm Password match नहीं कर रहे हैं।');
-  if(next===current)return fail('New Password पुराने password से अलग रखें।');
-  setPortalPassword(next);
-  if(msg){msg.textContent='Password successfully changed.';msg.className='password-message success';}
-  setTimeout(hidePasswordModal,800);
-}
-function initPortalLogin(){
-  if(sessionStorage.getItem('srdmPortalLogin')==='1') openPortal(); else closePortal();
-  $('loginBtn')?.addEventListener('click',tryPortalLogin);
-  $('logoutBtn')?.addEventListener('click',closePortal);
-  $('changePasswordBtn')?.addEventListener('click',showPasswordModal);
-  $('closePasswordBtn')?.addEventListener('click',hidePasswordModal);
-  $('cancelPasswordBtn')?.addEventListener('click',hidePasswordModal);
-  $('savePasswordBtn')?.addEventListener('click',savePortalPassword);
-  $('passwordModal')?.addEventListener('click',e=>{if(e.target===$('passwordModal'))hidePasswordModal();});
-  ['currentPassword','newPassword','confirmPassword'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')savePortalPassword();}));
-  ['loginUsername','loginPassword'].forEach(id=>$(id)?.addEventListener('keydown',e=>{if(e.key==='Enter')tryPortalLogin()}));
-}
-
-
+/* Login initialized before report data downloads. */
 function currentScopeText(){
   const d=$('districtFilter')?.value||'ALL';
   const j=$('janpadFilter')?.value||'ALL';
