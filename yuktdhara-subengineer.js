@@ -3,7 +3,7 @@
 function addStateReportLink(){
  const launcher=document.getElementById('yuktdharaLauncher');
  if(!launcher||document.getElementById('yuktdharaStateLauncher'))return;
- const link=document.createElement('a');link.id='yuktdharaStateLauncher';link.href='yuktdhara-state.html';link.className=launcher.className;link.textContent='R-3.4 — युक्तधारा मॉनिटरिंग • मध्यप्रदेश 52 जिले';link.style.cssText='display:block;padding:14px 18px;margin:10px 0;border:2px solid #552b96;border-radius:10px;background:#f3edff;color:#552b96;font-weight:800;text-decoration:none';launcher.insertAdjacentElement('afterend',link);
+ const link=document.createElement('a');link.id='yuktdharaStateLauncher';link.href='yuktdhara-state.html';link.className='srdm-app-card';link.innerHTML='<span class="srdm-app-copy"><strong>युक्तधारा मॉनिटरिंग — मध्यप्रदेश 52 जिले</strong><span>FY 2026-27 • राज्य एवं जिला-वार प्रगति</span></span>';launcher.insertAdjacentElement('afterend',link);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addStateReportLink);else addStateReportLink();
 
