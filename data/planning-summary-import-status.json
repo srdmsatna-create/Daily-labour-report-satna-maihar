@@ -1,35 +1,35 @@
 {
-  "date": "2026-10-19",
+  "date": "2026-10-21",
   "source": {
-    "uploadedDate": "19-10-2026",
+    "uploadedDate": "21-10-2026",
     "files": [
-      "Planning_Summary_Report (5)(2).xlsx",
-      "Planning_Summary_Report (4)(2).xlsx"
+      "Planning_Summary_Report (7)(1).xlsx",
+      "Planning_Summary_Report (6).xlsx"
     ],
     "sourceRows": 8569,
     "mappingSource": "gp-sector-engineer-master-25-09-2026.csv",
     "sourceFiles": [
       {
-        "file": "Planning_Summary_Report (5)(2).xlsx",
-        "sha256": "ca79af4bf0359c339f9952e299748a85c9941adcbafd416d6096f2c05498e905",
+        "file": "Planning_Summary_Report (7)(1).xlsx",
+        "sha256": "0c2f0747894f8abb15a5d7b522441cfe57748729366ffa858eb38f87ecab7ae7",
         "rows": 5103
       },
       {
-        "file": "Planning_Summary_Report (4)(2).xlsx",
-        "sha256": "dcb152f655a11933c0cd7d7085d3bef6a8967a32c0e83181b43799f5cf39b015",
+        "file": "Planning_Summary_Report (6).xlsx",
+        "sha256": "37ee773433be656e90275176551ba8348af4a8f071fcc9c7a3bd5cf8b17c3c86",
         "rows": 3466
       }
     ],
     "mappedRows": 8569,
     "unmappedRows": 0,
     "districtLabelsNormalized": 423,
-    "sipriAbovePlannerRows": 73
+    "sipriAbovePlannerRows": 78
   },
   "totals": {
     "plannerDetail": 30404,
-    "sipri": 1711,
+    "sipri": 1757,
     "aeApproved": 779,
-    "aePending": 932,
+    "aePending": 978,
     "stateReviewed": 411,
     "statePending": 435
   },
@@ -61,9 +61,9 @@
       "Majhgawan",
       "Assistant Engineer - Majhgawan",
       2466,
-      328,
+      345,
       153,
-      175,
+      192,
       38,
       115
     ],
@@ -83,9 +83,9 @@
       "Ramnagar",
       "Assistant Engineer - Ramnagar",
       5578,
-      246,
+      263,
       78,
-      168,
+      185,
       78,
       0
     ],
@@ -116,9 +116,9 @@
       "Unchahara",
       "Assistant Engineer - Unchahara",
       1087,
-      184,
+      196,
       134,
-      50,
+      62,
       9,
       125
     ]
@@ -157,6 +157,20 @@
       "sipri": 2
     },
     {
+      "block": "Majhgawan",
+      "panchayat": "Tendhee Patmaniya",
+      "structure": "Checkdam",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Majhgawan",
+      "panchayat": "Malgousa",
+      "structure": "Checkdam",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
       "block": "Unchahara",
       "panchayat": "Bihata",
       "structure": "Nadep",
@@ -189,6 +203,13 @@
       "panchayat": "Jhari Nakaila",
       "structure": "Percolation tank",
       "planner": 3,
+      "sipri": 7
+    },
+    {
+      "block": "Majhgawan",
+      "panchayat": "Singhpur",
+      "structure": "Percolation tank",
+      "planner": 4,
       "sipri": 5
     },
     {
@@ -612,11 +633,25 @@
       "sipri": 2
     },
     {
+      "block": "Ramnagar",
+      "panchayat": "Khara",
+      "structure": "Recharge pit",
+      "planner": 3,
+      "sipri": 4
+    },
+    {
       "block": "Maihar",
       "panchayat": "Kutai",
       "structure": "Gravel road",
       "planner": 1,
       "sipri": 3
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Khara",
+      "structure": "CC road",
+      "planner": 6,
+      "sipri": 7
     },
     {
       "block": "Maihar",
