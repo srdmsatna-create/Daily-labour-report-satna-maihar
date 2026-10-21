@@ -2661,7 +2661,7 @@ function renderEkBagiyaDashboard(){
     (host?.parentElement||document.querySelector('.report-card'))?.appendChild(list);
   }
   if(list){
-    let wh='<div class="section-title" style="margin-top:18px">एक बगिया — सभी कार्यों की एक साथ सूची ('+fmt(allWorks.length)+' Works)</div><div class="table-wrap" style="max-height:none"><table class="ek-all-work-table"><thead><tr><th>S.No.</th><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>Cluster</th><th>GP</th><th>FY</th><th>Status</th><th>Work Code</th><th>Work Name</th><th>Sanction ₹</th><th>MGNREGA Booked ₹</th><th>VB-G RAM G Booked ₹</th><th>Overall Booked ₹</th><th>MGNREGA Paid ₹</th><th>VBGRAMG Paid ₹</th><th>Total Paid ₹</th><th>Pending ₹</th><th>Overall Exp %</th><th>MGNREGA Mandays<br>Till 31 Mar 2026</th><th>NREGA Mandays<br>01 Apr–30 Jun</th><th>Mandays<br>01 Jul–Today</th></tr></thead><tbody>';
+    let wh='<div class="section-title" style="margin-top:18px">एक बगिया — सभी कार्यों की एक साथ सूची ('+fmt(allWorks.length)+' Works)</div><div class="ek-list-actions no-print"><button type="button" onclick="printEkAllWorksList()">🖨 Print / Save as PDF — सभी कार्य</button></div><div class="table-wrap" style="max-height:none"><table class="ek-all-work-table"><thead><tr><th>S.No.</th><th>District</th><th>Janpad</th><th>Sub Engineer</th><th>Cluster</th><th>GP</th><th>FY</th><th>Status</th><th>Work Code</th><th>Work Name</th><th>Sanction ₹</th><th>MGNREGA Booked ₹</th><th>VB-G RAM G Booked ₹</th><th>Overall Booked ₹</th><th>MGNREGA Paid ₹</th><th>VBGRAMG Paid ₹</th><th>Total Paid ₹</th><th>Pending ₹</th><th>Overall Exp %</th><th>MGNREGA Mandays<br>Till 31 Mar 2026</th><th>NREGA Mandays<br>01 Apr–30 Jun</th><th>Mandays<br>01 Jul–Today</th></tr></thead><tbody>';
     for(let i=0;i<allWorks.length;i++){const r=allWorks[i];wh+='<tr>'+cell(i+1,true)+cell(r.Zila)+cell(r.Janpad)+cell(r.Upyantri)+cell(r.Cluster)+cell(r['Panchayat Name'])+cell(r['Fin Year'])+cell(r['Work Status'])+cell(r['Work Code'])+cell(r['Work Name'])+'<td>'+num(r['Sanction Amount Total']).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+num(r['MGNREGA Total Booked Till 30 June']).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+num(r['VBGRAMG Total Booked']).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+num(r['Overall Total Booked']).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+(num(r['MGNREGA Paid Since Wage'])+num(r['MGNREGA Paid Since Material'])).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+(num(r['VBGRAMG Paid Since Wage'])+num(r['VBGRAMG Paid Since Material'])).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+num(r['Total Amount Paid since inception']).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+(num(r['Overall Total Booked'])-num(r['Total Amount Paid since inception'])).toLocaleString('en-IN',{maximumFractionDigits:2})+'</td><td>'+num(r['Overall Expenditure %']).toFixed(1)+'%</td>'+cell(r['Mandays 2025-2026'],true)+cell(r['NREGA Till 30 June Mandays'],true)+cell(r['Mandays 2026-2027'],true)+'</tr>';}
     if(!allWorks.length)wh+='<tr><td colspan="22" class="empty-table">Current filter में Ek Bagiya work नहीं मिला।</td></tr>';
     wh+='</tbody></table></div>';list.innerHTML=wh;
@@ -4160,7 +4160,37 @@ function srdmPrintEkBagiyaOnly(){
     '#reportTable{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin-top:3mm}'+
     '#reportTable th,#reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}'+
     '#reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}#reportTable thead,#ekBlockTable thead{display:table-header-group!important}#reportTable tr,#ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}.district-total td,.grand-total td,.total-row td{font-weight:900!important;background:#dbe9fb!important}'+
-    '</style></head><body>'+body+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit"></body></html>');
+    '</style></head><body>'+body+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit">
+<style id="ek-all-work-table-borders">
+body #ekAllWorksList .ek-all-work-table{border-collapse:collapse!important;border:1.5px solid #51759c!important;min-width:2400px;width:100%}
+body #ekAllWorksList .ek-all-work-table :is(th,td){border:1px solid #87a5c5!important;vertical-align:middle}
+body #ekAllWorksList .ek-all-work-table th{background:#dce9fb!important;color:#123f72!important;text-align:center;position:sticky;top:0}
+body #ekAllWorksList .ek-all-work-table tbody tr:nth-child(even){background:#f3f7fc}
+body #ekAllWorksList .ek-all-work-table td:nth-child(n+11){text-align:right;white-space:nowrap}
+body #ekAllWorksList .ek-all-work-table td:nth-child(10){min-width:270px;white-space:normal}
+.ek-list-actions{margin:10px 0}
+</style>
+<script>
+function printEkAllWorksList(){
+ const source=document.querySelector('#ekAllWorksList .ek-all-work-table');
+ if(!source){alert('कार्य सूची उपलब्ध नहीं है।');return;}
+ const table=source.cloneNode(true);
+ const count=table.tBodies[0]?.rows.length||0;
+ const title='एक बगिया — सभी कार्यों की एक साथ सूची ('+count+' Works)';
+ const frame=document.createElement('iframe');
+ frame.style.cssText='position:fixed;width:1px;height:1px;bottom:0;right:0;border:0;opacity:0';
+ frame.title='एक बगिया कार्य सूची प्रिंट';
+ document.body.appendChild(frame);
+ const doc=frame.contentDocument;
+ doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>'+
+ '@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box}body{margin:0;color:#111;font-family:Arial,"Noto Sans Devanagari",sans-serif}h1{font-size:14pt;text-align:center;margin:0 0 4mm}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #6281a1;padding:1mm .6mm;font-size:6.5pt;line-height:1.25;vertical-align:top;overflow-wrap:anywhere;white-space:normal}th{background:#dce9fb;color:#123f72;font-weight:700;text-align:center}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}th:nth-child(1){width:2.8%}th:nth-child(4){width:5%}th:nth-child(5){width:5%}th:nth-child(9){width:10%}th:nth-child(10){width:14%}td:nth-child(n+11){text-align:right}tbody tr:nth-child(even){background:#f3f7fc}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+ '</style></head><body><h1>'+title+'</h1>'+table.outerHTML+'</body></html>');doc.close();
+ const clean=()=>{if(frame.isConnected)frame.remove();};
+ frame.contentWindow.addEventListener('afterprint',clean,{once:true});
+ Promise.resolve(doc.fonts?doc.fonts.ready:null).then(()=>{setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},150);});
+}
+</script>
+</body></html>');
   doc.close();
 
   setTimeout(function(){
