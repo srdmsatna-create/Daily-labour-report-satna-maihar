@@ -1965,7 +1965,7 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
 <svg viewBox="0 0 136 100" role="img" aria-label="Planner Portal"><defs><linearGradient id="plannerG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0877ef"/><stop offset="1" stop-color="#20a7df"/></linearGradient></defs><rect width="136" height="100" rx="14" fill="url(#plannerG)"/><rect x="27" y="24" width="82" height="52" rx="8" fill="#fff" opacity=".96"/><rect x="38" y="55" width="10" height="12" fill="#19a76f"/><rect x="55" y="45" width="10" height="22" fill="#f0b429"/><rect x="72" y="35" width="10" height="32" fill="#ed5252"/><rect x="89" y="28" width="10" height="39" fill="#0d5bd7"/><text x="68" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="900" fill="#fff">PLANNER</text></svg>
 </span><span class="srdm-app-copy"><strong>Planner Portal</strong><span>Janpad-wise • Panchayat-wise • New Work संख्या</span></span><span class="srdm-app-new">New</span>
     </a>
-    <a class="srdm-app-card srdm-portal-card srdm-portal-jgsa" href="https://jgsa.nregsmp.org/" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
+    <a class="srdm-app-card srdm-portal-card srdm-portal-jgsa" href="jgsa-reports.html?report=summary&level=district" target="_blank" rel="noopener noreferrer" style="text-decoration:none">
       <span class="srdm-app-icon">💧</span><span class="srdm-app-copy"><strong>Dashboard - Jal Ganga Sanvardhan Abhiyan 2026</strong><span>Official JGSA portal</span></span><span class="srdm-app-new">New</span>
     </a>
 <a class="srdm-app-card srdm-portal-card" href="jgsa-reports.html?report=summary" style="text-decoration:none;--app-accent:#195889"><span class="srdm-app-icon">💧</span><span class="srdm-app-copy"><strong>JGSA स्थिति एवं वित्तीय सारांश</strong><span>जिला • जनपद • उपयंत्री / क्लस्टर • व्यय एवं शेष</span></span></a>
@@ -4238,7 +4238,7 @@ const groups=[
  ['1','मस्टरोल, e-MB एवं FTO',['#embPendingLauncher','a[href="pending-mr-fto.html"]','a[href="rejected-wage-reconciliation.html"]','#musterEmbLauncher']],
  ['2','एक बगिया — भुगतान एवं प्रगति',['a[href="payment.html"]','[data-view="ekbagiya"]']],
  ['3','कार्य योजना — Planner / SIPRI / Yuktdhara',['a[href="planner-portal-dashboard.html"]','a[href^="planner-sipri-dashboard-hi.html"]','#yuktdharaLauncher','#yuktdharaStateLauncher']],
- ['4','जल गंगा संवर्धन अभियान — JGSA',['a[href="https://jgsa.nregsmp.org/"]','a[href="jgsa-reports.html?report=summary"]','a[href="jgsa-reports.html?report=ranking"]','#jgsaReserved44','a[href="jgsa-reports.html?report=works"]']],
+ ['4','जल गंगा संवर्धन अभियान — JGSA',['a[href="jgsa-reports.html?report=summary&level=district"]','a[href="jgsa-reports.html?report=summary"]','a[href="jgsa-reports.html?report=ranking"]','#jgsaReserved44','a[href="jgsa-reports.html?report=works"]']],
  ['5','सुगम संपर्कता परियोजना — RIMS',['a[href="rims-roads.html"]']],
  ['6','ग्राम पंचायत / सेक्टर / उपयंत्री मास्टर',['a[href="gp-sector-engineer-master.html"]']],
  ['7','PMAY-G — मानव दिवस एवं भौतिक पूर्ण कार्य',['a[href="pmayg-physical.html"]','a[href="pmayg.html"]']],
@@ -4591,9 +4591,9 @@ function printEkAllWorksList(){
 (function(){
  const group=document.querySelector('[data-report-group="4"]');if(!group||document.getElementById('jgsaMainOfficialLinks'))return;
  const nav=document.createElement('nav');nav.id='jgsaMainOfficialLinks';nav.setAttribute('aria-label','JGSA Official Portal');
- const entries=[['📊 Overview','https://jgsa.nregsmp.org/?date=2026-07-02'],['Rankings','https://jgsa.nregsmp.org/rankings.php?date=2026-07-02'],['Work Monitor','https://jgsa.nregsmp.org/work-monitor.php?date=2026-07-02'],['📢 Alerts & Announcements','https://jgsa.nregsmp.org/alerts.php?date=2026-07-02']];
+ const entries=[['📊 Overview','jgsa-reports.html?report=summary'],['Rankings','jgsa-reports.html?report=ranking'],['Work Monitor','jgsa-reports.html?report=works'],['📢 Alerts & Announcements','jgsa-reports.html?report=alerts']];
  for(const [label,url]of entries){const a=document.createElement('a');a.textContent=label;a.href=url;a.target='_blank';a.rel='noopener noreferrer';nav.appendChild(a);}
- const date=document.createElement('small');date.textContent='JGSA पोर्टल • दिनांक 02-07-2026';nav.appendChild(date);
+ const date=document.createElement('small');date.textContent='केवल सतना एवं मैहर • जिला / जनपद / ग्राम पंचायत • डेटा 07-06-2026';nav.appendChild(date);
  group.querySelector('summary').insertAdjacentElement('afterend',nav);
 })();
 </script>
