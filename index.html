@@ -1880,7 +1880,18 @@ html:has(body.login-locked){overflow:hidden}
 #reportMenuEmpty{font-size:14px;color:#60778d;padding:12px;margin:0}
 @media(max-width:680px){#srdmApplications{padding:12px!important}#srdmApplications .srdm-app-grid{grid-template-columns:1fr!important;gap:12px!important}#srdmApplications .srdm-app-launcher-head{flex-direction:column;align-items:flex-start}#srdmApplications .report-menu-tools input{width:100%;flex:1;min-width:0}#srdmApplications .srdm-app-card{border-radius:14px!important}}
 }
-</style></head>
+</style>
+<style id="ekbagiya-numeric-font-20261021">
+@media screen {
+body[data-report-view="ekbagiya"] #reportTable tbody td:nth-child(n+5) {
+ font-size:18px!important;font-weight:800!important;line-height:1.35!important;white-space:nowrap!important;
+}
+body[data-report-view="ekbagiya"] #reportTable tbody tr:is(.janpad-total-row,.total-row,.all-total-row) td:nth-child(n+5) {
+ font-size:19px!important;font-weight:900!important;
+}
+}
+</style>
+</head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
