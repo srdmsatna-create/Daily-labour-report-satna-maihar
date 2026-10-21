@@ -4161,35 +4161,6 @@ function srdmPrintEkBagiyaOnly(){
     '#reportTable th,#reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}'+
     '#reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}#reportTable thead,#ekBlockTable thead{display:table-header-group!important}#reportTable tr,#ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}.district-total td,.grand-total td,.total-row td{font-weight:900!important;background:#dbe9fb!important}'+
     '</style></head><body>'+body+'<link rel="stylesheet" href="srdm-report-fonts.css?v=20261013-dys-fit">
-<style id="ek-all-work-table-borders">
-body #ekAllWorksList .ek-all-work-table{border-collapse:collapse!important;border:1.5px solid #51759c!important;min-width:2400px;width:100%}
-body #ekAllWorksList .ek-all-work-table :is(th,td){border:1px solid #87a5c5!important;vertical-align:middle}
-body #ekAllWorksList .ek-all-work-table th{background:#dce9fb!important;color:#123f72!important;text-align:center;position:sticky;top:0}
-body #ekAllWorksList .ek-all-work-table tbody tr:nth-child(even){background:#f3f7fc}
-body #ekAllWorksList .ek-all-work-table td:nth-child(n+11){text-align:right;white-space:nowrap}
-body #ekAllWorksList .ek-all-work-table td:nth-child(10){min-width:270px;white-space:normal}
-.ek-list-actions{margin:10px 0}
-</style>
-<script>
-function printEkAllWorksList(){
- const source=document.querySelector('#ekAllWorksList .ek-all-work-table');
- if(!source){alert('कार्य सूची उपलब्ध नहीं है।');return;}
- const table=source.cloneNode(true);
- const count=table.tBodies[0]?.rows.length||0;
- const title='एक बगिया — सभी कार्यों की एक साथ सूची ('+count+' Works)';
- const frame=document.createElement('iframe');
- frame.style.cssText='position:fixed;width:1px;height:1px;bottom:0;right:0;border:0;opacity:0';
- frame.title='एक बगिया कार्य सूची प्रिंट';
- document.body.appendChild(frame);
- const doc=frame.contentDocument;
- doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>'+
- '@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box}body{margin:0;color:#111;font-family:Arial,"Noto Sans Devanagari",sans-serif}h1{font-size:14pt;text-align:center;margin:0 0 4mm}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #6281a1;padding:1mm .6mm;font-size:6.5pt;line-height:1.25;vertical-align:top;overflow-wrap:anywhere;white-space:normal}th{background:#dce9fb;color:#123f72;font-weight:700;text-align:center}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}th:nth-child(1){width:2.8%}th:nth-child(4){width:5%}th:nth-child(5){width:5%}th:nth-child(9){width:10%}th:nth-child(10){width:14%}td:nth-child(n+11){text-align:right}tbody tr:nth-child(even){background:#f3f7fc}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
- '</style></head><body><h1>'+title+'</h1>'+table.outerHTML+'</body></html>');doc.close();
- const clean=()=>{if(frame.isConnected)frame.remove();};
- frame.contentWindow.addEventListener('afterprint',clean,{once:true});
- Promise.resolve(doc.fonts?doc.fonts.ready:null).then(()=>{setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},150);});
-}
-</script>
 </body></html>');
   doc.close();
 
@@ -4558,4 +4529,35 @@ body:not(.srdm-main-report-open) .shell>.report-card{display:none!important}
  close();
 })();
 </script>
+
+<style id="ek-all-work-table-borders">
+body #ekAllWorksList .ek-all-work-table{border-collapse:collapse!important;border:1.5px solid #51759c!important;min-width:2400px;width:100%}
+body #ekAllWorksList .ek-all-work-table :is(th,td){border:1px solid #87a5c5!important;vertical-align:middle}
+body #ekAllWorksList .ek-all-work-table th{background:#dce9fb!important;color:#123f72!important;text-align:center;position:sticky;top:0}
+body #ekAllWorksList .ek-all-work-table tbody tr:nth-child(even){background:#f3f7fc}
+body #ekAllWorksList .ek-all-work-table td:nth-child(n+11){text-align:right;white-space:nowrap}
+body #ekAllWorksList .ek-all-work-table td:nth-child(10){min-width:270px;white-space:normal}
+.ek-list-actions{margin:10px 0}
+</style>
+<script>
+function printEkAllWorksList(){
+ const source=document.querySelector('#ekAllWorksList .ek-all-work-table');
+ if(!source){alert('कार्य सूची उपलब्ध नहीं है।');return;}
+ const table=source.cloneNode(true);
+ const count=table.tBodies[0]?.rows.length||0;
+ const title='एक बगिया — सभी कार्यों की एक साथ सूची ('+count+' Works)';
+ const frame=document.createElement('iframe');
+ frame.style.cssText='position:fixed;width:1px;height:1px;bottom:0;right:0;border:0;opacity:0';
+ frame.title='एक बगिया कार्य सूची प्रिंट';
+ document.body.appendChild(frame);
+ const doc=frame.contentDocument;
+ doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>'+
+ '@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box}body{margin:0;color:#111;font-family:Arial,"Noto Sans Devanagari",sans-serif}h1{font-size:14pt;text-align:center;margin:0 0 4mm}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #6281a1;padding:1mm .6mm;font-size:6.5pt;line-height:1.25;vertical-align:top;overflow-wrap:anywhere;white-space:normal}th{background:#dce9fb;color:#123f72;font-weight:700;text-align:center}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}th:nth-child(1){width:2.8%}th:nth-child(4){width:5%}th:nth-child(5){width:5%}th:nth-child(9){width:10%}th:nth-child(10){width:14%}td:nth-child(n+11){text-align:right}tbody tr:nth-child(even){background:#f3f7fc}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+ '</style></head><body><h1>'+title+'</h1>'+table.outerHTML+'</body></html>');doc.close();
+ const clean=()=>{if(frame.isConnected)frame.remove();};
+ frame.contentWindow.addEventListener('afterprint',clean,{once:true});
+ Promise.resolve(doc.fonts?doc.fonts.ready:null).then(()=>{setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},150);});
+}
+</script>
+
 </body></html>
