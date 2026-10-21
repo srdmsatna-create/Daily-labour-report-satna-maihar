@@ -933,7 +933,7 @@
     "date": "02-June-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -945,7 +945,7 @@
     "date": "20-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -968,7 +968,7 @@
     "status": "Reviewed by SA",
     "date": "30-June-2026",
     "remark": "Approved",
-    "od": "No",
+    "od": "Yes",
     "engineer": "आशीष तिवारी"
   },
   {
@@ -980,7 +980,7 @@
     "status": "Reviewed by SA",
     "date": "29-June-2026",
     "remark": "Approved",
-    "od": "No",
+    "od": "Yes",
     "engineer": "आशीष तिवारी"
   },
   {
@@ -1016,7 +1016,7 @@
     "status": "Reviewed by SA",
     "date": "28-June-2026",
     "remark": "Approved",
-    "od": "No",
+    "od": "Yes",
     "engineer": "आशीष तिवारी"
   },
   {
@@ -1245,7 +1245,7 @@
     "date": "11-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1257,7 +1257,7 @@
     "date": "12-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1269,7 +1269,7 @@
     "date": "12-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1281,7 +1281,7 @@
     "date": "14-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1293,7 +1293,7 @@
     "date": "14-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1305,7 +1305,7 @@
     "date": "18-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1317,7 +1317,7 @@
     "date": "18-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1329,7 +1329,7 @@
     "date": "18-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1341,7 +1341,7 @@
     "date": "19-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1353,7 +1353,7 @@
     "date": "19-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1365,7 +1365,7 @@
     "date": "20-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1377,7 +1377,7 @@
     "date": "20-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1586,15 +1586,14 @@
   {
     "district": "Satna",
     "block": "Nagod",
-    "gp": "Chunaha",
+    "gp": "",
     "name": "Sigrhae Taliya Cunha Sai Davi Ji Ki Or Chunha",
     "width": 8.4,
     "status": "Pending",
     "date": "26-May-2026",
     "remark": "",
     "od": "No",
-    "engineer": "प्रमोद तिवारी",
-    "mapping_source": "GP चुनहा और प्रमोद तिवारी: उपयोगकर्ता की पुष्टि"
+    "engineer": "मैपिंग उपलब्ध नहीं"
   },
   {
     "district": "Satna",
@@ -1666,7 +1665,7 @@
     "date": "21-May-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1678,7 +1677,7 @@
     "date": "02-June-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1750,7 +1749,7 @@
     "date": "21-May-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1762,7 +1761,7 @@
     "date": "21-May-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1786,7 +1785,7 @@
     "date": "22-May-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -1798,7 +1797,7 @@
     "date": "22-May-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -1941,7 +1940,7 @@
     "status": "Reviewed by SA",
     "date": "30-June-2026",
     "remark": "Approved",
-    "od": "No",
+    "od": "Yes",
     "engineer": "आशीष तिवारी"
   },
   {
@@ -2181,7 +2180,7 @@
     "status": "Reviewed by SA",
     "date": "05-July-2026",
     "remark": "Approved",
-    "od": "No",
+    "od": "Yes",
     "engineer": "आशीष तिवारी अति0"
   },
   {
@@ -2542,7 +2541,7 @@
     "date": "23-May-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -2602,7 +2601,7 @@
     "date": "02-June-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -2698,7 +2697,7 @@
     "date": "22-May-2026",
     "remark": "",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -2710,7 +2709,7 @@
     "date": "22-May-2026",
     "remark": "",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -2775,15 +2774,14 @@
   {
     "district": "Satna",
     "block": "Sohawal",
-    "gp": "Sohawal",
+    "gp": "",
     "name": "पी0सी0सी0 रोड़ निर्माण कन्या हाईस्कूल सोहावल से लाला सोनी कुंआ तक",
     "width": 6,
     "status": "Approved by EE",
     "date": "13-July-2026",
     "remark": "Approved",
     "od": "No",
-    "engineer": "व्हीके मिश्रा अति0",
-    "mapping_source": "GP सोहावल: उपयोगकर्ता की पुष्टि; इंजीनियर: 25.09.2026 मास्टर"
+    "engineer": "मैपिंग उपलब्ध नहीं"
   },
   {
     "district": "Satna",
@@ -2891,7 +2889,7 @@
     "date": "11-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -2903,7 +2901,7 @@
     "date": "11-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -3215,7 +3213,7 @@
     "date": "11-June-2026",
     "remark": "",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -3280,15 +3278,14 @@
   {
     "district": "Satna",
     "block": "Sohawal",
-    "gp": "Sohawal",
+    "gp": "",
     "name": "Ydoyxup",
     "width": 9,
     "status": "Pending",
     "date": "06-May-2026",
     "remark": "",
     "od": "No",
-    "engineer": "व्हीके मिश्रा अति0",
-    "mapping_source": "GP सोहावल: उपयोगकर्ता की पुष्टि; इंजीनियर: 25.09.2026 मास्टर"
+    "engineer": "मैपिंग उपलब्ध नहीं"
   },
   {
     "district": "Satna",
@@ -3312,7 +3309,7 @@
     "date": "12-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल"
+    "engineer": "हेमंत तिवारी अति0"
   },
   {
     "district": "Satna",
@@ -3360,7 +3357,7 @@
     "date": "13-May-2026",
     "remark": "Rejected by SA: Not providing dual connectivity",
     "od": "No",
-    "engineer": "सत्यनारायण मिश्रा"
+    "engineer": "रमाकांत त्रिपाठी अति0"
   },
   {
     "district": "Satna",
@@ -3456,7 +3453,7 @@
     "date": "13-May-2026",
     "remark": "Rejected by SA: Not providing dual connectivity",
     "od": "No",
-    "engineer": "सत्यनारायण मिश्रा"
+    "engineer": "रमाकांत त्रिपाठी अति0"
   },
   {
     "district": "Satna",
@@ -3684,7 +3681,7 @@
     "date": "11-May-2026",
     "remark": "Rejected by SA: Not providing dual connectivity",
     "od": "No",
-    "engineer": "सत्यनारायण मिश्रा"
+    "engineer": "रमाकांत त्रिपाठी अति0"
   },
   {
     "district": "Satna",
@@ -3947,7 +3944,7 @@
     "status": "Reviewed by SA",
     "date": "05-July-2026",
     "remark": "Approved",
-    "od": "No",
+    "od": "Yes",
     "engineer": "आशीष तिवारी"
   },
   {
@@ -4200,7 +4197,7 @@
     "date": "18-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -4260,7 +4257,7 @@
     "date": "20-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "कौशल पटेल अति0"
+    "engineer": "हेमंत तिवारी"
   },
   {
     "district": "Satna",
@@ -4319,7 +4316,7 @@
     "status": "Reviewed by SA",
     "date": "27-June-2026",
     "remark": "Approved",
-    "od": "No",
+    "od": "Yes",
     "engineer": "आशीष तिवारी अति0"
   },
   {
@@ -4373,15 +4370,14 @@
   {
     "district": "Satna",
     "block": "Sohawal",
-    "gp": "Sohawal",
+    "gp": "",
     "name": "खेमराज पाण्डे की अहरी के पास से गन्नहा  बाबा की ओर",
     "width": 6.6,
     "status": "Rejected by SA",
     "date": "20-May-2026",
     "remark": "Rejected by SA: Not Providing Dual Connectivity",
     "od": "No",
-    "engineer": "व्हीके मिश्रा अति0",
-    "mapping_source": "GP सोहावल: उपयोगकर्ता की पुष्टि; इंजीनियर: 25.09.2026 मास्टर"
+    "engineer": "मैपिंग उपलब्ध नहीं"
   },
   {
     "district": "Satna",
