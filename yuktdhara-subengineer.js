@@ -1,5 +1,12 @@
 (function(){
 'use strict';
+function addStateReportLink(){
+ const launcher=document.getElementById('yuktdharaLauncher');
+ if(!launcher||document.getElementById('yuktdharaStateLauncher'))return;
+ const link=document.createElement('a');link.id='yuktdharaStateLauncher';link.href='yuktdhara-state.html';link.className=launcher.className;link.textContent='R-3.4 — युक्तधारा मॉनिटरिंग • मध्यप्रदेश 52 जिले';link.style.cssText='display:block;padding:14px 18px;margin:10px 0;border:2px solid #552b96;border-radius:10px;background:#f3edff;color:#552b96;font-weight:800;text-decoration:none';launcher.insertAdjacentElement('afterend',link);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',addStateReportLink);else addStateReportLink();
+
 const D=window.YUKTDHARA_DATA,root=document.getElementById('yuktdharaSubEngineerApp');if(!D||!root)return;
 const outer=document.getElementById('yuktdharaMonitoring'),outerHead=outer&&outer.querySelector(':scope > div:first-child');
 if(outerHead){const meta=outerHead.querySelector('small'),badge=outerHead.querySelector('span');if(meta)meta.textContent=`Bhuvan NRSC • SATNA (5 Janpad) + MAIHAR (3 Janpad) • Live status ${D.asOf||''}`;if(badge)badge.textContent=`${Number((D.counts||{}).master||0).toLocaleString('en-IN')} GP`;}
