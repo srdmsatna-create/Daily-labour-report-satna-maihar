@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Duplicate Attendance Photo Matching | SRDM Satna</title>
+<style>
+:root{--blue:#286eaa;--ink:#17324c;--line:#d5dee8;--bg:#f3f6fa;--muted:#5b6f82}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#172b3e;font:15px/1.45 Arial,"Noto Sans Devanagari",sans-serif}
+header{background:#fff;border-top:6px solid #397db6;padding:14px 20px;text-align:center;box-shadow:0 2px 8px #193b5a15}
+header a{position:absolute;left:18px;top:20px;color:#1d5f96;text-decoration:none;font-weight:700}h1{margin:2px 0 3px;color:#163f67;font-size:24px}.subtitle{color:var(--muted);font-size:13px}
+main{max-width:1500px;margin:18px auto;padding:0 16px}.source{background:#fff8e5;border:1px solid #e6cd7d;border-radius:8px;padding:11px 14px;margin:0 0 14px;color:#59450d}
+.actions{display:flex;justify-content:flex-end;gap:8px;margin:0 0 12px}.actions button{border:0;border-radius:6px;background:#286eaa;color:#fff;font-weight:700;padding:9px 14px;cursor:pointer}.actions button:hover{background:#1e5789}
+.kpis{display:grid;grid-template-columns:repeat(7,minmax(130px,1fr));gap:12px;margin:12px 0 18px}.card{min-height:94px;border-radius:8px;color:white;padding:12px 8px;text-align:center;display:flex;flex-direction:column;justify-content:center;box-shadow:0 3px 10px #1835501c}.card strong{font-size:30px;line-height:1.15}.card span{font-weight:700;font-size:14px;margin-top:4px}.c1{background:#1976e9}.c2{background:#ef7900}.c3{background:#216eae}.c4{background:#d93645}.c5{background:#19875a}.c6{background:#7041bd}.c7{background:#b7552f}
+h2{background:#397db6;color:white;padding:9px 12px;font-size:17px;margin:0;border-radius:5px 5px 0 0}.table-wrap{overflow:auto;background:white;border:1px solid var(--line);border-top:0;border-radius:0 0 7px 7px}table{width:100%;border-collapse:collapse;min-width:1000px}th,td{border:1px solid #d9e0e7;padding:9px 10px;text-align:center}th{background:#30363b;color:#fff;font-size:13px;line-height:1.35}tbody tr:nth-child(even){background:#f0f2f4}td:first-child,td:nth-child(2){text-align:left}td.num{font-weight:700;font-variant-numeric:tabular-nums}.foot{color:var(--muted);font-size:12px;margin:10px 2px 22px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(4,minmax(120px,1fr))}header a{position:static;display:block;text-align:left;margin-bottom:5px}}
+@media(max-width:600px){main{padding:0 9px}.kpis{grid-template-columns:repeat(2,minmax(120px,1fr));gap:8px}.card strong{font-size:26px}h1{font-size:20px}}
+@media print{body{background:white;font-size:10pt}header{padding:5mm 0;box-shadow:none}header a,.actions{display:none!important}main{max-width:none;margin:4mm 0;padding:0}.source{padding:2mm 3mm;margin-bottom:3mm}.kpis{grid-template-columns:repeat(7,1fr);gap:2mm;margin:3mm 0}.card{min-height:18mm;padding:2mm}.card strong{font-size:16pt}.card span{font-size:8pt}h2{font-size:11pt;padding:2mm 3mm}.table-wrap{overflow:visible}table{min-width:0;font-size:8pt}th,td{padding:1.5mm 1mm}th{font-size:7.5pt}.foot{font-size:7.5pt}}
+</style>
+</head>
+<body>
+<header><a href="index.html">← SRDM Applications</a><h1>Duplicate Attendance Photo Matching &amp; Verification Report</h1><div class="subtitle">जिला: SATNA • स्क्रीनशॉट स्नैपशॉट: 22-10-2026</div></header>
+<main>
+<div class="source"><b>डेटा स्रोत और सीमा:</b> यह रिपोर्ट आपके दिए गए स्क्रीनशॉट से दर्ज की गई है। चयन: Madhya Pradesh → SATNA → सभी जनपद। इसे पोर्टल से लाइव/स्वतः अपडेट होने वाला डेटा न मानें। मूल स्क्रीनशॉट में “SATNA” नाम की पंक्ति भी थी; उसे ज्यों का त्यों रखा है।</div>
+<div class="actions"><button type="button" onclick="window.print()">Print / Save as PDF</button><button type="button" id="csvBtn">Excel CSV</button></div>
+<section class="kpis" aria-label="मुख्य संख्या">
+<div class="card c1"><strong>106</strong><span>Total Duplicate Photos</span></div>
+<div class="card c2"><strong>0</strong><span>Today's Duplicate</span></div>
+<div class="card c3"><strong>33</strong><span>Accepted Attendance</span></div>
+<div class="card c4"><strong>0</strong><span>Rejected Attendance</span></div>
+<div class="card c5"><strong>92</strong><span>Accepted Photo</span></div>
+<div class="card c6"><strong>0</strong><span>Rejected Photo</span></div>
+<div class="card c7"><strong>14</strong><span>No Action Count</span></div>
+</section>
+<h2>Photo Matching Summary Report • Janpad / Block-wise</h2>
+<div class="table-wrap"><table id="matchingTable"><thead><tr><th>क्र.</th><th>जनपद / पंक्ति</th><th>Matched Photo वाले कार्य</th><th>Matched Photo वाले Muster Roll</th><th>99% और अधिक मिलान</th><th>98% और अधिक मिलान</th><th>97% और अधिक मिलान</th><th>Total Matching Photos</th><th>Rejected Photo</th><th>Accepted Photo</th><th>No Action Taken</th></tr></thead><tbody>
+<tr><td>1</td><td>AMARPATAN</td><td class="num">3</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">3</td><td class="num">0</td><td class="num">0</td><td class="num">3</td></tr>
+<tr><td>2</td><td>MAIHAR</td><td class="num">3</td><td class="num">4</td><td class="num">0</td><td class="num">1</td><td class="num">2</td><td class="num">4</td><td class="num">0</td><td class="num">3</td><td class="num">1</td></tr>
+<tr><td>3</td><td>MAJHGAWAN</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td></tr>
+<tr><td>4</td><td>NAGOD</td><td class="num">3</td><td class="num">8</td><td class="num">13</td><td class="num">13</td><td class="num">14</td><td class="num">18</td><td class="num">0</td><td class="num">13</td><td class="num">5</td></tr>
+<tr><td>5</td><td>RAMPUR BAGHELAN</td><td class="num">1</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">1</td><td class="num">0</td><td class="num">0</td><td class="num">1</td></tr>
+<tr><td>6</td><td>SATNA</td><td class="num">7</td><td class="num">26</td><td class="num">44</td><td class="num">52</td><td class="num">57</td><td class="num">77</td><td class="num">0</td><td class="num">74</td><td class="num">3</td></tr>
+<tr><td>7</td><td>UNCHAHARA</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">0</td><td class="num">2</td><td class="num">0</td></tr>
+</tbody></table></div>
+<p class="foot">Source: user-provided dashboard screenshot, dated 22-10-2026. Summary cards and row values are transcribed as displayed; “SATNA” row is retained as shown in the source.</p>
+</main>
+<script>
+document.getElementById('csvBtn').addEventListener('click',()=>{const rows=[...document.querySelectorAll('#matchingTable tr')].map(tr=>[...tr.children].map(td=>'"'+td.innerText.replaceAll('"','""')+'"').join(','));const csv='\uFEFF'+rows.join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='Satna-Duplicate-Attendance-Photo-Matching-22-10-2026.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)});
+</script>
+</body>
+</html>
