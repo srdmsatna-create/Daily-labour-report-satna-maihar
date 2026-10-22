@@ -4243,13 +4243,14 @@ const groups=[
  ['1','मस्टरोल, e-MB एवं FTO',['#embPendingLauncher','a[href="pending-mr-fto.html"]','a[href="rejected-wage-reconciliation.html"]','#musterEmbLauncher']],
  ['2','एक बगिया — भुगतान एवं प्रगति',['a[href="payment.html"]','[data-view="ekbagiya"]']],
  ['3','कार्य योजना — Planner / SIPRI / Yuktdhara',['a[href="planner-portal-dashboard.html"]','a[href^="planner-sipri-dashboard-hi.html"]','#yuktdharaLauncher','#yuktdharaStateLauncher']],
- ['4','जल गंगा संवर्धन अभियान — JGSA',['a[href="jgsa-reports.html?report=summary&level=district"]','a[href="jgsa-reports.html?report=summary"]','a[href="jgsa-reports.html?report=ranking"]','#jgsaReserved44','a[href="jgsa-reports.html?report=works"]','a[data-report-code-fixed="4.6"]']], ['11','फोटो मिलान एवं सत्यापन',['a[href="attendance-photo-report.html"]']],
+ ['4','जल गंगा संवर्धन अभियान — JGSA',['a[href="jgsa-reports.html?report=summary&level=district"]','a[href="jgsa-reports.html?report=summary"]','a[href="jgsa-reports.html?report=ranking"]','#jgsaReserved44','a[href="jgsa-reports.html?report=works"]','a[data-report-code-fixed="4.6"]']],
  ['5','सुगम संपर्कता परियोजना — RIMS',['a[href="rims-roads.html"]']],
  ['6','ग्राम पंचायत / सेक्टर / उपयंत्री मास्टर',['a[href="gp-sector-engineer-master.html"]']],
  ['7','PMAY-G — मानव दिवस एवं भौतिक पूर्ण कार्य',['a[href="pmayg-physical.html"]','a[href="pmayg.html"]']],
  ['8','कार्य विश्लेषण एवं व्यय',['a[href="works-above-75.html"]',':is([data-srdm-view="category"],[data-view="category"])','[data-view="categorysubeng"]','[data-view="categoryworks"]','[data-view="incomplete"]','[data-view="recovery"]']],
  ['9','दैनिक श्रमिक एवं जनपद मॉनिटरिंग',[':is([data-srdm-view="mandaysgen"],[data-view="mandaysgen"])','#srdmZeroLauncher',':is([data-srdm-view="dysfunctional"],[data-view="dysfunctional"])',':is([data-srdm-view="engineer"],[data-view="engineer"])',':is([data-srdm-view="official"],[data-view="official"])',':is([data-srdm-view="state"],[data-view="state"])','#shramikNiyojanLauncher','[data-view="dysjanpad"]']],
- ['10','Statistics — सांख्यिकीय विवरण',['#vbgStatisticsLauncher','a[href="completed-geotag-phase2.html"]']]
+ ['10','Statistics — सांख्यिकीय विवरण',['#vbgStatisticsLauncher','a[href="completed-geotag-phase2.html"]']],
+ ['11','फोटो मिलान एवं सत्यापन',['a[href="attendance-photo-report.html"]']]
 ];
 const codes=new Map(),done=new WeakSet(),sections=new Map();let other=0;
 function key(el){const v=el.getAttribute('data-srdm-view')||el.getAttribute('data-view');if(v)return 'view:'+v;if(el.id)return 'id:'+el.id;return 'url:'+el.getAttribute('href')}
