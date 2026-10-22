@@ -4165,12 +4165,11 @@ function srdmPrintEkBagiyaOnly(){
   frame.id='srdmEkPrintFrame';
   frame.setAttribute('aria-hidden','true');
   frame.style.position='fixed';
-  frame.style.right='0';
-  frame.style.bottom='0';
-  frame.style.width='1px';
-  frame.style.height='1px';
+  frame.style.left='-12000px';
+  frame.style.top='0';
+  frame.style.width='1280px';
+  frame.style.height='900px';
   frame.style.border='0';
-  frame.style.opacity='0';
   document.body.appendChild(frame);
 
   var doc=frame.contentDocument||frame.contentWindow.document;
@@ -4247,9 +4246,14 @@ body[data-report-view="dysfunctional"] .dys-alert-table td:nth-child(n+9){font-s
     try{
       frame.contentWindow.focus();
       frame.contentWindow.print();
-    }catch(e){alert('Print शुरू नहीं हो पाया। Page refresh करके फिर प्रयास करें।');}
-    setTimeout(function(){if(frame&&frame.parentNode)frame.remove();},3000);
-  },300);
+      var cleanup=function(){if(frame&&frame.parentNode)frame.remove();};
+      frame.contentWindow.addEventListener('afterprint',cleanup,{once:true});
+      setTimeout(cleanup,60000);
+    }catch(e){
+      if(frame&&frame.parentNode)frame.remove();
+      alert('PDF/Print शुरू नहीं हो पाया। कृपया दोबारा प्रयास करें।');
+    }
+  },500);
 }
 </script>
 <script>document.write('<script src="gp-emuster-data.js?live='+Date.now()+'"><\/script>');</script><script src="gp-labour-muster-module.js?v=20261013-column-fit"></script>
