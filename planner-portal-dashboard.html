@@ -60,7 +60,25 @@ body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection
 body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection) table :is(.progress-badge,.weekly-badge){font-size:13px!important;min-height:24px!important;height:auto!important;width:auto!important;padding:3px 5px!important}
 body#plannerDashboard :is(#officialSection,#engineerSection,#workCategorySection) table :is(small,.work-type-name,.work-type-count){font-size:12px!important}
 }
-</style></head><body id="plannerDashboard"><header><div class="head"><div><h1>Planner Portal</h1><div class="sub">Number Of New Works Taken In Planner Portal • SIPRI Progress • Category • Sub Engineer • Cluster • FY 2026-27</div></div><a class="back" href="./">← SRDM Applications</a></div></header><main>
+</style><style id="planner-analysis-page-fit-20261022">
+#analysisSection .tools{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px!important;align-items:center}
+#analysisSection .tools select{width:100%;min-width:0}
+#analysisSection .tools input{grid-column:span 2;width:100%;min-width:0}
+#analysisSection .tools button{width:100%;white-space:nowrap}
+#analysisSection .wrap{max-height:none!important;height:auto!important;overflow-x:auto!important;overflow-y:visible!important}
+#analysisSection .analysis-table{width:100%!important;table-layout:fixed!important}
+@media(max-width:1200px){#analysisSection .tools{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:700px){#analysisSection .tools{grid-template-columns:repeat(2,minmax(0,1fr))}#analysisSection .tools input{grid-column:span 2}}
+@media(max-width:420px){#analysisSection .tools{grid-template-columns:1fr}#analysisSection .tools input{grid-column:span 1}}
+@media print{
+ body.print-analysis #analysisSection{break-inside:auto!important;page-break-inside:auto!important}
+ body.print-analysis #analysisSection .wrap{max-height:none!important;height:auto!important;overflow:visible!important}
+ body.print-analysis #analysisSection .analysis-table{min-width:0!important;width:100%!important;table-layout:fixed!important}
+ body.print-analysis #analysisSection .analysis-table thead{display:table-header-group!important}
+ body.print-analysis #analysisSection .analysis-table tr{break-inside:avoid!important;page-break-inside:avoid!important}
+}
+</style>
+</head><body id="plannerDashboard"><header><div class="head"><div><h1>Planner Portal</h1><div class="sub">Number Of New Works Taken In Planner Portal • SIPRI Progress • Category • Sub Engineer • Cluster • FY 2026-27</div></div><a class="back" href="./">← SRDM Applications</a></div></header><main>
 <div class="tools print-toolbar" style="margin-bottom:10px">
   <select id="printScope">
     <option value="all">PDF / Print — पूरी रिपोर्ट</option>
