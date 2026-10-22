@@ -180,32 +180,26 @@ function draw(){
  w.document.close();Promise.resolve(w.document.fonts?.ready).then(()=>{w.focus();w.setTimeout(()=>w.print(),500);});
  };
  document.getElementById('gpLabourMusterPrint').onclick=()=>{
- // Split wide reports into readable pages, repeating identifying columns.
  const original=box.querySelector('table');
- const printParts=[];
- for(let start=4;start<headers.length;start+=6){
-  const indices=[0,1,2,3,...Array.from({length:Math.min(6,headers.length-start)},(_,i)=>start+i)];
-  const copy=document.createElement('table');
-  for(const section of ['thead','tbody']){
-   const target=document.createElement(section);
-   for(const row of original.querySelector(section).rows){
-    const tr=document.createElement('tr');tr.style.cssText=row.style.cssText;
-    let logical=0;
-    for(const cell of row.cells){
-     const span=cell.colSpan||1;
-     const count=indices.filter(i=>i>=logical&&i<logical+span).length;
-     if(count){const clone=cell.cloneNode(true);clone.colSpan=count;clone.removeAttribute('style');tr.appendChild(clone);}
-     logical+=span;
-    }
-    target.appendChild(tr);
-   }
-   copy.appendChild(target);
-  }
-  printParts.push('<section class="print-part"><h3>भाग '+(printParts.length+1)+' — '+esc(headers.slice(start,start+6).join(' • '))+'</h3>'+copy.outerHTML+'</section>');
- }
- const w=window.open('','_blank');if(!w){alert('प्रिंट के लिए popup अनुमति दें।');return;}
- w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>.pmay-column{background:#ede9fe!important;color:#5b21b6!important}.pmay-column .mr-gap,.pmay-column .mr-ok{background:transparent;color:#5b21b6;font-weight:900}th.pmay-column{background:#6d28d9!important;color:#fff!important}.print-part{break-before:page}.print-part:first-of-type{break-before:auto}.print-part h3{margin:6px 0}thead{display:table-header-group}tbody tr{page-break-inside:avoid}td:first-child,th:first-child{width:27mm;overflow-wrap:anywhere}td:nth-child(3),th:nth-child(3),td:nth-child(4),th:nth-child(4){width:14mm}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}td{font-size:17px;line-height:1.5;text-align:center;font-weight:900;vertical-align:middle;overflow-wrap:break-word}th{font-size:12px;overflow-wrap:anywhere}h3{font-size:13px}.mr-none{display:block;background:#fee2e2;color:#b91c1c;font-weight:900;padding:3px;border:1px solid #ef4444;border-radius:3px}.mr-gap{display:block;background:#fff7ed;color:#9a3412;font-weight:800;padding:3px}.mr-ok{color:#15803d;font-weight:800}.low-labour{background:#f3e8ff;color:#6b21a8;font-weight:900}tbody tr:last-child td{font-size:19px;font-weight:900}@page{size:A4 landscape;margin:8mm}body{font-family:Arial,sans-serif;color:#111}table{width:100%!important;table-layout:fixed!important;border-collapse:collapse;font-size:14px;font-weight:800}col{width:auto!important}th,td{border:1.5px solid #111;padding:6px 3px;line-height:1.5}th{background:#e5f0fa}table:first-of-type th:nth-child(3),table:first-of-type td:nth-child(3){width:9mm;max-width:9mm;padding:2px;white-space:normal}th:nth-child(2),td:nth-child(2){white-space:normal;text-align:left;width:42mm}thead{display:table-header-group}tr{break-inside:avoid}h2{font-size:18px}button{border:0;background:transparent;color:inherit;font:inherit;font-weight:bold;padding:0}.gp-mr-sort-arrow{display:none}.janpad-short-summary th:nth-child(16),.janpad-short-summary td:nth-child(16){width:16mm}.janpad-short-summary th:nth-child(17),.janpad-short-summary td:nth-child(17),.janpad-short-summary th:last-child,.janpad-short-summary td:last-child{width:23mm}.janpad-short-summary th:first-child,.janpad-short-summary td:first-child{width:32mm;white-space:normal;overflow-wrap:normal;font-size:12px}.janpad-short-summary td{font-variant-numeric:tabular-nums}</style></head><body><h2>'+title+'</h2><p style="text-align:right;font-weight:800;margin:4px 0 10px"><strong>दिनांक: '+esc(date)+'</strong></p>'+''+''+printParts.join('')+workTable+'</body></html>');
- w.document.close();Promise.resolve(w.document.fonts?.ready).then(()=>{w.focus();w.setTimeout(()=>w.print(),500);});};
+ if(!original){alert('प्रिंट के लिए तालिका उपलब्ध नहीं है।');return;}
+ const copy=original.cloneNode(true);
+ const w=window.open('','_blank');
+ if(!w){alert('प्रिंट के लिए popup अनुमति दें।');return;}
+ w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>'+
+ '@page{size:A3 landscape;margin:5mm}*{box-sizing:border-box}html,body{margin:0;padding:0}body{width:400mm;font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#142c43}h2{font-size:13pt;line-height:1.1;margin:0 0 2mm;text-align:center}p{font-size:8pt;line-height:1.1;margin:0 0 2mm;text-align:right}table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:7pt!important}col{width:auto!important}th,td{border:.25mm solid #34495e!important;padding:.45mm .55mm!important;line-height:1.05!important;vertical-align:middle!important;overflow-wrap:anywhere!important;white-space:normal!important}th{font-size:6.5pt!important;font-weight:800!important;text-align:center!important;background:#14588c!important;color:#fff!important}td{font-size:7pt!important;font-weight:700!important;text-align:center!important}th:nth-child(1),td:nth-child(1){width:11%!important;white-space:nowrap!important}th:nth-child(2),td:nth-child(2){width:18%!important;text-align:left!important}th:nth-child(3),td:nth-child(3),th:nth-child(4),td:nth-child(4){width:5%!important}thead{display:table-header-group}tr{break-inside:avoid!important;page-break-inside:avoid!important}tbody tr:nth-child(even){background:#edf4fa!important}.gp-mr-sort{font:inherit!important;font-weight:800!important;line-height:inherit!important;padding:0!important;border:0!important;background:transparent!important;color:inherit!important}.gp-mr-sort-arrow{display:none!important}.mr-none{display:inline-block;background:#fee2e2!important;color:#b91c1c!important;font-weight:900!important;padding:0 .5mm!important;border:.2mm solid #ef4444!important}.mr-gap{background:#fff7ed!important;color:#9a3412!important;font-weight:800!important;padding:0 .5mm!important}.mr-ok{color:#15803d!important;font-weight:800!important}.low-labour{background:#f3e8ff!important;color:#6b21a8!important;font-weight:900!important}.pmay-column{background:#6d28d9!important;color:#fff!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+ '</style></head><body><h2>'+title+'</h2><p><strong>दिनांक: '+esc(date)+'</strong></p>'+copy.outerHTML+'</body></html>');
+ w.document.close();
+ Promise.resolve(w.document.fonts?.ready).then(()=>{
+  w.requestAnimationFrame(()=>w.requestAnimationFrame(()=>{
+   const pageHeightPx=287*96/25.4;
+   const contentHeight=w.document.documentElement.scrollHeight;
+   const scale=Math.min(1,pageHeightPx/contentHeight)*.98;
+   w.document.body.style.zoom=String(scale);
+   w.focus();
+   w.setTimeout(()=>w.print(),300);
+  }));
+ });
+};
 }
 const old=render;render=function(){const result=old.apply(this,arguments);draw();return result;};draw();
 
