@@ -2713,7 +2713,7 @@ function renderEkBagiyaDashboard(){
   }
   let data=[...m.values()].map(r=>({...r,duesTotal:r.duesWage+r.duesMaterial,remaining:Math.max(0,r.totalSanction-r.totalBooked),expPct:r.totalSanction?r.totalBooked*100/r.totalSanction:0,ekOngoing:r.ongoing,labour:r.julyMandays}));
   data.sort((a,b)=>clean(a.janpad).localeCompare(clean(b.janpad),'hi')||clean(a.engineer).localeCompare(clean(b.engineer),'hi')||clean(a.cluster).localeCompare(clean(b.cluster),'hi'));
-  lastExport=data;$('viewTitle').textContent='एक बगिया माँ के नाम — Ongoing Works Dashboard';
+  lastExport=data;$('viewTitle').textContent='एक बगिया माँ के नाम — Ongoing Works';
   const q1=sum(data,'nregaAprJunMandays'),q2=sum(data,'julyMandays'),qt=sum(data,'totalMandays'),tw=sum(data,'workCount');
   $('viewMeta').textContent=`Correct Work Code matched data • ${fmt(tw)} verified works • 01 Apr–30 Jun Mandays ${fmt(q1)} • 01 Jul–Till Date Mandays ${fmt(q2)} • Total Mandays ${fmt(qt)} • Recovery/Vasuli works ${fmt(sum(data,'recoveryWorks'))}`;
   const cols=['workCount','ongoing','activeWorks','nilMandays','nregaAprJunMandays','julyMandays','totalMandays','b0','b25','b60','b75','b90','b90p','recoveryWorks','wageSanction','materialSanction','totalSanction','nregaWage','nregaMaterial','nregaBooked','vbgWage','vbgMaterial','vbgBooked','bookedWage','bookedMaterial','totalBooked','paidWage','paidMaterial','paidSince','duesWage','duesMaterial','duesTotal','remaining'];
