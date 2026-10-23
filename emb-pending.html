@@ -18,6 +18,8 @@
  .filters select{min-height:44px}
  .tabs{gap:12px}.tabs button{min-height:44px}
  section.report{overflow:hidden}
+ section.report:has(#report.engineer-table){max-width:1000px;margin-left:auto;margin-right:auto}
+ section.report:has(#report.gp-table){max-width:1240px;margin-left:auto;margin-right:auto}
  .table-wrap{overflow:auto;max-width:100%}
  table{width:100%;border-collapse:collapse}
  th,td{font-size:16px;padding:11px 12px;line-height:1.45}
@@ -26,14 +28,14 @@
  .total td{font-size:17px}
  .work{margin-bottom:8px;line-height:1.55;overflow-wrap:anywhere}
  .work b{font-size:14px}
- #report.engineer-table{width:100%;max-width:1240px;min-width:0;table-layout:fixed;margin:0 auto}
- #report.engineer-table th:nth-child(1),#report.engineer-table td:nth-child(1){width:5%}
+ #report.engineer-table{width:100%;max-width:1000px;min-width:0;table-layout:fixed;margin:0 auto}
+ #report.engineer-table th:nth-child(1),#report.engineer-table td:nth-child(1){width:4%}
  #report.engineer-table th:nth-child(2),#report.engineer-table td:nth-child(2){width:10%}
  #report.engineer-table th:nth-child(3),#report.engineer-table td:nth-child(3){width:12%}
- #report.engineer-table th:nth-child(4),#report.engineer-table td:nth-child(4){width:26%;overflow-wrap:anywhere}
- #report.engineer-table th:nth-child(5),#report.engineer-table td:nth-child(5){width:22%}
+ #report.engineer-table th:nth-child(4),#report.engineer-table td:nth-child(4){width:24%;overflow-wrap:anywhere}
+ #report.engineer-table th:nth-child(5),#report.engineer-table td:nth-child(5){width:25%}
  #report.engineer-table th:nth-child(6),#report.engineer-table td:nth-child(6){width:25%}
- #report.gp-table{width:100%;max-width:1360px;min-width:0;table-layout:fixed;margin:0 auto}
+ #report.gp-table{width:100%;max-width:1240px;min-width:0;table-layout:fixed;margin:0 auto}
  #report.gp-table th:nth-child(1),#report.gp-table td:nth-child(1){width:4%}
  #report.gp-table th:nth-child(2),#report.gp-table td:nth-child(2){width:8%}
  #report.gp-table th:nth-child(3),#report.gp-table td:nth-child(3){width:10%}
