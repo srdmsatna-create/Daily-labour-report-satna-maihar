@@ -1,6 +1,3 @@
-Warning: truncated output (original token count: 16327)
-Total output lines: 696
-
 ﻿District,Janpad,Sector,Gram_Panchayat,GP_20Sep_Name,Sub_Engineer,Correction
 Maihar,Amarpatan,BELA,BELA,Bela,सुनील मिश्रा,
 Maihar,Amarpatan,BELA,DITHAURA,Dithoura,सुनील मिश्रा,
@@ -264,7 +261,185 @@ Satna,Majhgawan,BARAUNDHA,BHIYAMAU,Bhiyamou,आशीष तिवारी,
 Satna,Majhgawan,BARAUNDHA,CHUWA,Chuwaon,आशीष तिवारी,
 Satna,Majhgawan,BARAUNDHA,GOPALPUR,Gopalpur,आशीष तिवारी,
 Satna,Majhgawan,BARAUNDHA,JAWARIN,Jawarin,आशीष तिवारी,
-Satna,Majhgaw…4327 tokens truncated… लढ़िया,
+Satna,Majhgawan,BARAUNDHA,KANDAR,Kandar,आशीष तिवारी,
+Satna,Majhgawan,BARAUNDHA,KAUNHARI,Kouhari,आशीष तिवारी,
+Satna,Majhgawan,BARAUNDHA,KHOHI,Khohie,आशीष तिवारी,
+Satna,Majhgawan,BARAUNDHA,NARDAHA,Nardaha,आशीष तिवारी,
+Satna,Majhgawan,BARAUNDHA,PATHARKACHHAR,Pathar Kchhar,आशीष तिवारी,
+Satna,Majhgawan,BARAUNDHA,RANIPUR,Ranipur,आशीष तिवारी,
+Satna,Majhgawan,BARAUNDHA,SHAHPUR,Sahpur,आशीष तिवारी,
+Satna,Majhgawan,HIRAUNDI,AMILIYA,Amiliya,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,BHARAGAWA,Bhargawon,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,CHANDAI,Chandai,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,GALBAL,Galwal,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,HIRAUNDI,Hiroundi,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,KAILASHPUR,Kailashpur,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,KHUTAHA,Khutaha,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,KITHA,Kitaha,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,LALPUR (PATIHAR),Lalpur,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,PACHHIT,Pachhit,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,TELNI,Telani,सतीस समेले,
+Satna,Majhgawan,HIRAUNDI,TURRA,Turra,सतीस समेले,
+Satna,Majhgawan,KARIGOHI,AMIRITI,Amiriti,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,BADERAKALAN,Badera Kala,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,BANKA,Banka,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,BEERRPUR,Beerpur,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,DEVRA,Dewara,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,GUJHAWA,Gujhawa,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,JHAKHAURA,Jhakhoura,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,KARIGOHI,Kariegohi,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,KHODARI,Khodari,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,PAGARKALAN,Pagar Kala,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,PAGARKHURD,Pagarkhurd,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KARIGOHI,SELAURA,Seloura,रमाकांत त्रिपाठी अति0,14-10-2026: user verified sector allocation
+Satna,Majhgawan,KHADAURRA,BARA,Bara,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,BERAHANA,Bairahana,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,DOMHAI,Domahai,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,GODGAWAN,Godgawa,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,KALWALIYA,Kalawaliya,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,KHADAURRA,Khadoura,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,KHANCH,Khanch,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,MAJHAGAWAN (JHARI),Majhagawan Ghari,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,MEHUTI,Mehuti,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,PACHALIKALAN,Pachali Kala,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,PATNAKALA,Patna Kalan,देवेन्द्र सिंह,
+Satna,Majhgawan,KHADAURRA,RIMARI,Rimari,देवेन्द्र सिंह,
+Satna,Majhgawan,MAJHGAWAN,ARJUNPUR,Arjunpur,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,BARAHA,Baraha,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,BHATHWA,Bathawa,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,BRAMHIPUR,Bramhipur,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,CHITAHRA,Chitahara,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,DEVLAHA,Dewlaha,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,KELHAURA,Kelhoura,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,MAHTAIN,Mahtian,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,MAJHGAWAN,Majhgawon,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,PADARI,Padari,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,PATNAKHURD,Patna Khurd,आशीष तिवारी अति0,
+Satna,Majhgawan,MAJHGAWAN,PUTARICHUWA,Putari Chhuwon,आशीष तिवारी अति0,
+Satna,Majhgawan,PINDRA,JHARI (Nakaila),Jhari Nakaila,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,KHARAHA,Kharaha,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,LALPUR (PADARI),Lalpur Padari,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,MALGAUSA,Malgousa,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,NAKAILA,Nakaila,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,PALDEV,Paldew,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,PINDRA,Pindara,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,Padmaniya,Padwaniya Jageer,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,SADA,Sada,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,SEJWAR,Sejwar,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PINDRA,SINGHPUR,Singhpur,रमाकांत त्रिपाठी,23-10-2026: user verified Singhpur reassignment
+Satna,Majhgawan,PINDRA,TERHIPATAMANIYA,Tendhee Patmaniya,रमाकांत त्रिपाठी,
+Satna,Majhgawan,PRATAPPUR,BADAKAN,Badkan,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,BARAUN,Barou,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,BITMA,Vitama,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,HALAWAN,Halawon,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,HARDI,Hardi,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,HARIHARPUR,Hariharpur,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,JAMUWANI,Jamuyani,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,JHONTA,Jhonta,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,KARAUNDIKALA,Karoundi Kala,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,PADUHAR,Paduhar,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,PRATAPPUR,Pratap Pur,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Majhgawan,PRATAPPUR,SHUKWAH,Sukwah,अखिलेश सोनी,25-09-2026: Pratap Pur पुष्टि
+Satna,Nagod,BARAPATTHAR,BARAPATTHAR,Barapathar,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,GANGWARIYA,Gangwariya,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,HADAHA,Hadha,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,HARDUWAKALAN,Harduwa Kala,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,ITAURAKALAN,Itoura Kala,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,ITMAUBARI,Itama Uwari,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,KHAKHRAUDHA,Khakhroundha,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,KHAMREHI,Khamrehi,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,NAUNIYA,Nauniya,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,PAWAIYA,Pawaiya,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,SEMARWARA,Semarwara,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,BARAPATTHAR,UJNEHI,Ujnehi,कौशल पटेल,14-10-2026: user verified sector allocation
+Satna,Nagod,DUREHA,AMKUI,Amkuie,संकल्प राणा,
+Satna,Nagod,DUREHA,DATUNHA,Datunaha,संकल्प राणा,
+Satna,Nagod,DUREHA,DUDAHA,Dudaha,संकल्प राणा,
+Satna,Nagod,DUREHA,DUREHA,Dureha,संकल्प राणा,
+Satna,Nagod,DUREHA,KALAWAL,Kalawal,संकल्प राणा,
+Satna,Nagod,DUREHA,KAPURI,Kapuri,संकल्प राणा,
+Satna,Nagod,DUREHA,PANSI,Pasie,संकल्प राणा,
+Satna,Nagod,DUREHA,RICHHUL,Richhul,संकल्प राणा,
+Satna,Nagod,DUREHA,RUNEHI,Runehi,संकल्प राणा,
+Satna,Nagod,DUREHA,SIJAHTI,Sijahati,संकल्प राणा,
+Satna,Nagod,DUREHA,UMARIHA,Umriha,संकल्प राणा,
+Satna,Nagod,JASO,ATARAURA,Atroura,रितेश राजपूत,
+Satna,Nagod,JASO,BAMURAHIYA,Bamurahiya,रितेश राजपूत,
+Satna,Nagod,JASO,JASO,Jaso,रितेश राजपूत,
+Satna,Nagod,JASO,JHINGODAR,Ghingodar,रितेश राजपूत,
+Satna,Nagod,JASO,KOTA NO.2,Kota N-2,रितेश राजपूत,
+Satna,Nagod,JASO,MADA TOLA,Mada Tola,रितेश राजपूत,
+Satna,Nagod,JASO,MARHI KALA,Madhie Kala,रितेश राजपूत,
+Satna,Nagod,JASO,PIPARI,Pipari,रितेश राजपूत,
+Satna,Nagod,JASO,RAMPURA,Rampura,रितेश राजपूत,
+Satna,Nagod,JASO,SEMRI,Semari,रितेश राजपूत,
+Satna,Nagod,JASO,SHAHPUR,Sahapura,रितेश राजपूत,
+Satna,Nagod,JASO,UMARI,Umari Brij,रितेश राजपूत,
+Satna,Nagod,KATKONKALA,AKOUNASATHIYA,Akouna Sathiya,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,AMILIYA,Amiliya,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,DHAURHARA,Dhourahara,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,GINJARA,Ginjara,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,KACHANAR,Kachanar,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,KACHLOHA,Kachloha,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,KATKONKALA,Katkonkala,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,KHAIRA,Khaira,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,MAJHGAWAN KHAIRUWA,Maghgawon,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,PATWARA,Patawara,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,RERUAKHURD,Reura Khurd,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,KATKONKALA,RERUWAKALAN,Reura Kala,हेमंत तिवारी,14-10-2026: user verified sector allocation
+Satna,Nagod,SHIVRAJPUR,AMA,Aama,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,BABOOPUR,Babupur,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,BANDI,Bandi,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,BHAJIKHERA,Bhajikhera,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,BILOUNDHA,Beloundha,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,DEORI,Dewari,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,DURGAPUR,Durgapur,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,DWARI KHURD,Dwari Khurd,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,KALPA,Kalpa,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,MADAI,Madai,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,SHIVRAJPUR,Shivrajpur,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SHIVRAJPUR,TIDUNI MOTWA,Tiduni Motwa,राजीवलोचन त्रिपाठी,
+Satna,Nagod,SINGHPUR,BELA,Bela,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,BELGAHANA,Belgahana,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,BHAIHAI,Bhaihai,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,KHAMHARIYA KHURD,Khamhariya Khurd,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,KOTA NO.1,Kota No.1,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,MAHTAIN,Mahtain,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,MAJHIYARI,Majhiyari,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,NONGARA,Nonagara,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,PANGARA,Panagara,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,RAUND (OF NAGOD),Raund,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,SINGHPUR (OF NAGOD),Singhpur,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SINGHPUR,USARAR (OF NAGOD),Usarar,हेमंत तिवारी अति0,15-10-2026: Hemant Tiwari additional charge
+Satna,Nagod,SITPURA,BACHBAI,Bachwai,निशा तिवारी,
+Satna,Nagod,SITPURA,BASUDHA,Basudha,निशा तिवारी,
+Satna,Nagod,SITPURA,CHHINDA,Chhinda,निशा तिवारी,
+Satna,Nagod,SITPURA,DAMHA,Damha,निशा तिवारी,
+Satna,Nagod,SITPURA,HILOUNDHA,Hiloundha,निशा तिवारी,
+Satna,Nagod,SITPURA,ITMA,Itama,निशा तिवारी,
+Satna,Nagod,SITPURA,LALPUR,Lalpur,निशा तिवारी,
+Satna,Nagod,SITPURA,MAUHARI,Mauhari,निशा तिवारी,
+Satna,Nagod,SITPURA,NAUWASTA,Nawasta,निशा तिवारी,
+Satna,Nagod,SITPURA,RAJARWARA,Rajarwara,निशा तिवारी,
+Satna,Nagod,SITPURA,SITPURA,Sitpura,निशा तिवारी,
+Satna,Nagod,SITPURA,UMARAHAT,Umrahat,निशा तिवारी,
+Satna,Nagod,SURDAHA KALA,CHANDKUIYA,Chandkuiya,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,CHUNAHA,Chunaha,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,JADAVPUR,Jadavpur,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,KODAR,Kodar,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,KONI,Koni,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,MAJHGAWN KHURD,Maghgawon Khurd,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,MUGAHAR,Mugahar,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,RAHIKWARA,Rahikawara,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,SURDAHA KALA,Surdaha Kalan,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,SURDAHA KHURD,Surdaha Khurd,प्रमोद तिवारी,
+Satna,Nagod,SURDAHA KALA,URDAN (OF NAGOD),Urdan,प्रमोद तिवारी,
+Satna,Rampur Baghelan,ABER,ABER,Aber,मोतीलाल लढ़िया,
+Satna,Rampur Baghelan,ABER,AKOUNA,Akouna,मोतीलाल लढ़िया,
+Satna,Rampur Baghelan,ABER,ANDHARWAR,Adharwar,मोतीलाल लढ़िया,
+Satna,Rampur Baghelan,ABER,BIHARA N.1,Bihara No-1,मोतीलाल लढ़िया,
+Satna,Rampur Baghelan,ABER,CHITGADH,Chitgarh,मोतीलाल लढ़िया,
+Satna,Rampur Baghelan,ABER,CHUNDKHURD,Chood Khurd,मोतीलाल लढ़िया,
 Satna,Rampur Baghelan,ABER,DEORA,Dewara N- 1,मोतीलाल लढ़िया,
 Satna,Rampur Baghelan,ABER,GHORKAT,Ghorkat,मोतीलाल लढ़िया,
 Satna,Rampur Baghelan,ABER,KARHIKALA,Karahi Kala,मोतीलाल लढ़िया,
