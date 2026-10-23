@@ -4128,7 +4128,18 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
     var card=e.target.closest('.srdm-app-card[data-srdm-view]');
     if(card&&!card.classList.contains('tab')){e.preventDefault();openView(card.getAttribute('data-srdm-view'));return;}
     var zero=e.target.closest('#srdmZeroLauncher');
-    if(zero){e.preventDefault();var b=document.getElementById('srdmZeroForceBtn');if(b)b.click();setTimeout(function(){var a=document.getElementById('srdmV8Alert')||document.getElementById('v64MainTabs');if(a)a.scrollIntoView({behavior:'smooth',block:'start'});},120);return;}
+    if(zero){
+      e.preventDefault();
+      var reportTab=document.querySelector('#v64MainTabs .tab[data-view="mandaysgen"]');
+      if(reportTab)reportTab.click();
+      var forceButton=document.getElementById('srdmZeroForceBtn');
+      if(forceButton)forceButton.click();
+      setTimeout(function(){
+        var target=document.getElementById('srdmZeroForceTools')||document.getElementById('reportTable');
+        if(target)target.scrollIntoView({behavior:'smooth',block:'start'});
+      },180);
+      return;
+    }
     var stats=e.target.closest('#vbgStatisticsLauncher');
     if(stats){e.preventDefault();var sec=document.getElementById('vbgStatistics');if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});}
   });
