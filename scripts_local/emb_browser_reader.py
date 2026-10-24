@@ -38,7 +38,7 @@ class BrowserReader:
    try:self.context=await self.p.chromium.launch_persistent_context(channel='chrome',**args)
    except Exception:self.context=await self.p.chromium.launch_persistent_context(**args)
    self.owned=True
-  self.slots=asyncio.Semaphore(5)
+  self.slots=asyncio.Semaphore(3)
  async def read(self,url):
   parsed=urlparse(url)
   if parsed.scheme!='https' or parsed.hostname!='vbgramgrep.dord.gov.in':raise ValueError('Official VBGRAMG report URL required')
@@ -53,6 +53,12 @@ class BrowserReader:
  async def read_once(self,url):
   page=await self.context.new_page()
   try:
+   async def trim_heavy_resources(route):
+    if route.request.resource_type in ('image','media','font'):
+     await route.abort()
+    else:
+     await route.continue_()
+   await page.route('**/*',trim_heavy_resources)
    response=await page.goto(url,wait_until='domcontentloaded',timeout=90000)
    if response is not None and response.status>=400:
     error=f'Official report HTTP {response.status}; previous data retained'
