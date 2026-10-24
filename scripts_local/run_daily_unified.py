@@ -65,7 +65,8 @@ def main():
     parser.add_argument('--publish', action='store_true')
     parser.add_argument('--publish-verified', action='store_true', help='Publish only fully validated independent groups even when another group fails')
     args = parser.parse_args()
-    lock = ROOT / '.unified-daily.lock'
+    failure_root = Path(os.environ.get('SRDM_DAILY_REPO') or ROOT)
+    lock = failure_root / '.unified-daily.lock'
     try:
         fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
     except FileExistsError:
@@ -86,14 +87,13 @@ def main():
         (stage / 'all-tabs-auto-status.json').write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
         # Failed groups remain atomic; optional publication includes successful groups only.
         if not status['success']:
-            failure_root = Path(os.environ.get('SRDM_DAILY_REPO') or ROOT)
             failure = failure_root / 'daily-update-last-failure.json'
             failure.write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
             bundle = failure_root / 'daily-update-diagnostics.zip'
             with zipfile.ZipFile(bundle, 'w', zipfile.ZIP_DEFLATED) as archive:
                 archive.write(failure, failure.name)
-                log = failure_root / 'daily-all-reports.log'
-                if log.is_file():archive.write(log, log.name)
+                log = Path(os.environ.get('SRDM_DAILY_LOG') or failure_root / 'daily-all-reports.log')
+                if log.is_file():archive.write(log, 'daily-all-reports.log')
                 for folder in ('gp-emuster-debug','yuktdhara-received-debug','daily-run-logs'):
                     debug = stage / 'data' / folder
                     if debug.exists():
