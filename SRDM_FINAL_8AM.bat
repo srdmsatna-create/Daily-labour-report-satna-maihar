@@ -6,6 +6,7 @@ set "PYTHONUTF8=1"
 set "PYTHONIOENCODING=utf-8"
 set "SRDM_DAILY_BAT=%~f0"
 set "SRDM_DAILY_REPO=%~dp0"
+set "SRDM_DAILY_LOG=%SRDM_DAILY_REPO%\daily-all-reports-%RANDOM%-%RANDOM%.log"
 if not exist "%SRDM_DAILY_REPO%\.git" (
  echo ERROR: Keep this BAT in the dashboard repository folder.
  goto failed
@@ -39,23 +40,24 @@ if errorlevel 1 goto failed
 git -C "%SRDM_DAILY_BOOT%" log -1 --format="Updater revision: %%h %%s"
 %SRDM_DAILY_PY% -c "import requests,bs4,openpyxl,playwright,tzdata; from importlib.metadata import version; assert tuple(map(int,version('openpyxl').split('.')[:3])) >= (3,1,5); assert tuple(map(int,version('playwright').split('.')[:2])) >= (1,46)" >nul 2>&1
 if not errorlevel 1 goto dependencies_ready
-%SRDM_DAILY_PY% -m pip install -r "%SRDM_DAILY_BOOT%\requirements.txt" requests beautifulsoup4 >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
+%SRDM_DAILY_PY% -m pip install -r "%SRDM_DAILY_BOOT%\requirements.txt" requests beautifulsoup4 >> "%SRDM_DAILY_LOG%" 2>&1
 if errorlevel 1 goto failed
 :dependencies_ready
 %SRDM_DAILY_PY% -c "from pathlib import Path; from playwright.sync_api import sync_playwright; p=sync_playwright().start(); exists=Path(p.chromium.executable_path).is_file(); p.stop(); raise SystemExit(0 if exists else 1)" >nul 2>&1
 if not errorlevel 1 goto browser_ready
-%SRDM_DAILY_PY% -m playwright install chromium >> "%SRDM_DAILY_REPO%\daily-all-reports.log" 2>&1
+%SRDM_DAILY_PY% -m playwright install chromium >> "%SRDM_DAILY_LOG%" 2>&1
 if errorlevel 1 goto failed
 :browser_ready
-echo Refreshing all reports. Details: daily-all-reports.log
-powershell.exe -NoProfile -Command "& $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish --publish-verified 2>&1 | Tee-Object -FilePath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Append; exit $LASTEXITCODE"
+echo Refreshing all reports. Log: %SRDM_DAILY_LOG%
+powershell.exe -NoProfile -Command "$ErrorActionPreference='Stop'; $LASTEXITCODE=1; try { & $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish --publish-verified 2>&1 | Tee-Object -FilePath $env:SRDM_DAILY_LOG -Append; $rc=$LASTEXITCODE; if($rc -ne 0){exit $rc}; exit 0 } catch { Write-Host $_; exit 1 }"
 if errorlevel 1 goto failed
-git worktree remove "%SRDM_DAILY_BOOT%"
-echo SUCCESS: Complete verified reports published together.
+git worktree remove --force "%SRDM_DAILY_BOOT%"
+if errorlevel 1 echo WARNING: Temporary updater folder could not be removed; reports were already published.
+echo SUCCESS: All reports verified and published.
 if /i not "%~1"=="--scheduled" pause
 exit /b 0
 :failed
 echo INCOMPLETE: Check the log. Verified groups may be published; failed groups retain their previous dates.
-if exist "%SRDM_DAILY_REPO%\daily-all-reports.log" powershell.exe -NoProfile -Command "Get-Content -LiteralPath (Join-Path $env:SRDM_DAILY_REPO 'daily-all-reports.log') -Tail 35"
+if exist "%SRDM_DAILY_LOG%" powershell.exe -NoProfile -Command "Get-Content -LiteralPath $env:SRDM_DAILY_LOG -Tail 35"
 if /i not "%~1"=="--scheduled" pause
 exit /b 1
