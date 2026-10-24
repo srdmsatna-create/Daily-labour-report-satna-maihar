@@ -134,7 +134,7 @@ def load_zero_attendance():
     print(f'Retrying Zero Attendance {b}/{g} ({attempt+2}/3): {exc}',flush=True)
     time.sleep(2*(attempt+1))
  result=set()
- with ThreadPoolExecutor(max_workers=5) as pool:
+ with ThreadPoolExecutor(max_workers=3) as pool:
   for part in pool.map(one,tasks):result.update(part)
  return result,gpseen
 def pending_rows(rr,block,gp,zero,today):
@@ -174,7 +174,7 @@ def read_gp_jobs(jobs,one,restart=None):
   if attempt:
    print(f'Recovering {len(pending)} unread GPs, attempt {attempt+1}/3',flush=True)
    if restart:restart()
-  with ThreadPoolExecutor(max_workers=5 if attempt==0 else 2) as pool:
+  with ThreadPoolExecutor(max_workers=3 if attempt==0 else 2) as pool:
    fs=[(t,pool.submit(one,t)) for t in pending]
    for t,f in fs:
     try:result.append(f.result())
@@ -225,7 +225,7 @@ if __name__=='__main__':
  result=0
  try:
   _BROWSER=BrowserReader()
-  print('Local Chrome: reading R4.4 GP details and R4.2 Zero Attendance; five pages at a time.',flush=True)
+  print('Local Chrome: reading R4.4 GP details and R4.2 Zero Attendance; three pages at a time.',flush=True)
   # Open the user's R4.2 landing page in the same ordinary persistent session.
   _BROWSER.get(R42_URL)
   main()
