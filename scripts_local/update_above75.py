@@ -78,15 +78,30 @@ def fetch_source(source_url,status,label):
 
 R613_URLS=['https://mnregaweb4.dord.gov.in/netnregarep/incomplete_works_Yearwise.aspx?payload=wlzcDkNgHsc1Bqk56sgn0cRHAZRE5bP2FwOm2Qq0je66lRYnpzRheqn29gJJheJ9CaJtM8RTrWs1rxPwAoNXQym-VjO0GmHKE6lJt6VsOGs9puWbJahcgoNsYmLcbGE4-0wBQJx-ABBDc_HZ_CROqiutmaLJD-358w32JVEDtUZ_qSCX8YD7oEoAEQwQ2c1OZt2Z8AukQRTbY_XSHEDnil26rqKffXb7bfm3V5hgP9-cT-0rnS2-jCqQ-8VI9kIF', 'https://vbgramgrep.dord.gov.in/VBGRAMG/incomplete_works_Yearwise.aspx?payload=zNVdSezGPZEO5qnUauuNyrKXu3I5UPwSHnyG_YQrImXAYNKQG6UsdzLiMmvM1oMAkfiMpurs-eRmDMRcaQe233MOvvhD3GcnBv0xAA8yQWuJAa8k7YT8uOpgKPJBDpB8m7-ohnSIjaAsKsn_usika7sWulAvmKGgN401-zec2jTyMw4aRNXD4dSwrO9go3cw7xFRxTY0JCvDsvwF87JbPChGtJ_UmVqS1Qt0xwa5pcpl_HdoR9WgTYyPADkzsOtc']
 def official_summary(url):
+ from bs4 import BeautifulSoup
  page,_=open_with_retry(session_opener(),url)
- clean=lambda s:html.unescape(re.sub('<[^>]+>',' ',s)).strip()
- rows=[]
- for tr in re.findall(r'<tr[^>]*>(.*?)</tr>',page,re.S):
-  cells=[clean(x) for x in re.findall(r'<t[dh][^>]*>(.*?)</t[dh]>',tr,re.S)]
-  if len(cells)==12 and cells[0].isdigit() and cells[2].isdigit() and block_key(cells[1]) in {'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA'}:
-   rows.append(dict(janpad=cells[1],incomplete=int(cells[2]),band75to100=int(cells[10]),above100=int(cells[11])))
- if len(rows)!=8 or len({block_key(x['janpad']) for x in rows})!=8:raise ValueError('Official R6.13 summary incomplete')
- return rows
+ expected={'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA'}
+ rows={}
+ soup=BeautifulSoup(page,'html.parser')
+ for tr in soup.find_all('tr'):
+  cells=[re.sub(r'\\s+',' ',cell.get_text(' ',strip=True)).strip() for cell in tr.find_all(['td','th'],recursive=False)]
+  if len(cells)<12 or not cells[0].strip().isdigit():
+   continue
+  block=block_key(cells[1])
+  if block not in expected:
+   continue
+  def count(value):
+   digits=re.sub(r'[,\\s]','',value)
+   if not digits.isdigit():
+    raise ValueError('Invalid R6.13 summary count for '+cells[1]+': '+value)
+   return int(digits)
+  item=dict(janpad=cells[1],incomplete=count(cells[2]),band75to100=count(cells[10]),above100=count(cells[11]))
+  if block in rows and rows[block]!=item:
+   raise ValueError('Conflicting official R6.13 rows for '+cells[1])
+  rows[block]=item
+ if set(rows)!=expected:
+  raise ValueError('Official R6.13 summary incomplete: found '+str(len(rows))+'/8 Satna Janpads')
+ return list(rows.values())
 
 def main():
  official=official_summary(R613_URLS[0]);vbg=official_summary(R613_URLS[1])
