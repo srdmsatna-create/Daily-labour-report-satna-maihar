@@ -8,6 +8,7 @@ on:
       - '.github/workflows/all-tabs-daily.yml'
       - 'scripts_local/run_daily_unified.py'
       - 'scripts_local/vbgram_access.py'
+      - 'scripts_local/update_above75.py'
 permissions:
   contents: write
 concurrency:
