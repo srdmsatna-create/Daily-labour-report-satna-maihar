@@ -84,14 +84,14 @@ def official_summary(url):
  rows={}
  soup=BeautifulSoup(page,'html.parser')
  for tr in soup.find_all('tr'):
-  cells=[re.sub(r'\\s+',' ',cell.get_text(' ',strip=True)).strip() for cell in tr.find_all(['td','th'],recursive=False)]
+  cells=[re.sub(r'\s+',' ',cell.get_text(' ',strip=True)).strip() for cell in tr.find_all(['td','th'],recursive=False)]
   if len(cells)<12 or not cells[0].strip().isdigit():
    continue
   block=block_key(cells[1])
   if block not in expected:
    continue
   def count(value):
-   digits=re.sub(r'[,\\s]','',value)
+   digits=re.sub(r'[,\s]','',value)
    if not digits.isdigit():
     raise ValueError('Invalid R6.13 summary count for '+cells[1]+': '+value)
    return int(digits)
