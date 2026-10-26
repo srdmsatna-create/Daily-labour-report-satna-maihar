@@ -145,6 +145,30 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
  .warning-table:not(.warning-detail) td:nth-child(n+6){font-size:10pt!important;font-weight:900!important;text-align:center!important;white-space:nowrap!important}
  .warning-table:not(.warning-detail) tr.janpad-total td:not([colspan]),.warning-table:not(.warning-detail) tr.district-total td:not([colspan]),.warning-table:not(.warning-detail) tr.grand-total td:not([colspan]){font-size:10pt!important}
 }
+
+/* Emphasize every subtotal and grand-total row in warning reports. */
+.warning-table:not(.warning-detail) tr.janpad-total td,
+.warning-table:not(.warning-detail) tr.district-total td,
+.warning-table:not(.warning-detail) tr.grand-total td{
+ font-size:18px!important;font-weight:900!important;line-height:1.3!important;
+}
+.warning-table:not(.warning-detail) tr.janpad-total td:not([colspan]),
+.warning-table:not(.warning-detail) tr.district-total td:not([colspan]),
+.warning-table:not(.warning-detail) tr.grand-total td:not([colspan]){
+ font-size:18px!important;font-weight:900!important;text-align:center!important;
+}
+@media print{
+ .warning-table:not(.warning-detail) tr.janpad-total td,
+ .warning-table:not(.warning-detail) tr.district-total td,
+ .warning-table:not(.warning-detail) tr.grand-total td{
+  font-size:10pt!important;font-weight:900!important;line-height:1.2!important;padding:4px 2px!important;
+ }
+ .warning-table:not(.warning-detail) tr.janpad-total td:not([colspan]),
+ .warning-table:not(.warning-detail) tr.district-total td:not([colspan]),
+ .warning-table:not(.warning-detail) tr.grand-total td:not([colspan]){
+  font-size:10pt!important;font-weight:900!important;text-align:center!important;
+ }
+}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
