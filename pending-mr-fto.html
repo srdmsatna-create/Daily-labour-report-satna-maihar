@@ -271,7 +271,7 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
   if(!table||!table.classList.contains('warning-table')||table.classList.contains('warning-detail'))return;
   const row=Array.from(head.rows).find(row=>row.querySelector('button[data-sort]'));
   if(!row)return;
-  const weights={district:4,block:7,engineer:11,cluster:5,panchayat:10,gps:4,pending:4,filling:5,wage:5,first:6,second:6,over3:5,oldest:10,average:6};
+  const weights={district:4,block:5,engineer:7,cluster:12,panchayat:10,gps:4,pending:3,filling:5,wage:5,first:6,second:6,over3:5,oldest:10,average:6};
   const widths=Array.from(row.cells).map((cell,i)=>i===0?2:weights[cell.querySelector('button')?.dataset.sort]||6);
   const sum=widths.reduce((a,b)=>a+b,0);
   table.querySelector('colgroup')?.remove();
