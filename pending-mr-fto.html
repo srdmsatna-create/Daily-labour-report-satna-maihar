@@ -191,6 +191,50 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
  .numeric-summary tr.district-total td:not([colspan]),
  .numeric-summary tr.grand-total td:not([colspan]){text-align:center!important}
 }
+
+/* Final shared styling for all summary modes and exported print sheets. */
+table tr.janpad-total td,
+table tr.district-total td,
+table tr.grand-total td,
+table tr.total td{
+ font-size:21px!important;font-weight:900!important;line-height:1.25!important;padding:9px 5px!important;
+}
+table tr.janpad-total td:not([colspan]),
+table tr.district-total td:not([colspan]),
+table tr.grand-total td:not([colspan]),
+table tr.total td:not([colspan]){
+ text-align:center!important;font-variant-numeric:tabular-nums;
+}
+#printPages table tr.janpad-total td,
+#printPages table tr.district-total td,
+#printPages table tr.grand-total td,
+#printPages table tr.total td{
+ font-size:15px!important;font-weight:900!important;line-height:1.2!important;padding:5px 3px!important;
+}
+#printPages table tr.janpad-total td:not([colspan]),
+#printPages table tr.district-total td:not([colspan]),
+#printPages table tr.grand-total td:not([colspan]),
+#printPages table tr.total td:not([colspan]){
+ text-align:center!important;font-variant-numeric:tabular-nums;
+}
+@media print{
+ body:not(.explicit-print-pages) table tr.janpad-total td,
+ body:not(.explicit-print-pages) table tr.district-total td,
+ body:not(.explicit-print-pages) table tr.grand-total td,
+ body:not(.explicit-print-pages) table tr.total td{
+  font-size:12pt!important;font-weight:900!important;line-height:1.2!important;padding:5px 3px!important;
+ }
+ body:not(.explicit-print-pages) table tr.janpad-total td:not([colspan]),
+ body:not(.explicit-print-pages) table tr.district-total td:not([colspan]),
+ body:not(.explicit-print-pages) table tr.grand-total td:not([colspan]),
+ body:not(.explicit-print-pages) table tr.total td:not([colspan]){text-align:center!important}
+ #printPages table tr.janpad-total td,
+ #printPages table tr.district-total td,
+ #printPages table tr.grand-total td,
+ #printPages table tr.total td{
+  font-size:12pt!important;font-weight:900!important;line-height:1.2!important;padding:5px 3px!important;
+ }
+}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
