@@ -38,7 +38,7 @@ const rules=[
  ['allowed',/construction of (?:rural health cent(?:er|re)|community hall|rural park|gram panchayat building).*for community/i,'3.24,3.26,3.27,3.29; पृष्ठ 7–8','अभिसरण/विभागीय प्रस्ताव लागू; पंचायत/सामुदायिक भवन के लिए पूर्व स्वीकृत/निर्मित भवन न होने की शर्त।'],
  ['allowed',/(?:rejuvenation|renovation).*traditional.*(?:pond|water|step.?well)|पारंपरिक.*(?:तालाब|बावड़ी).*(?:मरम्मत|जीर्णोद्धार)/i,'तालिका 2 क्र.12,13; 3.15, पृष्ठ 2,6','केवल पुराने पारंपरिक जल निकाय; मनरेगा/अन्य योजना में निर्मित संरचना का जीर्णोद्धार नहीं।'],
  ['allowed',/(?:plantation).*government institution/i,'तालिका 2 क्र.10; 3.13, पृष्ठ 2,6','प्रति सरकारी संस्था अधिकतम 50 पौधे; चारदीवारी और पानी की व्यवस्था आवश्यक।'],
- ['allowed',/(?:construction|strengthening).*(?:animal shelter trench|flood protection wall|masonry retaining wall|rcc retaining wall|gabion protection wall|embankment).*for community/i,'तालिका 2 क्र.46–50,54; 2.17, पृष्ठ 3,5','आपदा-सम्बंधी श्रेणी 04: राज्य द्वारा आपदा घोषित होने पर ही स्वीकृति।']
+ ['allowed',/(?:construction|strengthening).*(?:animal shelter trench|flood protection wall|masonry retaining wall|rcc retaining wall|gabion protection wall|embankment).*for community/i,'तालिका 2 क्र.46–50,54; 2.17, पृष्ठ 3,5','आपदा-सम्बंधी श्रेणी 04: राज्य द्वारा आपदा घोषित होने पर ही स्वीकृति।'],
 
  // Explicit coverage for additional work types in the 54-item construction list
  // (MP letter I/1368365/2026, table 2). These are type-level permissions;
