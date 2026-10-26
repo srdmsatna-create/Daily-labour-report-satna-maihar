@@ -39,6 +39,21 @@ const rules=[
  ['allowed',/(?:rejuvenation|renovation).*traditional.*(?:pond|water|step.?well)|पारंपरिक.*(?:तालाब|बावड़ी).*(?:मरम्मत|जीर्णोद्धार)/i,'तालिका 2 क्र.12,13; 3.15, पृष्ठ 2,6','केवल पुराने पारंपरिक जल निकाय; मनरेगा/अन्य योजना में निर्मित संरचना का जीर्णोद्धार नहीं।'],
  ['allowed',/(?:plantation).*government institution/i,'तालिका 2 क्र.10; 3.13, पृष्ठ 2,6','प्रति सरकारी संस्था अधिकतम 50 पौधे; चारदीवारी और पानी की व्यवस्था आवश्यक।'],
  ['allowed',/(?:construction|strengthening).*(?:animal shelter trench|flood protection wall|masonry retaining wall|rcc retaining wall|gabion protection wall|embankment).*for community/i,'तालिका 2 क्र.46–50,54; 2.17, पृष्ठ 3,5','आपदा-सम्बंधी श्रेणी 04: राज्य द्वारा आपदा घोषित होने पर ही स्वीकृति।']
+
+ // Explicit coverage for additional work types in the 54-item construction list
+ // (MP letter I/1368365/2026, table 2). These are type-level permissions;
+ // the listed convergence, location, and disaster conditions still apply.
+ ['allowed',/block plantation.*(?:agroforestry|community)|agroforestry.*block plantation/i,'तालिका 2 क्र.11; 3.14, पृष्ठ 2,6','समुदाय हेतु 5 एकड़ से अधिक पात्र क्षेत्र तथा .kml फाइल सहित प्रस्ताव; SIPRI/परिशिष्ट-1(m) लागू।'],
+ ['allowed',/(?:rejuvenation|renovation|repair.*maintenance).*(?:step.?well|bawdi|baoli)|(?:step.?well|bawdi|baoli).*(?:rejuvenation|renovation)/i,'तालिका 2 क्र.13; 3.15, पृष्ठ 2,6','केवल पारंपरिक बावड़ी/स्टेपवेल; अन्य योजना से बनी संरचना का जीर्णोद्धार नहीं।'],
+ ['allowed',/construction of (?:cremation|crematorium|shamshan|antim sanskar).*(?:ghat|platform|shed)?|(?:cremation|crematorium|shamshan) ghat/i,'तालिका 2 क्र.21; पृष्ठ 2','निर्धारित मानक प्राक्कलन, स्थल और विभागीय/अभिसरण शर्तें लागू।'],
+ ['allowed',/(?:construction of|for community).*(?:kabristan|burial ground|graveyard)|(?:kabristan|burial ground|graveyard).*(?:construction|community)/i,'तालिका 2 क्र.25; पृष्ठ 2','कब्रिस्तान निर्माण हेतु प्रस्तावित स्थल और स्थानीय पात्रता सत्यापित करें।'],
+ ['allowed',/construction of (?:pmay.?g|pmayg|pradhan mantri awas).*(?:house|housing|awas)|(?:pmay.?g|pmayg).*(?:house|housing|awas)/i,'तालिका 2 क्र.31; पृष्ठ 2','PMAY-G आवास हेतु स्वीकृत हितग्राही/आवास सूची और अभिसरण नियम लागू।'],
+ ['allowed',/construction of (?:sitting )?(?:chaupal|choupal|mandal|meeting platform|बैठक.*चौपाल|चौपाल.*पंडाल).*for community|(?:chaupal|choupal|mandal).*(?:construction|निर्माण)/i,'तालिका 2 क्र.35; 3.30, पृष्ठ 3,8','परिशिष्ट-1(x) का मानक प्राक्कलन तथा लागत लागू।'],
+ ['allowed',/repair.*maintenance.*(?:jal jeevan|jjm|water distribution|water supply).*(?:structure|project|pipeline|scheme)|(?:jal jeevan|jjm|water distribution).*(?:repair|maintenance|मरम्मत|रखरखाव)/i,'तालिका 2 क्र.43; 3.32, पृष्ठ 3,8','जल आपूर्ति विभाग के साथ वित्तीय अभिसरण और तकनीकी/प्रशासकीय स्वीकृति आवश्यक।'],
+ ['allowed',/repair.*maintenance.*(?:storage|overhead|reservoir).*(?:structure|tank).*(?:jal jeevan|jjm|water supply)|(?:jal jeevan|jjm).*(?:storage|भंडारण).*(?:repair|maintenance|मरम्मत|रखरखाव)/i,'तालिका 2 क्र.45; 3.32, पृष्ठ 3,8','जल आपूर्ति परियोजना की भंडारण संरचना; वित्तीय अभिसरण और स्वीकृति आवश्यक।'],
+ ['allowed',/(?:animal|cattle|livestock).*(?:conservation|protection).*(?:trench|pit)|(?:trench|pit).*(?:animal|cattle|livestock)/i,'तालिका 2 क्र.46; पृष्ठ 3','पशु संरक्षण खाइयों का निर्माण; स्थान और मानक प्राक्कलन सत्यापित करें।'],
+ ['allowed',/(?:strengthen|strengthening|repair|construction).*(?:embankment|bund|तटबंध)|(?:embankment|bund|तटबंध).*(?:strengthen|strengthening|repair|construction)/i,'तालिका 2 क्र.54; 2.17, पृष्ठ 3,5','आपदा-सम्बंधी श्रेणी 04: राज्य द्वारा आपदा घोषित होने पर ही स्वीकृति।'],
+
 ];
 function classify(label){
  const text=String(label||'').replace(/\s+/g,' ').trim();
