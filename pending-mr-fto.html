@@ -123,6 +123,21 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
 #printPages h2{font-size:13px;margin-bottom:4px}
 #printPages .sheet-meta{font-size:10px;line-height:1.25;margin-bottom:4px}
 .warning-table:not(.warning-detail) td{padding:5px 4px}
+
+/* Screen and A4 landscape refinements for Engineer / Cluster warning summary. */
+.warning-table:not(.warning-detail){width:100%!important;min-width:0!important;table-layout:fixed!important}
+.warning-table:not(.warning-detail) th:nth-child(4),.warning-table:not(.warning-detail) td:nth-child(4){font-size:13px!important}
+.warning-table:not(.warning-detail) th:nth-child(5),.warning-table:not(.warning-detail) td:nth-child(5){font-size:13px!important}
+.warning-table:not(.warning-detail) td:nth-child(n+6){font-size:17px!important;font-weight:850!important;text-align:center!important;vertical-align:middle!important;white-space:nowrap;font-variant-numeric:tabular-nums}
+.warning-table:not(.warning-detail) th:nth-child(n+6){text-align:center!important;vertical-align:middle!important}
+.warning-table:not(.warning-detail) tr.janpad-total td:not([colspan]),.warning-table:not(.warning-detail) tr.district-total td:not([colspan]),.warning-table:not(.warning-detail) tr.grand-total td:not([colspan]){font-size:17px!important;font-weight:900!important;text-align:center!important;font-variant-numeric:tabular-nums}
+@media print{
+ .warning-table:not(.warning-detail){width:100%!important;min-width:0!important;table-layout:fixed!important}
+ .warning-table:not(.warning-detail) th,.warning-table:not(.warning-detail) td{overflow-wrap:anywhere!important;padding:3px 2px!important;line-height:1.2!important}
+ .warning-table:not(.warning-detail) td:nth-child(4),.warning-table:not(.warning-detail) td:nth-child(5){font-size:7.5pt!important}
+ .warning-table:not(.warning-detail) td:nth-child(n+6){font-size:10pt!important;font-weight:900!important;text-align:center!important;white-space:nowrap!important}
+ .warning-table:not(.warning-detail) tr.janpad-total td:not([colspan]),.warning-table:not(.warning-detail) tr.district-total td:not([colspan]),.warning-table:not(.warning-detail) tr.grand-total td:not([colspan]){font-size:10pt!important}
+}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
@@ -249,7 +264,7 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
   if(!table||!table.classList.contains('warning-table')||table.classList.contains('warning-detail'))return;
   const row=Array.from(head.rows).find(row=>row.querySelector('button[data-sort]'));
   if(!row)return;
-  const weights={district:4,block:7,engineer:18,cluster:9,panchayat:10,gps:4,pending:5,filling:5,wage:5,first:6,second:6,over3:5,oldest:10,average:6};
+  const weights={district:4,block:7,engineer:11,cluster:5,panchayat:10,gps:4,pending:4,filling:5,wage:5,first:6,second:6,over3:5,oldest:10,average:6};
   const widths=Array.from(row.cells).map((cell,i)=>i===0?2:weights[cell.querySelector('button')?.dataset.sort]||6);
   const sum=widths.reduce((a,b)=>a+b,0);
   table.querySelector('colgroup')?.remove();
