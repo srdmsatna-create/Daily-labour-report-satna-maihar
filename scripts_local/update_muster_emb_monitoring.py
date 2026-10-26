@@ -12,7 +12,7 @@ def get_root():
     return Path.cwd()
 
 ROOT=get_root()
-URL="https://vbgramgrep.dord.gov.in/VBGRAMG/MusterRolle_EMBStatus.aspx?payload=ZXiXTJ0HzQl7fz4W7woa23KDguzp-Is4I63qmc6Kyc1jl3ibJtUhejzlAtv-fAxwYpqJyyVqtiJi6sPlWJ357Cb4q5KyW0qMVPUtVVbI2jF4KrNWijPnHjLZhYy2hn-IsDls6eL7mtZ3bO4TEFNgNLvBwskkuj-k-JBiAHVCc1URsDldWZBA_b0p11E4y43kiQmP7PzLsOsegcEuX8tvBUfVun1-KPT6ttJfedEcB7dCuEcZY6uUT99T_4E5JucKgEhkZbRWFH7ERjpKjdJv4w"
+URL="https://vbgramgrep.dord.gov.in/VBGRAMG/MusterRolle_EMBStatus.aspx?payload=uR-lQkXIZZCa4QXtqc-tV_zTYonR-NY3ADpO3MYCJ6UJ9MwcnNjqXIhbdNItUI6E7V_TrU36lI5ZwEzQiEkISFAOFCCgDQrsWyiLXx5jcDd8dTt3rIcUp6Fkw7ZvHaUZ1LehmWr-n2MODPoTHehJ5nrGmg7Xg1pcRx23palk1cO1JuHLDVA5UKaSOqduv_z9ZUkSAxZxDYmjjD9__mVHC4dCa_UL7-nyrkbFm5P5imQErFNNlQEaBhdj9atpQgiJZS1EUzSFql47_ap1bGN1HQ"
 BLOCKS={"AMARPATAN","MAIHAR","MAJHGAWAN","NAGOD","RAMNAGAR","RAMPUR BAGHELAN","SATNA","UNCHAHARA"}
 
 def clean(v): return re.sub(r"\s+"," ",html.unescape(re.sub(r"<[^>]+>","",v or ""))).strip()
