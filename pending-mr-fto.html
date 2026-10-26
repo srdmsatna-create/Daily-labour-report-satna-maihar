@@ -169,6 +169,28 @@ table tbody tr.district-total td{font-size:17px!important;font-weight:900!import
   font-size:10pt!important;font-weight:900!important;text-align:center!important;
  }
 }
+
+/* Make all totals readable in the FTO numeric summary, including the merged label cells. */
+.numeric-summary tr.janpad-total td,
+.numeric-summary tr.district-total td,
+.numeric-summary tr.grand-total td{
+ font-size:18px!important;font-weight:900!important;line-height:1.3!important;padding:8px 4px!important;
+}
+.numeric-summary tr.janpad-total td:not([colspan]),
+.numeric-summary tr.district-total td:not([colspan]),
+.numeric-summary tr.grand-total td:not([colspan]){
+ text-align:center!important;font-variant-numeric:tabular-nums;
+}
+@media print{
+ .numeric-summary tr.janpad-total td,
+ .numeric-summary tr.district-total td,
+ .numeric-summary tr.grand-total td{
+  font-size:10pt!important;font-weight:900!important;line-height:1.2!important;padding:4px 2px!important;
+ }
+ .numeric-summary tr.janpad-total td:not([colspan]),
+ .numeric-summary tr.district-total td:not([colspan]),
+ .numeric-summary tr.grand-total td:not([colspan]){text-align:center!important}
+}
 </style>
 <header><div><h1>लंबित मस्टरोल एवं एफ.टी.ओ. (प्रथम एवं द्वितीय)</h1><p>सतना एवं मैहर • जनपदवार / पंचायतवार रिपोर्ट</p></div><a href="index.html">← सभी रिपोर्ट</a></header>
 <main class="dashboard-container"><div class="toolbar"><div class="date" id="date">स्रोत तिथि: उपलब्ध नहीं</div><div class="actions"><button id="refresh">ताज़ा करें</button><button id="print">Print / PDF</button><button id="export" disabled>Excel / CSV</button></div></div>
