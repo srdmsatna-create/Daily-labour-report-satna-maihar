@@ -44,6 +44,6 @@ def validate(d):
 def main():
     d=fetch()
     path=ROOT/"data"/"r42-emuster-wagelist.json";path.parent.mkdir(parents=True,exist_ok=True)
-    tmp=path.with_suffix(".tmp");tmp.write_text(json.dumps(d,ensure_ascii=False,indent=2)+"\\n",encoding="utf-8");os.replace(tmp,path)
+    tmp=path.with_suffix(".tmp");tmp.write_text(json.dumps(d,ensure_ascii=False,indent=2)+"\n",encoding="utf-8");os.replace(tmp,path)
     print("R4.2 VERIFIED: 8 Janpads; "+str(d["totals"]["wagelists"])+" wagelists; source checked "+d["checkedDate"],flush=True)
 if __name__=="__main__":main()
