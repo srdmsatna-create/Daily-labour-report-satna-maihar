@@ -13,6 +13,7 @@ GROUPS=[
  ],['auto-data.js','auto-status.js','data/official-summary.csv','data/fetch-status.json',
     'shramik-gp-progress-data.js','gp-emuster-data.js','shramik-niyojan-data.js','shramik-district-reports.js',
     'shramik-state-refresh-status.js','shramik-refresh-status.js']),
+ ('r42_emuster_wagelist',[['scripts_local/update_r42_emuster_wagelist.py']],['data/r42-emuster-wagelist.json']),
  ('muster_emb',[['scripts_local/update_muster_emb_monitoring.py','--update-only']],['muster-emb-data.js']),
  ('pending_mr_fto',[['scripts_local/update_pending_mr_fto.py']],['data/pending-mr-fto.json','data/pending-mr-fto-details.json.gz']),
  ('emb_pending',[['scripts_local/update_emb_pending.py']],['data/emb-pending-latest.json']),
@@ -55,6 +56,9 @@ def validate(group,root):
   runpy.run_path(str(root/'scripts_local/update_emb_pending.py'))['validate'](d)
   if d.get('failedGP',0):raise ValueError(f"Incomplete e-MB coverage: {d['failedGP']} unread GPs; not a fully verified report")
   if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Current pending e-MB detail required')
+ elif group=='r42_emuster_wagelist':
+  d=data(root/'data/r42-emuster-wagelist.json')
+  runpy.run_path(str(root/'scripts_local/update_r42_emuster_wagelist.py'))['validate'](d)
  elif group=='muster_emb':
   d=data(root/'muster-emb-data.js')
   if len(d.get('rows',[]))!=8 or len(d.get('gpRows',[]))!=695:raise ValueError('Expected 8 Janpads and 695 GPs')
