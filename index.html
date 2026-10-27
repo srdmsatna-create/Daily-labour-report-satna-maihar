@@ -998,7 +998,6 @@ body[data-report-view="official"] .official-grid th{
     border-bottom:1px solid #42678e!important;
   }
   .report-head h2{font-size:10pt!important;line-height:1.05!important;margin:0!important}  .report-head p{font-size:5.5pt!important;margin:.5mm 0 0!important}  .legend{font-size:5.5pt!important}
-
   .table-wrap{
     overflow:visible!important;
     width:100%!important;
@@ -1998,7 +1997,6 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
     <a class="srdm-app-card srdm-portal-card" href="planner-sipri-dashboard-hi.html?refresh=20261026-bilingual54-final#workCategorySection" style="text-decoration:none;--app-accent:#0f766e;--app-soft:#ecfdf5;--app-shadow:#0f766e33;border-color:#0f766e;background:linear-gradient(135deg,#ecfdf5,#fff 75%)">      <span class="srdm-app-icon" style="background:#0f766e;color:#fff">54</span><span class="srdm-app-copy"><strong>54 अनुमत्य कार्यों की सूची — English / हिंदी</strong><span>मध्यप्रदेश शासन के 54 निर्माण कार्य • श्रेणीवार सूची</span></span><span class="srdm-app-new">New</span>
     </a>    <a class="srdm-app-card srdm-portal-card" href="pmayg.html" style="text-decoration:none"><span class="srdm-app-icon">🏠</span><span class="srdm-app-copy"><strong>PMAY-G • 90 मानव दिवस</strong><span>सभी वर्ष • Ongoing / Approved • जनपद / क्लस्टर / GP • शेष मानव दिवस</span></span><span class="srdm-app-new">New</span></a>
     <a class="srdm-app-card srdm-portal-card" data-report-code-fixed="7.1" href="pmayg-physical.html" style="text-decoration:none;--app-accent:#087e77"><span class="srdm-app-icon">🏠✓</span><span class="srdm-app-copy"><strong>Physically Completed PMAY-G</strong><span>MGNREGA 2025-26, 2026-27 + VBGRAMG 2026-27 • Booked / Paid / शेष / मानव दिवस</span></span><span class="srdm-app-new">New</span></a>
-
 <a class="srdm-app-card srdm-portal-card" href="works-above-75.html"><span class="srdm-app-icon">📊</span><span class="srdm-app-copy"><strong>75% से अधिक व्यय वाले कार्य</strong><span>जनपद • उपयंत्री • क्लस्टर • GP</span></span><span class="srdm-app-new">New</span></a>
     <a class="srdm-app-card srdm-portal-card" href="gp-sector-engineer-master.html" style="text-decoration:none"><span class="srdm-app-icon" aria-hidden="true">🗺️</span><span class="srdm-app-copy"><strong>695 GP • सेक्टर • उपयंत्री मास्टर</strong><span>जनपद / सेक्टर / उपयंत्री खोजें और CSV डाउनलोड करें</span></span><span class="srdm-app-new">New</span></a>
     <button type="button" class="srdm-app-card" data-srdm-view="mandaysgen">
@@ -2294,7 +2292,7 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
   return loading;
  }
  document.addEventListener('click',function(event){
-  const tab=event.target.closest('.tab[data-view="categoryworks"]');
+  const tab=event.target.closest('.tab[data-view="category"],.tab[data-view="categorysubeng"],.tab[data-view="categoryworks"],.tab[data-view="incomplete"],.tab[data-view="expbucket"],.tab[data-view="recovery"]');
   if(!tab||tab.dataset.srdmWorkReplay==='1'||(Array.isArray(window.ONGOING_DETAILS)&&window.ONGOING_DETAILS.length>1000))return;
   event.preventDefault();event.stopImmediatePropagation();
   const label=tab.textContent;
@@ -2996,7 +2994,6 @@ function renderJanpadDysfunctional(){
   summary+=`</div><div class="gp-summary-line" style="display:grid;grid-template-columns:minmax(145px,1fr) 105px 145px;gap:0;padding:11px 12px;margin-top:11px;border-radius:9px;background:#0f766e;color:#fff;font-weight:950">
     <span>MAIHAR + SATNA TOTAL</span><span style="text-align:right">${fmt(summaryGP)}</span>
     <span style="text-align:right">${fmt(summaryZero)}</span></div></div>`;
-
 
   let sh=`<div style="margin:10px 0 14px;border:1px solid #c8d8e8;border-radius:12px;overflow:auto;background:#fff">
     <div style="padding:11px 13px;background:#eef5fb;color:#123f72;font-weight:950;font-size:17px">
@@ -3997,8 +3994,7 @@ window.SRDM_ZERO_MANDAYS_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engine
    );
  }
 
- function renderRows(){
-   const f=getF(),d=filtered();
+ function renderRows(){   const f=getF(),d=filtered();
    const tbody=document.querySelector('#reportTable tbody');
    if(!tbody)return;
    tbody.innerHTML=d.map((r,i)=>`<tr>
