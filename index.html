@@ -1901,12 +1901,20 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table th {font-weight:700!im
 body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!important;}
 }
 </style>
+<style id="vbgramg-brand-logo">
+.gov-main{grid-template-columns:116px 1fr auto!important}
+.gov-mark{width:104px!important;height:98px!important;padding:2px!important;background:#fff!important;border:1px solid #d5e1ed!important;overflow:hidden!important}
+.gov-mark img,.login-emblem img{display:block;width:100%;height:100%;object-fit:contain;border-radius:inherit}
+#loginScreen .login-emblem{width:96px!important;height:90px!important;flex:0 0 96px!important;padding:3px!important;background:#fff!important;border:1px solid #d5e1ed!important;border-radius:18px!important;overflow:hidden!important}
+@media(max-width:900px){.gov-main{grid-template-columns:92px 1fr!important}.gov-mark{width:84px!important;height:80px!important}}
+@media(max-width:620px){#loginScreen .login-emblem{width:76px!important;height:72px!important;flex-basis:76px!important}}
+</style>
 </head>
 <body>
 <div class="login-screen" id="loginScreen">
   <div class="login-shell">
     <div class="login-brand">
-      <div class="login-emblem">MP</div>
+      <div class="login-emblem"><img src="assets/vb-gram-g-logo.png" alt="VB-G RAM G"></div>
       <div>
         <span class="login-kicker">मध्यप्रदेश शासन • पंचायत एवं ग्रामीण विकास विभाग</span>
         <h1>VB-G RAM G Daily Monitoring Portal</h1>
@@ -1934,7 +1942,7 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
     <div class="gov-right">VB-G RAM G • SATNA & MAIHAR</div>
   </div>
   <div class="gov-main">
-    <div class="gov-mark">MP</div>
+    <div class="gov-mark"><img src="assets/vb-gram-g-logo.png" alt="VB-G RAM G"></div>
     <div class="gov-title">
       <div class="eyebrow">VB-G RAM G • DAILY MONITORING PORTAL</div>
       <h1 id="portalHeading">जिला सतना एवं मैहर — 8 जनपद डेली मॉनिटरिंग</h1>
@@ -2263,7 +2271,7 @@ if(sessionStorage.getItem('srdmPortalLogin')==='1')openPortal();
   try{await library(kind);button.disabled=false;button.textContent=label;button.click();}catch(error){button.disabled=false;button.textContent=label;alert('Excel/PPT सुविधा लोड नहीं हुई। दोबारा बटन दबाएँ।');}
  },true);
 })();
-</script><script src="ek-bagiya/data.js?v=20260925"></script><script>try{window.EK_BAGIYA_WORK_DETAILS=(typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS))?WORK_DETAILS:[];}catch(e){window.EK_BAGIYA_WORK_DETAILS=[];}</script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');</script><script>document.write('<script src="auto-data.js?v='+encodeURIComponent((window.AUTO_FETCH_STATUS&&window.AUTO_FETCH_STATUS.finishedAt)||'latest')+'"><\/script>');</script><script>
+</script><script>window.EK_BAGIYA_WORK_DETAILS=[];</script><script>document.write('<script src="auto-status.js?live='+Date.now()+'"><\/script>');</script><script>document.write('<script src="auto-data.js?v='+encodeURIComponent((window.AUTO_FETCH_STATUS&&window.AUTO_FETCH_STATUS.finishedAt)||'latest')+'"><\/script>');</script><script>
 /* Embedded ongoing-details.js - EXCEL FINAL CATEGORY V8 */
 window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
 </script><script src="ongoing-vbg-25-09-2026.js?v=20260925"></script><script src="gp-sector-mapping-overrides.js?v=20261023-singhpur"></script><script>
@@ -2562,7 +2570,16 @@ function resolvedFinalCategory(r){
  return corrected||canonicalCategoryName(finalWorkCategory(r.name,r.type,r.fy))||'Other Works';
 }
 function categoryFiltered(){const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value,k=canonicalCategoryName($('categoryFilter')?.value||'ALL');return categorymix.map(r=>({...r,category:canonicalCategoryName(r.category)})).filter(r=>(d==='ALL'||districtOf(r.janpad)===d)&&(j==='ALL'||r.janpad===j)&&(e==='ALL'||r.engineer===e)&&(c==='ALL'||r.cluster===c)&&(k==='ALL'||r.category===k))}
-function correctedWorkFiltered(){const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value,k=$('categoryFilter')?.value||'ALL',s=$('workStatusFilter')?.value||'ALL';return ongoingDetails.filter(r=>{const cat=resolvedFinalCategory(r);return (d==='ALL'||districtOf(r.janpad)===d)&&(j==='ALL'||r.janpad===j)&&(e==='ALL'||r.engineer===e)&&(c==='ALL'||r.cluster===c)&&(k==='ALL'||cat===k)&&(s==='ALL'||clean(r.status).toUpperCase()===s.toUpperCase())})}
+let srdmWorkDetailsSortSource=null,srdmWorkDetailsSortCache=[];
+function correctedWorkFiltered(){
+ const d=$('districtFilter').value,j=$('janpadFilter').value,e=$('engineerFilter').value,c=$('clusterFilter').value,k=$('categoryFilter')?.value||'ALL',s=$('workStatusFilter')?.value||'ALL';
+ if(srdmWorkDetailsSortSource!==ongoingDetails){
+  const collator=new Intl.Collator('hi',{sensitivity:'base'});
+  srdmWorkDetailsSortCache=ongoingDetails.map(r=>({r,category:resolvedFinalCategory(r),janpad:clean(r.janpad),engineer:clean(r.engineer),code:clean(r.code)})).sort((a,b)=>collator.compare(a.category,b.category)||collator.compare(a.janpad,b.janpad)||collator.compare(a.engineer,b.engineer)||collator.compare(a.code,b.code));
+  srdmWorkDetailsSortSource=ongoingDetails;
+ }
+ return srdmWorkDetailsSortCache.filter(x=>(d==='ALL'||districtOf(x.r.janpad)===d)&&(j==='ALL'||x.r.janpad===j)&&(e==='ALL'||x.r.engineer===e)&&(c==='ALL'||x.r.cluster===c)&&(k==='ALL'||x.category===k)&&(s==='ALL'||clean(x.r.status).toUpperCase()===s.toUpperCase())).map(x=>x.r)
+}
 function syncVerifiedEkBagiyaWorkData(){
  const report=window.EK_BAGIYA_VERIFIED_REPORT;if(!report)return;
  const codes=new Set(report.works.map(w=>clean(w.code).toUpperCase()));
@@ -3058,7 +3075,7 @@ function renderCategoryWorks(){
  /* SRDM_CATEGORY_WORK_DETAILS_PERFORMANCE_V1
     Render a page at a time; keep the complete filtered list for export.
     This prevents 15,000+ rows x 20 cells from freezing Chrome. */
- const data=correctedWorkFiltered().slice().sort((a,b)=>resolvedFinalCategory(a).localeCompare(resolvedFinalCategory(b),'hi')||clean(a.janpad).localeCompare(clean(b.janpad),'hi')||clean(a.engineer).localeCompare(clean(b.engineer),'hi')||clean(a.code).localeCompare(clean(b.code)));data.forEach(r=>{r['MGNREGA Mandays Generate Till 31 March 2026']=Number.isFinite(+r.mandaysTillMar31)?num(r.mandaysTillMar31):Math.max(0,num(r.nregaTotalMandays)-num(r.nregaAprJunMandays));});lastExport=data;
+ const data=correctedWorkFiltered();data.forEach(r=>{r['MGNREGA Mandays Generate Till 31 March 2026']=Number.isFinite(+r.mandaysTillMar31)?num(r.mandaysTillMar31):Math.max(0,num(r.nregaTotalMandays)-num(r.nregaAprJunMandays));});lastExport=data;
  const pageSize=300;
  const signature=JSON.stringify([...document.querySelectorAll('select')].map(x=>[x.id,x.value]))+'|'+data.length+'|'+(data[0]?.code||'')+'|'+(data[data.length-1]?.code||'');
  if(window.SRDM_WORK_PAGE_SIGNATURE!==signature){window.SRDM_WORK_PAGE_SIGNATURE=signature;window.SRDM_WORK_PAGE=0;}
@@ -3203,7 +3220,19 @@ $('fileInput').addEventListener('change',e=>{pendingFile=e.target.files[0]||null
   }
   updatePortalHeading();
   render();
-}));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='dysjanpad'){for(const id of ['districtFilter','janpadFilter','engineerFilter','clusterFilter']){const filter=$(id);if(filter)filter.value='ALL';}}const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}render()}));
+}));$('resetBtn').addEventListener('click',()=>{if($('sortMetric'))$('sortMetric').value='AUTO';if($('sortOrder'))$('sortOrder').value='DESC';setPortalJanpad('ALL',false);});$('printBtn').addEventListener('click',()=>window.print());let srdmEkBagiyaDataPromise=null;
+function ensureEkBagiyaLegacyData(){
+ if(window.EK_BAGIYA_WORK_DETAILS?.length)return Promise.resolve(window.EK_BAGIYA_WORK_DETAILS);
+ if(srdmEkBagiyaDataPromise)return srdmEkBagiyaDataPromise;
+ srdmEkBagiyaDataPromise=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');script.src='ek-bagiya/data.js?v=20260925';
+  script.onload=()=>{try{window.EK_BAGIYA_WORK_DETAILS=(typeof WORK_DETAILS!=='undefined'&&Array.isArray(WORK_DETAILS))?WORK_DETAILS:[];resolve(window.EK_BAGIYA_WORK_DETAILS)}catch(error){reject(error)}};
+  script.onerror=()=>{srdmEkBagiyaDataPromise=null;reject(new Error('Ek Bagiya data failed to load'))};
+  document.head.appendChild(script);
+ });
+ return srdmEkBagiyaDataPromise;
+}
+document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(view==='dysjanpad'){for(const id of ['districtFilter','janpadFilter','engineerFilter','clusterFilter']){const filter=$(id);if(filter)filter.value='ALL';}}const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}if(view==='ekbagiya'&&!window.EK_BAGIYA_VERIFIED_REPORT&&!window.EK_BAGIYA_WORK_DETAILS?.length){$('viewTitle').textContent='एक बगिया डेटा लोड हो रहा है…';$('viewMeta').textContent='डेटा पहली बार लोड हो रहा है';$('reportTable').innerHTML='<tbody><tr><td class="empty-table">एक बगिया रिपोर्ट लोड हो रही है…</td></tr></tbody>';ensureEkBagiyaLegacyData().then(()=>{if(view==='ekbagiya'){refreshFilters();render()}}).catch(()=>{$('viewMeta').textContent='डेटा लोड नहीं हुआ। रिपोर्ट दोबारा खोलें।'});return}render()}));
 $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
 window.addEventListener('load',()=>{if(view==='dysjanpad')render();},{once:true});
 $('allWorksExcelBtn')?.addEventListener('click',()=>{
