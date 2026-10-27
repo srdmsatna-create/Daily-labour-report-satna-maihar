@@ -127,7 +127,8 @@ body.print-landscape .report-table.official-grid th,body.print-landscape .report
 .exp-tab{border-color:#bfcfec;color:#244e86}.exp-tab.active{background:#244e86!important;color:#fff!important;border-color:#244e86!important}
 .report-table.category-grid{min-width:1180px}.report-table.expbucket-grid{min-width:1160px}
 .incomplete-tab{border-color:#79a9eb;color:#164f93}.incomplete-tab.active{background:#2563a9!important;color:#fff!important;border-color:#2563a9!important}.report-table.incomplete-grid{min-width:1420px}.report-table.incomplete-grid th:first-child,.report-table.incomplete-grid td:first-child{text-align:center}.report-table.incomplete-grid th:nth-child(2),.report-table.incomplete-grid td:nth-child(2){text-align:left;white-space:normal;min-width:210px}.report-table.incomplete-grid .zero-exp{color:#b42318;font-weight:900}.report-table.incomplete-grid .low-util{color:#9a6700;font-weight:850}
-body[data-report-view="incomplete"] #categoryFilter,body[data-report-view="incomplete"] #workStatusFilter,body[data-report-view="incomplete"] #sortMetric,body[data-report-view="incomplete"] #sortOrder{display:none!important}
+body[data-report-view="incomplete"] #workStatusFilter,body[data-report-view="incomplete"] #sortMetric,body[data-report-view="incomplete"] #sortOrder{display:none!important}
+.compact-controls #categoryFilter{display:block!important;visibility:visible!important;pointer-events:auto!important;position:relative!important;z-index:4!important;cursor:pointer!important;touch-action:manipulation}
 .report-table.category-grid th:first-child,.report-table.category-grid td:first-child,.report-table.expbucket-grid th:nth-child(-n+3),.report-table.expbucket-grid td:nth-child(-n+3){text-align:left}
 .bucket-zero{font-weight:950!important;color:#a23625!important;background:#fff1ee!important}.bucket-good{font-weight:900!important;color:#1f6a3f!important;background:#eef9f2!important}
 .exp-pct-chip{display:inline-block;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:950;border:1px solid #cbd8e7;background:#eef4fb;color:#315a83}.exp-pct-chip.critical{background:#fde8e4;color:#a23625;border-color:#f1c8c0}.exp-pct-chip.low{background:#fff0d0;color:#946200;border-color:#ead8ad}.exp-pct-chip.good{background:#eaf7ee;color:#1f6a3f;border-color:#c8e6d2}
@@ -2177,7 +2178,7 @@ if(sessionStorage.getItem('srdmPortalLogin')==='1')openPortal();
     <select id="janpadFilter"><option value="ALL">सभी Janpad</option></select>
     <select id="engineerFilter"><option value="ALL">सभी Sub Engineer</option></select>
     <select id="clusterFilter"><option value="ALL">सभी Cluster</option></select>
-    <select id="categoryFilter" style="border:2px solid #0b7a3b"><option value="ALL">Work Category: सभी</option></select>
+    <select id="categoryFilter" aria-label="Work Category" title="Work Category" style="border:2px solid #0b7a3b"><option value="ALL">Work Category: सभी</option></select>
     <select id="workStatusFilter" style="border:2px solid #2563eb"><option value="ALL">Work Status: सभी</option><option value="Ongoing">Ongoing</option><option value="Completed">Completed</option><option value="Physically Completed">Physically Completed</option></select>
     <select id="sortMetric" title="Ranking metric">
       <option value="AUTO">Sort metric: Auto</option>
