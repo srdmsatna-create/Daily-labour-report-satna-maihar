@@ -3241,6 +3241,19 @@ function ensureEkBagiyaLegacyData(){
  return srdmEkBagiyaDataPromise;
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(!['category','categorysubeng','categoryworks','incomplete','expbucket','recovery'].includes(view)&&$('categoryFilter'))$('categoryFilter').value='ALL';if(view==='dysjanpad'){for(const id of ['districtFilter','janpadFilter','engineerFilter','clusterFilter']){const filter=$(id);if(filter)filter.value='ALL';}}const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}if(view==='ekbagiya'&&!window.EK_BAGIYA_VERIFIED_REPORT&&!window.EK_BAGIYA_WORK_DETAILS?.length){$('viewTitle').textContent='एक बगिया डेटा लोड हो रहा है…';$('viewMeta').textContent='डेटा पहली बार लोड हो रहा है';$('reportTable').innerHTML='<tbody><tr><td class="empty-table">एक बगिया रिपोर्ट लोड हो रही है…</td></tr></tbody>';ensureEkBagiyaLegacyData().then(()=>{if(view==='ekbagiya'){refreshFilters();render()}}).catch(()=>{$('viewMeta').textContent='डेटा लोड नहीं हुआ। रिपोर्ट दोबारा खोलें।'});return}render()}));
+document.addEventListener('click',event=>{
+ const card=event.target.closest('#srdmApplications .tab[data-view]');
+ if(!card)return;
+ const requested=card.dataset.view;
+ queueMicrotask(()=>{
+  if(view===requested&&document.body.dataset.reportView===requested)return;
+  view=requested;
+  document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab===card));
+  if(!['category','categorysubeng','categoryworks','incomplete','expbucket','recovery'].includes(view)&&$('categoryFilter'))$('categoryFilter').value='ALL';
+  if(view==='dysjanpad')for(const id of ['districtFilter','janpadFilter','engineerFilter','clusterFilter']){const filter=$(id);if(filter)filter.value='ALL'}
+  refreshFilters();render();
+ });
+});
 $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();render();updateAutoStatus();
 window.addEventListener('load',()=>{if(view==='dysjanpad')render();},{once:true});
 $('allWorksExcelBtn')?.addEventListener('click',()=>{
@@ -4134,7 +4147,7 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
   [...nav.querySelectorAll('.tab[data-view]')].forEach(tab=>{
     if(tab.hidden||tab.id==='srdmZeroForceBtn')return;
     const info=meta[tab.dataset.view]||['•',tab.textContent.trim(),'Monitoring report'];
-    tab.classList.add('srdm-app-card','report-module-card');
+    tab.type='button';tab.classList.add('srdm-app-card','report-module-card');
     tab.innerHTML='<span class="srdm-app-icon">'+info[0]+'</span><span class="srdm-app-copy"><strong>'+info[1]+'</strong><span>'+info[2]+'</span></span><span class="module-indicator" aria-hidden="true"></span>';
     grid.appendChild(tab);
   });
@@ -4162,7 +4175,7 @@ window.SRDM_ZERO_FORCE_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engineer
 <script id="SRDM_EGOV_LAUNCHER_JS_V1">
 (function(){
   function openView(view){
-    var tab=document.querySelector('#v64MainTabs .tab[data-view="'+view+'"]');
+    var tab=document.querySelector('#srdmApplications .tab[data-view="'+view+'"]')||document.querySelector('#v64MainTabs .tab[data-view="'+view+'"]');
     if(tab){tab.click(); setTimeout(function(){var el=document.querySelector('.report-card')||document.getElementById('v64MainTabs'); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});},120);}
   }
   document.addEventListener('click',function(e){
