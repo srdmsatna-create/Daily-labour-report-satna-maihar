@@ -997,8 +997,7 @@ body[data-report-view="official"] .official-grid th{
     padding:1.5mm 2mm!important;
     border-bottom:1px solid #42678e!important;
   }
-  .report-head h2{font-size:10pt!important;line-height:1.05!important;margin:0!important}  .report-head p{font-size:5.5pt!important;margin:.5mm 0 0!important}  .legend{font-size:5.5pt!important}  .table-wrap{
-    overflow:visible!important;
+  .report-head h2{font-size:10pt!important;line-height:1.05!important;margin:0!important}  .report-head p{font-size:5.5pt!important;margin:.5mm 0 0!important}  .legend{font-size:5.5pt!important}  .table-wrap{    overflow:visible!important;
     width:100%!important;
     max-width:none!important;
   }
@@ -1997,8 +1996,7 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
     </a>    <a class="srdm-app-card srdm-portal-card" href="pmayg.html" style="text-decoration:none"><span class="srdm-app-icon">🏠</span><span class="srdm-app-copy"><strong>PMAY-G • 90 मानव दिवस</strong><span>सभी वर्ष • Ongoing / Approved • जनपद / क्लस्टर / GP • शेष मानव दिवस</span></span><span class="srdm-app-new">New</span></a>
     <a class="srdm-app-card srdm-portal-card" data-report-code-fixed="7.1" href="pmayg-physical.html" style="text-decoration:none;--app-accent:#087e77"><span class="srdm-app-icon">🏠✓</span><span class="srdm-app-copy"><strong>Physically Completed PMAY-G</strong><span>MGNREGA 2025-26, 2026-27 + VBGRAMG 2026-27 • Booked / Paid / शेष / मानव दिवस</span></span><span class="srdm-app-new">New</span></a>
 <a class="srdm-app-card srdm-portal-card" href="works-above-75.html"><span class="srdm-app-icon">📊</span><span class="srdm-app-copy"><strong>75% से अधिक व्यय वाले कार्य</strong><span>जनपद • उपयंत्री • क्लस्टर • GP</span></span><span class="srdm-app-new">New</span></a>    <a class="srdm-app-card srdm-portal-card" href="gp-sector-engineer-master.html" style="text-decoration:none"><span class="srdm-app-icon" aria-hidden="true">🗺️</span><span class="srdm-app-copy"><strong>695 GP • सेक्टर • उपयंत्री मास्टर</strong><span>जनपद / सेक्टर / उपयंत्री खोजें और CSV डाउनलोड करें</span></span><span class="srdm-app-new">New</span></a>
-    <button type="button" class="srdm-app-card" data-srdm-view="mandaysgen">
-      <span class="srdm-app-icon">◉</span><span class="srdm-app-copy"><strong>VB-G RAM G Daily Monitoring</strong><span>Mandays generation &amp; daily progress</span></span>
+    <button type="button" class="srdm-app-card" data-srdm-view="mandaysgen">      <span class="srdm-app-icon">◉</span><span class="srdm-app-copy"><strong>VB-G RAM G Daily Monitoring</strong><span>Mandays generation &amp; daily progress</span></span>
     </button>
     <button type="button" class="srdm-app-card" data-srdm-view="category">
       <span class="srdm-app-icon">◔</span><span class="srdm-app-copy"><strong>Work Category Analytics</strong><span>Category summary &amp; work analysis</span></span>
@@ -2291,7 +2289,8 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
  }
  document.addEventListener('click',function(event){
   const tab=event.target.closest('.tab[data-view="category"],.tab[data-view="categorysubeng"],.tab[data-view="categoryworks"],.tab[data-view="incomplete"],.tab[data-view="expbucket"],.tab[data-view="recovery"]');
-  if(!tab||tab.dataset.srdmWorkReplay==='1'||(Array.isArray(window.ONGOING_DETAILS)&&window.ONGOING_DETAILS.length>1000))return;
+  if(!tab||(Array.isArray(window.ONGOING_DETAILS)&&window.ONGOING_DETAILS.length>1000))return;
+  if(tab.dataset.srdmWorkReplay==='1'){event.preventDefault();event.stopImmediatePropagation();return;}
   event.preventDefault();event.stopImmediatePropagation();
   const busyMark=document.createElement('span');busyMark.className='srdm-work-data-loading';busyMark.textContent=' Work details लोड हो रहे हैं…';
   tab.dataset.srdmWorkReplay='1';tab.setAttribute('aria-busy','true');tab.appendChild(busyMark);
@@ -2997,8 +2996,7 @@ function renderJanpadDysfunctional(){
     <div style="padding:11px 13px;background:#eef5fb;color:#123f72;font-weight:950;font-size:17px">
       ${month} — Janpad-wise / Sub Engineer-wise Summary    </div>
     <table class="report-table gp-noemp-summary" style="min-width:920px;width:100%;border-collapse:collapse">
-      <thead><tr>
-        <th>District</th><th>Janpad</th><th>Sub Engineer</th>
+      <thead><tr>        <th>District</th><th>Janpad</th><th>Sub Engineer</th>
         <th>Total GP Allotted</th><th>Zero Mandays GP</th><th>GPs</th>
       </tr></thead><tbody>`;
 
@@ -3997,7 +3995,6 @@ window.SRDM_ZERO_MANDAYS_DATA=[{"district":"MAIHAR","janpad":"AMARPATAN","engine
    tbody.innerHTML=d.map((r,i)=>`<tr>     <td>${i+1}</td><td>${r.district}</td><td>${r.janpad}</td><td>${r.engineer}</td><td>${r.cluster}</td><td>${r.gp}</td><td>${f.m}</td><td><b>0</b></td>
    </tr>`).join('')+
    `<tr class="total-row"><td colspan="6">TOTAL ZERO MANDAYS GP</td><td>${f.m}</td><td>${d.length.toLocaleString('en-IN')}</td></tr>`;
-
    const groups=new Set(d.map(r=>r.janpad+'|'+r.engineer+'|'+r.cluster));
    const se=new Set(d.map(r=>r.engineer));
    const gp=new Set(d.map(r=>r.gp));
