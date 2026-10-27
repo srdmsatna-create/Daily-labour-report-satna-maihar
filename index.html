@@ -3243,17 +3243,16 @@ function ensureEkBagiyaLegacyData(){
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');view=b.dataset.view;if(!['category','categorysubeng','categoryworks','incomplete','expbucket','recovery'].includes(view)&&$('categoryFilter'))$('categoryFilter').value='ALL';if(view==='dysjanpad'){for(const id of ['districtFilter','janpadFilter','engineerFilter','clusterFilter']){const filter=$(id);if(filter)filter.value='ALL';}}if(['category','categorysubeng','categoryworks','incomplete','expbucket','recovery'].includes(view)&&$('categoryFilter')&&$('categoryFilter').options.length<=1)refreshFilters();const o=$('printOrientation');if(o){o.value='landscape';o.dispatchEvent(new Event('change'));}if(view==='ekbagiya'&&!window.EK_BAGIYA_VERIFIED_REPORT&&!window.EK_BAGIYA_WORK_DETAILS?.length){$('viewTitle').textContent='एक बगिया डेटा लोड हो रहा है…';$('viewMeta').textContent='डेटा पहली बार लोड हो रहा है';$('reportTable').innerHTML='<tbody><tr><td class="empty-table">एक बगिया रिपोर्ट लोड हो रही है…</td></tr></tbody>';ensureEkBagiyaLegacyData().then(()=>{if(view==='ekbagiya'){refreshFilters();render()}}).catch(()=>{$('viewMeta').textContent='डेटा लोड नहीं हुआ। रिपोर्ट दोबारा खोलें।'});return}render()}));
 document.addEventListener('click',event=>{
  const card=event.target.closest('#srdmApplications .tab[data-view]');
- if(!card)return;
- const requested=card.dataset.view;
- queueMicrotask(()=>{
-  if(view===requested&&document.body.dataset.reportView===requested)return;
-  view=requested;
-  document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab===card));
-  if(!['category','categorysubeng','categoryworks','incomplete','expbucket','recovery'].includes(view)&&$('categoryFilter'))$('categoryFilter').value='ALL';
-  if(view==='dysjanpad')for(const id of ['districtFilter','janpadFilter','engineerFilter','clusterFilter']){const filter=$(id);if(filter)filter.value='ALL'}
-  refreshFilters();render();
- });
-});
+ if(!card||!['category','categorysubeng','categoryworks','incomplete'].includes(card.dataset.view))return;
+ event.preventDefault();event.stopImmediatePropagation();
+ view=card.dataset.view;
+ document.querySelectorAll('.tab').forEach(tab=>tab.classList.toggle('active',tab===card));
+ if($('categoryFilter')&&$('categoryFilter').options.length<=1)refreshFilters();
+ const orientation=$('printOrientation');if(orientation){orientation.value='landscape';orientation.dispatchEvent(new Event('change'))}
+ document.body.classList.add('srdm-main-report-open');
+ render();
+ requestAnimationFrame(()=>document.querySelector('.shell>.compact-controls')?.scrollIntoView({behavior:'smooth',block:'start'}));
+},true);
 $('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();if(view)render();else{document.getElementById('viewTitle').textContent='रिपोर्ट चुनें';document.getElementById('viewMeta').textContent='मेनू से रिपोर्ट चुनें';document.getElementById('reportTable').replaceChildren()}updateAutoStatus();
 window.addEventListener('load',()=>{if(view==='dysjanpad')render();},{once:true});
 $('allWorksExcelBtn')?.addEventListener('click',()=>{
