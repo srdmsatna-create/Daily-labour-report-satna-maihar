@@ -1,6 +1,6 @@
 {
-  "runId": "20261028T072950Z-20611d",
-  "checkedAt": "2026-10-28T07:48:15.107274+00:00",
+  "runId": "20261028T081910Z-1cdbb2",
+  "checkedAt": "2026-10-28T08:34:41.093710+00:00",
   "schedule": "06:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -42,9 +42,7 @@
       "attempts": 1
     },
     "emb_pending": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_emb_pending.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_emb_pending.py']\nFAILED: Pending for Payment e-MB count retained: Payment-pending MR identity incomplete: AMARPATAN/TALA\r\n",
+      "success": true,
       "files": [
         "data/emb-pending-latest.json"
       ],
@@ -153,5 +151,5 @@
       "attempts": 1
     }
   },
-  "success": false
+  "success": true
 }
