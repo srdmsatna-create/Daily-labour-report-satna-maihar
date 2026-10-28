@@ -1,5 +1,5 @@
 """e-MB pending ledger from official R4.4 details; rules: emb-lambit-logic.xlsx."""
-import html,json,re,sys,time,urllib.parse
+import gzip,html,json,re,sys,time,urllib.parse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime,date,timezone
 from html.parser import HTMLParser
@@ -158,12 +158,13 @@ def pending_rows(rr,block,gp,zero,today):
   out[k]=v
  return list(out.values()),invalid
 def validate(d):
- if d.get('schemaVersion')!=SCHEMA or d.get('available') is not True or not d.get('zeroAttendanceVerified'):raise ValueError('Verified detail and Zero Attendance source required')
+ if d.get('schemaVersion')!=SCHEMA or d.get('available') is not True or not d.get('paymentPendingVerified'):raise ValueError('Verified payment-pending source required')
  if len(d.get('coverage',[]))!=8 or any(r['checked']+r['failed']!=r['expected'] for r in d['coverage']):raise ValueError('GP coverage arithmetic failed')
  if len({(r['block'],r['panchayat']) for r in d['gpRows']})!=len(d['gpRows']):raise ValueError('Duplicate GP')
  if sum(r['checked'] for r in d['coverage'])!=len(d['gpRows']) or sum(r['failed'] for r in d['coverage'])!=d['failedGP']:raise ValueError('GP coverage total mismatch')
  for r in d['gpRows']:
-  if r['pending']!=len(r['details']) or any(v['days']<5 for v in r['details']):raise ValueError('Invalid pending details')
+  if r['pending']!=len(r['details']):raise ValueError('Payment-pending detail count mismatch')
+  if len({(v['code'],v['mr']) for v in r['details']})!=r['pending']:raise ValueError('Duplicate payment-pending MR')
  if d['totalPending']!=sum(r['pending'] for r in d['gpRows']):raise ValueError('Summary mismatch')
 def read_gp_jobs(jobs,one,restart=None):
  # Preserve successful GP reads. Retry just unavailable pages, with fewer
@@ -184,52 +185,45 @@ def read_gp_jobs(jobs,one,restart=None):
  return result,failures
 
 def main():
- mapping=read_js(ROOT/'muster-emb-data.js');gpmap={(key(r['block']),key(r['panchayat'])):r for r in mapping['gpRows']}
+ mapping=read_js(ROOT/'muster-emb-data.js')
+ gpmap={(key(r['block']),key(r['panchayat'])):r for r in mapping['gpRows']}
  if len(gpmap)!=695:raise ValueError('695 GP mappings required')
- root,base=get(mapping['source']);links=block_links(root,base)
- jobs=[];coverage=[]
- for b,url in links.items():
-  rr,base=get(url);seen=set()
-  for r in rr:
-   if len(r)<2 or not r[0]['text'].isdigit() or r[1]['text'].isdigit():continue
-   gp=key(r[1]['text'])
-   if (b,gp) not in gpmap:continue
-   detail={urllib.parse.urljoin(base,u) for c in r for u in c['links'] if 'MusterRolle_EMBStatus_dtl.aspx' in u}
-   if len(detail)!=1:raise ValueError('Exactly one GP detail link required: '+b+' '+gp)
-   seen.add(gp);jobs.append((b,gp,detail.pop()))
-  # Portal omits unissued GPs; still require every GP with issued MRs.
-  required={g for (j,g),r in gpmap.items() if j==b and r['issued']>0}
-  if not required.issubset(seen):raise ValueError('Issued GP details missing: '+b)
-  coverage.append({'block':b,'expected':len(seen),'checked':0,'failed':0})
- zero,zerogps=load_zero_attendance();today=datetime.now(ZoneInfo('Asia/Kolkata')).date()
- def one(t):
-  b,g,u=t
-  if (b,g) not in zerogps:raise ValueError('Zero Attendance GP coverage missing: '+b+' '+g)
-  rr,_=get(u)
-  headers=' '.join(c['text'] for r in rr for c in r if len(r)>=6 and not any('/' in x['text'] and re.match(r'\d+/',x['text']) for x in r))
-  if not re.search(r'muster|\bMR\b',headers,re.I) or not re.search(r'measure|e.?mb|माप',headers,re.I):raise ValueError('GP detail header missing; not counted as zero')
-  details,invalid=pending_rows(rr,b,g,zero,today);m=gpmap[(b,g)]
-  return {'block':b,'district':'MAIHAR' if b in {'AMARPATAN','MAIHAR','RAMNAGAR'} else 'SATNA','panchayat':g,'engineer':m.get('engineer') if m.get('engineer') not in (None,'','Unmapped') else '—','cluster':m.get('cluster') or '—','pending':len(details),'details':details,'invalidDates':invalid}
- result,unread=read_gp_jobs(jobs,one,restart=_BROWSER.restart)
- failures=[]
- for row in result:next(c for c in coverage if c['block']==row['block'])['checked']+=1
- for t,e in unread:
-  failures.append({'block':t[0],'panchayat':t[1],'engineer':gpmap[(t[0],t[1])].get('engineer') or '—','district':'MAIHAR' if t[0] in {'AMARPATAN','MAIHAR','RAMNAGAR'} else 'SATNA','reason':str(e) or repr(e)})
-  next(c for c in coverage if c['block']==t[0])['failed']+=1
- if not result:raise ValueError('No GP detail could be read; previous report retained')
- d={'schemaVersion':SCHEMA,'available':True,'source':mapping['source'],'zeroSource':R42_URL,'sourceDate':None,'fetchedAt':datetime.now(timezone.utc).isoformat(),'thresholdDays':5,'zeroAttendanceVerified':True,'zeroCount':len(zero),'coverage':coverage,'gpRows':result,'totalPending':sum(r['pending'] for r in result),'checkedGP':len(result),'affectedGP':sum(r['pending']>0 for r in result),'failedGP':len(failures),'failedPages':failures}
+ payment=json.loads((ROOT/'data/pending-mr-fto.json').read_text(encoding='utf-8-sig'))
+ if payment.get('sourceMode')!='payment-pending' or payment.get('filterVerified') is not True:raise ValueError('Verified S5.26 Pending for Payment filter required')
+ stage=payment.get('reports',{}).get('mr',{})
+ if not stage.get('available') or set(stage.get('coverage',[]))!=BLOCKS:raise ValueError('All eight payment-pending block reports required')
+ details_path=ROOT/payment.get('detailsFile','')
+ if not details_path.is_file():raise ValueError('Payment-pending detail file missing')
+ payment_rows=json.loads(gzip.decompress(details_path.read_bytes()))
+ if len(payment_rows)!=payment.get('detailCount'):raise ValueError('Payment-pending detail count mismatch')
+ by_gp={}
+ for row in payment_rows:
+  block=key(row.get('block'));gp=key(row.get('panchayat'))
+  if (block,gp) not in gpmap:raise ValueError('Payment-pending GP mapping missing: '+block+'/'+gp)
+  code=clean(row.get('workCode'));mr=clean(row.get('mr'))
+  if not re.fullmatch(r'\d+/[A-Za-z]+/\d+',code) or not mr:raise ValueError('Payment-pending MR identity incomplete: '+block+'/'+gp)
+  bucket=by_gp.setdefault((block,gp),{});identity=(code,mr)
+  detail={'code':code,'name':'Pending for Payment','mr':mr,'mrDate':clean(row.get('closureDate')),'days':0,'status':'Pending for Payment','firstPending':bool(row.get('firstPending')),'secondPending':bool(row.get('secondPending'))}
+  for fmt in ('%d/%m/%Y','%d-%m-%Y'):
+   try:
+    detail['days']=max(0,(datetime.now(ZoneInfo('Asia/Kolkata')).date()-datetime.strptime(detail['mrDate'],fmt).date()).days);break
+   except ValueError:pass
+  old=bucket.get(identity)
+  if old:
+   old['firstPending']=old['firstPending'] or detail['firstPending'];old['secondPending']=old['secondPending'] or detail['secondPending']
+  else:bucket[identity]=detail
+ gpRows=[];coverage=[]
+ for block in sorted(BLOCKS):
+  gps=sorted(g for (b,g) in gpmap if b==block)
+  for gp in gps:
+   m=gpmap[(block,gp)];vals=list(by_gp.get((block,gp),{}).values())
+   gpRows.append({'block':block,'district':'MAIHAR' if block in {'AMARPATAN','MAIHAR','RAMNAGAR'} else 'SATNA','panchayat':gp,'engineer':m.get('engineer') if m.get('engineer') not in (None,'','Unmapped') else '—','cluster':m.get('cluster') or '—','pending':len(vals),'details':vals,'invalidDates':0})
+  n=len(gps);coverage.append({'block':block,'expected':n,'checked':n,'failed':0})
+ d={'schemaVersion':SCHEMA,'available':True,'source':stage['source'],'sourceDate':stage.get('sourceDate'),'fetchedAt':stage.get('fetchedAt') or datetime.now(timezone.utc).isoformat(),'thresholdDays':0,'paymentPendingVerified':True,'sourceMode':'payment-pending','coverage':coverage,'gpRows':gpRows,'totalPending':sum(r['pending'] for r in gpRows),'checkedGP':len(gpRows),'affectedGP':sum(r['pending']>0 for r in gpRows),'failedGP':0,'failedPages':[]}
  validate(d);p=ROOT/'data/emb-pending-latest.json';tmp=p.with_suffix('.tmp');tmp.write_text(json.dumps(d,ensure_ascii=False,indent=2),encoding='utf-8');tmp.replace(p)
- print('Verified pending e-MB:',len(result),'GPs;',d['totalPending'],'MRs',flush=True)
+ print('Verified Pending for Payment:',len(gpRows),'GPs;',d['totalPending'],'distinct MRs',flush=True)
 if __name__=='__main__':
- from emb_browser_reader import BrowserReader
  result=0
- try:
-  _BROWSER=BrowserReader()
-  print('Local Chrome: reading R4.4 GP details and R4.2 Zero Attendance; three pages at a time.',flush=True)
-  # Open the user's R4.2 landing page in the same ordinary persistent session.
-  _BROWSER.get(R42_URL)
-  main()
- except Exception as e:print('FAILED: pending e-MB retained:',e,flush=True);result=1
- finally:
-  if _BROWSER is not None:_BROWSER.close()
+ try:main()
+ except Exception as e:print('FAILED: Pending for Payment e-MB count retained:',e,flush=True);result=1
  sys.exit(result)
