@@ -201,7 +201,7 @@ def main():
   block=key(row.get('block'));gp=key(row.get('panchayat'))
   if (block,gp) not in gpmap:raise ValueError('Payment-pending GP mapping missing: '+block+'/'+gp)
   code=clean(row.get('workCode'));mr=clean(row.get('mr'))
-  if not re.fullmatch(r'\d+/[A-Za-z]+/\d+',code) or not mr:raise ValueError('Payment-pending MR identity incomplete: '+block+'/'+gp)
+  if not re.fullmatch(r'\d+/\S+',code) or not mr:raise ValueError('Payment-pending MR identity incomplete: '+block+'/'+gp)
   bucket=by_gp.setdefault((block,gp),{});identity=(code,mr)
   detail={'code':code,'name':'Pending for Payment','mr':mr,'mrDate':clean(row.get('closureDate')),'days':0,'status':'Pending for Payment','firstPending':bool(row.get('firstPending')),'secondPending':bool(row.get('secondPending'))}
   for fmt in ('%d/%m/%Y','%d-%m-%Y'):
