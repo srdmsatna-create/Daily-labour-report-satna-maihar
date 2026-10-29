@@ -27,7 +27,7 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://secure.dord.gov.in/reportv2/'
 FY = '2026-2027'
-START = date(2026, 10, 1)
+START = date(2026, 9, 1)
 IST = timezone(timedelta(hours=5, minutes=30))
 EXPECTED = {'1712006': ('Amarpatan', 'Maihar', 75),
             '1712008': ('Maihar', 'Maihar', 115),
