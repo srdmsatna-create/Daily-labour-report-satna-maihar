@@ -731,6 +731,9 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
 /* Keep District labels readable in the compact main table. */
 #officialSection table.official-merged thead th:nth-child(1){width:72px!important;min-width:72px!important;max-width:72px!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
 #officialSection table.official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(1){width:72px!important;min-width:72px!important;max-width:72px!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
+
+/* Improve readability of official-table numbers. */
+#officialSection table.official-merged tbody td.num{font-size:16px!important;font-weight:850!important}
 </style>
 <script>
 (function(){
