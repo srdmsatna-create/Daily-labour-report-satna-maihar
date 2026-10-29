@@ -87,7 +87,7 @@ function totals(rows){
  return {old:a,now:b};
 }
 function val(x,m){return m.i===-1?x[0]-x[1]:x[m.i];}
-function signed(n){return n>0?"+"+fmt(n):n<0?"−"+fmt(Math.abs(n)):"0";}
+function signed(n){return n>0?"+"+fmt(n):n<0?"−"+fmt(Math.abs(n)):"(0)";}
 function deltaClass(d,lower){return d===0?"neutral":((lower?d<0:d>0)?"good":"bad");}
 function cell(a,b,lower){
  const d=b-a;
