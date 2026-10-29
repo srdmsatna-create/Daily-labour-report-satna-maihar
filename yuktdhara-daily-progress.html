@@ -188,7 +188,7 @@ function renderNoWork(gpData){
    engineers.forEach(e=>{
     const eRows=jRows.filter(g=>g.engineer===e);
     eRows.forEach(g=>{html+='<tr><td>'+g.district+'</td><td>'+g.janpad+'</td><td>'+g.engineer+'</td><td>'+g.cluster+'</td><td>'+fmt(g.gps.length)+'</td><td>'+fmt(g.worked)+'</td><td>'+fmt(g.without.length)+'</td><td>'+g.without.join(", ")+'</td></tr>';});
-    const x=emit("उपयंत्री योग",d,j,e,eRows);if(x){grand.clusters+=x.clusters;grand.gps+=x.gps;grand.worked+=x.worked;grand.without+=x.without;}
+    grand.clusters+=eRows.length;grand.gps+=eRows.reduce((n,g)=>n+g.gps.length,0);grand.worked+=eRows.reduce((n,g)=>n+g.worked,0);grand.without+=eRows.reduce((n,g)=>n+g.without.length,0);
    });
    emit("जनपद योग",d,j,"",jRows);
   });
