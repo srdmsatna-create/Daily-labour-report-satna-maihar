@@ -65,7 +65,7 @@ td:first-child,td:nth-child(2){text-align:left}
 <h1>दैनिक Planner से SIPRI प्रगति पत्रक</h1>
 <p class="subtitle">27-10-2026 की पंचायतवार SIPRI आधार स्थिति और Planning Summary तुलना<br><span id="sourceNote"></span></p>
 
-<section class="live-section"><h2>पंचायतवार SIPRI योजना और SIPRI पोर्टल में अनुमोदन — 27-10-2026</h2><p class="live-status">स्रोत: 27-10-2026 Planning Summary Report। अनुमोदन संख्या Planning Summary Report के AE-approved आँकड़े से ली गई है। जिला फ़िल्टर ऊपर से लागू होगा।</p><div id="panchayatCards" class="cards"></div><div class="table-wrap"><table class="live-table"><thead><tr><th>जिला</th><th>जनपद</th><th>पंचायत</th><th>SIPRI में योजनाबद्ध कार्य</th><th>SIPRI पोर्टल में अनुमोदन</th></tr></thead><tbody id="panchayatBody"></tbody></table></div></section>
+
 <h2 class="summary-title">Planning Summary रिपोर्ट की तुलना — 27-10-2026 से 29-10-2026</h2>
 <div id="cards" class="cards"></div>
 <p class="note" id="filterNote">हर खाने में पहले 27-10-2026 और फिर 29-10-2026 का मान दिखेगा। नीचे का अंतर आज के मान में से पुराने मान को घटाकर है।</p>
@@ -73,7 +73,7 @@ td:first-child,td:nth-child(2){text-align:left}
 <thead><tr><th style="width:16%">जनपद</th><th style="width:20%">उपयंत्री</th><th>Planner कार्य (स्थिर)</th><th>SIPRI में योजनाबद्ध</th><th>SIPRI हेतु लंबित</th><th>AE स्वीकृत</th><th>SA द्वारा समीक्षित</th></tr></thead>
 <tbody id="progressBody"></tbody></table></div>
 </main>
-<script src="planner-daily-progress-live-data.js?v=20261030-live2"></script><script src="planner-daily-progress-data.js?v=20261029-daily2"></script><script src="planner-panchayat-baseline-data.js?v=20261030-panchayat1"></script>
+<script src="planner-daily-progress-data.js?v=20261029-daily2"></script>
 <script>
 (function(){
 const DATA=window.PLANNER_DAILY_PROGRESS;
@@ -148,20 +148,7 @@ function render(){
  if(!html)html='<tr><td class="empty" colspan="7">इस फ़िल्टर के लिए डेटा उपलब्ध नहीं है।</td></tr>';
  $("progressBody").innerHTML=html;
 }
-function renderPanchayat(){
- const cfg=window.PLANNER_PANCHAYAT_BASELINE;
- if(!cfg){$("panchayatBody").innerHTML='<tr><td colspan="5">27-10-2026 पंचायत डेटा उपलब्ध नहीं है।</td></tr>';return;}
- const district=$("districtFilter").value;
- const gpMap=new Map((window.PLANNER_DAILY_PROGRESS_LIVE?.rows||[]).map(r=>[normLive(r.janpad)+"|"+normLive(r.panchayat),r]));
- const rows=cfg.rows.map(r=>Object.assign({},r,{engineer:gpMap.get(normLive(r.janpad)+"|"+normLive(r.panchayat))?.engineer||""})).filter(matchesFilter);
- const totalSipri=rows.reduce((n,r)=>n+Number(r.sipri||0),0);
- const totalTs=rows.reduce((n,r)=>n+Number(r.ts||0),0);
- const planned=rows.filter(r=>Number(r.sipri||0)>0).length;
- $("panchayatCards").innerHTML='<div class="card"><label>SIPRI में योजनाबद्ध पंचायतें</label><strong>'+fmt(planned)+' / '+fmt(rows.length)+'</strong></div><div class="card good-card"><label>SIPRI योजनाबद्ध कार्य</label><strong>'+fmt(totalSipri)+'</strong></div><div class="card"><label>SIPRI पोर्टल में अनुमोदन</label><strong>'+fmt(totalTs)+'</strong></div>';
- $("panchayatBody").innerHTML=rows.map(r=>'<tr><td>'+r.district+'</td><td>'+r.janpad+'</td><td>'+r.panchayat+'</td><td class="metric"><b>'+fmt(r.sipri)+'</b></td><td class="metric"><b>'+fmt(r.ts)+'</b></td></tr>').join("")||'<tr><td class="empty" colspan="5">इस जिले के लिए पंचायत डेटा नहीं है।</td></tr>';
-}
-function normLive(v){return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");}
-function renderAll(){render();renderPanchayat();}
+function renderAll(){render();}
 $("districtFilter").addEventListener("change",function(){refreshFilterOptions();renderAll();});
 $("janpadFilter").addEventListener("change",function(){refreshFilterOptions();renderAll();});
 $("engineerFilter").addEventListener("change",renderAll);
