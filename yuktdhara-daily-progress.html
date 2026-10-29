@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R-3 दैनिक Yuktdhara प्रगति</title>
+<style>
+:root{--navy:#174e7d;--blue:#176da7;--green:#087b4d;--ink:#173b5d;--line:#8aa8c2;--soft:#f6f9fc;--muted:#66809a}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;background:#fff;color:var(--ink);font-family:Arial,"Nirmala UI",sans-serif}
+main{max-width:1600px;margin:0 auto;border:1px solid #c8d9e9;border-radius:9px;padding:18px 22px 24px}
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.toolbar label{font-size:17px}
+button,a.button,select{font:600 16px Arial,"Nirmala UI",sans-serif;border:1px solid #8eafce;border-radius:6px;padding:10px 14px;color:#174e7d;background:#eef5fb}
+button{cursor:pointer}
+h1{text-align:center;color:#087b4d;font-size:30px;margin:10px 0 4px}
+.subtitle{text-align:center;color:#536f89;font-size:15px;line-height:1.6;margin:0 0 18px}
+h2{color:#087b4d;font-size:21px;margin:4px 0 8px}
+h3{font-size:16px;color:#174e7d;margin:14px 0 7px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
+.card{background:#f7fafc;border:1px solid #b6cce0;border-left:5px solid var(--blue);border-radius:9px;min-height:88px;padding:10px 13px}
+.card.good-card{border-left-color:var(--green)}
+.card label{display:block;font-weight:700;color:#607a93;margin-bottom:4px}
+.card strong{font-size:22px;color:#174e7d}
+.card small{display:block;font-size:17px;font-weight:900;margin-top:2px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:6px;margin-bottom:10px}
+table{border-collapse:collapse;width:100%;min-width:980px;table-layout:fixed}
+thead th{background:#1a4f7d;color:#fff;padding:8px 6px;font-size:14px;position:sticky;top:0}
+td{border:1px solid #8da8c2;padding:4px 5px;text-align:center;vertical-align:middle;line-height:1.15}
+tbody tr:nth-child(even){background:#f7fafd}
+td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
+.metric b{display:block;font-size:17px;color:#173b5d;white-space:nowrap}
+.metric small{display:block;font-size:16px;font-weight:900;margin-top:1px;line-height:1.1}
+.metric .good{color:#087b4d}.metric .bad{color:#bd2534}.metric .neutral{color:#7b2cbf}
+.total-row{background:#dcebdc!important;font-weight:800;color:#124d39}
+.total-row td{border-top:2px solid #628878}
+.status{font-size:13px;color:#536f89;margin:5px 0 8px}
+.panchayat-table{min-width:1150px}
+.empty{text-align:center!important;padding:20px;color:#647d95}
+@media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
+@page{size:A4 landscape;margin:8mm}
+@media print{
+ body{padding:0;font-size:9pt}main{max-width:none;border:0;border-radius:0;padding:0}
+ .toolbar{display:none!important}h1{font-size:18pt;margin:0 0 2mm}
+ h2{font-size:13pt}.subtitle{font-size:8pt;margin-bottom:3mm}
+ .cards{gap:3mm;margin:2mm 0}.card{min-height:auto;padding:2mm 3mm}.card label{font-size:7pt}.card strong{font-size:11pt}.card small{font-size:8pt}
+ .table-wrap{overflow:visible;border:0}table{min-width:0;width:100%;font-size:7pt}
+ thead{display:table-header-group}thead th{position:static;font-size:7pt;padding:1mm}
+ td{font-size:7pt;padding:.8mm .6mm;break-inside:avoid}.metric b{font-size:8pt}.metric small{font-size:7pt}
+ tr{break-inside:avoid}
+}
+</style>
+</head>
+<body><main>
+<div class="toolbar"><a class="button" href="./">← मुख्य मेनू पर वापस</a><label for="districtFilter">जिला</label><select id="districtFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><button onclick="window.print()">Print / PDF</button></div>
+<h1>दैनिक Yuktdhara प्रगति पत्रक</h1>
+<p class="subtitle">27-10-2026 से Daily Updater के नवीनतम डेटा तक प्रगति<br><span id="sourceNote"></span></p>
+<section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><div id="summaryCards" class="cards"></div>
+<div class="table-wrap"><table><thead><tr><th style="width:11%">जिला</th><th style="width:15%">जनपद</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th><th>शुरू नहीं हुए</th><th>प्रगतिरत</th><th>पूर्ण</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
+<section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table><thead><tr><th style="width:14%">जिला</th><th style="width:16%">जनपद</th><th style="width:24%">उपयंत्री</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
+<section><h2>पंचायतवार Bhuvan स्थिति</h2><p class="status">प्रत्येक मान: 27-10-2026 → नवीनतम; नीचे बदलाव। 0 बदलाव को (0) दिखाया गया है।</p><div id="gpCards" class="cards"></div>
+<div class="table-wrap"><table class="panchayat-table"><thead><tr><th style="width:10%">जिला</th><th style="width:13%">जनपद</th><th style="width:18%">पंचायत</th><th style="width:18%">उपयंत्री</th><th>प्रारंभ GP</th><th>जमा GP</th><th>शुरू नहीं</th><th>GAS अनुमोदित</th></tr></thead><tbody id="gpBody"></tbody></table></div></section>
+</main>
+<script src="yuktdhara-daily-progress-baseline.js?v=20261030-base1"></script>
+<script>
+(function(){
+const BASE=window.YUKTDHARA_DAILY_BASELINE,$=id=>document.getElementById(id);
+const JANPAD_DISTRICT={AMARPATAN:"Maihar",MAIHAR:"Maihar",RAMNAGAR:"Maihar",MAJHGAWAN:"Satna",NAGOD:"Satna","RAMPUR BAGHELAN":"Satna",SATNA:"Satna",UNCHAHARA:"Satna"};
+const fmt=n=>Number(n||0).toLocaleString("en-IN");
+const norm=v=>String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+const janpadKey=v=>norm(v)==="RAMPORBAGHELAN"?"RAMPURBAGHELAN":norm(v);
+function signed(n){return n>0?"+"+fmt(n):n<0?"−"+fmt(Math.abs(n)):"(0)";}
+function deltaClass(n){return n===0?"neutral":n>0?"good":"bad";}
+function metric(a,b){const d=Number(b||0)-Number(a||0);return '<td class="metric"><b>'+fmt(a)+' → '+fmt(b)+'</b><small class="'+deltaClass(d)+'">'+signed(d)+'</small></td>';}
+const isJanpad=(x,district)=>district==="ALL"||JANPAD_DISTRICT[x]===district;
+function total(records,key){return records.reduce((n,r)=>n+Number(r[key]||0),0);}
+function renderSummary(current){
+ const district=$("districtFilter").value;
+ const oldMap=new Map(BASE.blocks.map(x=>[janpadKey(x.janpad),x]));
+ const newMap=new Map((current.blocks||[]).map(x=>[janpadKey(x.block),x]));
+ const janpads=[...new Set([...oldMap.keys(),...newMap.keys()])].filter(k=>district==="ALL"||Object.values(JANPAD_DISTRICT).includes(district)&&isJanpad(k,district)).sort();
+ const keys=["gpReceived","worksReceived","worksCreated","yetToStart","ongoing","completed"];
+ const labels=["प्राप्त पंचायतें","Yuktdhara से प्राप्त कार्य","VBGRAMG में बने कार्य","शुरू नहीं हुए","प्रगतिरत","पूर्ण"];
+ const oldAgg={},newAgg={};keys.forEach(k=>{oldAgg[k]=0;newAgg[k]=0;});
+ let rows="";
+ janpads.forEach(k=>{const a=oldMap.get(k)||{},b=newMap.get(k)||{},j=(b.block||a.janpad||k);keys.forEach(x=>{oldAgg[x]+=Number(a[x]||0);newAgg[x]+=Number(b[x]||0);});const d=JANPAD_DISTRICT[j]||JANPAD_DISTRICT[k]||"Satna";rows+='<tr><td>'+d+'</td><td>'+j+'</td>'+keys.map(x=>metric(a[x],b[x])).join("")+'</tr>';});
+ if(district==="ALL"){for(const d of ["Maihar","Satna"]){const selected=janpads.filter(k=>isJanpad(k,d)),a={},b={};keys.forEach(k=>{a[k]=selected.reduce((n,j)=>n+Number(oldMap.get(j)?.[k]||0),0);b[k]=selected.reduce((n,j)=>n+Number(newMap.get(j)?.[k]||0),0);});rows+='<tr class="total-row"><td>'+d+'</td><td>जिला योग</td>'+keys.map(k=>metric(a[k],b[k])).join("")+'</tr>';}}
+ $("janpadBody").innerHTML=rows||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
+ $("summaryCards").innerHTML=keys.slice(0,3).map(k=>{const i=keys.indexOf(k),diff=newAgg[k]-oldAgg[k];return '<div class="card '+(k==="worksCreated"?"good-card":"")+'"><label>'+labels[i]+'</label><strong>'+fmt(oldAgg[k])+' → '+fmt(newAgg[k])+'</strong><small class="'+deltaClass(diff)+'">'+signed(diff)+' बदलाव</small></div>';}).join("");
+}
+function renderEngineers(current){
+ const district=$("districtFilter").value,old=new Map();
+ BASE.engineers.forEach(r=>old.set(janpadKey(r.janpad)+"|"+norm(r.engineer),r));
+ const now=new Map();(current.rows||[]).forEach(r=>now.set(janpadKey(r.janpad)+"|"+norm(r.engineer),r));
+ const keys=[...new Set([...old.keys(),...now.keys()])].filter(k=>{const r=now.get(k)||old.get(k);return isJanpad(r.janpad,district);}).sort();
+ const names=["gpReceived","worksReceived","worksCreated"];
+ let html="";
+ keys.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a;const d=JANPAD_DISTRICT[r.janpad]||"Satna";html+='<tr><td>'+d+'</td><td>'+r.janpad+'</td><td>'+r.engineer+'</td>'+names.map(x=>metric(a[x],b[x])).join("")+'</tr>';});
+ $("engineerBody").innerHTML=html||'<tr><td class="empty" colspan="6">डेटा उपलब्ध नहीं है।</td></tr>';
+}
+function renderGps(currentData){
+ const district=$("districtFilter").value;
+ const old=new Map(BASE.panchayats.map(r=>[janpadKey(r.janpad)+"|"+norm(r.gp),r]));
+ const lists=currentData.lists||{},sets={};
+ Object.keys(lists).forEach(k=>sets[k]=new Set((lists[k]||[]).map(x=>janpadKey(x.janpad)+"|"+norm(x.gp))));
+ const mapping=new Map((currentData.mapping||[]).map(x=>[janpadKey(x.janpad)+"|"+norm(x.gp),x]));
+ const masters=lists.master||[],rows=masters.filter(x=>isJanpad(x.janpad,district));
+ const stats=["started","submitted","notStarted","gasApproved"],titles=["युक्तधारा प्रारंभ","जमा","शुरू नहीं","GAS अनुमोदित"];
+ $("gpCards").innerHTML=stats.map((key,i)=>{const oldN=BASE.panchayats.reduce((n,r)=>n+r[key],0),newN=sets[key]?.size||0,d=newN-oldN;return '<div class="card"><label>'+titles[i]+' पंचायतें</label><strong>'+fmt(oldN)+' → '+fmt(newN)+'</strong><small class="'+deltaClass(d)+'">'+signed(d)+' बदलाव</small></div>';}).join("");
+ $("gpBody").innerHTML=rows.map(x=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp),a=old.get(k)||{},m=mapping.get(k)||{},d=JANPAD_DISTRICT[x.janpad]||"Satna";return '<tr><td>'+d+'</td><td>'+x.janpad+'</td><td>'+x.gp+'</td><td>'+((m.engineer)||a.engineer||"असाइन नहीं")+'</td>'+stats.map(s=>metric(a[s],sets[s]?.has(k)?1:0)).join("")+'</tr>';}).join("")||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
+}
+async function load(){
+ try{
+  const [r1,r2]=await Promise.all([fetch("yuktdhara-received-data.js?dailyUpdater="+Date.now(),{cache:"no-store"}),fetch("yuktdhara-data.js?dailyUpdater="+Date.now(),{cache:"no-store"})]);
+  if(!r1.ok||!r2.ok)throw new Error("Updater data fetch failed");
+  const [s1,s2]=await Promise.all([r1.text(),r2.text()]);
+  const j1=s1.match(/window\.YUKTDHARA_RECEIVED\s*=\s*(\{[\s\S]*\})\s*;?\s*$/),j2=s2.match(/window\.YUKTDHARA_DATA\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
+  if(!j1||!j2)throw new Error("Yuktdhara feed format not recognized");
+  const rec=JSON.parse(j1[1]),gp=JSON.parse(j2[1]);
+  const updated=rec.updatedAt?new Date(rec.updatedAt).toLocaleString("hi-IN",{timeZone:"Asia/Kolkata"}):rec.officialDate||"उपलब्ध नहीं";
+  $("feedStatus").textContent="Daily Updater का अंतिम Yuktdhara डेटा: "+updated+" • 27-10 आधार: "+BASE.officialDate+" • स्रोत: Yuktdhara/VBGRAMG";
+  $("sourceNote").textContent="27-10-2026 की baseline बनाम Updater की नवीनतम रिपोर्ट। पंचायत स्थिति Bhuvan GP सूची से है।";
+  renderSummary(rec);renderEngineers(rec);renderGps(gp);
+ }catch(e){$("feedStatus").textContent="Daily Updater Yuktdhara फ़ीड नहीं खुली।";}
+}
+$("districtFilter").addEventListener("change",function(){try{
+ const textRec=window.YUKTDHARA_RECEIVED,textGp=window.YUKTDHARA_DATA;
+ if(textRec&&textGp){renderSummary(textRec);renderEngineers(textRec);renderGps(textGp);}
+ else load();
+}catch(e){load();}});
+load();
+})();
+</script>
+</body></html>
