@@ -81,7 +81,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 const BASE=window.YUKTDHARA_DAILY_BASELINE,$=id=>document.getElementById(id);
 const JANPAD_DISTRICT={AMARPATAN:"Maihar",MAIHAR:"Maihar",RAMNAGAR:"Maihar",MAJHGAWAN:"Satna",NAGOD:"Satna",RAMPURBAGHELAN:"Satna",SOHAWAL:"Satna",SATNA:"Satna",UNCHAHARA:"Satna"};
 const fmt=n=>Number(n||0).toLocaleString("en-IN");
-const norm=v=>String(v||"").normalize("NFKC").toUpperCase().replace(/[^\\p{L}\\p{N}]/gu,"");
+const norm=v=>String(v||"").normalize("NFKC").toUpperCase().replace(/[^\p{L}\p{N}]/gu,"");
 const janpadKey=v=>norm(v)==="RAMPORBAGHELAN"?"RAMPURBAGHELAN":norm(v);
 function signed(n){return n>0?"+"+fmt(n):n<0?"−"+fmt(Math.abs(n)):"(0)";}
 function deltaClass(n){return n===0?"neutral":n>0?"good":"bad";}
@@ -179,7 +179,7 @@ function renderNoWork(gpData){
    });
    emit("जनपद योग",d,j,"",jRows);
   });
-  emit("जिला योग",d,"","","",dRows);
+  emit("जिला योग",d,"जिला योग","",dRows);
  });
  html+='<tr class="total-row grand-total"><td colspan="4">कुल योग ('+fmt(grand.clusters)+' क्लस्टर)</td><td>'+fmt(grand.gps)+'</td><td>0</td><td>'+fmt(grand.without)+'</td><td>—</td></tr>';
  $("noWorkBody").innerHTML=html;
