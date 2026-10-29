@@ -144,19 +144,19 @@ function renderEngineers(current){
  }
  const names=["gpReceived","worksReceived","worksCreated"],clusterMap=new Map();
  (window.YUKTDHARA_DATA?.mapping||[]).forEach(m=>{const k=janpadKey(m.janpad)+"|"+norm(m.engineer);if(!clusterMap.has(k))clusterMap.set(k,new Set());if(m.cluster)clusterMap.get(k).add(m.cluster);});
- const clusterName=k=>toHindiPlace([...(clusterMap.get(k)||[])].sort((a,b)=>a.localeCompare(b,"hi")).join(", "))||"समूह आवंटित नहीं";
+ const clusterName=k=>[...(clusterMap.get(k)||[])].sort((a,b)=>a.localeCompare(b,"hi")).map(toHindiPlace).join(", ")||"समूह आवंटित नहीं";
  const janpads=[...new Set(keys.map(k=>(now.get(k)||old.get(k)).janpad))],districts=["Maihar","Satna"];let html="";
  janpads.forEach(j=>{
   const selected=keys.filter(k=>janpadKey((now.get(k)||old.get(k)).janpad)===janpadKey(j));
   selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a,d=JANPAD_DISTRICT[janpadKey(r.janpad)]||"Satna";html+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+clusterName(k)+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
   const t=aggregateMaps(names,old,now,selected);
-  html+='<tr class="total-row"><td>'+ (JANPAD_DISTRICT[janpadKey(j)]||"Satna") +'</td><td>'+(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
+  html+='<tr class="total-row"><td>'+toHindiPlace(JANPAD_DISTRICT[janpadKey(j)]||"Satna")+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
  });
  districts.forEach(d=>{
   const selected=keys.filter(k=>(JANPAD_DISTRICT[janpadKey((now.get(k)||old.get(k)).janpad)]||"Satna")===d);
   if(!selected.length)return;
   const t=aggregateMaps(names,old,now,selected);
-  html+='<tr class="total-row"><td>'+d+'</td><td colspan="3">जिला योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
+  html+='<tr class="total-row"><td>'+toHindiPlace(d)+'</td><td colspan="3">जिला योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
  });
  if(keys.length){const t=aggregateMaps(names,old,now,keys);html+='<tr class="total-row grand-total"><td colspan="4">कुल योग</td>'+metricCells(names,t.a,t.b)+'</tr>';}
  $("engineerBody").innerHTML=html||'<tr><td class="empty" colspan="7">डेटा उपलब्ध नहीं है।</td></tr>';
