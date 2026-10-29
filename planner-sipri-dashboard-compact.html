@@ -411,6 +411,12 @@ body#plannerDashboard main{width:100%!important;max-width:100%!important;margin-
  #officialSection table.official-merged thead th:nth-child(16),#officialSection table.official-merged tbody td.pending-name-cell{min-width:0!important;width:12%!important;max-width:none!important}
  #officialSection table.official-merged .pending-name-cell small{font-size:6.5pt!important}
 }
+
+/* Compact work types into readable comma-separated entries to reduce engineer row height. */
+#engineerSection .work-type-item{display:inline!important;grid-template-columns:none!important;gap:0!important;padding:0!important;border:0!important;line-height:1.25!important}
+#engineerSection .work-type-item:not(:last-child)::after{content:", ";font-weight:400;color:#60738a}
+body #engineerSection .engineer-summary td:nth-child(11) .work-type-name{display:inline!important;font-size:11px!important;font-weight:800!important;line-height:1.25!important;color:#31465d!important}
+body #engineerSection .engineer-summary td:nth-child(11) .work-type-count{display:inline!important;font-size:10px!important;font-weight:500!important;line-height:1.25!important;min-width:0!important;margin-left:2px!important;color:#0b5378!important;text-align:left!important}
 </style><style id="planner-stable-fonts-20261017">
 /* Stable Planner screen typography; kept separate from daily data imports. */
 @media screen {
