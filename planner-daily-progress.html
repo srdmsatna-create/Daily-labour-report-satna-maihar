@@ -33,8 +33,9 @@ td:first-child,td:nth-child(2){text-align:left}
 .janpad-total td{border-top:2px solid #628878}
 .metric b{display:block;font-size:18px;color:#173b5d;white-space:nowrap}
 .metric small{display:block;font-size:18px;font-weight:900;margin-top:4px}
-.metric .good{color:#087b4d}.metric .bad{color:#bd2534}.metric .neutral{color:#69839a}
+.metric .good{color:#087b4d}.metric .bad{color:#bd2534}.metric .neutral{color:#7b2cbf}.card small.neutral{color:#7b2cbf}
 .empty{text-align:center!important;padding:24px;color:#647d95}
+.live-section{margin:14px 0 20px;padding:12px;border:1px solid #b6cce0;border-radius:8px;background:#fbfdff}.live-section h2,.summary-title{color:#087b4d;font-size:21px;margin:4px 0 8px}.live-section h3{font-size:16px;color:#174e7d;margin:14px 0 7px}.live-status{font-size:13px;color:#536f89;margin:4px 0 8px}.live-table{min-width:680px}.live-table th:first-child{width:15%}.live-table td:first-child,.live-table td:nth-child(2),.live-table td:nth-child(3){text-align:left}
 @media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
 @page{size:A4 landscape;margin:8mm}
 @media print{
@@ -58,14 +59,16 @@ td:first-child,td:nth-child(2){text-align:left}
 <button type="button" onclick="window.print()">Print / PDF</button>
 </div>
 <h1>दैनिक Planner से SIPRI प्रगति पत्रक</h1>
-<p class="subtitle">जनपदवार और उपयंत्रीवार तुलना: 27-10-2026 → 29-10-2026<br><span id="sourceNote"></span></p>
+<p class="subtitle">दैनिक Updater की नवीन Planner Portal प्रगति और Planning Summary तुलना<br><span id="sourceNote"></span></p>
+<section class="live-section"><h2>Daily Updater से Planner Portal प्रगति — 27-10-2026 से नवीनतम</h2><p class="live-status" id="liveStatus">Daily Updater की नवीन Planner फ़ीड लोड हो रही है…</p><div id="liveCards" class="cards"></div><h3>जिला / जनपदवार सारांश</h3><div class="table-wrap"><table class="live-table"><thead><tr><th>स्तर</th><th>जिला</th><th>जनपद</th><th>27-10-2026 → नवीनतम</th><th>बदलाव</th></tr></thead><tbody id="liveSummaryBody"></tbody></table></div><h3>जनपद / उपयंत्रीवार विवरण</h3><div class="table-wrap"><table class="live-table"><thead><tr><th>जिला</th><th>जनपद</th><th>उपयंत्री</th><th>27-10-2026 → नवीनतम</th><th>बदलाव</th></tr></thead><tbody id="liveEngineerBody"></tbody></table></div></section>
+<h2 class="summary-title">Planning Summary रिपोर्ट की तुलना — 27-10-2026 से 29-10-2026</h2>
 <div id="cards" class="cards"></div>
 <p class="note" id="filterNote">हर खाने में पहले 27-10-2026 और फिर 29-10-2026 का मान दिखेगा। नीचे का अंतर आज के मान में से पुराने मान को घटाकर है।</p>
 <div class="table-wrap"><table>
 <thead><tr><th style="width:16%">जनपद</th><th style="width:20%">उपयंत्री</th><th>Planner कार्य</th><th>SIPRI में योजनाबद्ध</th><th>SIPRI हेतु लंबित</th><th>AE स्वीकृत</th><th>SA द्वारा समीक्षित</th></tr></thead>
 <tbody id="progressBody"></tbody></table></div>
 </main>
-<script src="planner-daily-progress-data.js?v=20261029-daily2"></script>
+<script src="planner-daily-progress-live-data.js?v=20261030-live2"></script><script src="planner-daily-progress-data.js?v=20261029-daily2"></script>
 <script>
 (function(){
 const DATA=window.PLANNER_DAILY_PROGRESS;
@@ -119,8 +122,52 @@ function render(){
  if(!html)html='<tr><td class="empty" colspan="7">इस जिले के लिए डेटा उपलब्ध नहीं है।</td></tr>';
  $("progressBody").innerHTML=html;
 }
-$("districtFilter").addEventListener("change",render);
+function normLive(v){return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");}
+function sumLive(rows,key){return rows.reduce((n,r)=>n+Number(r[key]||0),0);}
+function renderLive(){
+ const cfg=window.PLANNER_DAILY_PROGRESS_LIVE,portal=window.PLANNER_PORTAL_DATA;
+ if(!cfg||!portal){$("liveStatus").textContent="Daily Updater की Planner फ़ीड उपलब्ध नहीं है।";return;}
+ const currentMap=new Map((portal.panchayats||[]).map(x=>[normLive(x.janpad)+"|"+normLive(x.panchayat),Number(x.newWorks||0)]));
+ const mapped=cfg.rows.map(r=>{const key=normLive(r.portalJanpad)+"|"+normLive(r.panchayat);return Object.assign({},r,{old:Number(r.baselineNewWorks||0),now:currentMap.get(key)??0,matched:currentMap.has(key)});});
+ const district=$("districtFilter").value;
+ const rows=mapped.filter(r=>district==="ALL"||r.district===district);
+ const matched=mapped.filter(r=>r.matched).length;
+ const oldTotal=sumLive(rows,"old"),nowTotal=sumLive(rows,"now"),delta=nowTotal-oldTotal;
+ const updated=portal.updatedAt?new Date(portal.updatedAt).toLocaleString("hi-IN",{timeZone:"Asia/Kolkata"}):"उपलब्ध नहीं";
+ $("liveStatus").textContent="Daily Updater का अंतिम Planner डेटा: "+updated+" • GP मिलान "+matched+"/"+cfg.rows.length+" • स्रोत: Planner Portal";
+ $("liveCards").innerHTML='<div class="card"><label>Planner Portal में नए कार्य</label><strong>'+fmt(oldTotal)+' → '+fmt(nowTotal)+'</strong><small class="'+deltaClass(delta,false)+'">'+signed(delta)+' बदलाव</small></div><div class="card good-card"><label>GP मिलान</label><strong>'+fmt(matched)+' / '+fmt(cfg.rows.length)+'</strong><small class="'+(matched===cfg.rows.length?"good":"bad")+'">'+(matched===cfg.rows.length?"पूरा मिलान":"कुछ GP मिलान लंबित")+'</small></div><div class="card"><label>अंतिम updater refresh</label><strong style="font-size:18px">'+updated+'</strong><small class="neutral">Daily Updater feed</small></div>';
+ const dgroups={}; rows.forEach(r=>{(dgroups[r.district]||(dgroups[r.district]=[])).push(r);});
+ let sumHtml="",engHtml="";
+ Object.keys(dgroups).sort((a,b)=>a.localeCompare(b,"hi")).forEach(d=>{
+  const dr=dgroups[d],do_=sumLive(dr,"old"),dn=sumLive(dr,"now");
+  sumHtml+='<tr class="janpad-total"><td>जिला योग</td><td>'+d+'</td><td>सभी जनपद</td>'+cell(do_,dn,false)+cell(do_,dn,false)+'</tr>';
+  const jgroups={}; dr.forEach(r=>{(jgroups[r.janpad]||(jgroups[r.janpad]=[])).push(r);});
+  Object.keys(jgroups).sort((a,b)=>a.localeCompare(b,"hi")).forEach(j=>{
+   const jr=jgroups[j],jo=sumLive(jr,"old"),jn=sumLive(jr,"now");
+   sumHtml+='<tr><td>जनपद योग</td><td>'+d+'</td><td>'+j+'</td>'+cell(jo,jn,false)+cell(jo,jn,false)+'</tr>';
+   const egroups={}; jr.forEach(r=>{(egroups[r.engineer]||(egroups[r.engineer]=[])).push(r);});
+   Object.keys(egroups).sort((a,b)=>a.localeCompare(b,"hi")).forEach(e=>{
+    const er=egroups[e],eo=sumLive(er,"old"),en=sumLive(er,"now");
+    engHtml+='<tr><td>'+d+'</td><td>'+j+'</td><td>'+e+'</td>'+cell(eo,en,false)+cell(eo,en,false)+'</tr>';
+   });
+  });
+ });
+ $("liveSummaryBody").innerHTML=sumHtml||'<tr><td class="empty" colspan="5">इस फ़िल्टर के लिए कोई डेटा नहीं है।</td></tr>';
+ $("liveEngineerBody").innerHTML=engHtml||'<tr><td class="empty" colspan="5">इस फ़िल्टर के लिए कोई डेटा नहीं है।</td></tr>';
+}
+async function loadLatestPlannerUpdater(){
+ try{
+  const res=await fetch("planner-portal-data.js?dailyUpdater="+Date.now(),{cache:"no-store"});
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  const src=await res.text();
+  const m=src.match(/window\.PLANNER_PORTAL_DATA\s*=\s*(\{[\s\S]*\});?\s*$/);
+  if(!m)throw new Error("Planner feed format not recognized");
+  window.PLANNER_PORTAL_DATA=JSON.parse(m[1]);renderLive();
+ }catch(e){$("liveStatus").textContent="Daily Updater की Planner फ़ीड नहीं खुली। पुरानी रिपोर्ट नीचे उपलब्ध है।";}
+}
+$("districtFilter").addEventListener("change",function(){render();renderLive();});
 render();
+loadLatestPlannerUpdater();
 })();
 </script>
 </body>
