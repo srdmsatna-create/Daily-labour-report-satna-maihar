@@ -781,4 +781,14 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
  });
 })();
 </script>
+
+<style>
+/* Final visible overrides for the requested compact report layout. */
+#officialSection table.official-merged thead th:nth-child(16),#officialSection table.official-merged tbody td:nth-child(16){width:55px!important;min-width:55px!important;max-width:55px!important}
+#officialSection table.official-merged thead th:nth-child(18),#officialSection table.official-merged tbody td:nth-child(18){width:180px!important;min-width:180px!important;max-width:180px!important}
+#officialSection table.official-merged tbody td.num{font-size:18px!important;font-weight:900!important}
+#engineerSection table.engineer-summary colgroup col:nth-child(1),#engineerSection table.engineer-summary thead th:nth-child(1),#engineerSection table.engineer-summary tbody tr:not(.total):not(.janpad-total) td:nth-child(1){width:48px!important;min-width:48px!important;max-width:48px!important;white-space:nowrap!important}
+#engineerSection table.engineer-summary colgroup col:nth-child(2),#engineerSection table.engineer-summary thead th:nth-child(2),#engineerSection table.engineer-summary tbody tr:not(.total):not(.janpad-total) td:nth-child(2){width:130px!important;min-width:130px!important;max-width:130px!important;white-space:normal!important;overflow-wrap:normal!important;word-break:normal!important}
+#engineerSection table.engineer-summary tbody td.num{font-size:15px!important;font-weight:850!important}
+</style>
 </body></html>
