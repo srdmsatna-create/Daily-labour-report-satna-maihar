@@ -42,6 +42,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .cluster-filter{display:flex;align-items:center;gap:8px;margin:8px 0}
 .cluster-filter label{font-weight:700;color:#174e7d}
 .panchayat-table{min-width:1150px}
+.engineer-progress-table{min-width:1050px}
 .empty{text-align:center!important;padding:20px;color:#647d95}
 @media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
 @page{size:A4 landscape;margin:8mm}
@@ -65,7 +66,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <div id="progressPanel" class="report-panel">
 <section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><div id="summaryCards" class="cards"></div>
 <div class="table-wrap"><table><thead><tr><th style="width:11%">जिला</th><th style="width:15%">जनपद</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th><th>शुरू नहीं हुए</th><th>प्रगतिरत</th><th>पूर्ण</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
-<section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table><thead><tr><th style="width:14%">जिला</th><th style="width:16%">जनपद</th><th style="width:24%">उपयंत्री</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
+<section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><thead><tr><th style="width:8%">जिला</th><th style="width:12%">जनपद</th><th style="width:14%">क्लस्टर</th><th style="width:18%">उपयंत्री</th><th style="width:16%">प्राप्त पंचायतें</th><th style="width:16%">Yuktdhara से प्राप्त कार्य</th><th style="width:16%">VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
 <section><h2>पंचायतवार Bhuvan स्थिति</h2><p class="status">प्रत्येक मान: 27-10-2026 → नवीनतम; नीचे बदलाव। 0 बदलाव को (0) दिखाया गया है।</p><div id="gpCards" class="cards"></div>
 <div class="table-wrap"><table class="panchayat-table"><thead><tr><th style="width:10%">जिला</th><th style="width:13%">जनपद</th><th style="width:18%">पंचायत</th><th style="width:18%">उपयंत्री</th><th>प्रारंभ GP</th><th>जमा GP</th><th>शुरू नहीं</th><th>GAS अनुमोदित</th></tr></thead><tbody id="gpBody"></tbody></table></div></section>
 </div>
@@ -123,22 +124,24 @@ function renderEngineers(current){
   const gpKey=panchayat,gp=(window.YUKTDHARA_DATA?.mapping||[]).find(x=>janpadKey(x.janpad)+"|"+norm(x.gp)===gpKey),baseGp=(BASE.panchayats||[]).find(x=>janpadKey(x.janpad)+"|"+norm(x.gp)===gpKey),assigned=(gp||baseGp||{}).engineer;
   if(assigned)keys=keys.filter(k=>k===janpadKey((gp||baseGp).janpad)+"|"+norm(assigned));
  }
- const names=["gpReceived","worksReceived","worksCreated"];
+ const names=["gpReceived","worksReceived","worksCreated"],clusterMap=new Map();
+ (window.YUKTDHARA_DATA?.mapping||[]).forEach(m=>{const k=janpadKey(m.janpad)+"|"+norm(m.engineer);if(!clusterMap.has(k))clusterMap.set(k,new Set());if(m.cluster)clusterMap.get(k).add(m.cluster);});
+ const clusterName=k=>[...(clusterMap.get(k)||[])].sort((a,b)=>a.localeCompare(b,"hi")).join(", ")||"क्लस्टर आवंटित नहीं";
  const janpads=[...new Set(keys.map(k=>(now.get(k)||old.get(k)).janpad))],districts=["Maihar","Satna"];let html="";
  janpads.forEach(j=>{
   const selected=keys.filter(k=>janpadKey((now.get(k)||old.get(k)).janpad)===janpadKey(j));
-  selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a,d=JANPAD_DISTRICT[janpadKey(r.janpad)]||"Satna";html+='<tr><td>'+d+'</td><td>'+(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
+  selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a,d=JANPAD_DISTRICT[janpadKey(r.janpad)]||"Satna";html+='<tr><td>'+d+'</td><td>'+(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+clusterName(k)+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
   const t=aggregateMaps(names,old,now,selected);
-  html+='<tr class="total-row"><td>'+ (JANPAD_DISTRICT[janpadKey(j)]||"Satna") +'</td><td>'+(j==="SATNA"?"Sohawal":j)+'</td><td>जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
+  html+='<tr class="total-row"><td>'+ (JANPAD_DISTRICT[janpadKey(j)]||"Satna") +'</td><td>'+(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
  });
  districts.forEach(d=>{
   const selected=keys.filter(k=>(JANPAD_DISTRICT[janpadKey((now.get(k)||old.get(k)).janpad)]||"Satna")===d);
   if(!selected.length)return;
   const t=aggregateMaps(names,old,now,selected);
-  html+='<tr class="total-row"><td>'+d+'</td><td colspan="2">जिला योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
+  html+='<tr class="total-row"><td>'+d+'</td><td colspan="3">जिला योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
  });
- if(keys.length){const t=aggregateMaps(names,old,now,keys);html+='<tr class="total-row grand-total"><td colspan="3">कुल योग</td>'+metricCells(names,t.a,t.b)+'</tr>';}
- $("engineerBody").innerHTML=html||'<tr><td class="empty" colspan="6">डेटा उपलब्ध नहीं है।</td></tr>';
+ if(keys.length){const t=aggregateMaps(names,old,now,keys);html+='<tr class="total-row grand-total"><td colspan="4">कुल योग</td>'+metricCells(names,t.a,t.b)+'</tr>';}
+ $("engineerBody").innerHTML=html||'<tr><td class="empty" colspan="7">डेटा उपलब्ध नहीं है।</td></tr>';
 }
 function renderGps(currentData){
  const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value;
