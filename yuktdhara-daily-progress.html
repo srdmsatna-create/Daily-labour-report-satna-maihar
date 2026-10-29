@@ -42,6 +42,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .cluster-filter{display:flex;align-items:center;gap:8px;margin:8px 0}
 .cluster-filter label{font-weight:700;color:#174e7d}
 .panchayat-table{min-width:1150px}
+.panchayat-table tbody td{font-weight:700}
 .engineer-progress-table{min-width:1050px}
 .empty{text-align:center!important;padding:20px;color:#647d95}
 @media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
@@ -62,11 +63,14 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <div class="toolbar"><a class="button" href="./">← मुख्य मेनू पर वापस</a><label for="districtFilter">जिला</label><select id="districtFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="janpadFilter">जनपद</label><select id="janpadFilter"><option value="ALL">सभी जनपद</option></select><label for="engineerFilter">उपयंत्री</label><select id="engineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="panchayatFilter">पंचायत</label><select id="panchayatFilter"><option value="ALL">सभी पंचायतें</option></select><button onclick="window.print()">Print / PDF</button></div>
 <h1>दैनिक Yuktdhara प्रगति पत्रक — दिनांक <span id="reportDate">—</span></h1>
 <p class="subtitle">27-10-2026 से Daily Updater के नवीनतम डेटा तक प्रगति<br><span id="sourceNote"></span></p>
-<nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी GP में काम नहीं हुआ</button></nav>
+<nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी GP में काम नहीं हुआ</button></nav>
 <div id="progressPanel" class="report-panel">
 <section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><div id="summaryCards" class="cards"></div>
 <div class="table-wrap"><table><thead><tr><th style="width:11%">जिला</th><th style="width:15%">जनपद</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th><th>शुरू नहीं हुए</th><th>प्रगतिरत</th><th>पूर्ण</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
 <section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><thead><tr><th style="width:8%">जिला</th><th style="width:12%">जनपद</th><th style="width:14%">क्लस्टर</th><th style="width:18%">उपयंत्री</th><th style="width:16%">प्राप्त पंचायतें</th><th style="width:16%">Yuktdhara से प्राप्त कार्य</th><th style="width:16%">VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
+
+</div>
+<div id="panchayatPanel" class="report-panel" hidden>
 <section><h2>पंचायतवार Bhuvan स्थिति</h2><p class="status">प्रत्येक मान: 27-10-2026 → नवीनतम; नीचे बदलाव। 0 बदलाव को (0) दिखाया गया है।</p><div id="gpCards" class="cards"></div>
 <div class="table-wrap"><table class="panchayat-table"><thead><tr><th style="width:10%">जिला</th><th style="width:13%">जनपद</th><th style="width:18%">पंचायत</th><th style="width:18%">उपयंत्री</th><th>प्रारंभ GP</th><th>जमा GP</th><th>शुरू नहीं</th><th>GAS अनुमोदित</th></tr></thead><tbody id="gpBody"></tbody></table></div></section>
 </div>
