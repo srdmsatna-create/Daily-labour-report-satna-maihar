@@ -164,13 +164,14 @@ function renderGps(currentData){
 }
 function renderNoWork(gpData){
  const district=$("nwDistrictFilter").value,janpad=$("nwJanpadFilter").value,engineer=$("nwEngineerFilter").value,cluster=$("nwClusterFilter").value;
- const lists=gpData.lists||{},master=lists.master||[],started=new Set((lists.started||[]).map(panchayatId)),mapping=new Map((gpData.mapping||[]).map(x=>[panchayatId(x),x])),groups=new Map();
+ const lists=gpData.lists||{},master=lists.master||[],started=new Set((lists.started||[]).map(panchayatId)),mapping=new Map((gpData.mapping||[]).map(x=>[panchayatId(x),x])),groups=new Map(),allClusterKeys=new Set();
  master.forEach(x=>{
   const pk=panchayatId(x),m=mapping.get(pk)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",j=janpadKey(x.janpad),e=m.engineer||"उपयंत्री आवंटित नहीं",c=m.cluster||"क्लस्टर आवंटित नहीं",ek=j+"|"+norm(e),ck=ek+"|"+norm(c);
   if(district!=="ALL"&&d!==district)return;
   if(janpad!=="ALL"&&j!==janpad)return;
   if(engineer!=="ALL"&&ek!==engineer)return;
   if(cluster!=="ALL"&&ck!==cluster)return;
+  if(c!=="क्लस्टर आवंटित नहीं")allClusterKeys.add(ck);
   if(!groups.has(ck))groups.set(ck,{district:d,janpad:x.janpad,engineer:e,cluster:c,gps:[],worked:0,without:[]});
   const g=groups.get(ck);g.gps.push(x.gp);if(started.has(pk))g.worked++;else g.without.push(x.gp);
  });
@@ -194,7 +195,7 @@ function renderNoWork(gpData){
   });
   emit("जिला योग",d,"जिला योग","",dRows);
  });
- html+='<tr class="total-row grand-total"><td colspan="4">कुल योग ('+fmt(grand.clusters)+' क्लस्टर)</td><td>'+fmt(grand.gps)+'</td><td>'+fmt(grand.worked)+'</td><td>'+fmt(grand.without)+'</td><td>—</td></tr>';
+ html+='<tr class="total-row grand-total"><td colspan="4">कुल योग ('+fmt(allClusterKeys.size)+' क्लस्टर)</td><td>'+fmt(grand.gps)+'</td><td>'+fmt(grand.worked)+'</td><td>'+fmt(grand.without)+'</td><td>—</td></tr>';
  $("noWorkBody").innerHTML=html;
 }
 function fillFilter(id,items,label){
