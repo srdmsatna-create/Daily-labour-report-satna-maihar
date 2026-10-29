@@ -80,8 +80,8 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <div class="table-wrap"><table class="panchayat-table"><thead><tr><th style="width:10%">जिला</th><th style="width:13%">जनपद</th><th style="width:18%">पंचायत</th><th style="width:18%">उपयंत्री</th><th>प्रारंभ पंचायतें</th><th>जमा पंचायतें</th><th>शुरू नहीं</th><th>GAS अनुमोदित</th></tr></thead><tbody id="gpBody"></tbody></table></div></section>
 </div>
 <div id="noWorkPanel" class="report-panel" hidden>
-<section><h2>आज तक काम शुरू नहीं करने वाली पंचायतें — समूहवार</h2><p class="status" id="noWorkCount">Bhuvan की वर्तमान GP स्थिति के अनुसार जिन पंचायतों में Yuktdhara कार्य प्रारंभ दर्ज नहीं है।</p>
-<div class="no-work-filters"><label for="nwDistrictFilter">जिला</label><select id="nwDistrictFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="nwJanpadFilter">जनपद</label><select id="nwJanpadFilter"><option value="ALL">सभी जनपद</option></select><label for="nwEngineerFilter">उपयंत्री</label><select id="nwEngineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="nwClusterFilter">क्लस्टर</label><select id="nwClusterFilter"><option value="ALL">सभी समूह</option></select><button type="button" onclick="window.print()">Print / PDF</button></div>
+<section><h2>आज तक काम शुरू नहीं करने वाली पंचायतें — समूहवार</h2><p class="status" id="noWorkCount">Bhuvan की वर्तमान पंचायत स्थिति के अनुसार जिन पंचायतों में Yuktdhara कार्य प्रारंभ दर्ज नहीं है।</p>
+<div class="no-work-filters"><label for="nwDistrictFilter">जिला</label><select id="nwDistrictFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="nwJanpadFilter">जनपद</label><select id="nwJanpadFilter"><option value="ALL">सभी जनपद</option></select><label for="nwEngineerFilter">उपयंत्री</label><select id="nwEngineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="nwClusterFilter">समूह</label><select id="nwClusterFilter"><option value="ALL">सभी समूह</option></select><button type="button" onclick="window.print()">Print / PDF</button></div>
 <div class="table-wrap"><table class="no-work-table"><thead><tr><th style="width:5%">जिला</th><th style="width:7%">जनपद</th><th style="width:11%">उपयंत्री</th><th style="width:9%">समूह</th><th style="width:7%">कुल पंचायतें</th><th style="width:7%">काम शुरू पंचायतें</th><th style="width:7%">बिना काम पंचायतें</th><th style="width:47%">बिना काम वाली पंचायतें</th></tr></thead><tbody id="noWorkBody"></tbody></table></div></section>
 </div>
 </main>
@@ -214,7 +214,7 @@ function populateFilters(rec,gp){
  fillFilter("engineerFilter",[...eng.values()],"सभी उपयंत्री");
  const g=new Map();((gp.lists&&gp.lists.master)||[]).forEach(x=>g.set(janpadKey(x.janpad)+"|"+norm(x.gp),{value:janpadKey(x.janpad)+"|"+norm(x.gp),label:(j.get(janpadKey(x.janpad))||x.janpad)+" — "+x.gp}));
  fillFilter("panchayatFilter",[...g.values()],"सभी पंचायतें");
-  const clusters=new Map();(gp.mapping||[]).forEach(x=>{const value=janpadKey(x.janpad)+"|"+norm(x.engineer)+"|"+norm(x.cluster);clusters.set(value,{value,label:(j.get(janpadKey(x.janpad))||x.janpad)+" — "+(x.engineer||"उपयंत्री आवंटित नहीं")+" — "+(x.cluster||"क्लस्टर आवंटित नहीं")});});
+  const clusters=new Map();(gp.mapping||[]).forEach(x=>{const value=janpadKey(x.janpad)+"|"+norm(x.engineer)+"|"+norm(x.cluster);clusters.set(value,{value,label:(j.get(janpadKey(x.janpad))||x.janpad)+" — "+(x.engineer||"उपयंत्री आवंटित नहीं")+" — "+(x.cluster||"समूह आवंटित नहीं")});});
   fillFilter("nwJanpadFilter",[...j].map(([value,label])=>({value,label:value==="SATNA"?"Sohawal":label})),"सभी जनपद");
   fillFilter("nwEngineerFilter",[...eng.values()],"सभी उपयंत्री");
   fillFilter("nwClusterFilter",[...clusters.values()],"सभी समूह");
@@ -230,7 +230,7 @@ async function load(){
   const updated=rec.updatedAt?new Date(rec.updatedAt).toLocaleString("hi-IN",{timeZone:"Asia/Kolkata"}):rec.officialDate||"उपलब्ध नहीं";
    const reportDate=String(rec.officialDate||"30/10/2026").replaceAll("/","-");$("reportDate").textContent=reportDate;document.title="दैनिक Yuktdhara प्रगति पत्रक — दिनांक "+reportDate;
   $("feedStatus").textContent="Daily Updater का अंतिम Yuktdhara डेटा: "+updated+" • 27-10 आधार: "+BASE.officialDate+" • स्रोत: Yuktdhara/VBGRAMG";
-  $("sourceNote").textContent="27-10-2026 की baseline बनाम Updater की नवीनतम रिपोर्ट। पंचायत स्थिति Bhuvan GP सूची से है।";
+  $("sourceNote").textContent="27-10-2026 की baseline बनाम Updater की नवीनतम रिपोर्ट। पंचायत स्थिति Bhuvan सूची से है।";
   populateFilters(rec,gp);renderSummary(rec);renderEngineers(rec);renderGps(gp);renderNoWork(gp);
  }catch(e){$("feedStatus").textContent="Daily Updater Yuktdhara फ़ीड नहीं खुली।";}
 }
