@@ -583,7 +583,7 @@ let h='',gp=0,gs=0,ge=0;
 const received=window.YUKTDHARA_RECEIVED||{},receivedRows=received.rows||[],normal=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097F]/g,''),jn=v=>normal(v)==='SATNA'?'SOHAWAL':normal(v)==='RAMPORBAGHELAN'?'RAMPURBAGHELAN':normal(v);
 const receivedFor=x=>receivedRows.find(v=>jn(v.janpad)===jn(x[1])&&normal(v.engineer)===normal(x[2]));
 const receivedCells=xs=>{const found=foundFor(xs);return found.length?'<td class="num">'+fmt(found.reduce((n,v)=>n+v.gpReceived,0))+'</td><td class="num">'+fmt(found.reduce((n,v)=>n+v.worksReceived,0))+'</td>':'<td class="num">—</td><td class="num">—</td>'};
-const typeLabels=window.SRDM_WORK_PERMISSION?.shortLabels||{};
+const typeLabels={...(window.SRDM_WORK_PERMISSION?.shortLabels||{}),"Repair & Maintenance of Compound Wall for Government School for Community":"विद्यालय चारदीवारी मरम्मत"};
 const createdCell=xs=>{const found=foundFor(xs);return '<td class="num">'+(found.length&&found.every(v=>Number.isInteger(v.worksCreated))?fmt(found.reduce((n,v)=>n+v.worksCreated,0)):'—')+'</td>'};
 const foundFor=xs=>[...new Map(xs.map(receivedFor).filter(Boolean).map(v=>[engineerKey(v.janpad,v.engineer),v])).values()];
 const countsFor=xs=>{const found=foundFor(xs);if(!found.length||!found.every(v=>v.typesComplete===true&&Object.values(v.workTypes||{}).reduce((a,n)=>a+n,0)===v.worksReceived))return null;const counts={};for(const v of found)for(const [label,n] of Object.entries(v.workTypes||{}))counts[label]=(counts[label]||0)+n;return counts};
@@ -625,7 +625,7 @@ body.replaceChildren(...data,...totals);
 
 function renderWorkCategories(){
 const data=categorySource(),normalize=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097F]/g,''),jn=v=>normalize(v)==='SATNA'?'SOHAWAL':normalize(v)==='RAMPORBAGHELAN'?'RAMPURBAGHELAN':normalize(v);
-const labels=window.SRDM_WORK_PERMISSION?.hindiLabels||{};
+const labels={...(window.SRDM_WORK_PERMISSION?.hindiLabels||{}),"Repair & Maintenance of Compound Wall for Government School for Community":"सरकारी विद्यालय की चारदीवारी की मरम्मत एवं रखरखाव"};
 const eligible=filteredReceivedRows().map(row=>{const name=yuktBlockNames[String(row.janpad||'').toUpperCase().replace(/[^A-Z]/g,'')]||row.janpad;return {x:[districtOf(name),name,row.engineer],row}});
 const permission=['allowed','outside','pending'].includes($('workPermissionFilter').value)?$('workPermissionFilter').value:'ALL';const select=$('workCategoryFilter'),old=select.value,categories=[...new Set(eligible.flatMap(v=>Object.keys(v.row?.typesComplete?v.row.workTypes||{}:{}).filter(k=>permission==='ALL'||workPermission(k)===permission)))].sort((a,b)=>(labels[a]||a).localeCompare(labels[b]||b,'hi'));
 select.innerHTML='<option value="ALL">सभी कार्य श्रेणियाँ</option>'+categories.map(k=>'<option value="'+esc(k)+'">'+esc(labels[k]||k)+'</option>').join('');select.value=categories.includes(old)?old:'ALL';
@@ -734,6 +734,11 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
 
 /* Improve readability of official-table numbers. */
 #officialSection table.official-merged tbody td.num{font-size:16px!important;font-weight:850!important}
+
+/* Compact ongoing-work column, expand final Sub Engineer names, and enlarge counts. */
+#officialSection table.official-merged thead th:nth-child(16),#officialSection table.official-merged tbody td:nth-child(16){width:55px!important;min-width:55px!important;max-width:55px!important}
+#officialSection table.official-merged thead th:nth-child(18),#officialSection table.official-merged tbody td:nth-child(18){width:180px!important;min-width:180px!important;max-width:180px!important}
+#officialSection table.official-merged tbody td.num{font-size:18px!important;font-weight:900!important}
 </style>
 <script>
 (function(){
