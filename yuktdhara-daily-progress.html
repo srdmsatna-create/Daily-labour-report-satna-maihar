@@ -68,21 +68,21 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <div class="toolbar"><a class="button" href="./">← मुख्य मेनू पर वापस</a><label for="districtFilter">जिला</label><select id="districtFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="janpadFilter">जनपद</label><select id="janpadFilter"><option value="ALL">सभी जनपद</option></select><label for="engineerFilter">उपयंत्री</label><select id="engineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="panchayatFilter">पंचायत</label><select id="panchayatFilter"><option value="ALL">सभी पंचायतें</option></select><button onclick="window.print()">Print / PDF</button></div>
 <h1>दैनिक Yuktdhara प्रगति पत्रक — दिनांक <span id="reportDate">—</span></h1>
 <p class="subtitle">27-10-2026 से Daily Updater के नवीनतम डेटा तक प्रगति<br><span id="sourceNote"></span></p>
-<nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी GP में काम नहीं हुआ</button></nav>
+<nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी पंचायत में काम नहीं हुआ</button></nav>
 <div id="progressPanel" class="report-panel">
 <section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><div id="summaryCards" class="cards"></div>
 <div class="table-wrap"><table><thead><tr><th style="width:11%">जिला</th><th style="width:15%">जनपद</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th><th>शुरू नहीं हुए</th><th>प्रगतिरत</th><th>पूर्ण</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
-<section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><thead><tr><th style="width:8%">जिला</th><th style="width:12%">जनपद</th><th style="width:14%">क्लस्टर</th><th style="width:18%">उपयंत्री</th><th style="width:16%">प्राप्त पंचायतें</th><th style="width:16%">Yuktdhara से प्राप्त कार्य</th><th style="width:16%">VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
+<section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><thead><tr><th style="width:8%">जिला</th><th style="width:12%">जनपद</th><th style="width:14%">समूह</th><th style="width:18%">उपयंत्री</th><th style="width:16%">प्राप्त पंचायतें</th><th style="width:16%">Yuktdhara से प्राप्त कार्य</th><th style="width:16%">VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
 
 </div>
 <div id="panchayatPanel" class="report-panel" hidden>
 <section><h2>पंचायतवार Bhuvan स्थिति</h2><p class="status">प्रत्येक मान: 27-10-2026 → नवीनतम; नीचे बदलाव। 0 बदलाव को (0) दिखाया गया है।</p><div id="gpCards" class="cards"></div>
-<div class="table-wrap"><table class="panchayat-table"><thead><tr><th style="width:10%">जिला</th><th style="width:13%">जनपद</th><th style="width:18%">पंचायत</th><th style="width:18%">उपयंत्री</th><th>प्रारंभ GP</th><th>जमा GP</th><th>शुरू नहीं</th><th>GAS अनुमोदित</th></tr></thead><tbody id="gpBody"></tbody></table></div></section>
+<div class="table-wrap"><table class="panchayat-table"><thead><tr><th style="width:10%">जिला</th><th style="width:13%">जनपद</th><th style="width:18%">पंचायत</th><th style="width:18%">उपयंत्री</th><th>प्रारंभ पंचायतें</th><th>जमा पंचायतें</th><th>शुरू नहीं</th><th>GAS अनुमोदित</th></tr></thead><tbody id="gpBody"></tbody></table></div></section>
 </div>
 <div id="noWorkPanel" class="report-panel" hidden>
-<section><h2>आज तक काम शुरू नहीं करने वाली पंचायतें — क्लस्टरवार</h2><p class="status" id="noWorkCount">Bhuvan की वर्तमान GP स्थिति के अनुसार जिन पंचायतों में Yuktdhara कार्य प्रारंभ दर्ज नहीं है।</p>
-<div class="no-work-filters"><label for="nwDistrictFilter">जिला</label><select id="nwDistrictFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="nwJanpadFilter">जनपद</label><select id="nwJanpadFilter"><option value="ALL">सभी जनपद</option></select><label for="nwEngineerFilter">उपयंत्री</label><select id="nwEngineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="nwClusterFilter">क्लस्टर</label><select id="nwClusterFilter"><option value="ALL">सभी क्लस्टर</option></select><button type="button" onclick="window.print()">Print / PDF</button></div>
-<div class="table-wrap"><table class="no-work-table"><thead><tr><th style="width:5%">जिला</th><th style="width:7%">जनपद</th><th style="width:11%">उपयंत्री</th><th style="width:9%">क्लस्टर</th><th style="width:7%">कुल पंचायतें</th><th style="width:7%">काम शुरू GP</th><th style="width:7%">बिना काम GP</th><th style="width:47%">बिना काम वाली पंचायतें</th></tr></thead><tbody id="noWorkBody"></tbody></table></div></section>
+<section><h2>आज तक काम शुरू नहीं करने वाली पंचायतें — समूहवार</h2><p class="status" id="noWorkCount">Bhuvan की वर्तमान GP स्थिति के अनुसार जिन पंचायतों में Yuktdhara कार्य प्रारंभ दर्ज नहीं है।</p>
+<div class="no-work-filters"><label for="nwDistrictFilter">जिला</label><select id="nwDistrictFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="nwJanpadFilter">जनपद</label><select id="nwJanpadFilter"><option value="ALL">सभी जनपद</option></select><label for="nwEngineerFilter">उपयंत्री</label><select id="nwEngineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="nwClusterFilter">क्लस्टर</label><select id="nwClusterFilter"><option value="ALL">सभी समूह</option></select><button type="button" onclick="window.print()">Print / PDF</button></div>
+<div class="table-wrap"><table class="no-work-table"><thead><tr><th style="width:5%">जिला</th><th style="width:7%">जनपद</th><th style="width:11%">उपयंत्री</th><th style="width:9%">समूह</th><th style="width:7%">कुल पंचायतें</th><th style="width:7%">काम शुरू पंचायतें</th><th style="width:7%">बिना काम पंचायतें</th><th style="width:47%">बिना काम वाली पंचायतें</th></tr></thead><tbody id="noWorkBody"></tbody></table></div></section>
 </div>
 </main>
 <script src="yuktdhara-daily-progress-baseline.js?v=20261030-base1"></script>
@@ -136,7 +136,7 @@ function renderEngineers(current){
  }
  const names=["gpReceived","worksReceived","worksCreated"],clusterMap=new Map();
  (window.YUKTDHARA_DATA?.mapping||[]).forEach(m=>{const k=janpadKey(m.janpad)+"|"+norm(m.engineer);if(!clusterMap.has(k))clusterMap.set(k,new Set());if(m.cluster)clusterMap.get(k).add(m.cluster);});
- const clusterName=k=>[...(clusterMap.get(k)||[])].sort((a,b)=>a.localeCompare(b,"hi")).join(", ")||"क्लस्टर आवंटित नहीं";
+ const clusterName=k=>[...(clusterMap.get(k)||[])].sort((a,b)=>a.localeCompare(b,"hi")).join(", ")||"समूह आवंटित नहीं";
  const janpads=[...new Set(keys.map(k=>(now.get(k)||old.get(k)).janpad))],districts=["Maihar","Satna"];let html="";
  janpads.forEach(j=>{
   const selected=keys.filter(k=>janpadKey((now.get(k)||old.get(k)).janpad)===janpadKey(j));
@@ -181,10 +181,10 @@ function renderNoWork(gpData){
  });
  const rows=[...groups.values()].filter(g=>g.without.length>0).sort((a,b)=>a.district.localeCompare(b.district)||a.janpad.localeCompare(b.janpad)||a.engineer.localeCompare(b.engineer,"hi")||a.cluster.localeCompare(b.cluster,"hi"));
  const gpCount=rows.reduce((n,g)=>n+g.without.length,0);
- $("noWorkCount").textContent="Bhuvan GP सूची में "+fmt(gpCount)+" पंचायतों में अभी तक Yuktdhara कार्य प्रारंभ दर्ज नहीं है। जिला, जनपद, उपयंत्री और क्लस्टर के अनुसार फ़िल्टर करें।";
+ $("noWorkCount").textContent="Bhuvan पंचायत सूची में "+fmt(gpCount)+" पंचायतों में अभी तक Yuktdhara कार्य प्रारंभ दर्ज नहीं है। जिला, जनपद, उपयंत्री और समूह के अनुसार फ़िल्टर करें।";
  if(!rows.length){$("noWorkBody").innerHTML='<tr><td class="empty" colspan="8">चुने हुए फ़िल्टर में बिना कार्य प्रारंभ वाली पंचायतें नहीं मिलीं।</td></tr>';return;}
  let html="",grand={clusters:0,gps:0,worked:0,without:0};
- const emit=(label,d,j,e,list)=>{const clusters=list.length,gps=list.reduce((n,g)=>n+g.gps.length,0),worked=list.reduce((n,g)=>n+g.worked,0),without=list.reduce((n,g)=>n+g.without.length,0);if(!clusters)return;html+='<tr class="total-row"><td>'+d+'</td><td>'+j+'</td><td>'+e+'</td><td>'+label+' ('+fmt(clusters)+' क्लस्टर)</td><td>'+fmt(gps)+'</td><td>'+fmt(worked)+'</td><td>'+fmt(without)+'</td><td>—</td></tr>';return {clusters,gps,worked,without};};
+ const emit=(label,d,j,e,list)=>{const clusters=list.length,gps=list.reduce((n,g)=>n+g.gps.length,0),worked=list.reduce((n,g)=>n+g.worked,0),without=list.reduce((n,g)=>n+g.without.length,0);if(!clusters)return;html+='<tr class="total-row"><td>'+d+'</td><td>'+j+'</td><td>'+e+'</td><td>'+label+' ('+fmt(clusters)+' समूह)</td><td>'+fmt(gps)+'</td><td>'+fmt(worked)+'</td><td>'+fmt(without)+'</td><td>—</td></tr>';return {clusters,gps,worked,without};};
  const districts=[...new Set(rows.map(g=>g.district))];
  districts.forEach(d=>{
   const dRows=rows.filter(g=>g.district===d),janpads=[...new Set(dRows.map(g=>g.janpad))];
@@ -199,7 +199,7 @@ function renderNoWork(gpData){
   });
   emit("जिला योग",d,"जिला योग","",dRows);
  });
- html+='<tr class="total-row grand-total"><td colspan="4">कुल योग ('+fmt(allClusterKeys.size)+' क्लस्टर)</td><td>'+fmt(allGpCount)+'</td><td>'+fmt(allWorkedCount)+'</td><td>'+fmt(allWithoutCount)+'</td><td>—</td></tr>';
+ html+='<tr class="total-row grand-total"><td colspan="4">कुल योग ('+fmt(allClusterKeys.size)+' समूह)</td><td>'+fmt(allGpCount)+'</td><td>'+fmt(allWorkedCount)+'</td><td>'+fmt(allWithoutCount)+'</td><td>—</td></tr>';
  $("noWorkBody").innerHTML=html;
 }
 function fillFilter(id,items,label){
@@ -217,7 +217,7 @@ function populateFilters(rec,gp){
   const clusters=new Map();(gp.mapping||[]).forEach(x=>{const value=janpadKey(x.janpad)+"|"+norm(x.engineer)+"|"+norm(x.cluster);clusters.set(value,{value,label:(j.get(janpadKey(x.janpad))||x.janpad)+" — "+(x.engineer||"उपयंत्री आवंटित नहीं")+" — "+(x.cluster||"क्लस्टर आवंटित नहीं")});});
   fillFilter("nwJanpadFilter",[...j].map(([value,label])=>({value,label:value==="SATNA"?"Sohawal":label})),"सभी जनपद");
   fillFilter("nwEngineerFilter",[...eng.values()],"सभी उपयंत्री");
-  fillFilter("nwClusterFilter",[...clusters.values()],"सभी क्लस्टर");
+  fillFilter("nwClusterFilter",[...clusters.values()],"सभी समूह");
 }
 async function load(){
  try{
