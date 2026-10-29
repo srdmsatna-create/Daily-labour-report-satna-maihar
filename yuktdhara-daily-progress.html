@@ -90,6 +90,7 @@ const JANPAD_DISTRICT={AMARPATAN:"Maihar",MAIHAR:"Maihar",RAMNAGAR:"Maihar",MAJH
 const fmt=n=>Number(n||0).toLocaleString("en-IN");
 const norm=v=>String(v||"").normalize("NFKC").toUpperCase().replace(/[^\p{L}\p{N}]/gu,"");
 const janpadKey=v=>norm(v)==="RAMPORBAGHELAN"?"RAMPURBAGHELAN":norm(v);
+ const panchayatId=r=>janpadKey(r.janpad)+"|"+norm(r.gp);
 function signed(n){return n>0?"+"+fmt(n):n<0?"−"+fmt(Math.abs(n)):"(0)";}
 function deltaClass(n){return n===0?"neutral":n>0?"good":"bad";}
 function metric(a,b){const d=Number(b||0)-Number(a||0);return '<td class="metric"><b>'+fmt(a)+' → '+fmt(b)+'</b><small class="'+deltaClass(d)+'">'+signed(d)+'</small></td>';}
