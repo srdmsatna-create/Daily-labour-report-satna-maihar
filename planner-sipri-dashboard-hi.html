@@ -447,7 +447,8 @@ function ongoingCount(janpad){
  const row=(data.blocks||[]).find(b=>(yuktBlockNames[String(b.block||'').toUpperCase().replace(/[^A-Z]/g,'')]||b.block)===janpad);
  return row&&Number.isInteger(row.ongoing)&&row.ongoing>=0?row.ongoing:null;
 }
-function secureTSCell(n){return n===null?'—':n.toLocaleString('en-IN')}\nconst SECURE_VBG_COUNTS={'Amarpatan':{total:66,tsFy:5},'Maihar':{total:8,tsFy:4},'Majhgawan':{total:139,tsFy:53},'Nagod':{total:69,tsFy:5},'Ramnagar':{total:75,tsFy:19},'Rampur baghelan':{total:15,tsFy:13},'Sohawal':{total:51,tsFy:35},'Unchahara':{total:30,tsFy:2}};
+function secureTSCell(n){return n===null?'—':n.toLocaleString('en-IN')}
+const SECURE_VBG_COUNTS={'Amarpatan':{total:66,tsFy:5},'Maihar':{total:8,tsFy:4},'Majhgawan':{total:139,tsFy:53},'Nagod':{total:69,tsFy:5},'Ramnagar':{total:75,tsFy:19},'Rampur baghelan':{total:15,tsFy:13},'Sohawal':{total:51,tsFy:35},'Unchahara':{total:30,tsFy:2}};
 const AS_TS_PENDING_DATA={
   'Amarpatan':[['Bhupendra Singh Add','AE',14],['Suneel Mishra','JE',4]],
   'Maihar':[],
