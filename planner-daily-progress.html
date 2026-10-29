@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R-3 दैनिक Planner / SIPRI प्रगति</title>
+<style>
+:root{--navy:#174e7d;--blue:#176da7;--green:#087b4d;--ink:#173b5d;--line:#8aa8c2;--soft:#f6f9fc;--muted:#66809a}
+*{box-sizing:border-box}
+body{margin:0;padding:14px;background:#fff;color:var(--ink);font-family:Arial,"Nirmala UI",sans-serif}
+main{max-width:1600px;margin:0 auto;border:1px solid #c8d9e9;border-radius:9px;padding:18px 22px 24px}
+.toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.toolbar label{font-size:17px}
+button,a.button,select{font:600 16px Arial,"Nirmala UI",sans-serif;border:1px solid #8eafce;border-radius:6px;padding:10px 14px;color:#174e7d;background:#eef5fb}
+button{cursor:pointer}
+h1{text-align:center;color:#087b4d;font-size:30px;margin:10px 0 4px}
+.subtitle{text-align:center;color:#536f89;font-size:15px;line-height:1.6;margin:0 0 20px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:16px 0}
+.card{background:#f7fafc;border:1px solid #b6cce0;border-left:5px solid var(--blue);border-radius:9px;min-height:96px;padding:12px 15px}
+.card.good-card{border-left-color:var(--green)}
+.card label{display:block;font-weight:700;color:#607a93;margin-bottom:4px}
+.card strong{font-size:24px;color:#174e7d}
+.card small{display:block;font-size:16px;font-weight:800;color:#087b4d;margin-top:5px}
+.card small.neg{color:#c32838}
+.note{color:#5c7791;margin:6px 0 10px;font-size:14px}
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;min-width:1050px;table-layout:fixed}
+thead th{background:#1a4f7d;color:#fff;padding:10px 7px;font-size:15px;position:sticky;top:0}
+td{border:1px solid #8da8c2;padding:8px 6px;text-align:center;vertical-align:middle}
+tbody tr:nth-child(even){background:#f7fafd}
+td:first-child,td:nth-child(2){text-align:left}
+.janpad-total{background:#dcebdc!important;font-weight:800;color:#124d39}
+.janpad-total td{border-top:2px solid #628878}
+.metric b{display:block;font-size:18px;color:#173b5d;white-space:nowrap}
+.metric small{display:block;font-size:13px;font-weight:800;margin-top:3px}
+.metric .good{color:#087b4d}.metric .bad{color:#bd2534}.metric .neutral{color:#69839a}
+.empty{text-align:center!important;padding:24px;color:#647d95}
+@media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
+@page{size:A4 landscape;margin:8mm}
+@media print{
+ body{padding:0;font-size:10pt}main{max-width:none;border:0;border-radius:0;padding:0}
+ .toolbar,.note{display:none!important}h1{font-size:18pt;margin:0 0 2mm}
+ .subtitle{font-size:9pt;margin-bottom:4mm}.cards{gap:4mm;margin:3mm 0}
+ .card{min-height:auto;padding:2.5mm 3mm}.card label{font-size:8pt}.card strong{font-size:14pt}.card small{font-size:9pt}
+ .table-wrap{overflow:visible;border:0}table{min-width:0;width:100%;font-size:8pt}
+ thead{display:table-header-group}thead th{position:static;font-size:8pt;padding:1.5mm}
+ td{font-size:8pt;padding:1.2mm .8mm;break-inside:avoid}.metric b{font-size:9pt}.metric small{font-size:7.5pt}
+ tr{break-inside:avoid}button{display:none}
+}
+</style>
+</head>
+<body>
+<main>
+<div class="toolbar">
+<a class="button" href="./">← मुख्य मेनू पर वापस</a>
+<label for="districtFilter">जिला</label>
+<select id="districtFilter" aria-label="जिला फ़िल्टर"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select>
+<button type="button" onclick="window.print()">Print / PDF</button>
+</div>
+<h1>दैनिक Planner से SIPRI प्रगति पत्रक</h1>
+<p class="subtitle">जनपदवार और उपयंत्रीवार तुलना: 27-10-2026 → 29-10-2026<br><span id="sourceNote"></span></p>
+<div id="cards" class="cards"></div>
+<p class="note" id="filterNote">हर खाने में पहले 27-10-2026 और फिर 29-10-2026 का मान दिखेगा। नीचे का अंतर आज के मान में से पुराने मान को घटाकर है।</p>
+<div class="table-wrap"><table>
+<thead><tr><th style="width:16%">जनपद</th><th style="width:20%">उपयंत्री</th><th>Planner कार्य</th><th>SIPRI में योजनाबद्ध</th><th>SIPRI हेतु लंबित</th><th>AE स्वीकृत</th><th>SA reviewed</th></tr></thead>
+<tbody id="progressBody"></tbody></table></div>
+</main>
+<script src="planner-daily-progress-data.js?v=20261029-daily1"></script>
+<script>
+(function(){
+const DATA=window.PLANNER_DAILY_PROGRESS;
+const METRICS=[
+ {name:"Planner कुल कार्य",i:0,lower:false},
+ {name:"SIPRI में योजनाबद्ध",i:1,lower:false},
+ {name:"SIPRI हेतु लंबित",i:-1,lower:true},
+ {name:"AE स्वीकृत",i:2,lower:false},
+ {name:"SA reviewed",i:3,lower:false}
+];
+const $=id=>document.getElementById(id);
+const fmt=n=>Number(n||0).toLocaleString("en-IN");
+function totals(rows){
+ const a=[0,0,0,0],b=[0,0,0,0];
+ rows.forEach(r=>{for(let i=0;i<4;i++){a[i]+=r.old[i];b[i]+=r.now[i];}});
+ return {old:a,now:b};
+}
+function val(x,m){return m.i===-1?x[0]-x[1]:x[m.i];}
+function signed(n){return n>0?"+"+fmt(n):n<0?"−"+fmt(Math.abs(n)):"0";}
+function deltaClass(d,lower){return d===0?"neutral":((lower?d<0:d>0)?"good":"bad");}
+function cell(a,b,lower){
+ const d=b-a;
+ return '<td class="metric"><b>'+fmt(a)+' → '+fmt(b)+'</b><small class="'+deltaClass(d,lower)+'">'+signed(d)+'</small></td>';
+}
+function groupKey(r){return r.district+"|"+r.janpad;}
+function render(){
+ const district=$("districtFilter").value;
+ const rows=DATA.rows.filter(r=>district==="ALL"||r.district===district);
+ const t=totals(rows);
+ $("sourceNote").textContent=DATA.sourceNote;
+ $("cards").innerHTML=METRICS.map(m=>{
+   const a=val(t.old,m),b=val(t.now,m),d=b-a;
+   return '<div class="card '+(m.i===1||m.i===2?'good-card':'')+'"><label>'+m.name+'</label><strong>'+fmt(a)+' → '+fmt(b)+'</strong><small class="'+deltaClass(d,m.lower)+'">'+signed(d)+' बदलाव</small></div>';
+ }).join("");
+ const groups={};
+ rows.forEach(r=>{(groups[groupKey(r)]||(groups[groupKey(r)]=[])).push(r);});
+ const keys=Object.keys(groups).sort((a,b)=>a.localeCompare(b,"hi"));
+ let html="";
+ keys.forEach(k=>{
+   const list=groups[k].slice().sort((a,b)=>a.engineer.localeCompare(b.engineer,"hi"));
+   const gtot=totals(list),first=list[0];
+   html+='<tr class="janpad-total"><td>'+first.district+' — '+first.janpad+'</td><td>जनपद योग</td>';
+   for(const m of METRICS)html+=cell(val(gtot.old,m),val(gtot.now,m),m.lower);
+   html+='</tr>';
+   list.forEach(r=>{
+     html+='<tr><td>'+r.janpad+'</td><td>'+r.engineer+'</td>';
+     for(const m of METRICS)html+=cell(val(r.old,m),val(r.now,m),m.lower);
+     html+='</tr>';
+   });
+ });
+ if(!html)html='<tr><td class="empty" colspan="7">इस जिले के लिए डेटा उपलब्ध नहीं है।</td></tr>';
+ $("progressBody").innerHTML=html;
+}
+$("districtFilter").addEventListener("change",render);
+render();
+})();
+</script>
+</body>
+</html>
