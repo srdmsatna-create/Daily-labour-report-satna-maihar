@@ -175,7 +175,7 @@ function renderNoWork(gpData){
   if(engineer!=="ALL"&&ek!==engineer)return;
   if(cluster!=="ALL"&&ck!==cluster)return;
   allGpCount++;if(started.has(pk))allWorkedCount++;else allWithoutCount++;
-  if(c!=="क्लस्टर आवंटित नहीं")allClusterKeys.add(ck);
+  if(c!=="क्लस्टर आवंटित नहीं")allClusterKeys.add(j+"|"+norm(c));
   if(!groups.has(ck))groups.set(ck,{district:d,janpad:x.janpad,engineer:e,cluster:c,gps:[],worked:0,without:[]});
   const g=groups.get(ck);g.gps.push(x.gp);if(started.has(pk))g.worked++;else g.without.push(x.gp);
  });
