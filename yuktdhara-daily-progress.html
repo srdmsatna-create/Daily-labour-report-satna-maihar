@@ -39,8 +39,10 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .report-tabs .tab-button{border-radius:6px 6px 0 0;border-bottom:0}
 .report-tabs .tab-button.active{background:#1a4f7d;color:#fff;border-color:#1a4f7d}
 .report-panel[hidden]{display:none!important}
-.cluster-filter{display:flex;align-items:center;gap:8px;margin:8px 0}
-.cluster-filter label{font-weight:700;color:#174e7d}
+.no-work-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0;padding:8px;background:#f1f6fb;border:1px solid #c8d9e9;border-radius:6px}
+.no-work-filters label{font-weight:700;color:#174e7d}
+.no-work-table tbody td{font-weight:700}
+.no-work-table{min-width:1100px}
 .panchayat-table{min-width:1150px}
 .panchayat-table tbody td{font-weight:700}
 .engineer-progress-table{min-width:1050px}
@@ -49,7 +51,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 @page{size:A4 landscape;margin:8mm}
 @media print{
  body{padding:0;font-size:9pt}main{max-width:none;border:0;border-radius:0;padding:0}
- .toolbar{display:none!important}h1{font-size:18pt;margin:0 0 2mm}
+ .toolbar{display:none!important}.no-work-filters{display:none!important}h1{font-size:18pt;margin:0 0 2mm}
  h2{font-size:13pt}.subtitle{font-size:8pt;margin-bottom:3mm}
  .cards{gap:3mm;margin:2mm 0}.card{min-height:auto;padding:2mm 3mm}.card label{font-size:7pt}.card strong{font-size:11pt}.card small{font-size:8pt}
  .table-wrap{overflow:visible;border:0}table{min-width:0;width:100%;font-size:7pt}
@@ -75,9 +77,9 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <div class="table-wrap"><table class="panchayat-table"><thead><tr><th style="width:10%">जिला</th><th style="width:13%">जनपद</th><th style="width:18%">पंचायत</th><th style="width:18%">उपयंत्री</th><th>प्रारंभ GP</th><th>जमा GP</th><th>शुरू नहीं</th><th>GAS अनुमोदित</th></tr></thead><tbody id="gpBody"></tbody></table></div></section>
 </div>
 <div id="noWorkPanel" class="report-panel" hidden>
-<section><h2>आज तक किसी GP में Yuktdhara कार्य प्रारंभ नहीं हुआ — क्लस्टरवार</h2><p class="status">यहाँ वे क्लस्टर दिखेंगे जहाँ किसी भी पंचायत में Yuktdhara का कार्य प्रारंभ दर्ज नहीं है। आधार: वर्तमान Bhuvan GP सूची का “प्रारंभ GP” डेटा।</p>
-<div class="cluster-filter"><label for="clusterFilter">क्लस्टर</label><select id="clusterFilter"><option value="ALL">सभी क्लस्टर</option></select></div>
-<div class="table-wrap"><table><thead><tr><th style="width:10%">जिला</th><th style="width:12%">जनपद</th><th style="width:19%">उपयंत्री</th><th style="width:16%">क्लस्टर</th><th>कुल पंचायतें</th><th>काम शुरू GP</th><th>बिना काम GP</th><th style="width:22%">बिना काम वाली पंचायतें</th></tr></thead><tbody id="noWorkBody"></tbody></table></div></section>
+<section><h2>आज तक काम शुरू नहीं करने वाली पंचायतें — क्लस्टरवार</h2><p class="status" id="noWorkCount">Bhuvan की वर्तमान GP स्थिति के अनुसार जिन पंचायतों में Yuktdhara कार्य प्रारंभ दर्ज नहीं है।</p>
+<div class="no-work-filters"><label for="nwDistrictFilter">जिला</label><select id="nwDistrictFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="nwJanpadFilter">जनपद</label><select id="nwJanpadFilter"><option value="ALL">सभी जनपद</option></select><label for="nwEngineerFilter">उपयंत्री</label><select id="nwEngineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="nwClusterFilter">क्लस्टर</label><select id="nwClusterFilter"><option value="ALL">सभी क्लस्टर</option></select><button type="button" onclick="window.print()">Print / PDF</button></div>
+<div class="table-wrap"><table class="no-work-table"><thead><tr><th style="width:9%">जिला</th><th style="width:11%">जनपद</th><th style="width:17%">उपयंत्री</th><th style="width:15%">क्लस्टर</th><th>कुल पंचायतें</th><th>काम शुरू GP</th><th>बिना काम GP</th><th style="width:24%">बिना काम वाली पंचायतें</th></tr></thead><tbody id="noWorkBody"></tbody></table></div></section>
 </div>
 </main>
 <script src="yuktdhara-daily-progress-baseline.js?v=20261030-base1"></script>
@@ -160,20 +162,23 @@ function renderGps(currentData){
  $("gpBody").innerHTML=rows.map(x=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp),a=old.get(k)||{},m=mapping.get(k)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",displayJ=x.janpad==="SATNA"?"Sohawal":x.janpad;return '<tr><td>'+d+'</td><td>'+displayJ+'</td><td>'+x.gp+'</td><td>'+((m.engineer)||a.engineer||"असाइन नहीं")+'</td>'+stats.map(s=>metric(a[s],sets[s]?.has(k)?1:0)).join("")+'</tr>';}).join("")||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
 }
 function renderNoWork(gpData){
- const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value,cluster=$("clusterFilter").value;
- const master=(gpData.lists&&gpData.lists.master)||[],started=new Set(((gpData.lists&&gpData.lists.started)||[]).map(panchayatId));
- const mapping=new Map((gpData.mapping||[]).map(x=>[panchayatId(x),x])),groups=new Map();
+ const district=$("nwDistrictFilter").value,janpad=$("nwJanpadFilter").value,engineer=$("nwEngineerFilter").value,cluster=$("nwClusterFilter").value;
+ const lists=gpData.lists||{},master=lists.master||[],started=new Set((lists.started||[]).map(panchayatId)),mapping=new Map((gpData.mapping||[]).map(x=>[panchayatId(x),x])),groups=new Map();
  master.forEach(x=>{
-  const pk=panchayatId(x),m=mapping.get(pk)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",j=janpadKey(x.janpad),e=m.engineer||"उपयंत्री आवंटित नहीं",c=m.cluster||"क्लस्टर आवंटित नहीं";
-  if(!isJanpad(x.janpad,district)||(janpad!=="ALL"&&j!==janpad)||(engineer!=="ALL"&&j+"|"+norm(e)!==engineer)||(panchayat!=="ALL"&&pk!==panchayat))return;
-  const ck=j+"|"+norm(e)+"|"+norm(c);if(cluster!=="ALL"&&ck!==cluster)return;
-  if(!groups.has(ck))groups.set(ck,{district:d,janpad:x.janpad,engineer:e,cluster:c,gps:[],worked:0,without:0});
-  const g=groups.get(ck);g.gps.push(x.gp);if(started.has(pk))g.worked++;else g.without++;
+  const pk=panchayatId(x),m=mapping.get(pk)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",j=janpadKey(x.janpad),e=m.engineer||"उपयंत्री आवंटित नहीं",c=m.cluster||"क्लस्टर आवंटित नहीं",ek=j+"|"+norm(e),ck=ek+"|"+norm(c);
+  if(district!=="ALL"&&d!==district)return;
+  if(janpad!=="ALL"&&j!==janpad)return;
+  if(engineer!=="ALL"&&ek!==engineer)return;
+  if(cluster!=="ALL"&&ck!==cluster)return;
+  if(!groups.has(ck))groups.set(ck,{district:d,janpad:x.janpad,engineer:e,cluster:c,gps:[],worked:0,without:[]});
+  const g=groups.get(ck);g.gps.push(x.gp);if(started.has(pk))g.worked++;else g.without.push(x.gp);
  });
- const rows=[...groups.values()].filter(g=>g.worked===0).sort((a,b)=>a.district.localeCompare(b.district)||a.janpad.localeCompare(b.janpad)||a.engineer.localeCompare(b.engineer,"hi")||a.cluster.localeCompare(b.cluster,"hi"));
- if(!rows.length){$("noWorkBody").innerHTML='<tr><td class="empty" colspan="8">चुने हुए फ़िल्टर में ऐसा कोई क्लस्टर नहीं मिला।</td></tr>';return;}
- let html="",grand={clusters:0,gps:0,without:0};
- const emit=(label,d,j,e,list)=>{const clusters=list.length,gps=list.reduce((n,g)=>n+g.gps.length,0),without=list.reduce((n,g)=>n+g.without,0);if(!clusters)return;html+='<tr class="total-row"><td>'+d+'</td><td>'+j+'</td><td>'+e+'</td><td>'+label+' ('+clusters+' क्लस्टर)</td><td>'+fmt(gps)+'</td><td>0</td><td>'+fmt(without)+'</td><td>—</td></tr>';return {clusters,gps,without};};
+ const rows=[...groups.values()].filter(g=>g.without.length>0).sort((a,b)=>a.district.localeCompare(b.district)||a.janpad.localeCompare(b.janpad)||a.engineer.localeCompare(b.engineer,"hi")||a.cluster.localeCompare(b.cluster,"hi"));
+ const gpCount=rows.reduce((n,g)=>n+g.without.length,0);
+ $("noWorkCount").textContent="Bhuvan GP सूची में "+fmt(gpCount)+" पंचायतों में अभी तक Yuktdhara कार्य प्रारंभ दर्ज नहीं है। जिला, जनपद, उपयंत्री और क्लस्टर के अनुसार फ़िल्टर करें।";
+ if(!rows.length){$("noWorkBody").innerHTML='<tr><td class="empty" colspan="8">चुने हुए फ़िल्टर में बिना कार्य प्रारंभ वाली पंचायतें नहीं मिलीं।</td></tr>';return;}
+ let html="",grand={clusters:0,gps:0,worked:0,without:0};
+ const emit=(label,d,j,e,list)=>{const clusters=list.length,gps=list.reduce((n,g)=>n+g.gps.length,0),worked=list.reduce((n,g)=>n+g.worked,0),without=list.reduce((n,g)=>n+g.without.length,0);if(!clusters)return;html+='<tr class="total-row"><td>'+d+'</td><td>'+j+'</td><td>'+e+'</td><td>'+label+' ('+fmt(clusters)+' क्लस्टर)</td><td>'+fmt(gps)+'</td><td>'+fmt(worked)+'</td><td>'+fmt(without)+'</td><td>—</td></tr>';return {clusters,gps,worked,without};};
  const districts=[...new Set(rows.map(g=>g.district))];
  districts.forEach(d=>{
   const dRows=rows.filter(g=>g.district===d),janpads=[...new Set(dRows.map(g=>g.janpad))];
@@ -181,14 +186,14 @@ function renderNoWork(gpData){
    const jRows=dRows.filter(g=>g.janpad===j),engineers=[...new Set(jRows.map(g=>g.engineer))];
    engineers.forEach(e=>{
     const eRows=jRows.filter(g=>g.engineer===e);
-    eRows.forEach(g=>{html+='<tr><td>'+g.district+'</td><td>'+g.janpad+'</td><td>'+g.engineer+'</td><td>'+g.cluster+'</td><td>'+fmt(g.gps.length)+'</td><td>'+fmt(g.worked)+'</td><td>'+fmt(g.without)+'</td><td>'+g.gps.join(", ")+'</td></tr>';});
-    const x=emit("उपयंत्री योग",d,j,e,eRows);if(x){grand.clusters+=x.clusters;grand.gps+=x.gps;grand.without+=x.without;}
+    eRows.forEach(g=>{html+='<tr><td>'+g.district+'</td><td>'+g.janpad+'</td><td>'+g.engineer+'</td><td>'+g.cluster+'</td><td>'+fmt(g.gps.length)+'</td><td>'+fmt(g.worked)+'</td><td>'+fmt(g.without.length)+'</td><td>'+g.without.join(", ")+'</td></tr>';});
+    const x=emit("उपयंत्री योग",d,j,e,eRows);if(x){grand.clusters+=x.clusters;grand.gps+=x.gps;grand.worked+=x.worked;grand.without+=x.without;}
    });
    emit("जनपद योग",d,j,"",jRows);
   });
   emit("जिला योग",d,"जिला योग","",dRows);
  });
- html+='<tr class="total-row grand-total"><td colspan="4">कुल योग ('+fmt(grand.clusters)+' क्लस्टर)</td><td>'+fmt(grand.gps)+'</td><td>0</td><td>'+fmt(grand.without)+'</td><td>—</td></tr>';
+ html+='<tr class="total-row grand-total"><td colspan="4">कुल योग ('+fmt(grand.clusters)+' क्लस्टर)</td><td>'+fmt(grand.gps)+'</td><td>'+fmt(grand.worked)+'</td><td>'+fmt(grand.without)+'</td><td>—</td></tr>';
  $("noWorkBody").innerHTML=html;
 }
 function fillFilter(id,items,label){
@@ -204,7 +209,9 @@ function populateFilters(rec,gp){
  const g=new Map();((gp.lists&&gp.lists.master)||[]).forEach(x=>g.set(janpadKey(x.janpad)+"|"+norm(x.gp),{value:janpadKey(x.janpad)+"|"+norm(x.gp),label:(j.get(janpadKey(x.janpad))||x.janpad)+" — "+x.gp}));
  fillFilter("panchayatFilter",[...g.values()],"सभी पंचायतें");
   const clusters=new Map();(gp.mapping||[]).forEach(x=>{const value=janpadKey(x.janpad)+"|"+norm(x.engineer)+"|"+norm(x.cluster);clusters.set(value,{value,label:(j.get(janpadKey(x.janpad))||x.janpad)+" — "+(x.engineer||"उपयंत्री आवंटित नहीं")+" — "+(x.cluster||"क्लस्टर आवंटित नहीं")});});
-  fillFilter("clusterFilter",[...clusters.values()],"सभी क्लस्टर");
+  fillFilter("nwJanpadFilter",[...j].map(([value,label])=>({value,label:value==="SATNA"?"Sohawal":label})),"सभी जनपद");
+  fillFilter("nwEngineerFilter",[...eng.values()],"सभी उपयंत्री");
+  fillFilter("nwClusterFilter",[...clusters.values()],"सभी क्लस्टर");
 }
 async function load(){
  try{
@@ -221,7 +228,8 @@ async function load(){
   populateFilters(rec,gp);renderSummary(rec);renderEngineers(rec);renderGps(gp);renderNoWork(gp);
  }catch(e){$("feedStatus").textContent="Daily Updater Yuktdhara फ़ीड नहीं खुली।";}
 }
-["districtFilter","janpadFilter","engineerFilter","panchayatFilter","clusterFilter"].forEach(id=>$(id).addEventListener("change",function(){const r=window.YUKTDHARA_RECEIVED,g=window.YUKTDHARA_DATA;if(r&&g){renderSummary(r);renderEngineers(r);renderGps(g);renderNoWork(g);}else load();}));
+["districtFilter","janpadFilter","engineerFilter","panchayatFilter"].forEach(id=>$(id).addEventListener("change",function(){const r=window.YUKTDHARA_RECEIVED,g=window.YUKTDHARA_DATA;if(r&&g){renderSummary(r);renderEngineers(r);renderGps(g);}else load();}));
+ ["nwDistrictFilter","nwJanpadFilter","nwEngineerFilter","nwClusterFilter"].forEach(id=>$(id).addEventListener("change",function(){const g=window.YUKTDHARA_DATA;if(g)renderNoWork(g);else load();}));
  document.querySelectorAll(".tab-button").forEach(btn=>btn.addEventListener("click",function(){document.querySelectorAll(".tab-button").forEach(x=>x.classList.toggle("active",x===btn));document.querySelectorAll(".report-panel").forEach(panel=>panel.hidden=panel.id!==btn.dataset.panel);}));
  load();
 })();
