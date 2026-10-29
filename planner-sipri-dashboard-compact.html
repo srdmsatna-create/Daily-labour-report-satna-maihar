@@ -727,6 +727,10 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
 #officialSection table.official-merged tbody td.pending-name-cell{padding:3px 4px!important;line-height:1.15!important}
 #officialSection table.official-merged .pending-name-cell b{font-size:13px!important;line-height:1.08!important}
 #officialSection table.official-merged .pending-name-cell small{font-size:10px!important;line-height:1.15!important;font-weight:650!important}
+
+/* Keep District labels readable in the compact main table. */
+#officialSection table.official-merged thead th:nth-child(1){width:72px!important;min-width:72px!important;max-width:72px!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
+#officialSection table.official-merged tbody tr:not(.district-total):not(.grand-total) td:nth-child(1){width:72px!important;min-width:72px!important;max-width:72px!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
 </style>
 <script>
 (function(){
