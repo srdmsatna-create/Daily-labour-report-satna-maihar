@@ -417,6 +417,13 @@ body#plannerDashboard main{width:100%!important;max-width:100%!important;margin-
 #engineerSection .work-type-item:not(:last-child)::after{content:", ";font-weight:400;color:#60738a}
 body #engineerSection .engineer-summary td:nth-child(11) .work-type-name{display:inline!important;font-size:11px!important;font-weight:800!important;line-height:1.25!important;color:#31465d!important}
 body #engineerSection .engineer-summary td:nth-child(11) .work-type-count{display:inline!important;font-size:10px!important;font-weight:500!important;line-height:1.25!important;min-width:0!important;margin-left:2px!important;color:#0b5378!important;text-align:left!important}
+
+/* Compact pending-name columns while keeping AE wider than Sub Engineer. */
+#officialSection table.official-merged thead th:nth-child(17),#officialSection table.official-merged tbody td:nth-child(17).pending-name-cell{width:180px!important;min-width:180px!important;max-width:180px!important}
+#officialSection table.official-merged thead th:nth-child(18),#officialSection table.official-merged tbody td:nth-child(18).pending-name-cell{width:145px!important;min-width:145px!important;max-width:145px!important}
+#officialSection table.official-merged tbody td.pending-name-cell{padding:4px 5px!important;line-height:1.18!important}
+#officialSection table.official-merged .pending-name-cell b{font-size:14px!important;line-height:1.1!important}
+#officialSection table.official-merged .pending-name-cell small{font-size:10px!important;line-height:1.18!important;font-weight:650!important}
 </style><style id="planner-stable-fonts-20261017">
 /* Stable Planner screen typography; kept separate from daily data imports. */
 @media screen {
@@ -519,7 +526,7 @@ function astPendingCell(blocks){
   }
   const render=(role)=>{
     const entries=[...people[role].values()],total=entries.reduce((n,p)=>n+p.count,0);
-    const details=entries.length?entries.map(p=>`${esc(p.name)}: ${p.count}`).join('<br>'):'कोई लंबित नहीं';
+    const details=entries.length?entries.map(p=>`${esc(p.name)}: ${p.count}`).join(', '):'कोई लंबित नहीं';
     return `<td class="pending-name-cell pending-col"><a href="https://secure.dord.gov.in/reportv2/astspending?mvsl=161" target="_blank" rel="noopener noreferrer" title="SECURE रिपोर्ट में AS/TS pending; डेटा 29-10-2026 को देखा गया"><b>${total.toLocaleString('en-IN')}</b><small>${details}</small></a></td>`;
   };
   return render('AE')+render('SE');
