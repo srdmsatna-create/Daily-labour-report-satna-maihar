@@ -111,6 +111,8 @@ const norm=v=>String(v||"").normalize("NFKC").toUpperCase().replace(/[^\p{L}\p{N
 const janpadKey=v=>norm(v)==="RAMPORBAGHELAN"?"RAMPURBAGHELAN":norm(v);
  const panchayatId=r=>janpadKey(r.janpad)+"|"+norm(r.gp);
 const PLACE_HI={"SATNA":"सतना","MAIHAR":"मैहर","AMARPATAN":"अमरपाटन","RAMNAGAR":"रामनगर","MAJHGAWAN":"मझगवां","NAGOD":"नागौद","RAMPUR BAGHELAN":"रामपुर बघेलान","RAMPURBAGHELAN":"रामपुर बघेलान","SOHAWAL":"सोहावल","UNCHAHARA":"उचेहरा","ABER":"आबेर","AMDARA":"अमदरा","BADAITMA":"बड़ाईटमा","BADERA":"बडेरा","BADKHERA":"बड़खेड़ा","BARAHANA":"बरहना","BARAKALA":"बरकला","BARAPATTHAR":"बरापत्थर","BARAUNDHA":"बरौंधा","BELA":"बेला","BHAINSWAR":"भैंसवार","BHARJUNAKHUAD":"भरजुनाखुर्द","BIHATA":"बिहटा","BIHRA NO. 2":"बिहरा नं. 2","CHORMARI":"चोरमारी","DUREHA":"दुरेहा","GANGASAGAR":"गंगासागर","GOBRI":"गोबरी","GORAIYA":"गोरैया","GORSARI":"गोरसरी","HIRAUNDI":"हिरौंदी","ICHAUL":"इचौल","JASO":"जसो","JIGANAHAT":"जिगनाहट","JIGNA":"जिगना","KARIGOHI":"करिगोही","KATKONKALA":"कटकोनकला","KHADAURRA":"खड़ौरा","KRISHNAGARH":"कृष्णगढ़","KUSEDI":"कुसेड़ी","LALPUR":"लालपुर","MAHURACHHKADAILA":"महुराछकडैला","MAUHARI KATARA":"मौहारी कटारा","MURTIHAI":"मुर्तिहाई","NADAN SHARDAPRASAD":"नादन शारदाप्रसाद","PAKARIYA":"पकरिया","PARASAMANIYA":"परसमनिया","PARASWAHI":"परसवाही","PHUTAUNDHA":"फुटौंधा","PINDRA":"पिंडरा","PONDEE":"पोंडी","PONDI":"पोंडी","PRATAPPUR":"प्रतापपुर","RAIGAON":"रायगाँव","RAMGARH":"रामगढ़","RIWARA":"रीवारा","SAJJANPUR":"सज्जनपुर","SEMARIA":"सेमरिया","SHIVRAJPUR":"शिवराजपुर","SHYAAMANAGAR":"श्यामानगर","SINGHPUR":"सिंहपुर","SITPURA":"सीतपुरा","SONWARI":"सोनवारी","SURDAHA KALA":"सुरदहा कला","TALA":"ताला","TILAURA":"तिलौरा"};
+const ENGLISH_GP_NAMES=new Set(["AHIRGAON","DEO","DINAPUR","ERA","KARAHI LAMI","KHUTAHA","KORIGAWAN","MAHUDAR","MAUHARI KATARA","SILPARI"]);
+function toHindiGp(value){const s=String(value||"").trim();return ENGLISH_GP_NAMES.has(s.toUpperCase().replace(/\\s+/g," "))?s:toHindiPlace(value);}
 function toHindiPlace(value){
  const s=String(value||"").trim();if(!s||/[\u0900-\u097F]/.test(s))return s;
  const direct=PLACE_HI[s.toUpperCase().replace(/\s+/g," ")];if(direct)return direct;
@@ -188,7 +190,7 @@ function renderGps(currentData){
  if(engineer!=="ALL")rows=rows.filter(x=>janpadKey(x.janpad)+"|"+norm((mapping.get(janpadKey(x.janpad)+"|"+norm(x.gp))||{}).engineer||((old.get(janpadKey(x.janpad)+"|"+norm(x.gp))||{}).engineer||""))===engineer);
  const stats=["started","submitted","notStarted","gasApproved"],titles=["युक्तधारा प्रारंभ","जमा","शुरू नहीं","GAS अनुमोदित"];
  $("gpCards").innerHTML=stats.map((key,i)=>{const baseRows=BASE.panchayats.filter(r=>isJanpad(r.janpad,district)),currentRows=masters.filter(r=>isJanpad(r.janpad,district));const oldN=baseRows.reduce((n,r)=>n+r[key],0),newN=currentRows.reduce((n,r)=>n+(sets[key]?.has(janpadKey(r.janpad)+"|"+norm(r.gp))?1:0),0),d=newN-oldN;return '<div class="card"><label>'+titles[i]+' पंचायतें</label><strong>'+fmt(oldN)+' → '+fmt(newN)+'</strong><small class="'+deltaClass(d)+'">'+signed(d)+' बदलाव</small></div>';}).join("");
- $("gpBody").innerHTML=rows.map(x=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp),a=old.get(k)||{},m=mapping.get(k)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",displayJ=x.janpad==="SATNA"?"Sohawal":x.janpad;return '<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(displayJ)+'</td><td>'+toHindiPlace(x.gp)+'</td><td>'+((m.engineer)||a.engineer||"असाइन नहीं")+'</td>'+stats.map(s=>metric(a[s],sets[s]?.has(k)?1:0)).join("")+'</tr>';}).join("")||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
+ $("gpBody").innerHTML=rows.map(x=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp),a=old.get(k)||{},m=mapping.get(k)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",displayJ=x.janpad==="SATNA"?"Sohawal":x.janpad;return '<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(displayJ)+'</td><td>'+toHindiGp(x.gp)+'</td><td>'+((m.engineer)||a.engineer||"असाइन नहीं")+'</td>'+stats.map(s=>metric(a[s],sets[s]?.has(k)?1:0)).join("")+'</tr>';}).join("")||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
 }
 function renderNoWork(gpData){
  const district=$("nwDistrictFilter").value,janpad=$("nwJanpadFilter").value,engineer=$("nwEngineerFilter").value,cluster=$("nwClusterFilter").value;
@@ -217,7 +219,7 @@ function renderNoWork(gpData){
    const jRows=dRows.filter(g=>g.janpad===j),engineers=[...new Set(jRows.map(g=>g.engineer))];
    engineers.forEach(e=>{
     const eRows=jRows.filter(g=>g.engineer===e);
-    eRows.forEach(g=>{html+='<tr><td>'+toHindiPlace(g.district)+'</td><td>'+toHindiPlace(g.janpad)+'</td><td>'+g.engineer+'</td><td>'+toHindiPlace(g.cluster)+'</td><td>'+fmt(g.gps.length)+'</td><td>'+fmt(g.worked)+'</td><td>'+fmt(g.without.length)+'</td><td>'+g.without.map(toHindiPlace).join(", ")+'</td></tr>';});
+    eRows.forEach(g=>{html+='<tr><td>'+toHindiPlace(g.district)+'</td><td>'+toHindiPlace(g.janpad)+'</td><td>'+g.engineer+'</td><td>'+toHindiPlace(g.cluster)+'</td><td>'+fmt(g.gps.length)+'</td><td>'+fmt(g.worked)+'</td><td>'+fmt(g.without.length)+'</td><td>'+g.without.map(toHindiGp).join(", ")+'</td></tr>';});
     grand.clusters+=eRows.length;grand.gps+=eRows.reduce((n,g)=>n+g.gps.length,0);grand.worked+=eRows.reduce((n,g)=>n+g.worked,0);grand.without+=eRows.reduce((n,g)=>n+g.without.length,0);
    });
    emit("जनपद योग",d,j,"",jRows);
@@ -237,7 +239,7 @@ function populateFilters(rec,gp){
  fillFilter("janpadFilter",[...j].map(([value,label])=>({value,label:toHindiPlace(value==="SATNA"?"Sohawal":label)})),"सभी जनपद");
  const eng=new Map();[...(BASE.engineers||[]),...(rec.rows||[])].forEach(x=>eng.set(janpadKey(x.janpad)+"|"+norm(x.engineer),{value:janpadKey(x.janpad)+"|"+norm(x.engineer),label:(j.get(janpadKey(x.janpad))||x.janpad)+" — "+x.engineer}));
  fillFilter("engineerFilter",[...eng.values()],"सभी उपयंत्री");
- const g=new Map();((gp.lists&&gp.lists.master)||[]).forEach(x=>g.set(janpadKey(x.janpad)+"|"+norm(x.gp),{value:janpadKey(x.janpad)+"|"+norm(x.gp),label:toHindiPlace(j.get(janpadKey(x.janpad))||x.janpad)+" — "+toHindiPlace(x.gp)}));
+ const g=new Map();((gp.lists&&gp.lists.master)||[]).forEach(x=>g.set(janpadKey(x.janpad)+"|"+norm(x.gp),{value:janpadKey(x.janpad)+"|"+norm(x.gp),label:toHindiPlace(j.get(janpadKey(x.janpad))||x.janpad)+" — "+toHindiGp(x.gp)}));
  fillFilter("panchayatFilter",[...g.values()],"सभी पंचायतें");
   const clusters=new Map();(gp.mapping||[]).forEach(x=>{const value=janpadKey(x.janpad)+"|"+norm(x.engineer)+"|"+norm(x.cluster);clusters.set(value,{value,label:toHindiPlace(j.get(janpadKey(x.janpad))||x.janpad)+" — "+(x.engineer||"उपयंत्री आवंटित नहीं")+" — "+toHindiPlace(x.cluster||"क्लस्टर आवंटित नहीं")});});
   fillFilter("nwJanpadFilter",[...j].map(([value,label])=>({value,label:toHindiPlace(value==="SATNA"?"Sohawal":label)})),"सभी जनपद");
