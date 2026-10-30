@@ -1,4 +1,13 @@
-window.PLANNER_APPROVAL_SUMMARY=[["Maihar","Amarpatan","Assistant Engineer - Amarpatan",3661,25,3,22,14,0],["Maihar","Maihar","Assistant Engineer - Maihar",8566,172,42,130,68,0],["Satna","Majhgawan","Assistant Engineer - Majhgawan",2466,380,200,176,38,162],["Satna","Nagod","Assistant Engineer - Nagod",2639,335,184,140,35,136],["Maihar","Ramnagar","Assistant Engineer - Ramnagar",5578,311,108,193,78,30],["Satna","Rampur baghelan","Assistant Engineer - Rampur baghelan",3186,170,69,101,90,0],["Satna","Sohawal","Assistant Engineer - Sohawal",3221,347,166,181,79,87],["Satna","Unchahara","Assistant Engineer - Unchahara",1087,216,134,77,9,125]];
-window.PLANNER_APPROVAL_TOTALS={"plannerDetail":30404,"sipri":1956,"aeApproved":906,"aePending":1050,"stateReviewed":411,"statePending":540};
-window.PLANNER_SIPRI_SOURCE={"uploadedDate":"29-10-2026","files":["Planning_Summary_Report (11).xlsx","Planning_Summary_Report (12).xlsx"],"sourceRows":8569,"mappingSource":"gp-sector-engineer-master-25-09-2026.csv","sourceFiles":[{"file":"Planning_Summary_Report (11).xlsx","sha256":"77c819fe5fe732d3b6fe03e4a2f3eb5d8e33bcc78a1d9cffb51e4260a40f4c8f","rows":5103},{"file":"Planning_Summary_Report (12).xlsx","sha256":"f35309dcba4bef11633836dfa8d0b03dec8d78436b91fa95cc35b946803c8e59","rows":3466}],"mappedRows":8569,"unmappedRows":0,"districtLabelsNormalized":423,"sipriAbovePlannerRows":104};
-window.PLANNER_IMPORT_DATE="29-10-2026";
+window.PLANNER_APPROVAL_SUMMARY=[
+ ["Maihar","Amarpatan","Assistant Engineer - Amarpatan",3661,25,3,22,14,0],
+ ["Maihar","Maihar","Assistant Engineer - Maihar",8566,177,42,135,68,0],
+ ["Satna","Majhgawan","Assistant Engineer - Majhgawan",2466,395,200,195,38,162],
+ ["Satna","Nagod","Assistant Engineer - Nagod",2639,344,225,119,35,190],
+ ["Maihar","Ramnagar","Assistant Engineer - Ramnagar",5578,330,108,222,78,30],
+ ["Satna","Rampur baghelan","Assistant Engineer - Rampur baghelan",3186,170,69,101,90,0],
+ ["Satna","Sohawal","Assistant Engineer - Sohawal",3221,372,199,173,79,120],
+ ["Satna","Unchahara","Assistant Engineer - Unchahara",1087,216,134,82,9,125]
+];
+window.PLANNER_APPROVAL_TOTALS={"plannerDetail":30404,"sipri":2029,"aeApproved":980,"aePending":1049,"stateReviewed":411,"statePending":627};
+window.PLANNER_SIPRI_SOURCE={"uploadedDate":"30-10-2026","files":["Planning_Summary_Report (13).xlsx","Planning_Summary_Report (14).xlsx"],"sourceRows":8569,"mappingSource":"gp-sector-engineer-master-25-09-2026.csv","sourceFiles":[{"file":"Planning_Summary_Report (13).xlsx","sha256":"0e16f564848a5b1e363437f502ae3d7bebc45b7c563deefd514918c92ca55b5d","rows":5103},{"file":"Planning_Summary_Report (14).xlsx","sha256":"c88cab873e9a32557f5b022025880e024b5c05a974f30f3ab46a63e9c0523112","rows":3466}],"mappedRows":8569,"unmappedRows":0,"districtLabelsNormalized":423,"sipriAbovePlannerRows":110};
+window.PLANNER_IMPORT_DATE="30-10-2026";
