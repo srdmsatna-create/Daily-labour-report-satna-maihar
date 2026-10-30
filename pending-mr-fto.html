@@ -373,4 +373,28 @@ table tr.total td:not([colspan]){
  balanceWarningColumns();
 })();
 </script>
+<style id="fto-table-readable-20261030">
+/* Improve FTO summary readability and keep full signatory names visible. */
+#title{font-size:22px!important;line-height:1.4!important;font-weight:900!important;color:#155e89!important}
+.table-wrap{width:100%;max-width:100%;overflow-x:auto!important;overscroll-behavior-x:contain}
+table.balanced-columns{width:max-content!important;min-width:100%!important;table-layout:auto!important}
+table.balanced-columns colgroup{display:none}
+table.balanced-columns th:has(button[data-sort="firstSignatory"]),
+table.balanced-columns th:has(button[data-sort="secondSignatory"]){width:180px!important;min-width:180px!important}
+#head th,#head th button{font-weight:900!important;line-height:1.35!important}
+#body td{font-size:13px!important;font-weight:700!important;line-height:1.4!important;vertical-align:middle!important}
+#body td:nth-child(1){text-align:center;font-weight:850!important}
+@media(max-width:700px){
+ #title{font-size:19px!important}
+ table.balanced-columns th:has(button[data-sort="firstSignatory"]),
+ table.balanced-columns th:has(button[data-sort="secondSignatory"]){width:160px!important;min-width:160px!important}
+ #body td{font-size:12px!important}
+}
+@media print{
+ table.balanced-columns{width:100%!important;min-width:0!important;table-layout:fixed!important}
+ table.balanced-columns th:has(button[data-sort="firstSignatory"]),
+ table.balanced-columns th:has(button[data-sort="secondSignatory"]){width:auto!important;min-width:0!important}
+ #body td{font-size:10px!important;line-height:1.25!important}
+}
+</style>
 </html>
