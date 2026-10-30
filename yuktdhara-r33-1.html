@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>युक्तधारा R33.1 आधिकारिक रिपोर्ट • सतना एवं मैहर</title>
+<style>
+:root{--navy:#174e7d;--blue:#176da7;--ink:#18334b;--line:#8ba9c3;--bg:#f3f7fb;--satna:#d9ebff;--maihar:#e5f4e9;--total:#ffedc9}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans Devanagari",sans-serif}
+header{background:linear-gradient(125deg,#103e68,#1976ae);color:white;padding:18px max(14px,calc((100vw - 1200px)/2));box-shadow:0 4px 15px #12365b26}
+h1{font-size:25px;margin:0}header p{margin:5px 0 0}
+main{max-width:1200px;margin:18px auto;padding:0 14px}
+a.back{display:inline-block;margin-bottom:12px;color:#12558a;font-weight:800}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 14px}
+.card,.box{background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 3px 12px #1a35520d}
+.card{padding:14px}.card small{font-weight:800;color:#526c82}.card strong{display:block;margin-top:4px;font-size:25px;color:#174e7d}
+.box{padding:12px}.box h2{font-size:18px;margin:0 0 10px;color:#174e7d}
+.meta{margin:4px 0 12px;color:#526c82;font-size:13px}
+.wrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{border:1px solid #8ba9c3;padding:9px;text-align:right;font-variant-numeric:tabular-nums}
+th{background:#174e7d;color:#fff;text-align:center}td:first-child,th:first-child{text-align:left}
+tbody tr:nth-child(even){background:#f8fbff}
+tr.district-maihar td{background:var(--maihar);font-weight:850}
+tr.district-satna td{background:var(--satna);font-weight:850}
+tr.grand td{background:var(--total);font-weight:900;border-top:2px solid #b07a27}
+.source{font-size:12px;color:#587086;margin:10px 0 0}
+@media(max-width:700px){.cards{grid-template-columns:1fr}.card strong{font-size:22px}h1{font-size:21px}}
+@media print{body{background:white}header{padding:8px;background:#174e7d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{margin:8px auto}.back{display:none!important}.box,.card{box-shadow:none}th,td{padding:6px;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style>
+<script src="yuktdhara-official-data.js?v=20261030-r331"></script>
+</head>
+<body>
+<header><h1>युक्तधारा R33.1 आधिकारिक निगरानी रिपोर्ट</h1><p id="reportMeta">सतना एवं मैहर • रिपोर्ट दिनांक: —</p></header>
+<main>
+<a class="back" href="index.html">← मुख्य मेनू</a>
+<div class="cards">
+<div class="card"><small>सतना — ग्राम पंचायत</small><strong id="satnaGP">—</strong></div>
+<div class="card"><small>मैहर — ग्राम पंचायत</small><strong id="maiharGP">—</strong></div>
+<div class="card"><small>कुल ग्राम पंचायत</small><strong id="totalGP">—</strong></div>
+</div>
+<section class="box">
+<h2>जिला और जनपदवार आधिकारिक स्थिति</h2>
+<p class="meta" id="reportDesc"></p>
+<div class="wrap"><table>
+<thead><tr><th>जिला</th><th>जनपद</th><th>कुल GP</th><th>प्राप्त GP</th><th>प्राप्त कार्य</th><th>बने कार्य</th><th>शुरू नहीं</th><th>प्रगतिरत</th><th>पूर्ण</th></tr></thead>
+<tbody id="reportRows"></tbody>
+</table></div>
+<p class="source" id="sourceText"></p>
+</section></main>
+<script>
+(function(){
+const D=window.YUKTDHARA_REPORT;if(!D){document.getElementById('reportMeta').textContent='रिपोर्ट डेटा लोड नहीं हुआ।';return}
+const satna=new Set(['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA']);
+const maihar=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']);
+const fmt=n=>Number(n||0).toLocaleString('en-IN');
+document.getElementById('reportMeta').textContent='वित्तीय वर्ष '+D.financialYear+' • रिपोर्ट दिनांक: '+String(D.officialDate||'').replaceAll('/','-');
+const totals={Satna:{gp:0,gpReceived:0,worksReceived:0,worksCreated:0,yetToStart:0,ongoing:0,completed:0},Maihar:{gp:0,gpReceived:0,worksReceived:0,worksCreated:0,yetToStart:0,ongoing:0,completed:0}};
+const rows=(D.rows||[]).map(r=>{const key=String(r.block||'').toUpperCase();const district=maihar.has(key)?'Maihar':'Satna';for(const k of Object.keys(totals[district]))totals[district][k]+=Number(r[k]||0);return {...r,district}}).sort((a,b)=>a.district.localeCompare(b.district)||a.block.localeCompare(b.block));
+const labels={gp:'कुल GP',gpReceived:'प्राप्त GP',worksReceived:'प्राप्त कार्य',worksCreated:'बने कार्य',yetToStart:'शुरू नहीं',ongoing:'प्रगतिरत',completed:'पूर्ण'};
+const body=document.getElementById('reportRows');
+let html='';for(const r of rows){html+='<tr><td>'+r.district+'</td><td>'+r.block+'</td>'+['gp','gpReceived','worksReceived','worksCreated','yetToStart','ongoing','completed'].map(k=>'<td>'+fmt(r[k])+'</td>').join('')+'</tr>'}
+for(const d of ['Satna','Maihar']){html+='<tr class="district-'+d.toLowerCase()+'"><td>'+d+' कुल</td><td>जिला योग</td>'+['gp','gpReceived','worksReceived','worksCreated','yetToStart','ongoing','completed'].map(k=>'<td>'+fmt(totals[d][k])+'</td>').join('')+'</tr>'}
+const grand={};for(const k of Object.keys(labels))grand[k]=totals.Satna[k]+totals.Maihar[k];
+html+='<tr class="grand"><td>कुल</td><td>सतना + मैहर</td>'+['gp','gpReceived','worksReceived','worksCreated','yetToStart','ongoing','completed'].map(k=>'<td>'+fmt(grand[k])+'</td>').join('')+'</tr>';
+body.innerHTML=html;
+document.getElementById('satnaGP').textContent=fmt(totals.Satna.gp)+' GP';
+document.getElementById('maiharGP').textContent=fmt(totals.Maihar.gp)+' GP';
+document.getElementById('totalGP').textContent=fmt(grand.gp)+' GP';
+document.getElementById('reportDesc').textContent='जिला योग: सतना '+fmt(totals.Satna.gp)+' GP • मैहर '+fmt(totals.Maihar.gp)+' GP • कुल '+fmt(grand.gp)+' GP';
+document.getElementById('sourceText').textContent='स्रोत: आधिकारिक Yuktdhara R33.1 Monitoring Report • डेटा अद्यतन '+String(D.updatedAt||'').replace('T',' ').replace('Z',' UTC')+' • '+D.source;
+})();
+</script></body></html>
