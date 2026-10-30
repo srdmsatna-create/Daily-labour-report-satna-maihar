@@ -29,11 +29,26 @@ thead th{background:#1a4f7d;color:#fff;padding:8px 6px;font-size:14px;position:s
 td{border:1px solid #8da8c2;padding:4px 5px;text-align:center;vertical-align:middle;line-height:1.15}
 tbody tr:nth-child(even){background:#f7fafd}
 td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
-.metric b{display:inline;font-size:17px;color:#173b5d;white-space:nowrap}
-.metric small{display:inline;font-size:16px;font-weight:900;margin-left:5px;line-height:1.1;white-space:nowrap}
+.metric b{display:inline;font-size:21px;font-weight:900;color:#123e68;white-space:nowrap}
+.metric small{display:inline;font-size:18px;font-weight:900;margin-left:5px;line-height:1.1;white-space:nowrap}
+.total-row .metric b{color:#153f31}
+.grand-total .metric b{color:#fff}
+.no-work-table tbody td:nth-child(5),.no-work-table tbody td:nth-child(6),.no-work-table tbody td:nth-child(7){font-size:16px!important;font-weight:900!important;color:#123e68}
+.no-work-table .total-row td:nth-child(5),.no-work-table .total-row td:nth-child(6),.no-work-table .total-row td:nth-child(7){color:#153f31}
+.no-work-table .grand-total td:nth-child(5),.no-work-table .grand-total td:nth-child(6),.no-work-table .grand-total td:nth-child(7){color:#123e68}
 .metric .good{color:#087b4d}.metric .bad{color:#bd2534}.metric .neutral{color:#7b2cbf}
 .total-row{background:#dcebdc!important;font-weight:800;color:#124d39}
-.total-row td{border-top:2px solid #628878}.grand-total{background:#c8dfc8!important;font-size:1.04em}
+.total-row td{border-top:2px solid #628878}
+.janpad-total-amarpatan{background:#e5f2df!important;color:#1d5b39!important}.janpad-total-amarpatan td{border-top-color:#6fa57b}
+.janpad-total-maihar{background:#e2effb!important;color:#174e7d!important}.janpad-total-maihar td{border-top-color:#729ec5}
+.janpad-total-ramnagar{background:#f4e9fa!important;color:#673985!important}.janpad-total-ramnagar td{border-top-color:#aa82c3}
+.janpad-total-majhgawan{background:#fff0df!important;color:#86501c!important}.janpad-total-majhgawan td{border-top-color:#c79760}
+.janpad-total-nagod{background:#fce5e7!important;color:#8f2632!important}.janpad-total-nagod td{border-top-color:#c77880}
+.janpad-total-rampurbaghelan{background:#e2f4f1!important;color:#17665b!important}.janpad-total-rampurbaghelan td{border-top-color:#69a99f}
+.janpad-total-sohawal{background:#f4f0d8!important;color:#706019!important}.janpad-total-sohawal td{border-top-color:#b7a94d}
+.janpad-total-unchahara{background:#e9e8fb!important;color:#373d83!important}.janpad-total-unchahara td{border-top-color:#898cc7}
+.janpad-total-satna{background:#e8eef4!important;color:#324f69!important}.janpad-total-satna td{border-top-color:#839bb0}
+.grand-total{background:#c8dfc8!important;font-size:1.04em}
 .status{font-size:13px;color:#536f89;margin:5px 0 8px}
 .report-tabs{display:flex;gap:8px;margin:10px 0 14px;border-bottom:2px solid #d4e2ef}
 .report-tabs .tab-button{border-radius:6px 6px 0 0;border-bottom:0}
@@ -107,6 +122,7 @@ function deltaClass(n){return n===0?"neutral":n>0?"good":"bad";}
 function metric(a,b){const d=Number(b||0)-Number(a||0);return '<td class="metric"><b>'+fmt(a)+' → '+fmt(b)+'</b><small class="'+deltaClass(d)+'">'+signed(d)+'</small></td>';}
 function isJanpad(x,district){return district==="ALL"||(JANPAD_DISTRICT[janpadKey(x)]||JANPAD_DISTRICT[x])===district;}
 function total(records,key){return records.reduce((n,r)=>n+Number(r[key]||0),0);}
+function janpadTotalClass(value){return "janpad-total-"+janpadKey(value).toLowerCase().replace(/[^a-z0-9-]/g,"");}
 function aggregateMaps(keys,oldMap,newMap,selector){
  const a={},b={};keys.forEach(k=>{a[k]=0;b[k]=0;});
  selector.forEach(key=>keys.forEach(k=>{a[k]+=Number((oldMap.get(key)||{})[k]||0);b[k]+=Number((newMap.get(key)||{})[k]||0);}));
@@ -150,7 +166,7 @@ function renderEngineers(current){
   const selected=keys.filter(k=>janpadKey((now.get(k)||old.get(k)).janpad)===janpadKey(j));
   selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a,d=JANPAD_DISTRICT[janpadKey(r.janpad)]||"Satna";html+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+clusterName(k)+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
   const t=aggregateMaps(names,old,now,selected);
-  html+='<tr class="total-row"><td>'+toHindiPlace(JANPAD_DISTRICT[janpadKey(j)]||"Satna")+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
+  html+='<tr class="total-row '+janpadTotalClass(j)+'"><td>'+toHindiPlace(JANPAD_DISTRICT[janpadKey(j)]||"Satna")+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
  });
  districts.forEach(d=>{
   const selected=keys.filter(k=>(JANPAD_DISTRICT[janpadKey((now.get(k)||old.get(k)).janpad)]||"Satna")===d);
@@ -192,7 +208,7 @@ function renderNoWork(gpData){
  $("noWorkCount").textContent="Bhuvan पंचायत सूची में "+fmt(gpCount)+" पंचायतों में अभी तक Yuktdhara कार्य प्रारंभ दर्ज नहीं है। जिला, जनपद, उपयंत्री और समूह के अनुसार फ़िल्टर करें।";
  if(!rows.length){$("noWorkBody").innerHTML='<tr><td class="empty" colspan="8">चुने हुए फ़िल्टर में बिना कार्य प्रारंभ वाली पंचायतें नहीं मिलीं।</td></tr>';return;}
  let html="",grand={clusters:0,gps:0,worked:0,without:0};
- const emit=(label,d,j,e,list)=>{const clusters=list.length,gps=list.reduce((n,g)=>n+g.gps.length,0),worked=list.reduce((n,g)=>n+g.worked,0),without=list.reduce((n,g)=>n+g.without.length,0);if(!clusters)return;html+='<tr class="total-row"><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j)+'</td><td>'+e+'</td><td>'+label+' ('+fmt(clusters)+' समूह)</td><td>'+fmt(gps)+'</td><td>'+fmt(worked)+'</td><td>'+fmt(without)+'</td><td>—</td></tr>';return {clusters,gps,worked,without};};
+ const emit=(label,d,j,e,list)=>{const clusters=list.length,gps=list.reduce((n,g)=>n+g.gps.length,0),worked=list.reduce((n,g)=>n+g.worked,0),without=list.reduce((n,g)=>n+g.without.length,0);if(!clusters)return;html+='<tr class="total-row '+(label==="जनपद योग"?janpadTotalClass(j):"")+'"><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j)+'</td><td>'+e+'</td><td>'+label+' ('+fmt(clusters)+' समूह)</td><td>'+fmt(gps)+'</td><td>'+fmt(worked)+'</td><td>'+fmt(without)+'</td><td>—</td></tr>';return {clusters,gps,worked,without};};
  const districts=[...new Set(rows.map(g=>g.district))];
  districts.forEach(d=>{
   const dRows=rows.filter(g=>g.district===d),janpads=[...new Set(dRows.map(g=>g.janpad))];
