@@ -1,6 +1,6 @@
 {
-  "runId": "20261031T040542Z-87d1f2",
-  "checkedAt": "2026-10-31T05:22:25.482578+00:00",
+  "runId": "20261031T052427Z-d41e3e",
+  "checkedAt": "2026-10-31T06:04:56.320633+00:00",
   "schedule": "06:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -109,9 +109,7 @@
       "attempts": 1
     },
     "pmayg": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_pmayg.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_pmayg.py']\nFetching MGNREGA FY 2026-27 (all work-start years)\r\nFetching Ongoing / Constr of PMAY-G House for Individuals\r\nWaiting for official portal response: 14 sec (attempt 1/3)\r\nWaiting for official portal response: 30 sec (attempt 1/3)\r\nWaiting for official portal response: 45 sec (attempt 1/3)\r\nWaiting for official portal response: 60 sec (attempt 1/3)\r\nWaiting for official portal response: 75 sec (attempt 1/3)\r\nWaiting for official portal response: 90 sec (attempt 1/3)\r\nWaiting for official portal response: 105 sec (attempt 1/3)\r\nWaiting for official portal response: 120 sec (attempt 1/3)\r\nWaiting for official portal response: 135 sec (attempt 1/3)\r\nWaiting for official portal response: 150 sec (attempt 1/3)\r\nRows: 10873\r\nFetching Ongoing / IAY Houses\r\nRows: 306\r\nFetching Approved / Constr of PMAY-G House for Individuals\r\nWaiting for official portal response: 15 sec (attempt 1/3)\r\nWaiting for official portal response: 30 sec (attempt 1/3)\r\nWaiting for official portal response: 45 sec (attempt 1/3)\r\nWaiting for official portal response: 60 sec (attempt 1/3)\r\nRows: 4573\r\nFetching Approved / IAY Houses\r\nWaiting for official portal response: 15 sec (attempt 1/3)\r\nRows: 1361\r\nFetching VBGRAMG FY 2026-27 (all work-start years)\r\nFetching Ongoing / Constr of PMAY-G House for Individuals\r\nWaiting for official portal response: 14 sec (attempt 1/3)\r\nWaiting for official portal response: 30 sec (attempt 1/3)\r\nFAILED PMAY-G; previous snapshot retained: [WinError 10054] An existing connection was forcibly closed by the remote host\r\n",
+      "success": true,
       "files": [
         "data/pmayg-latest.json"
       ],
@@ -122,14 +120,14 @@
       "files": [
         "data/above75-latest.json"
       ],
-      "attempts": 2
+      "attempts": 1
     },
     "planner": {
       "success": true,
       "files": [
         "planner-portal-data.js"
       ],
-      "attempts": 2
+      "attempts": 1
     },
     "secure_ts": {
       "success": true,
@@ -153,5 +151,5 @@
       "attempts": 1
     }
   },
-  "success": false
+  "success": true
 }
