@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>वीबी-जी राम जी अंतर्गत प्रगतिरत कार्यों की समीक्षा</title>
+<title>वीबी-जी राम जी अंतर्गत प्रगतिरत कार्य</title>
 <style>
 *{box-sizing:border-box}body{margin:0;padding:16px;background:#eff4f8;color:#193b57;font-family:Arial,"Noto Sans Devanagari",sans-serif}
 main{max-width:1450px;margin:auto;padding:18px;background:#fff;border:1px solid #c8d6e2;border-radius:9px}
@@ -69,7 +69,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
 </head>
 <body><main>
 <nav><a href="index.html">← मुख्य डैशबोर्ड</a><button id="print">Print / PDF</button></nav>
-<h1>वीबी-जी राम जी अंतर्गत प्रगतिरत कार्यों की समीक्षा</h1>
+<h1>वीबी-जी राम जी अंतर्गत प्रगतिरत कार्य — दिनांक <span id="reportDate"></span></h1>
 <p class="meta" id="meta">सत्यापित R6.12 कार्य विवरण लोड हो रहा है…</p>
 <div class="summary" id="summary"></div>
 <div class="district-filters" id="districtFilters" role="group" aria-label="जिला फ़िल्टर"><strong>जिला फ़िल्टर:</strong><button type="button" data-district="all" class="active">दोनों जिले</button><button type="button" data-district="मैहर">मैहर</button><button type="button" data-district="सतना">सतना</button></div>
@@ -233,6 +233,8 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(overall),1)+'%</strong></div>';
  }
  function load(){
+  const now=new Date(),dateLabel=new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'Asia/Kolkata'}).format(now).replace(/\//g,'-');
+  document.getElementById('reportDate').textContent=dateLabel;
   const raw=Array.isArray(window.ONGOING_DETAILS)?window.ONGOING_DETAILS:[];
   allSource=raw;
   source=raw.filter(r=>{
