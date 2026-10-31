@@ -15,6 +15,10 @@ button,a{padding:8px 12px;border:1px solid #8aa7bd;border-radius:5px;background:
 .card small{display:block;color:#526a7b;font-weight:700}.card strong{display:block;margin-top:5px;color:#153c5c;font-size:19px}
 .views{display:flex;gap:7px;overflow-x:auto;margin:12px 0;padding:2px}
 .views button{white-space:nowrap;background:#f2f6fb}.views button.active{background:#164a7b;color:#fff;border-color:#164a7b}
+.district-filters{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:12px 0 8px}
+.district-filters strong{font-size:14px;color:#193b57;margin-right:3px}
+.district-filters button{padding:6px 11px}
+.district-filters button.active{background:#0f766e;color:#fff;border-color:#0f766e}
 .wrap{overflow:auto;border:1px solid #68869c;border-radius:5px}
 table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}.split-wide,.engineer-wide{min-width:0}
 .engineer-wide th:nth-child(1),.engineer-wide td:nth-child(1){width:50px}
@@ -68,6 +72,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
 <h1>वीबी-जी राम जी अंतर्गत प्रगतिरत कार्यों की समीक्षा</h1>
 <p class="meta" id="meta">सत्यापित R6.12 कार्य विवरण लोड हो रहा है…</p>
 <div class="summary" id="summary"></div>
+<div class="district-filters" id="districtFilters" role="group" aria-label="जिला फ़िल्टर"><strong>जिला फ़िल्टर:</strong><button type="button" data-district="all" class="active">दोनों जिले</button><button type="button" data-district="मैहर">मैहर</button><button type="button" data-district="सतना">सतना</button></div>
 <div class="views" id="views" aria-label="रिपोर्ट के दृश्य">
 <button class="active" data-view="janpad">जनपदवार</button>
 <button data-view="engineer">इंजीनियरवार</button>
@@ -96,6 +101,8 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
  const addHeadingControls=()=>document.querySelectorAll('#head th').forEach(th=>{if(th.querySelector('.sort-heading'))return;const label=th.innerHTML;th.innerHTML='<button type="button" class="sort-heading" aria-label="आरोही-अवरोही क्रम बदलें">'+label+' <span>'+(ascending?'▲ आरोही':'▼ अवरोही')+'</span></button>'});
  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0};
  const norm=v=>String(v??'').trim().replace(/\s+/g,' ');
+ function districtFor(r){const raw=norm(r.janpad),place=blockInfo.find(x=>x.key===raw.toUpperCase());return place?.district||norm(r.district)||'अन्य'}
+ function filteredSource(){return source.filter(r=>districtFilter==='all'||districtFor(r)===districtFilter)}
  const configs={
   janpad:{title:'जनपदवार',key:r=>norm(r.janpad)||'अन्य/अमैप्ड',name:k=>{const b=blockInfo.find(x=>x.key===k.toUpperCase());return b?b.name:k},district:k=>blockInfo.find(x=>x.key===k.toUpperCase())?.district||'अन्य'},
   engineer:{title:'इंजीनियरवार',key:r=>norm(r.engineer)||'अनमैप्ड',name:k=>k},
@@ -103,7 +110,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   category:{title:'कार्य श्रेणीवार',key:r=>{const x=norm(r.finalCategory||r.category||r.type);return x.toUpperCase().startsWith('IAY')||x.toUpperCase().startsWith('PMAY')||x.toUpperCase().includes('INDIRA AWAAS YOJANA')?'IAY / PMAY-G':x||'अन्य/अवर्गीकृत'},name:k=>k},
   year:{title:'वर्षवार',key:r=>norm(r.fy||r.financialYear)||'वर्ष उपलब्ध नहीं',name:k=>k}
  };
- let source=[],allSource=[],active='janpad',ascending=true;
+ let source=[],allSource=[],active='janpad',ascending=true,districtFilter='all';
  function amounts(r){const sanction=num(r.sanction),nrega=num(r.nregaBooked),vbg=num(r.vbgBooked??r.booked),expenditure=num(r.overallBooked??(nrega+vbg));return {sanction,expenditure}}
  function isPhysicalDone(r){const status=norm(r.status??r.workStatus??r['Work Status']??'').toLowerCase();return r.physicallyCompleted===true||r.isPhysicallyCompleted===true||String(r.physicallyCompleted??r.isPhysicallyCompleted??'').toLowerCase()==='true'||status.includes('physically completed')||status.includes('physical completed')}
  function renderEngineer(){
@@ -117,7 +124,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    const b=emptyBucket(),a=amounts(r);b.count=1;b.sanction=a.sanction;b.expenditure=a.expenditure;
    return isHousing?{pmayiay:b,nonpmay:emptyBucket()}:{pmayiay:emptyBucket(),nonpmay:b};
   };
-  for(const r of source){
+  for(const r of filteredSource()){
    const janRaw=norm(r.janpad)||'अनमैप्ड',janKey=janRaw.toUpperCase();
    const place=blockInfo.find(x=>x.key===janKey),district=place?.district||norm(r.district)||'अन्य';
    const janpad=place?.name||janRaw,engineer=norm(r.engineer)||'अनमैप्ड',key=district+'¦'+janKey;
@@ -168,7 +175,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    const b=emptyBucket(),a=amounts(r);b.count=1;b.sanction=a.sanction;b.expenditure=a.expenditure;
    return isHousing?{pmayiay:b,nonpmay:emptyBucket()}:{pmayiay:emptyBucket(),nonpmay:b};
   };
-  for(const r of source){
+  for(const r of filteredSource()){
    const janRaw=norm(r.janpad)||'अनमैप्ड',janKey=janRaw.toUpperCase(),place=blockInfo.find(x=>x.key===janKey);
    const janpadName=place?.name||janRaw,districtName=place?.district||norm(r.district)||'अन्य',panchayatName=norm(r.panchayat)||'अनमैप्ड';
    const key=active==='panchayat'?districtName+'¦'+janKey+'¦'+panchayatName:cfg.key(r);
@@ -184,7 +191,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    }
    Object.assign(g,addPair(g,pair));
   }
-  if(active==='category')for(const r of allSource){if(!isPhysicalDone(r))continue;const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),physicalCount:0,...emptyPair()});groups.get(key).physicalCount++}
+  if(active==='category')for(const r of allSource){if(districtFilter!=='all'&&districtFor(r)!==districtFilter)continue;if(!isPhysicalDone(r))continue;const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),physicalCount:0,...emptyPair()});groups.get(key).physicalCount++}
   const list=[...groups.values()].sort((a,b)=>(active==='janpad'?((a.district==='मैहर'?0:1)-(b.district==='मैहर'?0:1))||a.name.localeCompare(b.name,'hi'):a.name.localeCompare(b.name,'hi')||(active==='panchayat'?a.janpad.localeCompare(b.janpad,'hi'):0))*(ascending?1:-1));
   const total=list.reduce((a,g)=>({physicalCount:a.physicalCount+(g.physicalCount||0),...addPair(a,g)}),{physicalCount:0,...emptyPair()});
   const money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
@@ -219,6 +226,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:active==='panchayat'?5:2)+'">महायोग</td>'+workCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+financeCells(total)+'</tr>';
   document.getElementById('rows').innerHTML=html;
   const overall=addPair(total.pmayiay,total.nonpmay);
+  document.getElementById('meta').textContent='सत्यापित R6.12 ongoing-work विवरण • '+fmt(filteredSource().length)+' कार्य • जिला: '+(districtFilter==='all'?'दोनों जिले':districtFilter)+' • रिपोर्ट समय: '+new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
   document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(overall),1)+'%</strong></div>';
  }
  function load(){
@@ -235,6 +243,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
  }
  document.querySelector('.wrap table thead').addEventListener('click',e=>{if(!e.target.closest('.sort-heading'))return;ascending=!ascending;render()});
  document.getElementById('views').addEventListener('click',e=>{const b=e.target.closest('button[data-view]');if(!b)return;active=b.dataset.view;document.querySelectorAll('#views button[data-view]').forEach(x=>x.classList.toggle('active',x===b));render()});
+ document.getElementById('districtFilters').addEventListener('click',e=>{const b=e.target.closest('button[data-district]');if(!b)return;districtFilter=b.dataset.district;document.querySelectorAll('#districtFilters button[data-district]').forEach(x=>x.classList.toggle('active',x===b));render()});
  document.getElementById('print').addEventListener('click',()=>window.print());
  load();
 })();
