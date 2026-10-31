@@ -80,7 +80,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
    const key=district+'¦'+janKey;
    if(!janpads.has(key))janpads.set(key,{district,janKey,janpad,engineers:new Map(),total:empty()});
    const group=janpads.get(key),e=group.engineers.get(engineer)||{name:engineer,...empty()};
-   e.count++;const a=amounts(r);e.sanction+=a.sanction;e.expenditure+=a.expenditure;group.engineers.set(engineer,e);group.total=add(group.total,a);
+   e.count++;const a=amounts(r);e.sanction+=a.sanction;e.expenditure+=a.expenditure;group.engineers.set(engineer,e);group.total=add(group.total,{...a,count:1});
   }
   const list=[...janpads.values()].sort((a,b)=>{
    const d=['मैहर','सतना','अन्य'].indexOf(a.district)-['मैहर','सतना','अन्य'].indexOf(b.district);
