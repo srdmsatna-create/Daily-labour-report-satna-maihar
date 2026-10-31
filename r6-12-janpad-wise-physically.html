@@ -104,7 +104,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   engineer:{title:'इंजीनियरवार',key:r=>norm(r.engineer)||'अनमैप्ड',name:k=>k},
   panchayat:{title:'ग्राम पंचायतवार',key:r=>norm(r.panchayat)||'अनमैप्ड',name:k=>k},
   category:{title:'कार्य श्रेणीवार',key:r=>{const x=norm(r.finalCategory||r.category||r.type);return x.toUpperCase().startsWith('IAY')||x.toUpperCase().startsWith('PMAY')||x.toUpperCase().includes('INDIRA AWAAS YOJANA')?'IAY / PMAY-G':x||'अन्य/अवर्गीकृत'},name:k=>k},
-  year:{title:'वर्षवार',key:r=>norm(r.fy||r.financialYear)||'वर्ष उपलब्ध नहीं',name:k=>k}
+  year:{title:'वर्षवार',key:r=>{const raw=norm(r.fy||r.financialYear);const full=raw.match(/(?:19|20)\\d{2}/);const short=raw.match(/\\b(\\d{2})\\b/);const startYear=full?Number(full[0]):short?2000+Number(short[1]):2025;return startYear>=2026?'FY 2026':'FY 2025 तक'},name:k=>k}
  };
  let source=[],allSource=[],active='janpad',ascending=true,districtFilter='all';
  function amounts(r){const sanction=num(r.sanction),nrega=num(r.nregaBooked),vbg=num(r.vbgBooked??r.booked),expenditure=num(r.overallBooked??(nrega+vbg));return {sanction,expenditure}}
