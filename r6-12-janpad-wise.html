@@ -41,7 +41,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
 <button data-view="year">वर्षवार</button>
 </div>
 <div class="wrap"><table><thead id="head"></thead><tbody id="rows"><tr><td colspan="7" class="status">R6.12 डेटा लोड हो रहा है…</td></tr></tbody></table></div>
-<p class="note" id="note">स्रोत: उपलब्ध सत्यापित MIS R6.12 ongoing-work विवरण। Physically Completed कार्य हटाए गए हैं; स्वीकृत लागत और व्यय ₹ लाख में हैं। व्यय प्रतिशत = व्यय ÷ स्वीकृत लागत × 100; शेष लागत = स्वीकृत लागत − व्यय।</p>
+<p class="note" id="note">स्रोत: उपलब्ध सत्यापित MIS R6.12 ongoing-work विवरण। Physically Completed कार्य जनपदवार/अन्य चालू योग से बाहर हैं और कार्य श्रेणीवार दृश्य में अलग कॉलम में दिखते हैं। स्वीकृत लागत और व्यय ₹ लाख में हैं। व्यय प्रतिशत = व्यय ÷ स्वीकृत लागत × 100; शेष लागत = स्वीकृत लागत − व्यय।</p>
 </main>
 <script src="ongoing-details.js?category=20261028"></script>
 <script>
@@ -66,23 +66,26 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   category:{title:'कार्य श्रेणीवार',key:r=>norm(r.finalCategory||r.category||r.type)||'अन्य/अवर्गीकृत',name:k=>k},
   year:{title:'वर्षवार',key:r=>norm(r.fy||r.financialYear)||'वर्ष उपलब्ध नहीं',name:k=>k}
  };
- let source=[],active='janpad';
+ let source=[],allSource=[],active='janpad';
  function amounts(r){const sanction=num(r.sanction),nrega=num(r.nregaBooked),vbg=num(r.vbgBooked??r.booked),expenditure=num(r.overallBooked??(nrega+vbg));return {sanction,expenditure}}
+ function isPhysicalDone(r){const status=norm(r.status??r.workStatus??r['Work Status']??'').toLowerCase();return r.physicallyCompleted===true||r.isPhysicallyCompleted===true||String(r.physicallyCompleted??r.isPhysicallyCompleted??'').toLowerCase()==='true'||status.includes('physically completed')||status.includes('physical completed')}
  function render(){
   const cfg=configs[active],groups=new Map();
-  for(const r of source){const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),count:0,sanction:0,expenditure:0});const g=groups.get(key),a=amounts(r);g.count++;g.sanction+=a.sanction;g.expenditure+=a.expenditure}
+  for(const r of source){const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),count:0,physicalCount:0,sanction:0,expenditure:0});const g=groups.get(key),a=amounts(r);g.count++;g.sanction+=a.sanction;g.expenditure+=a.expenditure}
+  if(active==='category')for(const r of allSource){if(!isPhysicalDone(r))continue;const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),count:0,physicalCount:0,sanction:0,expenditure:0});groups.get(key).physicalCount++}
   const list=[...groups.values()].sort((a,b)=>active==='janpad'?((a.district==='मैहर'?0:1)-(b.district==='मैहर'?0:1))||a.name.localeCompare(b.name,'hi'):a.name.localeCompare(b.name,'hi'));
-  const total=list.reduce((a,g)=>({count:a.count+g.count,sanction:a.sanction+g.sanction,expenditure:a.expenditure+g.expenditure}),{count:0,sanction:0,expenditure:0});
+  const total=list.reduce((a,g)=>({count:a.count+g.count,physicalCount:a.physicalCount+(g.physicalCount||0),sanction:a.sanction+g.sanction,expenditure:a.expenditure+g.expenditure}),{count:0,physicalCount:0,sanction:0,expenditure:0});
   const money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
-  document.getElementById('head').innerHTML='<tr><th>क्रमांक</th>'+(active==='janpad'?'<th>जिला</th>':'')+'<th>'+cfg.title+'</th><th>चल रहे कार्य</th><th>स्वीकृत लागत (₹ लाख)</th><th>व्यय (₹ लाख)</th><th>व्यय %</th><th>शेष लागत (₹ लाख)</th></tr>';
+  document.getElementById('head').innerHTML='<tr><th>क्रमांक</th>'+(active==='janpad'?'<th>जिला</th>':'')+'<th>'+cfg.title+'</th><th>चल रहे कार्य</th>'+(active==='category'?'<th>Physically Completed कार्य</th>':'')+'<th>स्वीकृत लागत (₹ लाख)</th><th>व्यय (₹ लाख)</th><th>व्यय %</th><th>शेष लागत (₹ लाख)</th></tr>';
   let html='',serial=0;
-  for(const g of list){serial++;html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td><td>'+fmt(g.count)+'</td><td class="money">'+fmt(money(g.sanction),2)+'</td><td class="money">'+fmt(money(g.expenditure),2)+'</td><td class="percent">'+fmt(pct(g),1)+'%</td><td class="money">'+fmt(money(g.sanction-g.expenditure),2)+'</td></tr>'}
-  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td><td>'+fmt(total.count)+'</td><td>'+fmt(money(total.sanction),2)+'</td><td>'+fmt(money(total.expenditure),2)+'</td><td>'+fmt(pct(total),1)+'%</td><td>'+fmt(money(total.sanction-total.expenditure),2)+'</td></tr>';
+  for(const g of list){serial++;html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td><td>'+fmt(g.count)+'</td>'+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+'<td class="money">'+fmt(money(g.sanction),2)+'</td><td class="money">'+fmt(money(g.expenditure),2)+'</td><td class="percent">'+fmt(pct(g),1)+'%</td><td class="money">'+fmt(money(g.sanction-g.expenditure),2)+'</td></tr>'
+  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td><td>'+fmt(total.count)+'</td>'+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+'<td>'+fmt(money(total.sanction),2)+'</td><td>'+fmt(money(total.expenditure),2)+'</td><td>'+fmt(pct(total),1)+'%</td><td>'+fmt(money(total.sanction-total.expenditure),2)+'</td></tr>';
   document.getElementById('rows').innerHTML=html;
   document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(total.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(total.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(total.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(total),1)+'%</strong></div>';
  }
  function load(){
   const raw=Array.isArray(window.ONGOING_DETAILS)?window.ONGOING_DETAILS:[];
+  allSource=raw;
   source=raw.filter(r=>{
    const status=norm(r.status??r.workStatus??r['Work Status']??'').toLowerCase();
    const physicalFlag=r.physicallyCompleted===true||r.isPhysicallyCompleted===true||String(r.physicallyCompleted??r.isPhysicallyCompleted??'').toLowerCase()==='true';
