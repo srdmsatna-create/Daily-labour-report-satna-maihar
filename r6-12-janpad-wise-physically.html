@@ -22,6 +22,12 @@ table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}.split-
 .engineer-wide th:nth-child(3),.engineer-wide td:nth-child(3){width:10%}
 .engineer-wide th:nth-child(4),.engineer-wide td:nth-child(4){width:23%}
 .engineer-wide td:nth-child(4){text-align:left}
+.panchayat-wide th:nth-child(1),.panchayat-wide td:nth-child(1){width:4%}
+.panchayat-wide th:nth-child(2),.panchayat-wide td:nth-child(2){width:6%}
+.panchayat-wide th:nth-child(3),.panchayat-wide td:nth-child(3){width:7%}
+.panchayat-wide th:nth-child(4),.panchayat-wide td:nth-child(4){width:12%}
+.panchayat-wide th:nth-child(5),.panchayat-wide td:nth-child(5){width:13%}
+.panchayat-wide td:nth-child(5){text-align:left}
 .sort-heading{padding:0;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;white-space:normal}
 .sort-heading span{display:block;margin-top:2px;font-size:10px;color:#ffe2a8}
 th,td{padding:6px 4px;border:1px solid #68869c;text-align:center;overflow-wrap:anywhere}
@@ -131,7 +137,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   document.getElementById('rows').innerHTML=html;
  }
  function render(){if(active==='engineer'){renderEngineer();return}
-  document.querySelector('.wrap table').classList.remove('engineer-wide');document.querySelector('.wrap table').classList.add('split-wide');
+  const viewTable=document.querySelector('.wrap table');viewTable.classList.remove('engineer-wide','panchayat-wide');viewTable.classList.add('split-wide');if(active==='panchayat')viewTable.classList.add('panchayat-wide');
   const cfg=configs[active],groups=new Map();
   const emptyBucket=()=>({count:0,sanction:0,expenditure:0});
   const emptyPair=()=>({pmayiay:emptyBucket(),nonpmay:emptyBucket()});
@@ -144,18 +150,23 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    return isHousing?{pmayiay:b,nonpmay:emptyBucket()}:{pmayiay:emptyBucket(),nonpmay:b};
   };
   for(const r of source){
-   const key=cfg.key(r);
-   if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),physicalCount:0,...emptyPair()});
+   const janRaw=norm(r.janpad)||'अनमैप्ड',janKey=janRaw.toUpperCase(),place=blockInfo.find(x=>x.key===janKey);
+   const janpadName=place?.name||janRaw,districtName=place?.district||norm(r.district)||'अन्य',panchayatName=norm(r.panchayat)||'अनमैप्ड';
+   const key=active==='panchayat'?districtName+'¦'+janKey+'¦'+panchayatName:cfg.key(r);
+   if(!groups.has(key))groups.set(key,{key,name:active==='panchayat'?panchayatName:cfg.name(key),district:active==='panchayat'?districtName:cfg.district?.(key),janpad:janpadName,subEngineers:new Set(),physicalCount:0,...emptyPair()});
    const g=groups.get(key),pair=recordPair(r);
+   if(active==='panchayat')g.subEngineers.add(norm(r.subEngineer||r.subEng||r.engineer)||'अनमैप्ड');
    Object.assign(g,addPair(g,pair));
   }
   if(active==='category')for(const r of allSource){if(!isPhysicalDone(r))continue;const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),physicalCount:0,...emptyPair()});groups.get(key).physicalCount++}
-  const list=[...groups.values()].sort((a,b)=>(active==='janpad'?((a.district==='मैहर'?0:1)-(b.district==='मैहर'?0:1))||a.name.localeCompare(b.name,'hi'):a.name.localeCompare(b.name,'hi'))*(ascending?1:-1));
+  const list=[...groups.values()].sort((a,b)=>(active==='janpad'?((a.district==='मैहर'?0:1)-(b.district==='मैहर'?0:1))||a.name.localeCompare(b.name,'hi'):a.name.localeCompare(b.name,'hi')||(active==='panchayat'?a.janpad.localeCompare(b.janpad,'hi'):0))*(ascending?1:-1));
   const total=list.reduce((a,g)=>({physicalCount:a.physicalCount+(g.physicalCount||0),...addPair(a,g)}),{physicalCount:0,...emptyPair()});
   const money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
   const sub='<th class="pmayg-head">PMAY-G</th><th class="nonpmay-head">NON PMAY</th>',totalHead='<th class="total-work-head">कुल चल रहे कार्य</th>';
   if(active==='category'){
    document.getElementById('head').innerHTML='<tr><th>क्रमांक</th><th>'+sortHeading(cfg.title)+'</th><th class="total-work-head">कुल चल रहे कार्य</th><th>Physically Completed कार्य</th><th>स्वीकृत लागत (₹ लाख)</th><th>व्यय (₹ लाख)</th><th>व्यय %</th><th>शेष लागत (₹ लाख)</th></tr>';
+  }else if(active==='panchayat'){
+   document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">'+sortHeading(cfg.title)+'</th><th rowspan="2">उपयंत्री</th><th colspan="3">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+totalHead+sub+sub+sub+sub+sub+'</tr>';
   }else{
    document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th>'+(active==='janpad'?'<th rowspan="2">जिला</th>':'')+'<th rowspan="2">'+sortHeading(cfg.title)+'</th><th colspan="3">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+totalHead+sub+sub+sub+sub+sub+'</tr>';
   }
@@ -169,10 +180,11 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    if(active==='janpad'&&currentDistrict&&g.district!==currentDistrict){html+=districtTotalRow(currentDistrict,districtTotal);districtTotal=emptyPair()}
    if(active==='janpad'){currentDistrict=g.district||'अन्य';districtTotal=addPair(districtTotal,g)}
    serial++;
-   html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td>'+workCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+financeCells(g)+'</tr>';
+   const identity=active==='panchayat'?'<td>'+g.district+'</td><td>'+g.janpad+'</td><td>'+g.name+'</td><td>'+[...g.subEngineers].sort((a,b)=>a.localeCompare(b,'hi')).join(', ')+'</td>':(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td>';
+   html+='<tr><td>'+serial+'</td>'+identity+workCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+financeCells(g)+'</tr>';
   }
   if(active==='janpad'&&currentDistrict)html+=districtTotalRow(currentDistrict,districtTotal);
-  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td>'+workCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+financeCells(total)+'</tr>';
+  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:active==='panchayat'?5:2)+'">महायोग</td>'+workCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+financeCells(total)+'</tr>';
   document.getElementById('rows').innerHTML=html;
   const overall=addPair(total.pmayiay,total.nonpmay);
   document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(overall),1)+'%</strong></div>';
