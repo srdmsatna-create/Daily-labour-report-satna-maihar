@@ -16,7 +16,7 @@ button,a{padding:8px 12px;border:1px solid #8aa7bd;border-radius:5px;background:
 .views{display:flex;gap:7px;overflow-x:auto;margin:12px 0;padding:2px}
 .views button{white-space:nowrap;background:#f2f6fb}.views button.active{background:#164a7b;color:#fff;border-color:#164a7b}
 .wrap{overflow:auto;border:1px solid #68869c;border-radius:5px}
-table{width:100%;min-width:800px;border-collapse:collapse}
+table{width:100%;min-width:800px;border-collapse:collapse}.engineer-wide{min-width:1700px}
 th,td{padding:9px 7px;border:1px solid #68869c;text-align:center}
 th{background:#164a7b;color:#fff;font-size:13px}td{font-size:15px;font-weight:700}
 td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.percent{font-weight:800;color:#087548}
@@ -25,7 +25,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
 .note{margin-top:11px;color:#6c4c23;font-size:12px;line-height:1.55}
 @media(max-width:760px){body{padding:7px}main{padding:10px}h1{font-size:21px}.summary{grid-template-columns:repeat(2,minmax(130px,1fr))}}
 @media(max-width:420px){.summary{grid-template-columns:1fr}}
-@media print{@page{size:A4 landscape;margin:8mm}body{padding:0;background:#fff}main{max-width:none;padding:0;border:0}nav,.views{display:none}h1{font-size:18px;margin:4px}.meta{font-size:10px;margin:3px}.summary{grid-template-columns:repeat(4,1fr);gap:4px;margin:5px 0}.card{padding:4px 6px}.card strong{font-size:13px}.wrap{overflow:visible}table{min-width:0}th,td{font-size:10px;padding:5px 3px}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+@media print{@page{size:A4 landscape;margin:8mm}body{padding:0;background:#fff}main{max-width:none;padding:0;border:0}nav,.views{display:none}h1{font-size:18px;margin:4px}.meta{font-size:10px;margin:3px}.summary{grid-template-columns:repeat(4,1fr);gap:4px;margin:5px 0}.card{padding:4px 6px}.card strong{font-size:13px}.wrap{overflow:visible}table{min-width:0}.engineer-wide{min-width:0}.engineer-wide th,.engineer-wide td{font-size:7px;padding:3px 1px}th,td{font-size:10px;padding:5px 3px}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 </style>
 </head>
 <body><main>
@@ -70,33 +70,49 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
  function amounts(r){const sanction=num(r.sanction),nrega=num(r.nregaBooked),vbg=num(r.vbgBooked??r.booked),expenditure=num(r.overallBooked??(nrega+vbg));return {sanction,expenditure}}
  function isPhysicalDone(r){const status=norm(r.status??r.workStatus??r['Work Status']??'').toLowerCase();return r.physicallyCompleted===true||r.isPhysicallyCompleted===true||String(r.physicallyCompleted??r.isPhysicallyCompleted??'').toLowerCase()==='true'||status.includes('physically completed')||status.includes('physical completed')}
  function renderEngineer(){
-  const janpads=new Map(),districtTotals=new Map();
-  const empty=()=>({count:0,sanction:0,expenditure:0});
-  const add=(a,b)=>({count:a.count+b.count,sanction:a.sanction+b.sanction,expenditure:a.expenditure+b.expenditure});
+  const janpads=new Map(),emptyBucket=()=>({count:0,sanction:0,expenditure:0});
+  const emptyPair=()=>({pmayiay:emptyBucket(),nonpmay:emptyBucket()});
+  const addBucket=(a,b)=>({count:a.count+b.count,sanction:a.sanction+b.sanction,expenditure:a.expenditure+b.expenditure});
+  const addPair=(a,b)=>({pmayiay:addBucket(a.pmayiay,b.pmayiay),nonpmay:addBucket(a.nonpmay,b.nonpmay)});
+  const recordPair=r=>{
+   const fields=[r.finalCategory,r.category,r.type,r.name,r.workName].map(norm).join(' ').toUpperCase();
+   const isHousing=/PMAY|IAY|INDIRA AWAAS|PRADHAN MANTRI AWAAS/.test(fields);
+   const b=emptyBucket(),a=amounts(r);b.count=1;b.sanction=a.sanction;b.expenditure=a.expenditure;
+   return isHousing?{pmayiay:b,nonpmay:emptyBucket()}:{pmayiay:emptyBucket(),nonpmay:b};
+  };
   for(const r of source){
    const janRaw=norm(r.janpad)||'अनमैप्ड',janKey=janRaw.toUpperCase();
    const place=blockInfo.find(x=>x.key===janKey),district=place?.district||norm(r.district)||'अन्य';
-   const janpad=place?.name||janRaw,engineer=norm(r.engineer)||'अनमैप्ड';
-   const key=district+'¦'+janKey;
-   if(!janpads.has(key))janpads.set(key,{district,janKey,janpad,engineers:new Map(),total:empty()});
-   const group=janpads.get(key),e=group.engineers.get(engineer)||{name:engineer,...empty()};
-   e.count++;const a=amounts(r);e.sanction+=a.sanction;e.expenditure+=a.expenditure;group.engineers.set(engineer,e);group.total=add(group.total,{...a,count:1});
+   const janpad=place?.name||janRaw,engineer=norm(r.engineer)||'अनमैप्ड',key=district+'¦'+janKey;
+   if(!janpads.has(key))janpads.set(key,{district,janKey,janpad,engineers:new Map(),total:emptyPair()});
+   const group=janpads.get(key),vals=recordPair(r);
+   if(!group.engineers.has(engineer))group.engineers.set(engineer,{name:engineer,...emptyPair()});
+   group.engineers.set(engineer,addPair(group.engineers.get(engineer),vals));
+   group.total=addPair(group.total,vals);
   }
   const list=[...janpads.values()].sort((a,b)=>{
    const d=['मैहर','सतना','अन्य'].indexOf(a.district)-['मैहर','सतना','अन्य'].indexOf(b.district);
    return d||blockInfo.findIndex(x=>x.key===a.janKey)-blockInfo.findIndex(x=>x.key===b.janKey)||a.janpad.localeCompare(b.janpad,'hi');
   });
-  const total=list.reduce((a,g)=>add(a,g.total),empty()),money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
-  document.getElementById('head').innerHTML='<tr><th>क्रमांक</th><th>जिला</th><th>जनपद</th><th>इंजीनियरवार</th><th>चल रहे कार्य</th><th>स्वीकृत लागत (₹ लाख)</th><th>व्यय (₹ लाख)</th><th>व्यय %</th><th>शेष लागत (₹ लाख)</th></tr>';
-  let html='',serial=0,currentDistrict='',districtTotal=empty();
-  const cells=g=>'<td>'+fmt(g.count)+'</td><td class="money">'+fmt(money(g.sanction),2)+'</td><td class="money">'+fmt(money(g.expenditure),2)+'</td><td class="percent">'+fmt(pct(g),1)+'%</td><td class="money">'+fmt(money(g.sanction-g.expenditure),2)+'</td>';
+  const total=list.reduce((a,g)=>addPair(a,g.total),emptyPair()),money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
+  const table=document.querySelector('.wrap table');table.classList.add('engineer-wide');
+  const sub='<th>PMAY+IAY</th><th>NON PMAY</th>';
+  document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">इंजीनियर</th><th colspan="2">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+sub+sub+sub+sub+sub+'</tr>';
+  const cells=g=>{
+   const pair=(a,b,fn)=>'<td>'+fn(a)+'</td><td>'+fn(b)+'</td>';
+   return pair(g.pmayiay,g.nonpmay,x=>fmt(x.count))
+    +pair(g.pmayiay,g.nonpmay,x=>fmt(money(x.sanction),2))
+    +pair(g.pmayiay,g.nonpmay,x=>fmt(money(x.expenditure),2))
+    +pair(g.pmayiay,g.nonpmay,x=>fmt(pct(x),1)+'%')
+    +pair(g.pmayiay,g.nonpmay,x=>fmt(money(x.sanction-x.expenditure),2));
+  };
+  let html='',serial=0,currentDistrict='',districtTotal=emptyPair();
   for(const group of list){
-   if(currentDistrict&&group.district!==currentDistrict){html+='<tr class="district-total"><td colspan="4">जिला '+currentDistrict+' — योग</td>'+cells(districtTotal)+'</tr>';districtTotal=empty()}
+   if(currentDistrict&&group.district!==currentDistrict){html+='<tr class="district-total"><td colspan="4">जिला '+currentDistrict+' — योग</td>'+cells(districtTotal)+'</tr>';districtTotal=emptyPair()}
    currentDistrict=group.district;
-   const engineers=[...group.engineers.values()].sort((a,b)=>a.name.localeCompare(b.name,'hi'));
-   for(const e of engineers){serial++;html+='<tr class="engineer-row"><td>'+serial+'</td><td>'+group.district+'</td><td>'+group.janpad+'</td><td>'+e.name+'</td>'+cells(e)+'</tr>'}
+   for(const e of [...group.engineers.values()].sort((a,b)=>a.name.localeCompare(b.name,'hi'))){serial++;html+='<tr class="engineer-row"><td>'+serial+'</td><td>'+group.district+'</td><td>'+group.janpad+'</td><td>'+e.name+'</td>'+cells(e)+'</tr>'}
    html+='<tr class="janpad-total"><td colspan="4">जनपद '+group.janpad+' — योग</td>'+cells(group.total)+'</tr>';
-   districtTotal=add(districtTotal,group.total);
+   districtTotal=addPair(districtTotal,group.total);
   }
   if(currentDistrict)html+='<tr class="district-total"><td colspan="4">जिला '+currentDistrict+' — योग</td>'+cells(districtTotal)+'</tr>';
   html+='<tr class="grand"><td colspan="4">महायोग</td>'+cells(total)+'</tr>';
