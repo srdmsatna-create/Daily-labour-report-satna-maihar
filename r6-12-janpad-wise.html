@@ -63,7 +63,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   janpad:{title:'जनपदवार',key:r=>norm(r.janpad)||'अन्य/अमैप्ड',name:k=>{const b=blockInfo.find(x=>x.key===k.toUpperCase());return b?b.name:k},district:k=>blockInfo.find(x=>x.key===k.toUpperCase())?.district||'अन्य'},
   engineer:{title:'इंजीनियरवार',key:r=>norm(r.engineer)||'अनमैप्ड',name:k=>k},
   panchayat:{title:'ग्राम पंचायतवार',key:r=>norm(r.panchayat)||'अनमैप्ड',name:k=>k},
-  category:{title:'कार्य श्रेणीवार',key:r=>{const x=norm(r.finalCategory||r.category||r.type);return /^(IAY|PMAY)(?:\\b|[-\\s])?/i.test(x)||/INDIRA AWAAS YOJANA/i.test(x)?'IAY / PMAY-G':x||'अन्य/अवर्गीकृत'},name:k=>k},
+  category:{title:'कार्य श्रेणीवार',key:r=>{const x=norm(r.finalCategory||r.category||r.type);return x.toUpperCase().startsWith('IAY')||x.toUpperCase().startsWith('PMAY')||x.toUpperCase().includes('INDIRA AWAAS YOJANA')?'IAY / PMAY-G':x||'अन्य/अवर्गीकृत'},name:k=>k},
   year:{title:'वर्षवार',key:r=>norm(r.fy||r.financialYear)||'वर्ष उपलब्ध नहीं',name:k=>k}
  };
  let source=[],allSource=[],active='janpad';
