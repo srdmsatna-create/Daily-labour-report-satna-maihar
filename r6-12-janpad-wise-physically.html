@@ -150,7 +150,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   const list=[...groups.values()].sort((a,b)=>(active==='janpad'?((a.district==='मैहर'?0:1)-(b.district==='मैहर'?0:1))||a.name.localeCompare(b.name,'hi'):a.name.localeCompare(b.name,'hi'))*(ascending?1:-1));
   const total=list.reduce((a,g)=>({physicalCount:a.physicalCount+(g.physicalCount||0),...addPair(a,g)}),{physicalCount:0,...emptyPair()});
   const money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
-  const sub='<th class="pmayg-head">PMAY-G</th><th class="nonpmay-head">NON PMAY</th>',totalHead='<th class="total-work-head" rowspan="2">कुल चल रहे कार्य</th>';
+  const sub='<th class="pmayg-head">PMAY-G</th><th class="nonpmay-head">NON PMAY</th>',totalHead='<th class="total-work-head">कुल चल रहे कार्य</th>';
   if(active==='category'){
    document.getElementById('head').innerHTML='<tr><th>क्रमांक</th><th>'+cfg.title+'</th><th class="total-work-head">कुल चल रहे कार्य</th><th>Physically Completed कार्य</th><th>स्वीकृत लागत (₹ लाख)</th><th>व्यय (₹ लाख)</th><th>व्यय %</th><th>शेष लागत (₹ लाख)</th></tr>';
   }else{
