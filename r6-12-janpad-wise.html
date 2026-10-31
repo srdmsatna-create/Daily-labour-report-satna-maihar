@@ -41,7 +41,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
 <button data-view="year">वर्षवार</button>
 </div>
 <div class="wrap"><table><thead id="head"></thead><tbody id="rows"><tr><td colspan="7" class="status">R6.12 डेटा लोड हो रहा है…</td></tr></tbody></table></div>
-<p class="note" id="note">स्रोत: उपलब्ध सत्यापित MIS R6.12 ongoing-work विवरण। स्वीकृत लागत और व्यय ₹ लाख में हैं। व्यय प्रतिशत = व्यय ÷ स्वीकृत लागत × 100; शेष लागत = स्वीकृत लागत − व्यय।</p>
+<p class="note" id="note">स्रोत: उपलब्ध सत्यापित MIS R6.12 ongoing-work विवरण। Physically Completed कार्य हटाए गए हैं; स्वीकृत लागत और व्यय ₹ लाख में हैं। व्यय प्रतिशत = व्यय ÷ स्वीकृत लागत × 100; शेष लागत = स्वीकृत लागत − व्यय।</p>
 </main>
 <script src="ongoing-details.js?category=20261028"></script>
 <script>
@@ -82,7 +82,12 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(total.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(total.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(total.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(total),1)+'%</strong></div>';
  }
  function load(){
-  source=Array.isArray(window.ONGOING_DETAILS)?window.ONGOING_DETAILS:[];
+  const raw=Array.isArray(window.ONGOING_DETAILS)?window.ONGOING_DETAILS:[];
+  source=raw.filter(r=>{
+   const status=norm(r.status??r.workStatus??r['Work Status']??'').toLowerCase();
+   const physicalFlag=r.physicallyCompleted===true||r.isPhysicallyCompleted===true||String(r.physicallyCompleted??r.isPhysicallyCompleted??'').toLowerCase()==='true';
+   return !physicalFlag&&!status.includes('physically completed')&&!status.includes('physical completed');
+  });
   if(!source.length){document.getElementById('meta').textContent='R6.12 डेटा उपलब्ध नहीं हुआ।';document.getElementById('rows').innerHTML='<tr><td colspan="8" class="status">R6.12 डेटा फ़ाइल लोड नहीं हुई।</td></tr>';return}
   document.getElementById('meta').textContent='सत्यापित R6.12 ongoing-work विवरण • '+fmt(source.length)+' कार्य • रिपोर्ट समय: '+new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
   render();
