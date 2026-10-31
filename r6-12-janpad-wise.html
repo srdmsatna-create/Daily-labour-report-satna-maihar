@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MIS R6.12 — जनपदवार व्यय रिपोर्ट</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:16px;background:#eff4f8;color:#193b57;font-family:Arial,"Noto Sans Devanagari",sans-serif}
+main{max-width:1450px;margin:auto;padding:18px;background:#fff;border:1px solid #c8d6e2;border-radius:9px}
+h1{margin:10px 0;color:#087548;text-align:center;font-size:25px}
+.meta{text-align:center;color:#526a7b;font-size:13px;line-height:1.7;margin:6px 0 14px}
+nav{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button,a{padding:8px 12px;border:1px solid #8aa7bd;border-radius:5px;background:#eef6fc;color:#164a7b;font-size:14px;font-weight:700;text-decoration:none;cursor:pointer}
+.summary{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:9px;margin:14px 0}
+.card{padding:10px 12px;border:1px solid #bbcad8;border-left:5px solid #176da6;border-radius:7px;background:#f8fbfe}
+.card small{display:block;color:#526a7b;font-weight:700}.card strong{display:block;margin-top:5px;color:#153c5c;font-size:19px}
+.wrap{overflow:auto;border:1px solid #68869c;border-radius:5px}
+table{width:100%;min-width:950px;border-collapse:collapse}
+th,td{padding:9px 7px;border:1px solid #68869c;text-align:center}
+th{background:#164a7b;color:#fff;font-size:13px}td{font-size:16px;font-weight:700}
+td:nth-child(2),td:nth-child(3){text-align:left;white-space:nowrap}
+.money{white-space:nowrap}.percent{font-weight:800;color:#087548}
+.district-total td{background:#dcebdc;color:#164a35;font-weight:800}.grand td{background:#164a7b;color:#fff;font-weight:800}
+.status{padding:14px;text-align:center;color:#526a7b;font-weight:700}
+.note{margin-top:11px;color:#6c4c23;font-size:12px;line-height:1.55}
+@media(max-width:760px){body{padding:7px}main{padding:10px}h1{font-size:21px}.summary{grid-template-columns:repeat(2,minmax(130px,1fr))}}
+@media(max-width:420px){.summary{grid-template-columns:1fr}}
+@media print{@page{size:A4 landscape;margin:8mm}body{padding:0;background:#fff}main{max-width:none;padding:0;border:0}nav{display:none}h1{font-size:18px;margin:4px}.meta{font-size:10px;margin:3px}.summary{grid-template-columns:repeat(4,1fr);gap:4px;margin:5px 0}.card{padding:4px 6px}.card strong{font-size:13px}.wrap{overflow:visible}table{min-width:0}th,td{font-size:10px;padding:5px 3px}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style>
+</head>
+<body><main>
+<nav><a href="index.html">← मुख्य डैशबोर्ड</a><button id="print">Print / PDF</button></nav>
+<h1>MIS रिपोर्ट R6.12 — जनपदवार कार्य एवं व्यय</h1>
+<p class="meta" id="meta">सत्यापित R6.12 कार्य विवरण लोड हो रहा है…</p>
+<div class="summary" id="summary"></div>
+<div class="wrap"><table><thead><tr><th>क्रमांक</th><th>जिला</th><th>जनपद</th><th>चल रहे कार्य</th><th>स्वीकृत लागत (₹ करोड़)</th><th>व्यय (₹ करोड़)</th><th>व्यय %</th><th>शेष लागत (₹ करोड़)</th></tr></thead><tbody id="rows"><tr><td colspan="8" class="status">R6.12 डेटा लोड हो रहा है…</td></tr></tbody></table></div>
+<p class="note">स्रोत: डैशबोर्ड में उपलब्ध सत्यापित MIS R6.12 ongoing-work विवरण। व्यय प्रतिशत = कुल व्यय ÷ स्वीकृत लागत × 100; शेष लागत = स्वीकृत लागत − कुल व्यय। राशि ₹ करोड़ में दिखाई गई है।</p>
+</main>
+<script>
+(function(){
+ const blockInfo=[
+  {key:'AMARPATAN',name:'अमरपाटन',district:'मैहर'},
+  {key:'MAIHAR',name:'मैहर',district:'मैहर'},
+  {key:'RAMNAGAR',name:'रामनगर',district:'मैहर'},
+  {key:'MAJHGAWAN',name:'मझगवां',district:'सतना'},
+  {key:'NAGOD',name:'नागौद',district:'सतना'},
+  {key:'RAMPUR BAGHELAN',name:'रामपुर बघेलान',district:'सतना'},
+  {key:'SATNA',name:'सोहावल',district:'सतना'},
+  {key:'UNCHAHARA',name:'उचेहरा',district:'सतना'}
+ ];
+ const fmt=(n,d=0)=>Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
+ const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0};
+ function aggregate(){
+  const source=Array.isArray(window.ONGOING_DETAILS)?window.ONGOING_DETAILS:[];
+  if(!source.length){document.getElementById('rows').innerHTML='<tr><td colspan="8" class="status">R6.12 डेटा उपलब्ध नहीं हुआ। कृपया कुछ देर बाद पेज रीफ्रेश करें।</td></tr>';return}
+  const map=new Map(blockInfo.map(b=>[b.key,{...b,count:0,sanction:0,expenditure:0}]));
+  for(const r of source){
+   const key=String(r.janpad||'').trim().toUpperCase().replace(/\\s+/g,' ');
+   const item=map.get(key);if(!item)continue;
+   item.count++;
+   const sanction=num(r.sanction);
+   const nrega=num(r.nregaBooked);
+   const vbg=num(r.vbgBooked ?? r.booked);
+   const expenditure=num(r.overallBooked ?? (nrega+vbg));
+   item.sanction+=sanction;
+   item.expenditure+=expenditure;
+  }
+  const rows=blockInfo.map(b=>map.get(b.key));
+  const total=rows.reduce((a,r)=>({count:a.count+r.count,sanction:a.sanction+r.sanction,expenditure:a.expenditure+r.expenditure}),{count:0,sanction:0,expenditure:0});
+  const pct=r=>r.sanction?100*r.expenditure/r.sanction:0;
+  const money=n=>n/1e7;
+  let html='',serial=0;
+  for(const district of ['मैहर','सतना']){
+   const list=rows.filter(r=>r.district===district);
+   for(const r of list){serial++;html+='<tr><td>'+serial+'</td><td>'+r.district+'</td><td>'+r.name+'</td><td>'+fmt(r.count)+'</td><td class="money">'+fmt(money(r.sanction),2)+'</td><td class="money">'+fmt(money(r.expenditure),2)+'</td><td class="percent">'+fmt(pct(r),1)+'%</td><td class="money">'+fmt(money(r.sanction-r.expenditure),2)+'</td></tr>'}
+   const sub=list.reduce((a,r)=>({count:a.count+r.count,sanction:a.sanction+r.sanction,expenditure:a.expenditure+r.expenditure}),{count:0,sanction:0,expenditure:0});
+   html+='<tr class="district-total"><td colspan="3">जिला '+district+' — योग</td><td>'+fmt(sub.count)+'</td><td>'+fmt(money(sub.sanction),2)+'</td><td>'+fmt(money(sub.expenditure),2)+'</td><td>'+fmt(pct(sub),1)+'%</td><td>'+fmt(money(sub.sanction-sub.expenditure),2)+'</td></tr>';
+  }
+  html+='<tr class="grand"><td colspan="3">महायोग</td><td>'+fmt(total.count)+'</td><td>'+fmt(money(total.sanction),2)+'</td><td>'+fmt(money(total.expenditure),2)+'</td><td>'+fmt(pct(total),1)+'%</td><td>'+fmt(money(total.sanction-total.expenditure),2)+'</td></tr>';
+  document.getElementById('rows').innerHTML=html;
+  document.getElementById('summary').innerHTML='<div class="card"><small>जनपद</small><strong>8</strong></div><div class="card"><small>चल रहे कार्य</small><strong>'+fmt(total.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(total.sanction),2) Cr</strong></div><div class="card"><small>कुल व्यय</small><strong>₹ '+fmt(money(total.expenditure),2)+' Cr</strong></div>';
+  document.getElementById('meta').textContent='सत्यापित R6.12 ongoing-work विवरण • रिपोर्ट देखे जाने का समय: '+new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
+ }
+ const s=document.createElement('script');
+ s.src='ongoing-details.js?category=20261028';
+ s.onload=aggregate;
+ s.onerror=()=>{document.getElementById('meta').textContent='R6.12 डेटा लोड नहीं हुआ।';document.getElementById('rows').innerHTML='<tr><td colspan="8" class="status">डेटा फाइल तक पहुँच नहीं हो सकी।</td></tr>'};
+ document.head.appendChild(s);
+ document.getElementById('print').addEventListener('click',()=>window.print());
+})();
+</script></body></html>
