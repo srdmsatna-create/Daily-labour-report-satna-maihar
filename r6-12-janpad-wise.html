@@ -54,7 +54,7 @@ td:nth-child(2),td:nth-child(3){text-align:left;white-space:nowrap}
   if(!source.length){document.getElementById('rows').innerHTML='<tr><td colspan="8" class="status">R6.12 डेटा उपलब्ध नहीं हुआ। कृपया कुछ देर बाद पेज रीफ्रेश करें।</td></tr>';return}
   const map=new Map(blockInfo.map(b=>[b.key,{...b,count:0,sanction:0,expenditure:0}]));
   for(const r of source){
-   const key=String(r.janpad||'').trim().toUpperCase().replace(/\\s+/g,' ');
+   const key=String(r.janpad||'').trim().toUpperCase().replace(/\s+/g,' ');
    const item=map.get(key);if(!item)continue;
    item.count++;
    const sanction=num(r.sanction);
