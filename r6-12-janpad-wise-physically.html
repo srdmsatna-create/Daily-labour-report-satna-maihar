@@ -25,11 +25,19 @@ table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}.split-
 .engineer-wide td:nth-child(4){text-align:left}
 .engineer-wide{min-width:1250px}
 .engineer-wide td:nth-child(n+5){white-space:nowrap}
-.panchayat-wide th:nth-child(1),.panchayat-wide td:nth-child(1){width:4%}
-.panchayat-wide th:nth-child(2),.panchayat-wide td:nth-child(2){width:5%}
-.panchayat-wide th:nth-child(3),.panchayat-wide td:nth-child(3){width:13%}
+.panchayat-wide th:nth-child(1),.panchayat-wide td:nth-child(1){width:42px}
+.panchayat-wide th:nth-child(2),.panchayat-wide td:nth-child(2){width:4%}
+.panchayat-wide th:nth-child(3),.panchayat-wide td:nth-child(3){width:9%}
 .panchayat-wide th:nth-child(4),.panchayat-wide td:nth-child(4){width:12%}
 .panchayat-wide th:nth-child(5),.panchayat-wide td:nth-child(5){width:13%}
+.panchayat-wide th:nth-child(n+6),.panchayat-wide td:nth-child(n+6){width:5.6%}
+.panchayat-wide td:nth-child(n+6){font-size:14px;white-space:nowrap}
+.panchayat-wide td:nth-child(3){font-size:13px}
+.panchayat-wide td:nth-child(4),.panchayat-wide td:nth-child(5){font-size:13px;overflow-wrap:anywhere}
+.panchayat-wide .subengineer-heading td{background:#164a7b;color:#fff;font-weight:900;text-align:left}
+.panchayat-wide .subengineer-total td{background:#fff1ce;color:#71420a;font-weight:900;border-top:1px solid #d5a34c}
+.panchayat-wide .subengineer-total td.pmayg-cell{background:#f3d895;color:#70420a}
+.panchayat-wide .subengineer-total td.nonpmay-cell{background:#d9efe8;color:#155647}
  .janpad-wide th:nth-child(2),.janpad-wide td:nth-child(2){width:5%}
 .janpad-wide th:nth-child(3),.janpad-wide td:nth-child(3){width:10%}
 .janpad-wide td:nth-child(3){white-space:nowrap;font-size:14px}
@@ -149,7 +157,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
  }
  function render(){if(active==='engineer'){renderEngineer();return}
   const viewTable=document.querySelector('.wrap table');viewTable.classList.remove('engineer-wide','panchayat-wide','janpad-wide');viewTable.classList.add('split-wide');if(active==='panchayat')viewTable.classList.add('panchayat-wide');if(active==='janpad')viewTable.classList.add('janpad-wide');
-  const cfg=configs[active],groups=new Map();
+  const cfg=configs[active],groups=new Map(),subEngineerTotals=new Map();
   const emptyBucket=()=>({count:0,sanction:0,expenditure:0});
   const emptyPair=()=>({pmayiay:emptyBucket(),nonpmay:emptyBucket()});
   const addBucket=(a,b)=>({count:a.count+b.count,sanction:a.sanction+b.sanction,expenditure:a.expenditure+b.expenditure});
@@ -166,7 +174,14 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    const key=active==='panchayat'?districtName+'¦'+janKey+'¦'+panchayatName:cfg.key(r);
    if(!groups.has(key))groups.set(key,{key,name:active==='panchayat'?panchayatName:cfg.name(key),district:active==='panchayat'?districtName:cfg.district?.(key),janpad:janpadName,subEngineers:new Set(),physicalCount:0,...emptyPair()});
    const g=groups.get(key),pair=recordPair(r);
-   if(active==='panchayat')g.subEngineers.add(norm(r.subEngineer||r.subEng||r.engineer)||'अनमैप्ड');
+   if(active==='panchayat'){
+    const sub=norm(r.subEngineer||r.subEng||r.engineer)||'अनमैप्ड';
+    g.subEngineers.add(sub);
+    const subKey=districtName+'¦'+janKey+'¦'+sub.toUpperCase();
+    if(!subEngineerTotals.has(subKey))subEngineerTotals.set(subKey,{district:districtName,janpad:janpadName,engineer:sub,...emptyPair()});
+    const subGroup=subEngineerTotals.get(subKey);
+    Object.assign(subGroup,addPair(subGroup,pair));
+   }
    Object.assign(g,addPair(g,pair));
   }
   if(active==='category')for(const r of allSource){if(!isPhysicalDone(r))continue;const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),physicalCount:0,...emptyPair()});groups.get(key).physicalCount++}
@@ -196,6 +211,11 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    html+='<tr><td>'+serial+'</td>'+identity+workCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+financeCells(g)+'</tr>';
   }
   if(active==='janpad'&&currentDistrict)html+=districtTotalRow(currentDistrict,districtTotal);
+  if(active==='panchayat'&&subEngineerTotals.size){
+   html+='<tr class="subengineer-heading"><td colspan="16">उपयंत्रीवार कुल — जनपद और उपयंत्री के अनुसार</td></tr>';
+   const subTotals=[...subEngineerTotals.values()].sort((a,b)=>(a.district.localeCompare(b.district,'hi')||a.janpad.localeCompare(b.janpad,'hi')||a.engineer.localeCompare(b.engineer,'hi'))*(ascending?1:-1));
+   for(const g of subTotals)html+='<tr class="subengineer-total"><td colspan="5">जनपद '+g.janpad+' • उपयंत्री '+g.engineer+' — योग</td>'+workCells(g)+financeCells(g)+'</tr>';
+  }
   html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:active==='panchayat'?5:2)+'">महायोग</td>'+workCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+financeCells(total)+'</tr>';
   document.getElementById('rows').innerHTML=html;
   const overall=addPair(total.pmayiay,total.nonpmay);
