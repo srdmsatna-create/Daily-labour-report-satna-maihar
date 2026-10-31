@@ -87,7 +87,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
    if(!janpads.has(key))janpads.set(key,{district,janKey,janpad,engineers:new Map(),total:emptyPair()});
    const group=janpads.get(key),vals=recordPair(r);
    if(!group.engineers.has(engineer))group.engineers.set(engineer,{name:engineer,...emptyPair()});
-   group.engineers.set(engineer,addPair(group.engineers.get(engineer),vals));
+   group.engineers.set(engineer,{name:engineer,...addPair(group.engineers.get(engineer),vals)});
    group.total=addPair(group.total,vals);
   }
   const list=[...janpads.values()].sort((a,b)=>{
@@ -119,6 +119,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   document.getElementById('rows').innerHTML=html;
  }
  function render(){if(active==='engineer'){renderEngineer();return}
+  document.querySelector('.wrap table').classList.remove('engineer-wide');
 
   const cfg=configs[active],groups=new Map();
   for(const r of source){const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),count:0,physicalCount:0,sanction:0,expenditure:0});const g=groups.get(key),a=amounts(r);g.count++;g.sanction+=a.sanction;g.expenditure+=a.expenditure}
