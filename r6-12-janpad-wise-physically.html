@@ -30,6 +30,7 @@ table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}.split-
 .panchayat-wide td:nth-child(5){text-align:left}
 .sort-heading{padding:0;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer;white-space:normal}
 .sort-heading span{display:block;margin-top:2px;font-size:10px;color:#ffe2a8}
+table th:first-child,table td:first-child{width:50px!important;min-width:50px}
 th,td{padding:6px 4px;border:1px solid #68869c;text-align:center;overflow-wrap:anywhere}
 th{background:#164a7b;color:#fff;font-size:11px}td{font-size:16px;font-weight:800}
 td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money{white-space:nowrap}.percent{font-weight:800;color:#087548}
@@ -76,6 +77,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
  ];
  const fmt=(n,d=0)=>Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
  const sortHeading=label=>'<button type="button" class="sort-heading" aria-label="आरोही-अवरोही क्रम बदलें">'+label+' <span>'+(ascending?'▲ आरोही':'▼ अवरोही')+'</span></button>';
+ const addHeadingControls=()=>document.querySelectorAll('#head th').forEach(th=>{if(th.querySelector('.sort-heading'))return;const label=th.innerHTML;th.innerHTML='<button type="button" class="sort-heading" aria-label="आरोही-अवरोही क्रम बदलें">'+label+' <span>'+(ascending?'▲ आरोही':'▼ अवरोही')+'</span></button>'});
  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0};
  const norm=v=>String(v??'').trim().replace(/\s+/g,' ');
  const configs={
@@ -117,6 +119,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   const table=document.querySelector('.wrap table');table.classList.remove('split-wide');table.classList.add('engineer-wide');
   const sub='<th class="pmayg-head">PMAY-G</th><th class="nonpmay-head">NON PMAY</th>',totalHead='<th class="total-work-head">कुल चल रहे कार्य</th>';
   document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">'+sortHeading('इंजीनियर')+'</th><th colspan="3">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+totalHead+sub+sub+sub+sub+sub+'</tr>';
+  addHeadingControls();
   const pair=(g,fn)=>'<td class="pmayg-cell">'+fn(g.pmayiay)+'</td><td class="nonpmay-cell">'+fn(g.nonpmay)+'</td>';
   const cells=g=>{
    const all=addBucket(g.pmayiay,g.nonpmay),rate=all.sanction?100*all.expenditure/all.sanction:0;
@@ -170,6 +173,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   }else{
    document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th>'+(active==='janpad'?'<th rowspan="2">जिला</th>':'')+'<th rowspan="2">'+sortHeading(cfg.title)+'</th><th colspan="3">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+totalHead+sub+sub+sub+sub+sub+'</tr>';
   }
+  addHeadingControls();
   const combined=g=>addBucket(g.pmayiay,g.nonpmay);
   const pairCells=(g,fn)=>'<td class="pmayg-cell">'+fn(g.pmayiay)+'</td><td class="nonpmay-cell">'+fn(g.nonpmay)+'</td>';
   const workCells=g=>'<td class="total-work-cell">'+fmt(combined(g).count)+'</td>'+(active==='category'?'':pairCells(g,b=>fmt(b.count)));
