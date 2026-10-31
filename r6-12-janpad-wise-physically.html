@@ -51,6 +51,7 @@ th,td{padding:6px 4px;border:1px solid #68869c;text-align:center;overflow-wrap:a
 th{background:#164a7b;color:#fff;font-size:11px}td{font-size:16px;font-weight:800}
 td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money{white-space:nowrap}.percent{font-weight:800;color:#087548}
 .district-total td{background:#dcebdc;color:#164a35;font-weight:800}.grand td{background:#164a7b;color:#fff;font-weight:800}
+.year-summary td{font-weight:900;border-top:2px solid #72b7a4}.year-summary.previous-fy td{background:#e3f0dc;color:#285b34}.year-summary.current-fy td{background:#d9efe8;color:#155647}
  .engineer-row td{background:#fff;color:#193b57}.janpad-total td{background:#e3f3e8;color:#155637;font-weight:900}.district-total td{background:#d9efe8;color:#155647;font-weight:900;border-top:2px solid #72b7a4}.grand td{background:#163f69;color:#fff;font-weight:900;font-size:16px;border-top:3px solid #e8a34d}.status{padding:14px;text-align:center;color:#526a7b;font-weight:700}
 .note{margin-top:11px;color:#6c4c23;font-size:12px;line-height:1.55}.pmayg-head{background:#0f766e!important;color:#fff!important}.pmayg-cell{background:#e4f3ef;color:#155e53}.engineer-row td.pmayg-cell{background:#e4f3ef;color:#155e53}.district-total td.pmayg-cell,.janpad-total td.pmayg-cell{background:#c8e7df;color:#104d43}.grand td.pmayg-cell{background:#0f766e;color:#fff}.nonpmay-cell{background:#fff;color:#193b57}.district-total td.nonpmay-cell,.janpad-total td.nonpmay-cell{background:#d9efe8;color:#155647} .grand td.nonpmay-cell{background:#163f69;color:#fff}
 .total-work-head{background:#b66a13!important;color:#fff!important}
@@ -104,7 +105,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   engineer:{title:'इंजीनियरवार',key:r=>norm(r.engineer)||'अनमैप्ड',name:k=>k},
   panchayat:{title:'ग्राम पंचायतवार',key:r=>norm(r.panchayat)||'अनमैप्ड',name:k=>k},
   category:{title:'कार्य श्रेणीवार',key:r=>{const x=norm(r.finalCategory||r.category||r.type);return x.toUpperCase().startsWith('IAY')||x.toUpperCase().startsWith('PMAY')||x.toUpperCase().includes('INDIRA AWAAS YOJANA')?'IAY / PMAY-G':x||'अन्य/अवर्गीकृत'},name:k=>k},
-  year:{title:'वर्षवार',key:r=>{const raw=norm(r.fy||r.financialYear);const full=raw.match(/(?:19|20)[0-9]{2}/);const short=raw.match(/(^|[^0-9])([0-9]{2})(?=$|[^0-9])/);const startYear=full?Number(full[0]):short?2000+Number(short[2]):2025;return startYear>=2026?'FY 2026':'FY 2025 तक'},name:k=>k}
+  year:{title:'वर्षवार',key:r=>norm(r.fy||r.financialYear)||'वर्ष उपलब्ध नहीं',name:k=>k}
  };
  let source=[],allSource=[],active='janpad',ascending=true,districtFilter='all';
  function amounts(r){const sanction=num(r.sanction),nrega=num(r.nregaBooked),vbg=num(r.vbgBooked??r.booked),expenditure=num(r.overallBooked??(nrega+vbg));return {sanction,expenditure}}
@@ -228,6 +229,13 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
    }
   }
   if(active==='janpad'&&currentDistrict)html+=districtTotalRow(currentDistrict,districtTotal);
+  if(active==='year'){
+   const fiscalStart=label=>{const m=String(label).match(/(?:19|20)[0-9]{2}/);return m?Number(m[0]):0};
+   const priorYears=list.filter(g=>fiscalStart(g.name)<=2025).reduce((a,g)=>addPair(a,g),emptyPair());
+   const currentYear=list.filter(g=>fiscalStart(g.name)===2026).reduce((a,g)=>addPair(a,g),emptyPair());
+   html+='<tr class="year-summary previous-fy"><td colspan="2">FY 2025 तक — योग</td>'+workCells(priorYears)+financeCells(priorYears)+'</tr>';
+   html+='<tr class="year-summary current-fy"><td colspan="2">FY 2026 — योग</td>'+workCells(currentYear)+financeCells(currentYear)+'</tr>';
+  }
   html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:active==='panchayat'?5:2)+'">महायोग</td>'+workCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+financeCells(total)+'</tr>';
   document.getElementById('rows').innerHTML=html;
   const overall=addPair(total.pmayiay,total.nonpmay);
