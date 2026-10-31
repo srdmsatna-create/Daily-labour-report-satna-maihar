@@ -19,8 +19,9 @@ button,a{padding:8px 12px;border:1px solid #8aa7bd;border-radius:5px;background:
 table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}.split-wide,.engineer-wide{min-width:0}
 .engineer-wide th:nth-child(1),.engineer-wide td:nth-child(1){width:50px}
 .engineer-wide th:nth-child(2),.engineer-wide td:nth-child(2){width:5%}
-.engineer-wide th:nth-child(3),.engineer-wide td:nth-child(3){width:6%}
+.engineer-wide th:nth-child(3),.engineer-wide td:nth-child(3){width:8%}
 .engineer-wide th:nth-child(4),.engineer-wide td:nth-child(4){width:14%}
+.engineer-wide td:nth-child(3){white-space:nowrap;font-size:12px}
 .engineer-wide td:nth-child(4){text-align:left}
 .engineer-wide{min-width:1250px}
 .engineer-wide td:nth-child(n+5){white-space:nowrap}
@@ -29,6 +30,9 @@ table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse}.split-
 .panchayat-wide th:nth-child(3),.panchayat-wide td:nth-child(3){width:13%}
 .panchayat-wide th:nth-child(4),.panchayat-wide td:nth-child(4){width:12%}
 .panchayat-wide th:nth-child(5),.panchayat-wide td:nth-child(5){width:13%}
+ .janpad-wide th:nth-child(2),.janpad-wide td:nth-child(2){width:5%}
+.janpad-wide th:nth-child(3),.janpad-wide td:nth-child(3){width:10%}
+.janpad-wide td:nth-child(3){white-space:nowrap;font-size:14px}
 .panchayat-wide td:nth-child(5){text-align:left}
 .panchayat-wide td:nth-child(3){font-size:14px;white-space:nowrap}
 .panchayat-wide td:nth-child(4){font-size:14px}
@@ -144,7 +148,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   document.getElementById('rows').innerHTML=html;
  }
  function render(){if(active==='engineer'){renderEngineer();return}
-  const viewTable=document.querySelector('.wrap table');viewTable.classList.remove('engineer-wide','panchayat-wide');viewTable.classList.add('split-wide');if(active==='panchayat')viewTable.classList.add('panchayat-wide');
+  const viewTable=document.querySelector('.wrap table');viewTable.classList.remove('engineer-wide','panchayat-wide','janpad-wide');viewTable.classList.add('split-wide');if(active==='panchayat')viewTable.classList.add('panchayat-wide');if(active==='janpad')viewTable.classList.add('janpad-wide');
   const cfg=configs[active],groups=new Map();
   const emptyBucket=()=>({count:0,sanction:0,expenditure:0});
   const emptyPair=()=>({pmayiay:emptyBucket(),nonpmay:emptyBucket()});
