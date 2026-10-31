@@ -21,7 +21,7 @@ th,td{padding:9px 7px;border:1px solid #68869c;text-align:center}
 th{background:#164a7b;color:#fff;font-size:13px}td{font-size:15px;font-weight:700}
 td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.percent{font-weight:800;color:#087548}
 .district-total td{background:#dcebdc;color:#164a35;font-weight:800}.grand td{background:#164a7b;color:#fff;font-weight:800}
- .engineer-row td{background:#fff;color:#193b57}.janpad-total td{background:#e3f3e8;color:#155637;font-weight:900}.district-total td{background:#dcecff;color:#174b7b;font-weight:900}.status{padding:14px;text-align:center;color:#526a7b;font-weight:700}
+ .engineer-row td{background:#fff;color:#193b57}.janpad-total td{background:#e3f3e8;color:#155637;font-weight:900}.district-total td{background:#d9efe8;color:#155647;font-weight:900;border-top:2px solid #72b7a4}.grand td{background:#163f69;color:#fff;font-weight:900;font-size:16px;border-top:3px solid #e8a34d}.status{padding:14px;text-align:center;color:#526a7b;font-weight:700}
 .note{margin-top:11px;color:#6c4c23;font-size:12px;line-height:1.55}
 @media(max-width:760px){body{padding:7px}main{padding:10px}h1{font-size:21px}.summary{grid-template-columns:repeat(2,minmax(130px,1fr))}}
 @media(max-width:420px){.summary{grid-template-columns:1fr}}
@@ -96,7 +96,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   });
   const total=list.reduce((a,g)=>addPair(a,g.total),emptyPair()),money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
   const table=document.querySelector('.wrap table');table.classList.remove('split-wide');table.classList.add('engineer-wide');
-  const sub='<th>PMAY+IAY</th><th>NON PMAY</th>';
+  const sub='<th>PMAY-G</th><th>NON PMAY</th>';
   document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">इंजीनियर</th><th colspan="2">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+sub+sub+sub+sub+sub+'</tr>';
   const cells=g=>{
    const pair=(a,b,fn)=>'<td>'+fn(a)+'</td><td>'+fn(b)+'</td>';
@@ -141,13 +141,20 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   const list=[...groups.values()].sort((a,b)=>active==='janpad'?((a.district==='मैहर'?0:1)-(b.district==='मैहर'?0:1))||a.name.localeCompare(b.name,'hi'):a.name.localeCompare(b.name,'hi'));
   const total=list.reduce((a,g)=>({physicalCount:a.physicalCount+(g.physicalCount||0),...addPair(a,g)}),{physicalCount:0,...emptyPair()});
   const money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
-  const sub='<th>PMAY+IAY</th><th>NON PMAY</th>';
+  const sub='<th>PMAY-G</th><th>NON PMAY</th>';
   document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th>'+(active==='janpad'?'<th rowspan="2">जिला</th>':'')+'<th rowspan="2">'+cfg.title+'</th><th colspan="2">चल रहे कार्य</th>'+(active==='category'?'<th rowspan="2">Physically Completed कार्य</th>':'')+'<th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+sub+sub+sub+sub+sub+'</tr>';
   const pairCells=(g,fn)=>'<td>'+fn(g.pmayiay)+'</td><td>'+fn(g.nonpmay)+'</td>';
   const workCells=g=>pairCells(g,b=>fmt(b.count));
   const financeCells=g=>pairCells(g,b=>fmt(money(b.sanction),2))+pairCells(g,b=>fmt(money(b.expenditure),2))+pairCells(g,b=>fmt(pct(b),1)+'%')+pairCells(g,b=>fmt(money(b.sanction-b.expenditure),2));
-  let html='',serial=0;
-  for(const g of list){serial++;html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td>'+workCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+financeCells(g)+'</tr>'}
+  let html='',serial=0,currentDistrict='',districtTotal=emptyPair();
+  const districtTotalRow=(name,g)=>'<tr class="district-total"><td colspan="3">जिला '+name+' — योग</td>'+workCells(g)+financeCells(g)+'</tr>';
+  for(const g of list){
+   if(active==='janpad'&&currentDistrict&&g.district!==currentDistrict){html+=districtTotalRow(currentDistrict,districtTotal);districtTotal=emptyPair()}
+   if(active==='janpad'){currentDistrict=g.district||'अन्य';districtTotal=addPair(districtTotal,g)}
+   serial++;
+   html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td>'+workCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+financeCells(g)+'</tr>';
+  }
+  if(active==='janpad'&&currentDistrict)html+=districtTotalRow(currentDistrict,districtTotal);
   html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td>'+workCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+financeCells(total)+'</tr>';
   document.getElementById('rows').innerHTML=html;
   const overall=addPair(total.pmayiay,total.nonpmay);
