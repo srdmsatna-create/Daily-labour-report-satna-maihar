@@ -144,14 +144,11 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   const sub='<th>PMAY+IAY</th><th>NON PMAY</th>';
   document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th>'+(active==='janpad'?'<th rowspan="2">जिला</th>':'')+'<th rowspan="2">'+cfg.title+'</th><th colspan="2">चल रहे कार्य</th>'+(active==='category'?'<th rowspan="2">Physically Completed कार्य</th>':'')+'<th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+sub+sub+sub+sub+sub+'</tr>';
   const pairCells=(g,fn)=>'<td>'+fn(g.pmayiay)+'</td><td>'+fn(g.nonpmay)+'</td>';
-  const metricCells=g=>pairCells(g,b=>fmt(b.count))+pairCells(g,b=>fmt(money(b.sanction),2))+pairCells(g,b=>fmt(money(b.expenditure),2))+pairCells(g,b=>fmt(pct(b),1)+'%')+pairCells(g,b=>fmt(money(b.sanction-b.expenditure),2));
+  const workCells=g=>pairCells(g,b=>fmt(b.count));
+  const financeCells=g=>pairCells(g,b=>fmt(money(b.sanction),2))+pairCells(g,b=>fmt(money(b.expenditure),2))+pairCells(g,b=>fmt(pct(b),1)+'%')+pairCells(g,b=>fmt(money(b.sanction-b.expenditure),2));
   let html='',serial=0;
-  for(const g of list){serial++;html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td>'+metricCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+'</tr>'}
-  if(active==='category'){
-   // Keep physically completed as a standalone count after the active work and finance columns.
-   html=html.replace(/<tr><td>(\\d+)<\\/td>(.*?)<\\/tr>/g,'<tr><td>$1</td>$2</tr>');
-  }
-  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td>'+metricCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+'</tr>';
+  for(const g of list){serial++;html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td>'+workCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+financeCells(g)+'</tr>'}
+  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td>'+workCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+financeCells(total)+'</tr>';
   document.getElementById('rows').innerHTML=html;
   const overall=addPair(total.pmayiay,total.nonpmay);
   document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(overall),1)+'%</strong></div>';
