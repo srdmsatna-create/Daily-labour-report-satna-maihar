@@ -120,19 +120,41 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
  }
  function render(){if(active==='engineer'){renderEngineer();return}
   document.querySelector('.wrap table').classList.remove('engineer-wide');
-
   const cfg=configs[active],groups=new Map();
-  for(const r of source){const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),count:0,physicalCount:0,sanction:0,expenditure:0});const g=groups.get(key),a=amounts(r);g.count++;g.sanction+=a.sanction;g.expenditure+=a.expenditure}
-  if(active==='category')for(const r of allSource){if(!isPhysicalDone(r))continue;const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),count:0,physicalCount:0,sanction:0,expenditure:0});groups.get(key).physicalCount++}
+  const emptyBucket=()=>({count:0,sanction:0,expenditure:0});
+  const emptyPair=()=>({pmayiay:emptyBucket(),nonpmay:emptyBucket()});
+  const addBucket=(a,b)=>({count:a.count+b.count,sanction:a.sanction+b.sanction,expenditure:a.expenditure+b.expenditure});
+  const addPair=(a,b)=>({pmayiay:addBucket(a.pmayiay,b.pmayiay),nonpmay:addBucket(a.nonpmay,b.nonpmay)});
+  const recordPair=r=>{
+   const fields=[r.finalCategory,r.category,r.type,r.name,r.workName].map(norm).join(' ').toUpperCase();
+   const isHousing=/PMAY|IAY|INDIRA AWAAS|PRADHAN MANTRI AWAAS/.test(fields);
+   const b=emptyBucket(),a=amounts(r);b.count=1;b.sanction=a.sanction;b.expenditure=a.expenditure;
+   return isHousing?{pmayiay:b,nonpmay:emptyBucket()}:{pmayiay:emptyBucket(),nonpmay:b};
+  };
+  for(const r of source){
+   const key=cfg.key(r);
+   if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),physicalCount:0,...emptyPair()});
+   const g=groups.get(key),pair=recordPair(r);
+   Object.assign(g,addPair(g,pair));
+  }
+  if(active==='category')for(const r of allSource){if(!isPhysicalDone(r))continue;const key=cfg.key(r);if(!groups.has(key))groups.set(key,{key,name:cfg.name(key),district:cfg.district?.(key),physicalCount:0,...emptyPair()});groups.get(key).physicalCount++}
   const list=[...groups.values()].sort((a,b)=>active==='janpad'?((a.district==='मैहर'?0:1)-(b.district==='मैहर'?0:1))||a.name.localeCompare(b.name,'hi'):a.name.localeCompare(b.name,'hi'));
-  const total=list.reduce((a,g)=>({count:a.count+g.count,physicalCount:a.physicalCount+(g.physicalCount||0),sanction:a.sanction+g.sanction,expenditure:a.expenditure+g.expenditure}),{count:0,physicalCount:0,sanction:0,expenditure:0});
+  const total=list.reduce((a,g)=>({physicalCount:a.physicalCount+(g.physicalCount||0),...addPair(a,g)}),{physicalCount:0,...emptyPair()});
   const money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
-  document.getElementById('head').innerHTML='<tr><th>क्रमांक</th>'+(active==='janpad'?'<th>जिला</th>':'')+'<th>'+cfg.title+'</th><th>चल रहे कार्य</th>'+(active==='category'?'<th>Physically Completed कार्य</th>':'')+'<th>स्वीकृत लागत (₹ लाख)</th><th>व्यय (₹ लाख)</th><th>व्यय %</th><th>शेष लागत (₹ लाख)</th></tr>';
+  const sub='<th>PMAY+IAY</th><th>NON PMAY</th>';
+  document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th>'+(active==='janpad'?'<th rowspan="2">जिला</th>':'')+'<th rowspan="2">'+cfg.title+'</th><th colspan="2">चल रहे कार्य</th>'+(active==='category'?'<th rowspan="2">Physically Completed कार्य</th>':'')+'<th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+sub+sub+sub+sub+sub+'</tr>';
+  const pairCells=(g,fn)=>'<td>'+fn(g.pmayiay)+'</td><td>'+fn(g.nonpmay)+'</td>';
+  const metricCells=g=>pairCells(g,b=>fmt(b.count))+pairCells(g,b=>fmt(money(b.sanction),2))+pairCells(g,b=>fmt(money(b.expenditure),2))+pairCells(g,b=>fmt(pct(b),1)+'%')+pairCells(g,b=>fmt(money(b.sanction-b.expenditure),2));
   let html='',serial=0;
-  for(const g of list){serial++;html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td><td>'+fmt(g.count)+'</td>'+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+'<td class="money">'+fmt(money(g.sanction),2)+'</td><td class="money">'+fmt(money(g.expenditure),2)+'</td><td class="percent">'+fmt(pct(g),1)+'%</td><td class="money">'+fmt(money(g.sanction-g.expenditure),2)+'</td></tr>'}
-  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td><td>'+fmt(total.count)+'</td>'+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+'<td>'+fmt(money(total.sanction),2)+'</td><td>'+fmt(money(total.expenditure),2)+'</td><td>'+fmt(pct(total),1)+'%</td><td>'+fmt(money(total.sanction-total.expenditure),2)+'</td></tr>';
+  for(const g of list){serial++;html+='<tr><td>'+serial+'</td>'+(active==='janpad'?'<td>'+g.district+'</td>':'')+'<td>'+g.name+'</td>'+metricCells(g)+(active==='category'?'<td>'+fmt(g.physicalCount||0)+'</td>':'')+'</tr>'}
+  if(active==='category'){
+   // Keep physically completed as a standalone count after the active work and finance columns.
+   html=html.replace(/<tr><td>(\\d+)<\\/td>(.*?)<\\/tr>/g,'<tr><td>$1</td>$2</tr>');
+  }
+  html+='<tr class="grand"><td colspan="'+(active==='janpad'?3:2)+'">महायोग</td>'+metricCells(total)+(active==='category'?'<td>'+fmt(total.physicalCount)+'</td>':'')+'</tr>';
   document.getElementById('rows').innerHTML=html;
-  document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(total.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(total.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(total.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(total),1)+'%</strong></div>';
+  const overall=addPair(total.pmayiay,total.nonpmay);
+  document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(overall),1)+'%</strong></div>';
  }
  function load(){
   const raw=Array.isArray(window.ONGOING_DETAILS)?window.ONGOING_DETAILS:[];
