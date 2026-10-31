@@ -16,7 +16,7 @@ button,a{padding:8px 12px;border:1px solid #8aa7bd;border-radius:5px;background:
 .views{display:flex;gap:7px;overflow-x:auto;margin:12px 0;padding:2px}
 .views button{white-space:nowrap;background:#f2f6fb}.views button.active{background:#164a7b;color:#fff;border-color:#164a7b}
 .wrap{overflow:auto;border:1px solid #68869c;border-radius:5px}
-table{width:100%;min-width:800px;border-collapse:collapse}.engineer-wide{min-width:1700px}
+table{width:100%;min-width:800px;border-collapse:collapse}.split-wide{min-width:1450px}.engineer-wide{min-width:1700px}
 th,td{padding:9px 7px;border:1px solid #68869c;text-align:center}
 th{background:#164a7b;color:#fff;font-size:13px}td{font-size:15px;font-weight:700}
 td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.percent{font-weight:800;color:#087548}
@@ -25,7 +25,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
 .note{margin-top:11px;color:#6c4c23;font-size:12px;line-height:1.55}
 @media(max-width:760px){body{padding:7px}main{padding:10px}h1{font-size:21px}.summary{grid-template-columns:repeat(2,minmax(130px,1fr))}}
 @media(max-width:420px){.summary{grid-template-columns:1fr}}
-@media print{@page{size:A4 landscape;margin:8mm}body{padding:0;background:#fff}main{max-width:none;padding:0;border:0}nav,.views{display:none}h1{font-size:18px;margin:4px}.meta{font-size:10px;margin:3px}.summary{grid-template-columns:repeat(4,1fr);gap:4px;margin:5px 0}.card{padding:4px 6px}.card strong{font-size:13px}.wrap{overflow:visible}table{min-width:0}.engineer-wide{min-width:0}.engineer-wide th,.engineer-wide td{font-size:7px;padding:3px 1px}th,td{font-size:10px;padding:5px 3px}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+@media print{@page{size:A4 landscape;margin:8mm}body{padding:0;background:#fff}main{max-width:none;padding:0;border:0}nav,.views{display:none}h1{font-size:18px;margin:4px}.meta{font-size:10px;margin:3px}.summary{grid-template-columns:repeat(4,1fr);gap:4px;margin:5px 0}.card{padding:4px 6px}.card strong{font-size:13px}.wrap{overflow:visible}table{min-width:0}.split-wide,.engineer-wide{min-width:0}.engineer-wide th,.engineer-wide td{font-size:7px;padding:3px 1px}th,td{font-size:10px;padding:5px 3px}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
 </style>
 </head>
 <body><main>
@@ -95,7 +95,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
    return d||blockInfo.findIndex(x=>x.key===a.janKey)-blockInfo.findIndex(x=>x.key===b.janKey)||a.janpad.localeCompare(b.janpad,'hi');
   });
   const total=list.reduce((a,g)=>addPair(a,g.total),emptyPair()),money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
-  const table=document.querySelector('.wrap table');table.classList.add('engineer-wide');
+  const table=document.querySelector('.wrap table');table.classList.remove('split-wide');table.classList.add('engineer-wide');
   const sub='<th>PMAY+IAY</th><th>NON PMAY</th>';
   document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">इंजीनियर</th><th colspan="2">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+sub+sub+sub+sub+sub+'</tr>';
   const cells=g=>{
@@ -119,7 +119,7 @@ td:nth-child(2){text-align:left;white-space:nowrap}.money{white-space:nowrap}.pe
   document.getElementById('rows').innerHTML=html;
  }
  function render(){if(active==='engineer'){renderEngineer();return}
-  document.querySelector('.wrap table').classList.remove('engineer-wide');
+  document.querySelector('.wrap table').classList.remove('engineer-wide');document.querySelector('.wrap table').classList.add('split-wide');
   const cfg=configs[active],groups=new Map();
   const emptyBucket=()=>({count:0,sanction:0,expenditure:0});
   const emptyPair=()=>({pmayiay:emptyBucket(),nonpmay:emptyBucket()});
