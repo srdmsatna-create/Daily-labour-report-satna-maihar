@@ -7,6 +7,8 @@ on:
     paths:
       - '.github/workflows/all-tabs-daily.yml'
       - 'scripts_local/run_daily_unified.py'
+      - 'scripts_local/local_auto_update.py'
+      - 'scripts/fetch_planner_portal_summary.py'
       - 'scripts_local/vbgram_access.py'
       - 'scripts_local/update_above75.py'
 permissions:
