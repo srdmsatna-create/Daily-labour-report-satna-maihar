@@ -1,9 +1,9 @@
-"""Apply approved 25-09-2026 GP engineer changes from the published 695-GP master."""
+"""Apply approved 29-10-2026 verified GP engineer changes from the published 695-GP master."""
 import csv
 import re
 from pathlib import Path
 
-MASTER = Path(__file__).resolve().parents[1] / "gp-sector-engineer-master-25-09-2026.csv"
+MASTER = Path(__file__).resolve().parents[1] / "gp-sector-engineer-master-01-11-2026.csv"
 
 def _key(value):
     return re.sub(r"[^A-Z0-9]", "", str(value or "").upper())
