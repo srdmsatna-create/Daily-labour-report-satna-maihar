@@ -1,4 +1,5 @@
 """One entry point: isolated refresh, validation, then one publication."""
+# status-conflict-retry-v8
 import argparse
 import importlib.util
 import json
