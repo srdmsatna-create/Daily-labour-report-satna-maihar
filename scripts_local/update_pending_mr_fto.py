@@ -41,10 +41,10 @@ def build(blocks,source=SOURCE):
   for block,part in blocks.items():
    for gp,g in part['groups'].items():result.append({'block':block,'panchayat':gp,'pending':g[stage]})
   reports[stage]={'available':True,'sourceDate':stamp.strftime('%d/%m/%Y'),'fetchedAt':stamp.isoformat(),'source':source,'unit':'musterRoll','coverage':list(BLOCKS),'rows':result}
- d={'schemaVersion':1,'reports':reports,'sourceMode':'payment-pending','counts':'Distinct work code + muster roll per GP; first/second are associated muster rolls, not unique FTO orders','sourceSummary':{b:{k:v for k,v in p.items() if k!='details'} for b,p in blocks.items()},'details':[dict(r,block=b) for b,p in blocks.items() for r in p.get('details',[])],'filterVerified':True}
+ d={'schemaVersion':1,'reports':reports,'sourceMode':'payment-pending','selectedFilter':'Pending Payment','counts':'S5.26 Pending Payment only; first/second are stages within this filtered result, not separate payment modes','sourceSummary':{b:{k:v for k,v in p.items() if k!='details'} for b,p in blocks.items()},'details':[dict(r,block=b) for b,p in blocks.items() for r in p.get('details',[])],'filterVerified':True}
  validate(d);return d
 def validate(d):
- if d.get('schemaVersion')!=1 or d.get('sourceMode')!='payment-pending' or d.get('filterVerified') is not True:raise ValueError('Invalid tracking snapshot')
+ if d.get('schemaVersion')!=1 or d.get('sourceMode')!='payment-pending' or d.get('selectedFilter')!='Pending Payment' or d.get('filterVerified') is not True:raise ValueError('S5.26 must be verified in Pending Payment mode only')
  for stage in ('mr','first','second'):
   r=d['reports'][stage]
   if not r.get('available') or set(r.get('coverage',[]))!=set(BLOCKS):raise ValueError('Incomplete block coverage')
