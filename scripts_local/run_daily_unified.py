@@ -22,14 +22,43 @@ def publish(stage):
         run(['git', 'fetch', 'origin', '+refs/heads/main:refs/remotes/origin/main'], stage)
         result = subprocess.run(['git', 'rebase', 'origin/main'], cwd=stage)
         if result.returncode:
-            subprocess.run(['git', 'rebase', '--abort'], cwd=stage)
-            raise RuntimeError('Remote report conflict. Validated commit retained at ' + str(stage) + '; no reports overwritten.')
+            conflict = subprocess.run(
+                ['git', 'diff', '--name-only', '--diff-filter=U'],
+                cwd=stage, capture_output=True, text=True
+            )
+            paths = sorted(line.strip().replace('\\\\', '/') for line in conflict.stdout.splitlines() if line.strip())
+            # This generated status file changes on every daily run. If that is
+            # the only conflict, keep this run's status; never guess on report data.
+            if paths == ['all-tabs-auto-status.json']:
+                print('Resolving concurrent status-only conflict; keeping this run status.', flush=True)
+                resolved = subprocess.run(
+                    ['git', 'checkout', '--theirs', '--', 'all-tabs-auto-status.json'],
+                    cwd=stage
+                )
+                if resolved.returncode == 0:
+                    subprocess.run(['git', 'add', '--', 'all-tabs-auto-status.json'], cwd=stage, check=True)
+                    env = os.environ.copy()
+                    env['GIT_EDITOR'] = 'cmd /c exit 0' if os.name == 'nt' else 'true'
+                    continued = subprocess.run(['git', 'rebase', '--continue'], cwd=stage, env=env)
+                    if continued.returncode == 0:
+                        result = continued
+                    else:
+                        subprocess.run(['git', 'rebase', '--abort'], cwd=stage)
+                        raise RuntimeError('Could not finish status-only rebase. Validated commit retained at ' + str(stage))
+                else:
+                    subprocess.run(['git', 'rebase', '--abort'], cwd=stage)
+                    raise RuntimeError('Could not resolve status-only conflict. Validated commit retained at ' + str(stage))
+            else:
+                subprocess.run(['git', 'rebase', '--abort'], cwd=stage)
+                raise RuntimeError(
+                    'Remote report conflict in ' + (', '.join(paths) if paths else 'unknown files') +
+                    '. No reports overwritten; validated commit retained at ' + str(stage)
+                )
         result = subprocess.run(['git', 'push', 'origin', 'HEAD:main'], cwd=stage)
         if result.returncode == 0:
             return
         print('Publication failed; fetching latest main before retry ' + str(attempt + 1), flush=True)
     raise RuntimeError('Publication failed after 3 attempts. Validated commit retained at ' + str(stage))
-
 def prevent_console_pause():
     # Quick Edit selection pauses a Windows console process until Esc.
     if os.name != 'nt':return
