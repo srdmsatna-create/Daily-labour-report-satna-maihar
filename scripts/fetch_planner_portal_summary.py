@@ -9,7 +9,7 @@ from urllib3.util.retry import Retry
 BASE='https://planner.nregsmp.org/reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block'
 HEADERS={'User-Agent':'Mozilla/5.0 SRDM-SATNA/1.0'}
 SESSION=requests.Session()
-SESSION.mount('https://',HTTPAdapter(max_retries=Retry(total=2,connect=2,read=2,status=2,backoff_factor=1,status_forcelist=[502,503,504],allowed_methods=['GET'])))
+SESSION.mount('https://',HTTPAdapter(max_retries=Retry(total=5,connect=5,read=5,status=3,backoff_factor=2,status_forcelist=[429,500,502,503,504],allowed_methods=['GET'])))
 JANPADS={'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA'}
 
 def nint(s):
@@ -17,7 +17,7 @@ def nint(s):
     return int(m.group(0).replace(',','')) if m else 0
 
 def get(url):
-    r=SESSION.get(url,headers=HEADERS,timeout=(15,45))
+    r=SESSION.get(url,headers=HEADERS,timeout=(30,90))
     r.raise_for_status();return r.text
 
 def rows_from_table(table):
