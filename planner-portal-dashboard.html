@@ -128,7 +128,7 @@ function printSelected(){
   for(const g of groups){
     let items=g.blocks.map(b=>{
       const p=Number(OFF.blocks[b]||0);
-      const s=ER.filter(x=>x[1]===b).reduce((a,x)=>a+Number(x[4]||0),0);
+      const s=ER.filter(x=>String(x[1]||'').trim().toLowerCase()===String(b||'').trim().toLowerCase()).reduce((a,x)=>a+Number(x[4]||0),0);
       const pend=Math.max(0,p-s),pct=p?100*s/p:0;
       return{b,p,s,pend,pct,label:b==='Sohawal'?'SATNA':b.toUpperCase()};
     });
