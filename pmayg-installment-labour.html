@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>R-7.3 • AwaasPlus किस्त एवं VBGRAMG मजदूरी</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf3f8;color:#17334b;font:15px system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}header{background:#ecfdf5;color:#14532d;border-bottom:2px solid #16803c;padding:16px 22px}header a{color:#166534;font-weight:700}h1{font-size:23px;margin:8px 0}header p{margin:5px 0}.wrap{max-width:1700px;margin:auto;padding:18px}.bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.bar select,button{font:inherit;padding:9px 12px;border:1px solid #9bb1c3;border-radius:6px;background:white;color:#17334b}button{cursor:pointer;font-weight:750}.bar button{background:#15803d;color:white;border-color:#15803d}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px}.metric{background:white;border-top:4px solid #16803c;border-radius:7px;padding:12px;min-height:78px}.metric span{font-size:13px;color:#52697c}.metric strong{display:block;font-size:21px;margin-top:4px;font-variant-numeric:tabular-nums}.subhead{font-size:19px;margin:18px 0 8px;color:#14532d}.source,.note{background:#fff;border:1px solid #c7d8e6;border-radius:7px;padding:10px 12px;line-height:1.55;margin:12px 0}.source{font-size:13px;color:#34556f}.note{background:#fff7df;border-color:#e7d39d}.scroll{overflow:auto;background:#fff;border:1px solid #7892a8;border-radius:7px;margin:10px 0 18px}table{width:100%;border-collapse:collapse;min-width:1150px}th,td{border:1px solid #9aafbf;padding:8px 7px;text-align:center}th{background:#dceaf4;color:#163f5a;position:sticky;top:0}td.num{font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}.total{font-weight:900;background:#d7ebf2}.grand{font-weight:950;background:#12476a;color:white}.error{color:#8d1d26;background:#fff0f0;padding:12px;border:1px solid #e5a9aa;border-radius:6px}.hidden{display:none}@media print{@page{size:A4 landscape;margin:7mm}body,.wrap{background:white;padding:0}header{padding:0 0 5mm;border-bottom:1px solid #16803c}h1{font-size:16pt}.bar,.no-print{display:none!important}.metrics{grid-template-columns:repeat(6,1fr);gap:4px}.metric{padding:5px;min-height:0}.metric strong{font-size:12pt}.scroll{overflow:visible;border:0}table{min-width:0;table-layout:fixed}th,td{font-size:8pt;padding:4px 2px;overflow-wrap:anywhere}thead{display:table-header-group}tr{break-inside:avoid}.note,.source{font-size:8pt;padding:5px}.subhead{font-size:12pt}}
+</style>
+</head>
+<body>
+<header><a href="index.html">← SRDM Applications</a><h1>R-7.3 — Awaas Portal में प्रदाय किस्त अनुसार VB-G RAM G मजदूरी</h1><p>सतना एवं मैहर • AwaasPlus FY 2024-25 / 2025-26 • VB-G RAM G FY 2026-27</p></header>
+<main class="wrap">
+<div class="bar no-print">
+<label>आवास वर्ष <select id="fy"></select></label>
+<label>जिला <select id="district"><option value="">दोनों जिले</option><option value="MAIHAR">Maihar</option><option value="SATNA">Satna</option></select></label>
+<label>जनपद <select id="janpad"><option value="">सभी जनपद</option></select></label>
+<button id="csv">CSV डाउनलोड</button><button onclick="window.print()">Print / PDF</button>
+</div>
+<div id="source" class="source">AwaasPlus और VBGRAMG स्रोत लोड हो रहे हैं…</div>
+<div id="error" class="error hidden"></div>
+<div id="metrics" class="metrics"></div>
+<h2 class="subhead">AwaasPlus — किस्त एवं भौतिक प्रगति</h2>
+<div class="scroll"><table><thead id="head"></thead><tbody id="body"></tbody><tfoot id="foot"></tfoot></table></div>
+<div class="note"><b>मिलान का आधार:</b> AwaasPlus exports में जनपदवार किस्तों की गिनती है, घर/कार्य ID नहीं है। VB-G RAM G की मजदूरी R-7.1 के Physically Completed PMAY-G/IAY कार्यों से जनपदवार जोड़ी गई है। इसलिए मजदूरी के आँकड़े किसी खास किस्त या घर के लिए नहीं हैं। शेष मजदूरी = VB-G RAM G में बुक्ड मजदूरी − प्रदाय मजदूरी। किस्तों की गिनती अलग-अलग चरणों की संचयी संख्या है; इन्हें जोड़कर कुल घर न निकालें।</div>
+</main>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('en-IN',{maximumFractionDigits:0}).format(Number(n)||0),cash=n=>'₹'+fmt(n);
+const districtOf=j=>['AMARPATAN','MAIHAR','RAMNAGAR'].includes(String(j).toUpperCase())?'MAIHAR':'SATNA';
+const janpadName=b=>String(b).trim().toUpperCase()==='SATNA'?'SOHAWAL':String(b).trim().toUpperCase();
+let awaas=[],wageByJanpad=new Map(),exportRows=[];
+function showError(msg){$('error').textContent=msg;$('error').classList.remove('hidden')}
+function render(){
+ const fy=$('fy').value,dist=$('district').value,jp=$('janpad').value;
+ const rows=awaas.filter(r=>r.fy===fy&&(!dist||districtOf(janpadName(r.portalBlock))===dist)&&(!jp||janpadName(r.portalBlock)===jp)).sort((a,b)=>janpadName(a.portalBlock).localeCompare(janpadName(b.portalBlock),'en'));
+ const wageRows=[...wageByJanpad.entries()].filter(([j])=>(!dist||districtOf(j)===dist)&&(!jp||j===jp));
+ const totals=rows.reduce((a,r)=>{for(const k of ['target','registered','geoTagged','sanctioned','verifiedAccounts','installment1','installment2','installment3','installment4','completedVerified','completed'])a[k]+=Number(r[k])||0;return a},{target:0,registered:0,geoTagged:0,sanctioned:0,verifiedAccounts:0,installment1:0,installment2:0,installment3:0,installment4:0,completedVerified:0,completed:0});
+ const wages=wageRows.reduce((a,[,w])=>{a.booked+=w.booked;a.paid+=w.paid;a.remaining+=w.remaining;return a},{booked:0,paid:0,remaining:0});
+ $('metrics').innerHTML=[['स्वीकृत लक्ष्य',totals.target],['पंजीकृत',totals.registered],['प्रथम किस्त',totals.installment1],['द्वितीय किस्त',totals.installment2],['तृतीय किस्त',totals.installment3],['चतुर्थ किस्त',totals.installment4],['पूर्ण',totals.completed],['VBGRAMG मजदूरी प्रदाय',cash(wages.paid)],['VBGRAMG शेष मजदूरी',cash(wages.remaining)]].map(x=>'<div class="metric"><span>'+x[0]+'</span><strong>'+x[1]+'</strong></div>').join('');
+ const keys=['target','registered','verifiedAccounts','installment1','installment2','installment3','installment4','completedVerified','completed'];
+ const titles=['जिला','जनपद','लक्ष्य','पंजीकृत','सत्यापित खाते','1st किस्त','2nd किस्त','3rd किस्त','4th किस्त','पूर्ण एवं सत्यापित','पूर्ण','VBGRAMG बुक्ड मजदूरी','VBGRAMG प्रदाय मजदूरी','VBGRAMG शेष मजदूरी'];
+ $('head').innerHTML='<tr>'+titles.map(x=>'<th>'+x+'</th>').join('')+'</tr>';
+ const bodyRows=rows.map(r=>{const j=janpadName(r.portalBlock),w=wageByJanpad.get(j)||{booked:0,paid:0,remaining:0};return {district:districtOf(j),janpad:j,portalBlock:r.portalBlock,...r,wageBooked:w.booked,wagePaid:w.paid,wageRemaining:w.remaining}});
+ $('body').innerHTML=bodyRows.map(r=>'<tr><td>'+r.district+'</td><td>'+r.janpad+(r.portalBlock==='Satna'?' (Awaas Portal: Satna)':'')+'</td>'+keys.map(k=>'<td class="num">'+fmt(r[k])+'</td>').join('')+'<td class="num">'+cash(r.wageBooked)+'</td><td class="num">'+cash(r.wagePaid)+'</td><td class="num">'+cash(r.wageRemaining)+'</td></tr>').join('')||'<tr><td colspan="14">चुने हुए फिल्टर में कोई रिकॉर्ड नहीं है।</td></tr>';
+ const wcols=['booked','paid','remaining'];
+ function totalRow(label,items,cls){const s=items.reduce((a,r)=>{for(const k of keys)a[k]+=Number(r[k])||0;return a},{target:0,registered:0,geoTagged:0,sanctioned:0,verifiedAccounts:0,installment1:0,installment2:0,installment3:0,installment4:0,completedVerified:0,completed:0});const ww=items.reduce((a,r)=>{const w=wageByJanpad.get(janpadName(r.portalBlock))||{booked:0,paid:0,remaining:0};for(const k of wcols)a[k]+=w[k];return a},{booked:0,paid:0,remaining:0});return '<tr class="'+cls+'"><td colspan="2">'+label+'</td>'+keys.map(k=>'<td class="num">'+fmt(s[k])+'</td>').join('')+wcols.map(k=>'<td class="num">'+cash(ww[k])+'</td>').join('')+'</tr>'}
+ let foot='';for(const d of ['MAIHAR','SATNA']){const items=bodyRows.filter(r=>r.district===d);if(items.length)foot+=totalRow((d==='MAIHAR'?'मैहर':'सतना')+' — जिला योग',items,'total')}foot+=totalRow('महायोग',bodyRows,'grand');$('foot').innerHTML=foot;
+ exportRows=[titles,...bodyRows.map(r=>[r.district,r.janpad,...keys.map(k=>r[k]),r.wageBooked,r.wagePaid,r.wageRemaining])];
+}
+async function init(){try{
+ const raw=await fetch('data/awaasplus-installment-labour-r73.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('AwaasPlus snapshot नहीं मिला');return r.json()});
+ if(raw.schemaVersion!==1||!Array.isArray(raw.rows)||raw.rows.length!==16)throw Error('AwaasPlus snapshot की जाँच असफल');awaas=raw.rows;
+ const years=[...new Set(awaas.map(r=>r.fy))].sort().reverse();$('fy').innerHTML=years.map(y=>'<option value="'+y+'">'+y.replace('-','–')+'</option>').join('');
+ const physical=await fetch('data/pmayg-physical-latest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('R-7.1 मजदूरी डेटा नहीं मिला');return r.json()});
+ if(physical.basis!=='vbg-physical-pmayg-v1'||!Array.isArray(physical.rows)||!physical.rows.length)throw Error('R-7.1 मजदूरी डेटा सत्यापित नहीं है');
+ if(physical.rows.some(r=>r.status!=='Physically Completed'||!r.sources?.VBGRAMG||!Number.isFinite(r.sources.VBGRAMG.wageBooked)||!Number.isFinite(r.sources.VBGRAMG.wagePaid)))throw Error('R-7.1 मजदूरी फ़ील्ड अधूरे हैं');
+ for(const r of physical.rows){const j=janpadName(r.janpad),w=r.sources.VBGRAMG;if(!wageByJanpad.has(j))wageByJanpad.set(j,{booked:0,paid:0,remaining:0});const a=wageByJanpad.get(j);a.booked+=w.wageBooked;a.paid+=w.wagePaid;a.remaining+=w.wageBooked-w.wagePaid}
+ const jans=[...new Set(awaas.map(r=>janpadName(r.portalBlock)))].sort();$('janpad').innerHTML='<option value="">सभी जनपद</option>'+jans.map(j=>'<option value="'+j+'">'+j+'</option>').join('');
+ const dates=[...new Set(awaas.map(r=>r.sourceAsOn))].join(' • '),sourceDates=Object.entries(physical.sourceDates||{}).map(([k,v])=>k+' '+v).join(' | ');
+ $('source').textContent='AwaasPlus स्रोत: '+dates+' • VBGRAMG सत्यापित स्रोत: '+sourceDates+' • मजदूरी cohort: Physically Completed PMAY-G/IAY FY 2026-27';
+ $('fy').onchange=render;$('district').onchange=render;$('janpad').onchange=render;
+ $('csv').onclick=()=>{const csv='\ufeff'+exportRows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='R-7.3-AwaasPlus-VBGRAMG-'+$('fy').value+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};render();
+ }catch(e){showError('रिपोर्ट डेटा लोड नहीं हुआ: '+e.message);$('source').textContent='आधिकारिक डेटा सत्यापित नहीं हो सका। पुराने या खाली आँकड़े नहीं दिखाए जा रहे।'}}
+init();})();
+</script>
+</body></html>
