@@ -34,8 +34,7 @@ def summarize(rr):
  if serial and serial!=list(range(1,len(serial)+1)):raise ValueError('Missing/repeated serials; complete source required')
  return {'rawRows':len(serial),'details':details,'groups':{gp:{k:len(v) for k,v in g.items()} for gp,g in groups.items()}}
 def enrich_details(details):
- # Work type/category enrichment is an exact Work Code match. The payment
- # population itself remains exclusively the verified S5.26 Pending Payment rows.
+ # Match work metadata by exact Work Code. S5.26 remains the sole payment-pending source.
  work_map={}
  path=ROOT/'data'/'Ongoing_Works_dynamic_work_details_latest.csv'
  if path.exists():
@@ -54,7 +53,15 @@ def enrich_details(details):
             re.search(r'\b(?:PMAY|IAY)\b',str(info.get('workName',''))+' '+str(info.get('workType','')),re.I))
   r['scheme']='PMAY-G / IAY' if pmay else 'अन्य मनरेगा कार्य'
   staff=(r.get('staff') or '').strip()
-  m=re.match(r'^(.*?)\s*\((.*?)\)\s*
+  m=re.match(r'^(.*?)\s*\((.*?)\)\s*$',staff)
+  person=m.group(1).strip() if m else staff
+  role=m.group(2).strip().lower() if m else ''
+  r['grs']=person if pmay and ('gram rozgar sahayak' in role or re.search(r'\bgrs\b',role)) else ''
+  r['subEngineer']=person if not pmay and 'sub-engineer' in role else ''
+ return details
+
+
+def build(blocks,source=SOURCE):
  if set(blocks)!=set(BLOCKS):raise ValueError('All eight blocks must be fetched before publication')
  stamp=datetime.now(ZoneInfo('Asia/Kolkata'));reports={}
  for stage in ('mr','first','second'):
