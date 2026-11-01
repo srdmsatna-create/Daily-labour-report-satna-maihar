@@ -155,7 +155,7 @@ def _submit_and_wait(page):
 
 def _select_with_option(page, label, exclude=None):
     """Find a select by available option text, independent of form order."""
-    target = re.sub(r"\\s+", " ", label).strip().lower()
+    target = re.sub(r"\s+", " ", label).strip().lower()
     matches = []
     for i in range(page.locator("select").count()):
         control = page.locator("select").nth(i)
@@ -173,10 +173,12 @@ def _select_with_option(page, label, exclude=None):
     return page.locator("select").nth(matches[0]), matches[0]
 
 
-def _r69_controls(page):
-    category, category_index = _select_with_option(page, INDIVIDUAL_CATEGORY)
-    status, _ = _select_with_option(page, PMAY_STATUS, exclude=category_index)
-    return category, status
+def _r69_category(page):
+    return _select_with_option(page, INDIVIDUAL_CATEGORY)
+
+
+def _r69_status(page, category_index):
+    return _select_with_option(page, PMAY_STATUS, exclude=category_index)[0]
 
 def fetch_reports():
     from playwright.sync_api import sync_playwright
@@ -201,7 +203,7 @@ def fetch_reports():
         page.wait_for_timeout(1500)
 
         try:
-            work_category, proposed_status = _r69_controls(page)
+            work_category, category_index = _r69_category(page)
         except RuntimeError as exc:
             visible = re.sub(r"\\s+", " ", page.locator("body").inner_text())[:500]
             browser.close()
@@ -210,35 +212,35 @@ def fetch_reports():
         # 1) ALL report
         _select_label(work_category, "ALL")
         page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = page.locator("select").nth(2)
+        proposed_status = _r69_status(page, category_index)
         _select_label(proposed_status, "ALL")
         page.wait_for_load_state("networkidle", timeout=60000)
         _submit_and_wait(page)
         all_html = page.content()
 
         # 2) Individual
-        work_category, proposed_status = _r69_controls(page)
+        work_category, category_index = _r69_category(page)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
         page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = page.locator("select").nth(2)
+        proposed_status = _r69_status(page, category_index)
         _select_label(proposed_status, "ALL")
         _submit_and_wait(page)
         individual_html = page.content()
 
         # 3) PMAY-G
-        work_category, proposed_status = _r69_controls(page)
+        work_category, category_index = _r69_category(page)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
         page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = page.locator("select").nth(2)
+        proposed_status = _r69_status(page, category_index)
         _select_label(proposed_status, PMAY_STATUS)
         _submit_and_wait(page)
         pmay_html = page.content()
 
         # 4) Ek Bagiya
-        work_category, proposed_status = _r69_controls(page)
+        work_category, category_index = _r69_category(page)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
         page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = page.locator("select").nth(2)
+        proposed_status = _r69_status(page, category_index)
         _select_label(proposed_status, EK_BAGIYA_STATUS)
         _submit_and_wait(page)
         ek_html = page.content()
