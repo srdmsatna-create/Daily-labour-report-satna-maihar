@@ -51,10 +51,10 @@ def enrich_details(details):
   info=work_map.get(code,{})
   r.update(info)
   pmay=bool(re.search(r'/(?:IAY|PMAY)/',code,re.I) or
-            re.search(r'\\b(?:PMAY|IAY)\\b',str(info.get('workName',''))+' '+str(info.get('workType','')),re.I))
+            re.search(r'\b(?:PMAY|IAY)\b',str(info.get('workName',''))+' '+str(info.get('workType','')),re.I))
   r['scheme']='PMAY-G / IAY' if pmay else 'अन्य मनरेगा कार्य'
   staff=(r.get('staff') or '').strip()
-  m=re.match(r'^(.*?)\\s*\\((.*?)\\)\\s*
+  m=re.match(r'^(.*?)\s*\((.*?)\)\s*
  if set(blocks)!=set(BLOCKS):raise ValueError('All eight blocks must be fetched before publication')
  stamp=datetime.now(ZoneInfo('Asia/Kolkata'));reports={}
  for stage in ('mr','first','second'):
@@ -192,7 +192,7 @@ if __name__=='__main__':
 ,staff)
   person=(m.group(1).strip() if m else staff)
   role=(m.group(2).strip().lower() if m else '')
-  r['grs']=person if pmay and ('gram rozgar sahayak' in role or re.search(r'\\bgrs\\b',role)) else ''
+  r['grs']=person if pmay and ('gram rozgar sahayak' in role or re.search(r'\bgrs\b',role)) else ''
   r['subEngineer']=person if not pmay and 'sub-engineer' in role else ''
  return details
 
