@@ -9,7 +9,7 @@ MIS 6.12 after the VB-G RAM G migration can return zero/blank historic NREGA boo
 values and does not carry the Apr-Jun split.  Preserve the live row list/status but
 restore those historical NREGA values by Work Code from the reviewed 30-08 master.
 """
-import csv, json, re, sys
+import csv, gzip, json, re, sys
 from gp_sector_mapping import apply_sector_correction
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,6 +20,7 @@ CSV_PATH = DATA / 'Ongoing_Works_dynamic_work_details_latest.csv'
 LEGACY_NREGA = DATA / 'Final_WorkCategory_30-08-2026.csv'
 AUTO = ROOT / 'auto-data.js'
 OUT = ROOT / 'ongoing-details.js'
+GZIP_OUT = ROOT / 'ongoing-details.json.gz'
 ALLOWED_STATUS = {'NEW', 'APPROVED', 'ONGOING', 'SUSPENDED', 'COMPLETED', 'PHYSICALLY COMPLETED', 'DELETED'}
 
 
@@ -242,7 +243,12 @@ def main():
     for row in rows:
         apply_sector_correction(row)
     rows[0]['sourceDate'] = datetime.now(timezone.utc).date().isoformat()
-    OUT.write_text('window.ONGOING_DETAILS=' + json.dumps(rows, ensure_ascii=False, separators=(',', ':')) + ';\n', encoding='utf-8')
+    payload = json.dumps(rows, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+    OUT.write_text('window.ONGOING_DETAILS=' + payload.decode('utf-8') + ';\\n', encoding='utf-8')
+    compressed = gzip.compress(payload, compresslevel=6, mtime=0)
+    temp = GZIP_OUT.with_name(GZIP_OUT.name + '.tmp')
+    temp.write_bytes(compressed)
+    temp.replace(GZIP_OUT)
     mapped = sum(1 for r in rows if r['engineer'])
     status_counts = {s: sum(1 for r in rows if norm(r['status']) == s) for s in sorted(ALLOWED_STATUS)}
     print(f'Updated MIS 6.12 work details: {len(rows)} works; engineer mapping {mapped}/{len(rows)}; status={status_counts}; legacy matched={matched_legacy}; booked restored={restored_booked}; Apr-Jun restored={restored_aprjun}; {datetime.now(timezone.utc).isoformat()}')
