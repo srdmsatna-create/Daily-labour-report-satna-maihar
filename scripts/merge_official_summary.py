@@ -47,8 +47,8 @@ def main():
     for r in rows:
         z={"janpad":str(r["janpad"]).strip().upper()}
         for k in NUMFIELDS: z[k]=num(r.get(k,0))
-        if z["totalGP"]<=0 or z["musterGP"]<=0:
-            raise SystemExit(f"Invalid Screen-2 row: {z['janpad']}")
+        if z["totalGP"]<=0 or z["musterGP"]<0 or z["musterGP"]>z["totalGP"]:
+            raise SystemExit(f"Invalid Screen-2 row: {z['janpad']} totalGP={z['totalGP']} musterGP={z['musterGP']}")
         fixed=R612_VERIFIED[z["janpad"]]
         z["ongoingAll"]=fixed["ongoingAll"]
         z["pmayOngoing"]=fixed["pmayOngoing"]
