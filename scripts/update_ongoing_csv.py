@@ -244,7 +244,7 @@ def main():
         apply_sector_correction(row)
     rows[0]['sourceDate'] = datetime.now(timezone.utc).date().isoformat()
     payload = json.dumps(rows, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
-    OUT.write_text('window.ONGOING_DETAILS=' + payload.decode('utf-8') + ';\\n', encoding='utf-8')
+    OUT.write_text('window.ONGOING_DETAILS=' + payload.decode('utf-8') + ';\n', encoding='utf-8')
     compressed = gzip.compress(payload, compresslevel=6, mtime=0)
     temp = GZIP_OUT.with_name(GZIP_OUT.name + '.tmp')
     temp.write_bytes(compressed)
