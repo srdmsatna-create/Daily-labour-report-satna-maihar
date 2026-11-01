@@ -1,12 +1,12 @@
 {
-  "runId": "20261101T034346Z-ffd5f6",
-  "checkedAt": "2026-11-01T04:23:05.024196+00:00",
+  "runId": "20261101T044212Z-4d2d29",
+  "checkedAt": "2026-11-01T05:31:59.190742+00:00",
   "schedule": "06:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
       "success": false,
       "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts/merge_official_summary.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/local_auto_update.py']\nOfficial ALL AMARPATAN: GP=75; progress=15; labour=80; MR works=64\r\nOfficial ALL MAIHAR: GP=115; progress=14; labour=77; MR works=56\r\nOfficial ALL MAJHGAWAN: GP=96; progress=1; labour=80; MR works=1\r\nOfficial ALL NAGOD: GP=94; progress=15; labour=54; MR works=38\r\nOfficial ALL RAMNAGAR: GP=55; progress=39; labour=240; MR works=188\r\nOfficial ALL RAMPUR BAGHELAN: GP=97; progress=21; labour=88; MR works=66\r\nOfficial ALL SATNA: GP=93; progress=0; labour=0; MR works=0\r\nOfficial ALL UNCHAHARA: GP=70; progress=31; labour=111; MR works=88\r\nUpdated C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_2hoybw0p\\report\\data\\official-summary.csv for 8 janpads\r\nSUCCESS: 8/8 Janpads. Individual Labour/MR=628/496; PMAY Labour/MR=591/473; Ek Bagiya Labour/MR=37/23.\r\nNext: python scripts\\merge_official_summary.py\r\n\nCOMMAND ['scripts/merge_official_summary.py']\nInvalid Screen-2 row: SATNA\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/local_auto_update.py']\nOfficial ALL AMARPATAN: GP=75; progress=15; labour=80; MR works=64\r\nOfficial ALL MAIHAR: GP=115; progress=14; labour=77; MR works=56\r\nOfficial ALL MAJHGAWAN: GP=96; progress=1; labour=80; MR works=1\r\nOfficial ALL NAGOD: GP=94; progress=15; labour=54; MR works=38\r\nOfficial ALL RAMNAGAR: GP=55; progress=39; labour=240; MR works=188\r\nOfficial ALL RAMPUR BAGHELAN: GP=97; progress=21; labour=88; MR works=66\r\nOfficial ALL SATNA: GP=93; progress=0; labour=0; MR works=0\r\nOfficial ALL UNCHAHARA: GP=70; progress=31; labour=111; MR works=88\r\nUpdated C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_bwn6dijk\\report\\data\\official-summary.csv for 8 janpads\r\nSUCCESS: 8/8 Janpads. Individual Labour/MR=628/496; PMAY Labour/MR=591/473; Ek Bagiya Labour/MR=37/23.\r\nNext: python scripts\\merge_official_summary.py\r\n\nCOMMAND ['scripts/merge_official_summary.py']\nInvalid Screen-2 row: SATNA\r\n",
       "files": [
         "auto-data.js",
         "auto-status.js",
