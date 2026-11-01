@@ -1,5 +1,5 @@
 """Refresh each dashboard data feed independently; roll back failed partial writes."""
-import csv,json,os,subprocess,sys,runpy,time,codecs
+import csv,gzip,json,os,subprocess,sys,runpy,time,codecs
 from pathlib import Path
 from datetime import datetime,timezone
 from zoneinfo import ZoneInfo
@@ -23,7 +23,7 @@ GROUPS=[
  ('timely_payment',[['scripts_local/update_timely_payment.py']],['data/timely-payment-latest.json']),
  ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
- ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js']),
+ ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js','ongoing-details.json.gz']),
  ('pmayg_physical',[['scripts_local/update_pmayg_physical.py']],['data/pmayg-physical-latest.json']),
  ('pmayg',[['scripts_local/update_pmayg.py']],['data/pmayg-latest.json']),
  ('above75',[['scripts_local/update_above75.py']],['data/above75-latest.json']),
@@ -107,6 +107,8 @@ def validate(group,root):
   if d['nregaCount']!=sum(r['incomplete'] for r in official) or d['bandCount']!=sum(r['band75to100'] for r in official) or d['above75Count']!=sum(r['overallBooked']*100>r['sanction']*75 for r in rr if r['sanction']>0):raise ValueError('Above75 summary totals failed')
  elif group=='mis_612':
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
+  with gzip.open(root/'ongoing-details.json.gz','rt',encoding='utf-8') as f: work_rows=json.load(f)
+  if not isinstance(work_rows,list) or len(work_rows)<1000:raise ValueError('Compressed MIS work details incomplete')
  elif group=='yuktdhara_state':
   d=data(root/'data/yuktdhara-state-latest.json');rr=d.get('rows',[])
   if len(rr)!=52 or len({r['district'] for r in rr})!=52:raise ValueError('52 unique Yuktdhara districts required')
