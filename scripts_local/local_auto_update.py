@@ -153,6 +153,31 @@ def _submit_and_wait(page):
     page.wait_for_timeout(1200)
 
 
+def _select_with_option(page, label, exclude=None):
+    """Find a select by available option text, independent of form order."""
+    target = re.sub(r"\\s+", " ", label).strip().lower()
+    matches = []
+    for i in range(page.locator("select").count()):
+        control = page.locator("select").nth(i)
+        if exclude is not None and i == exclude:
+            continue
+        labels = [re.sub(r"\\s+", " ", (opt.inner_text() or "")).strip().lower()
+                  for opt in control.locator("option").all()]
+        if any(text == target or target in text for text in labels):
+            matches.append(i)
+    if len(matches) != 1:
+        raise RuntimeError(
+            f"R6.9 dropdown for {label!r} is not unique; matching indexes={matches}, "
+            f"total selects={page.locator('select').count()}"
+        )
+    return page.locator("select").nth(matches[0]), matches[0]
+
+
+def _r69_controls(page):
+    category, category_index = _select_with_option(page, INDIVIDUAL_CATEGORY)
+    status, _ = _select_with_option(page, PMAY_STATUS, exclude=category_index)
+    return category, status
+
 def fetch_reports():
     from playwright.sync_api import sync_playwright
 
@@ -175,13 +200,12 @@ def fetch_reports():
         page.goto(REPORT_URL, wait_until="networkidle", timeout=60000)
         page.wait_for_timeout(1500)
 
-        selects = page.locator("select")
-        if selects.count() < 3:
+        try:
+            work_category, proposed_status = _r69_controls(page)
+        except RuntimeError as exc:
+            visible = re.sub(r"\\s+", " ", page.locator("body").inner_text())[:500]
             browser.close()
-            raise RuntimeError("R6.9 filters not found: expected 3 dropdowns.")
-
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
+            raise RuntimeError(f"{exc}; page says: {visible}") from exc
 
         # 1) ALL report
         _select_label(work_category, "ALL")
@@ -193,9 +217,7 @@ def fetch_reports():
         all_html = page.content()
 
         # 2) Individual
-        selects = page.locator("select")
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
+        work_category, proposed_status = _r69_controls(page)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
         page.wait_for_load_state("networkidle", timeout=60000)
         proposed_status = page.locator("select").nth(2)
@@ -204,9 +226,7 @@ def fetch_reports():
         individual_html = page.content()
 
         # 3) PMAY-G
-        selects = page.locator("select")
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
+        work_category, proposed_status = _r69_controls(page)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
         page.wait_for_load_state("networkidle", timeout=60000)
         proposed_status = page.locator("select").nth(2)
@@ -215,9 +235,7 @@ def fetch_reports():
         pmay_html = page.content()
 
         # 4) Ek Bagiya
-        selects = page.locator("select")
-        work_category = selects.nth(1)
-        proposed_status = selects.nth(2)
+        work_category, proposed_status = _r69_controls(page)
         _select_label(work_category, INDIVIDUAL_CATEGORY)
         page.wait_for_load_state("networkidle", timeout=60000)
         proposed_status = page.locator("select").nth(2)
