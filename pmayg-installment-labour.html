@@ -36,8 +36,10 @@ let awaas=[],wageByJanpad=new Map(),exportRows=[];
 function showError(msg){$('error').textContent=msg;$('error').classList.remove('hidden')}
 function render(){
  const fy=$('fy').value,dist=$('district').value,jp=$('janpad').value;
- const fyLabel=fy.split('-')[0]+'-'+fy.split('-')[1].slice(-2);$('selected-title').textContent='Awaas Portal में प्रदाय किस्त अनुसार VB-G RAM G मजदूरी — वर्ष '+fyLabel;
- const rows=awaas.filter(r=>r.fy===fy&&(!dist||districtOf(janpadName(r.portalBlock))===dist)&&(!jp||janpadName(r.portalBlock)===jp)).sort((a,b)=>janpadName(a.portalBlock).localeCompare(janpadName(b.portalBlock),'en'));
+ const fyLabel=fy==='ALL'?'2024-25 एवं 2025-26':fy.split('-')[0]+'-'+fy.split('-')[1].slice(-2);$('selected-title').textContent='Awaas Portal में प्रदाय किस्त अनुसार VB-G RAM G मजदूरी — वर्ष '+fyLabel;
+ const selectedRows=awaas.filter(r=>(fy==='ALL'||r.fy===fy)&&(!dist||districtOf(janpadName(r.portalBlock))===dist)&&(!jp||janpadName(r.portalBlock)===jp)).sort((a,b)=>janpadName(a.portalBlock).localeCompare(janpadName(b.portalBlock),'en'));
+ let rows=selectedRows;
+ if(fy==='ALL'){const grouped=new Map();for(const r of selectedRows){const j=janpadName(r.portalBlock);if(!grouped.has(j))grouped.set(j,{...r,fy:'ALL'});else for(const k of ['target','registered','geoTagged','sanctioned','verifiedAccounts','installment1','installment2','installment3','installment4','completedVerified','completed'])grouped.get(j)[k]=(Number(grouped.get(j)[k])||0)+(Number(r[k])||0)}rows=[...grouped.values()].sort((a,b)=>janpadName(a.portalBlock).localeCompare(janpadName(b.portalBlock),'en'))}
  const wageRows=[...wageByJanpad.entries()].filter(([j])=>(!dist||districtOf(j)===dist)&&(!jp||j===jp));
  const totals=rows.reduce((a,r)=>{for(const k of ['target','registered','geoTagged','sanctioned','verifiedAccounts','installment1','installment2','installment3','installment4','completedVerified','completed'])a[k]+=Number(r[k])||0;return a},{target:0,registered:0,geoTagged:0,sanctioned:0,verifiedAccounts:0,installment1:0,installment2:0,installment3:0,installment4:0,completedVerified:0,completed:0});
  const wages=wageRows.reduce((a,[,w])=>{a.booked+=w.booked;a.paid+=w.paid;a.remaining+=w.remaining;return a},{booked:0,paid:0,remaining:0});
@@ -58,7 +60,7 @@ function render(){
 async function init(){try{
  const raw=await fetch('data/awaasplus-installment-labour-r73.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('AwaasPlus snapshot नहीं मिला');return r.json()});
  if(raw.schemaVersion!==1||!Array.isArray(raw.rows)||raw.rows.length!==16)throw Error('AwaasPlus snapshot की जाँच असफल');awaas=raw.rows;
- const years=[...new Set(awaas.map(r=>r.fy))].sort().reverse();$('fy').innerHTML=years.map(y=>'<option value="'+y+'">'+y.replace('-','–')+'</option>').join('');
+ const years=[...new Set(awaas.map(r=>r.fy))].sort().reverse();$('fy').innerHTML='<option value="ALL">दोनों वर्ष</option>'+years.map(y=>'<option value="'+y+'">'+y.replace('-','–')+'</option>').join('');
  const physical=await fetch('data/pmayg-physical-latest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('R-7.1 मजदूरी डेटा नहीं मिला');return r.json()});
  if(physical.basis!=='vbg-physical-pmayg-v1'||!Array.isArray(physical.rows)||!physical.rows.length)throw Error('R-7.1 मजदूरी डेटा सत्यापित नहीं है');
  if(physical.rows.some(r=>r.status!=='Physically Completed'||!r.sources?.VBGRAMG||!Number.isFinite(r.sources.VBGRAMG.wageBooked)||!Number.isFinite(r.sources.VBGRAMG.wagePaid)))throw Error('R-7.1 मजदूरी फ़ील्ड अधूरे हैं');
