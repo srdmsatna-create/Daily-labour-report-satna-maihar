@@ -1,5 +1,5 @@
 """Read S5.26, payment-pending mode, all eight Satna/Maihar blocks."""
-import asyncio,gzip,json,re,sys
+import asyncio,csv,gzip,json,re,sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -33,6 +33,170 @@ def summarize(rr):
     else:g['missingFto'+stage].add(k)
  if serial and serial!=list(range(1,len(serial)+1)):raise ValueError('Missing/repeated serials; complete source required')
  return {'rawRows':len(serial),'details':details,'groups':{gp:{k:len(v) for k,v in g.items()} for gp,g in groups.items()}}
+def enrich_details(details):
+ # Work type/category enrichment is an exact Work Code match. The payment
+ # population itself remains exclusively the verified S5.26 Pending Payment rows.
+ work_map={}
+ path=ROOT/'data'/'Ongoing_Works_dynamic_work_details_latest.csv'
+ if path.exists():
+  with path.open(encoding='utf-8-sig',newline='') as f:
+   for row in csv.DictReader(f):
+    code=(row.get('Work Code') or '').strip()
+    if code:
+     work_map[code]={k:(row.get(src) or '').strip() for k,src in (
+      ('workName','Work Name'),('workType','Work Type'),
+      ('workCategory','Original Work Category'))}
+ for r in details:
+  code=(r.get('workCode') or '').strip()
+  info=work_map.get(code,{})
+  r.update(info)
+  pmay=bool(re.search(r'/(?:IAY|PMAY)/',code,re.I) or
+            re.search(r'\\b(?:PMAY|IAY)\\b',str(info.get('workName',''))+' '+str(info.get('workType','')),re.I))
+  r['scheme']='PMAY-G / IAY' if pmay else 'अन्य मनरेगा कार्य'
+  staff=(r.get('staff') or '').strip()
+  m=re.match(r'^(.*?)\\s*\\((.*?)\\)\\s*
+ if set(blocks)!=set(BLOCKS):raise ValueError('All eight blocks must be fetched before publication')
+ stamp=datetime.now(ZoneInfo('Asia/Kolkata'));reports={}
+ for stage in ('mr','first','second'):
+  result=[]
+  for block,part in blocks.items():
+   for gp,g in part['groups'].items():result.append({'block':block,'panchayat':gp,'pending':g[stage]})
+  reports[stage]={'available':True,'sourceDate':stamp.strftime('%d/%m/%Y'),'fetchedAt':stamp.isoformat(),'source':source,'unit':'musterRoll','coverage':list(BLOCKS),'rows':result}
+ d={'schemaVersion':1,'reports':reports,'sourceMode':'payment-pending','selectedFilter':'Pending Payment','counts':'S5.26 Pending Payment only; first/second are stages within this filtered result, not separate payment modes','sourceSummary':{b:{k:v for k,v in p.items() if k!='details'} for b,p in blocks.items()},'details':enrich_details([dict(r,block=b) for b,p in blocks.items() for r in p.get('details',[])]),'filterVerified':True}
+ validate(d);return d
+def validate(d):
+ if d.get('schemaVersion')!=1 or d.get('sourceMode')!='payment-pending' or d.get('selectedFilter')!='Pending Payment' or d.get('filterVerified') is not True:raise ValueError('S5.26 must be verified in Pending Payment mode only')
+ for stage in ('mr','first','second'):
+  r=d['reports'][stage]
+  if not r.get('available') or set(r.get('coverage',[]))!=set(BLOCKS):raise ValueError('Incomplete block coverage')
+  seen=set()
+  for row in r['rows']:
+   k=(row['block'],row['panchayat'])
+   if k in seen or k[0] not in BLOCKS or not k[1] or type(row['pending']) is not int or row['pending']<0:raise ValueError('Invalid/duplicate GP count')
+   seen.add(k)
+ details=d.get('details')
+ if details is None:
+  if d.get('detailsFile')!='data/pending-mr-fto-details.json.gz':raise ValueError('Datewise detail file missing')
+  details=json.loads(gzip.decompress((ROOT/d['detailsFile']).read_bytes()))
+  if len(details)!=d.get('detailCount'):raise ValueError('Detail count mismatch')
+ if set(r['block'] for r in details)!=set(BLOCKS):raise ValueError('All eight blocks require datewise details')
+ for stage in ('mr','first','second'):
+  counts={}
+  for r in details:
+   if stage!='mr' and not r[stage+'Pending']:continue
+   counts.setdefault((r['block'],r['panchayat']),set()).add((r['workCode'],r['mr']))
+  for r in d['reports'][stage]['rows']:
+   if r['pending']!=len(counts.get((r['block'],r['panchayat']),set())):raise ValueError('Detail/summary reconciliation failed')
+
+def gp_key(value):
+ return re.sub(r'[^\w]','',value.upper(),flags=re.UNICODE)
+
+def canonical_rows(rr,options,block):
+ # Match only within the selected block. A work's GP code is stronger than
+ # display spelling, but conflicting names/codes must never be guessed.
+ by_name={};by_code={}
+ for option in options:
+  by_name.setdefault(gp_key(option['text']),set()).add(option['text'])
+  if re.fullmatch(r'\d{10}',option['value']):by_code.setdefault(option['value'],set()).add(option['text'])
+ start=next((i for i,r in enumerate(rr) if len(r)==14 and r[2]['text'].lower()=='muster roll number'),None)
+ if start is None:return rr # summarize supplies the missing-header error
+ for row in rr[start+1:]:
+  if len(row)!=14 or not row[0]['text'].isdigit():continue
+  name=row[1]['text'];code=row[5]['text'].split('/')[0]
+  names=by_name.get(gp_key(name),set());coded=by_code.get(code,set())
+  if len(names)==1 and (not coded or names==coded):chosen=next(iter(names))
+  elif not names and len(coded)==1:chosen=next(iter(coded))
+  else:raise ValueError(f'Unrecognized/conflicting GP in {block}: name={name!r}, workCode={row[5]["text"]!r}; dropdown={options!r}')
+  row[1]['text']=chosen
+ return rr
+
+async def postback(page,action,step,timeout=90000):
+ # ASP.NET may use a full navigation OR an UpdatePanel POST. A response
+ # wait handles both, without waiting for a navigation that never occurs.
+ try:
+  async with page.expect_response(lambda r:r.request.method=='POST' and r.url.split('?')[0]==page.url.split('?')[0],timeout=timeout) as pending:
+   await action()
+  response=await pending.value
+  if response.status>=400:raise ValueError(f'HTTP {response.status}')
+  await page.wait_for_load_state('domcontentloaded',timeout=timeout)
+  await page.wait_for_function("() => document.readyState !== 'loading' && !(window.Sys && Sys.WebForms && Sys.WebForms.PageRequestManager.getInstance().get_isInAsyncPostBack())",timeout=timeout)
+ except Exception as exc:raise RuntimeError(f'S5.26 {step}: {exc}') from exc
+
+async def select_report_option(page,selector,label):
+ control=page.locator(selector)
+ # Selecting the already selected state/GP does not fire a postback.
+ selected=await control.locator('option:checked').all_text_contents()
+ if selected and selected[0].strip()==label:return
+ async def action():await control.select_option(label=label)
+ onchange=await control.get_attribute('onchange') or ''
+ if '__doPostBack' in onchange or 'WebForm_DoPostBack' in onchange:
+  await postback(page,action,selector+' -> '+label)
+ else:
+  await action()
+ await page.wait_for_function("([selector,label]) => { const e=document.querySelector(selector); return e && e.selectedOptions.length && e.selectedOptions[0].textContent.trim()===label; }",arg=[selector,label],timeout=30000)
+
+async def fetch_block(context,block,n):
+ page=await context.new_page()
+ async def select(selector,label):await select_report_option(page,selector,label)
+ try:
+  response=await page.goto(SOURCE,wait_until='domcontentloaded',timeout=90000)
+  if response is not None and response.status>=400:raise ValueError('Official portal refused report')
+  await select('#ContentPlaceHolder1_ddl_state','MADHYA PRADESH')
+  await select('#ContentPlaceHolder1_ddl_dist','SATNA')
+  await select('#ContentPlaceHolder1_ddl_blk',block)
+  options=await page.locator('#ContentPlaceHolder1_ddl_pan option').evaluate_all('(options) => options.map(o => ({text:o.textContent.trim(),value:o.value}))')
+  options=[o for o in options if o['text'].upper() not in ('SELECT','ALL','')]
+  gps=[o['text'] for o in options]
+  if len(gps)!=n:raise ValueError('GP coverage mismatch: '+block)
+  await select('#ContentPlaceHolder1_ddl_pan','ALL')
+  radio=page.locator('#ContentPlaceHolder1_Rbtn_pay_1')
+  if not await radio.is_checked():
+   onclick=await radio.get_attribute('onclick') or ''
+   if '__doPostBack' in onclick or 'WebForm_DoPostBack' in onclick:await postback(page,radio.check,'payment-pending filter')
+   else:await radio.check()
+  await postback(page,page.locator('#ContentPlaceHolder1_Button1').click,'generate '+block,180000)
+  if not await page.locator('#ContentPlaceHolder1_Rbtn_pay_1').is_checked():raise ValueError('Payment pending filter not retained')
+  body=await page.content()
+  if re.search(r'Page\$\d+',body):raise ValueError('Paginated tracking report requires all pages')
+  part=summarize(canonical_rows(rows(body),options,block))
+  fields=('mr','first','second','missingFtoFirst','missingFtoSecond','knownFirst','knownSecond')
+  for gp in gps:part['groups'].setdefault(gp,dict.fromkeys(fields,0))
+  print('S5.26 verified:',block,'GPs',n,'source rows',part['rawRows'],flush=True)
+  return part
+ finally:await page.close()
+
+async def fetch(context):
+ result={}
+ for block,n in BLOCKS.items():
+  for attempt in range(3):
+   try:
+    result[block]=await fetch_block(context,block,n)
+    break
+   except Exception as exc:
+    if attempt==2:raise RuntimeError(f'{block} failed after 3 fresh-page attempts: {exc}') from exc
+    print(f'Retrying S5.26 {block} ({attempt+2}/3): {exc}',flush=True)
+    await asyncio.sleep(2*(attempt+1))
+ return build(result)
+def main():
+ from emb_browser_reader import BrowserReader
+ reader=BrowserReader()
+ try:d=asyncio.run_coroutine_threadsafe(fetch(reader.context),reader.loop).result(timeout=3600)
+ finally:reader.close()
+ details=d.pop('details');d['detailsFile']='data/pending-mr-fto-details.json.gz';d['detailCount']=len(details)
+ dp=ROOT/d['detailsFile'];dt=dp.with_suffix('.tmp');dt.write_bytes(gzip.compress(json.dumps(details,ensure_ascii=False,separators=(',',':')).encode('utf-8')));dt.replace(dp)
+ p=ROOT/'data/pending-mr-fto.json';tmp=p.with_suffix('.tmp');tmp.write_text(json.dumps(d,ensure_ascii=False,separators=(',',':')),encoding='utf-8');tmp.replace(p)
+ print('SUCCESS: S5.26 pending MR/FTO stages, eight blocks, 695 GPs')
+if __name__=='__main__':
+ try:main()
+ except Exception as e:print('Pending MR/FTO refresh failed; previous snapshot retained:',e,flush=True);sys.exit(1)
+,staff)
+  person=(m.group(1).strip() if m else staff)
+  role=(m.group(2).strip().lower() if m else '')
+  r['grs']=person if pmay and ('gram rozgar sahayak' in role or re.search(r'\\bgrs\\b',role)) else ''
+  r['subEngineer']=person if not pmay and 'sub-engineer' in role else ''
+ return details
+
+
 def build(blocks,source=SOURCE):
  if set(blocks)!=set(BLOCKS):raise ValueError('All eight blocks must be fetched before publication')
  stamp=datetime.now(ZoneInfo('Asia/Kolkata'));reports={}
