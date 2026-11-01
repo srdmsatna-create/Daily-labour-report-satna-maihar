@@ -161,7 +161,7 @@ def _select_with_option(page, label, exclude=None):
         control = page.locator("select").nth(i)
         if exclude is not None and i == exclude:
             continue
-        labels = [re.sub(r"\\s+", " ", (opt.inner_text() or "")).strip().lower()
+        labels = [re.sub(r"\s+", " ", (opt.inner_text() or "")).strip().lower()
                   for opt in control.locator("option").all()]
         if any(text == target or target in text for text in labels):
             matches.append(i)
@@ -205,7 +205,7 @@ def fetch_reports():
         try:
             work_category, category_index = _r69_category(page)
         except RuntimeError as exc:
-            visible = re.sub(r"\\s+", " ", page.locator("body").inner_text())[:500]
+            visible = re.sub(r"\s+", " ", page.locator("body").inner_text())[:500]
             browser.close()
             raise RuntimeError(f"{exc}; page says: {visible}") from exc
 
