@@ -2285,7 +2285,7 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
   loading=(async()=>{
    try{
     if(typeof DecompressionStream==='function'){
-     const response=await fetch('ongoing-details.json.gz',{cache:'force-cache'});
+     const response=await fetch('ongoing-details.json.gz',{cache:'default'});
      if(response.ok&&response.body){
       const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
       const rows=JSON.parse(await new Response(stream).text());
