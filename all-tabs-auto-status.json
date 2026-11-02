@@ -1,12 +1,11 @@
 {
-  "runId": "20261102T015146Z-619109",
-  "checkedAt": "2026-11-02T02:26:18.722970+00:00",
-  "schedule": "06:00 Asia/Kolkata",
+  "checkedAt": "2026-11-02T07:28:51.526985+00:00",
+  "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
       "success": false,
       "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/local_auto_update.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/local_auto_update.py']\nFAILED: R6.9 dropdown for 'Constr of PMAY-G House for Individuals' is not unique; matching indexes=[], total selects=0\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/local_auto_update.py']\nFAILED: R6.9 dropdown for 'Constr of PMAY-G House for Individuals' is not unique; matching indexes=[], total selects=0\r\n\nCOMMAND ['scripts_local/local_auto_update.py']\nFAILED: R6.9 dropdown for 'Constr of PMAY-G House for Individuals' is not unique; matching indexes=[], total selects=0\r\n\nCOMMAND ['scripts_local/local_auto_update.py']\nFAILED: R6.9 dropdown for 'Constr of PMAY-G House for Individuals' is not unique; matching indexes=[], total selects=0\r\n",
       "files": [
         "auto-data.js",
         "auto-status.js",
@@ -19,7 +18,7 @@
         "shramik-state-refresh-status.js",
         "shramik-refresh-status.js"
       ],
-      "attempts": 1
+      "attempts": 3
     },
     "r42_emuster_wagelist": {
       "success": true,
@@ -38,21 +37,21 @@
     "pending_mr_fto": {
       "success": false,
       "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_pending_mr_fto.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_ehhqnacj\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_0ar4_fso\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_0ar4_fso\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_0ar4_fso\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n",
       "files": [
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1
+      "attempts": 3
     },
     "emb_pending": {
       "success": false,
       "message": "Current pending e-MB detail required",
-      "errorTail": "\nCOMMAND ['scripts_local/update_emb_pending.py']\nVerified Pending for Payment: 695 GPs; 7964 distinct MRs\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/update_emb_pending.py']\nVerified Pending for Payment: 695 GPs; 7964 distinct MRs\r\n\nCOMMAND ['scripts_local/update_emb_pending.py']\nVerified Pending for Payment: 695 GPs; 7964 distinct MRs\r\n\nCOMMAND ['scripts_local/update_emb_pending.py']\nVerified Pending for Payment: 695 GPs; 7964 distinct MRs\r\n",
       "files": [
         "data/emb-pending-latest.json"
       ],
-      "attempts": 1
+      "attempts": 3
     },
     "yuktdhara_state": {
       "success": true,
@@ -113,7 +112,7 @@
       "files": [
         "data/pmayg-physical-latest.json"
       ],
-      "attempts": 1
+      "attempts": 2
     },
     "pmayg": {
       "success": true,
