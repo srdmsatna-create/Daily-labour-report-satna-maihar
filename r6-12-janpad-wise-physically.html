@@ -138,7 +138,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   const total=list.reduce((a,g)=>addPair(a,g.total),emptyPair()),money=n=>n/1e5,pct=g=>g.sanction?100*g.expenditure/g.sanction:0;
   const overall=addBucket(total.pmayiay,total.nonpmay);
   document.getElementById('meta').textContent='सत्यापित R6.12 ongoing-work विवरण • '+fmt(filteredSource().length)+' कार्य • जिला: '+(districtFilter==='all'?'दोनों जिले':districtFilter)+' • रिपोर्ट समय: '+new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
-  document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(overall.sanction?100*overall.expenditure/overall.sanction:0,1)+'%</strong></div>';
+  document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),1)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),1)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(overall.sanction?100*overall.expenditure/overall.sanction:0,1)+'%</strong></div>';
   const table=document.querySelector('.wrap table');table.classList.remove('split-wide','panchayat-wide','janpad-wide');table.classList.add('engineer-wide');const oldCols=table.querySelector('colgroup');if(oldCols)oldCols.remove();
   const sub='<th class="pmayg-head">PMAY-G</th><th class="nonpmay-head">NON PMAY</th>',totalHead='<th class="total-work-head">कुल चल रहे कार्य</th>';
   document.getElementById('head').innerHTML='<tr><th rowspan="2">क्रमांक</th><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">'+sortHeading('इंजीनियर')+'</th><th colspan="3">चल रहे कार्य</th><th colspan="2">स्वीकृत लागत (₹ लाख)</th><th colspan="2">व्यय (₹ लाख)</th><th colspan="2">व्यय %</th><th colspan="2">शेष लागत (₹ लाख)</th></tr><tr>'+totalHead+sub+sub+sub+sub+sub+'</tr>';
@@ -147,8 +147,8 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   const cells=g=>{
    const all=addBucket(g.pmayiay,g.nonpmay),rate=all.sanction?100*all.expenditure/all.sanction:0;
    return '<td class="total-work-cell">'+fmt(all.count)+'</td>'+pair(g,b=>fmt(b.count))
-    +pair(g,b=>fmt(money(b.sanction),2))+pair(g,b=>fmt(money(b.expenditure),2))
-    +pair(g,b=>fmt(pct(b),1)+'%')+pair(g,b=>fmt(money(b.sanction-b.expenditure),2));
+    +pair(g,b=>fmt(money(b.sanction),1))+pair(g,b=>fmt(money(b.expenditure),1))
+    +pair(g,b=>fmt(pct(b),1)+'%')+pair(g,b=>fmt(money(b.sanction-b.expenditure),1));
   };
   let html='',serial=0,currentDistrict='',districtTotal=emptyPair();
   for(const group of list){
@@ -213,7 +213,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   const combined=g=>addBucket(g.pmayiay,g.nonpmay);
   const pairCells=(g,fn)=>'<td class="pmayg-cell">'+fn(g.pmayiay)+'</td><td class="nonpmay-cell">'+fn(g.nonpmay)+'</td>';
   const workCells=g=>'<td class="total-work-cell">'+fmt(combined(g).count)+'</td>'+(active==='category'?'':pairCells(g,b=>fmt(b.count)));
-  const financeCells=g=>{if(active==='category'){const b=combined(g),rate=b.sanction?100*b.expenditure/b.sanction:0;return '<td>'+fmt(money(b.sanction),2)+'</td><td>'+fmt(money(b.expenditure),2)+'</td><td class="percent">'+fmt(rate,1)+'%</td><td>'+fmt(money(b.sanction-b.expenditure),2)+'</td>'}return pairCells(g,b=>fmt(money(b.sanction),2))+pairCells(g,b=>fmt(money(b.expenditure),2))+pairCells(g,b=>fmt(pct(b),1)+'%')+pairCells(g,b=>fmt(money(b.sanction-b.expenditure),2))};
+  const financeCells=g=>{if(active==='category'){const b=combined(g),rate=b.sanction?100*b.expenditure/b.sanction:0;return '<td>'+fmt(money(b.sanction),1)+'</td><td>'+fmt(money(b.expenditure),1)+'</td><td class="percent">'+fmt(rate,1)+'%</td><td>'+fmt(money(b.sanction-b.expenditure),1)+'</td>'}return pairCells(g,b=>fmt(money(b.sanction),1))+pairCells(g,b=>fmt(money(b.expenditure),1))+pairCells(g,b=>fmt(pct(b),1)+'%')+pairCells(g,b=>fmt(money(b.sanction-b.expenditure),1))};
   let html='',serial=0,currentDistrict='',districtTotal=emptyPair();
   const districtTotalRow=(name,g)=>'<tr class="district-total"><td colspan="3">जिला '+name+' — योग</td>'+workCells(g)+financeCells(g)+'</tr>';
   for(let i=0;i<list.length;i++){
@@ -240,7 +240,7 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   document.getElementById('rows').innerHTML=html;
   const overall=addPair(total.pmayiay,total.nonpmay);
   document.getElementById('meta').textContent='सत्यापित R6.12 ongoing-work विवरण • '+fmt(filteredSource().length)+' कार्य • जिला: '+(districtFilter==='all'?'दोनों जिले':districtFilter)+' • रिपोर्ट समय: '+new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
-  document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),2)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),2)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(overall),1)+'%</strong></div>';
+  document.getElementById('summary').innerHTML='<div class="card"><small>चल रहे कार्य</small><strong>'+fmt(overall.count)+'</strong></div><div class="card"><small>स्वीकृत लागत</small><strong>₹ '+fmt(money(overall.sanction),1)+' लाख</strong></div><div class="card"><small>व्यय</small><strong>₹ '+fmt(money(overall.expenditure),1)+' लाख</strong></div><div class="card"><small>औसत व्यय</small><strong>'+fmt(pct(overall),1)+'%</strong></div>';
  }
  function load(){
   const now=new Date(),dateLabel=new Intl.DateTimeFormat('en-GB',{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'Asia/Kolkata'}).format(now).replace(/\//g,'-');
