@@ -18,6 +18,11 @@ h1{text-align:center;color:#087b4d;font-size:30px;margin:10px 0 4px}
 h2{color:#087b4d;font-size:21px;margin:4px 0 8px}
 h3{font-size:16px;color:#174e7d;margin:14px 0 7px}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:12px 0}
+.summary-cards{grid-template-columns:repeat(6,minmax(0,1fr));overflow-x:auto}
+.summary-cards .card{padding:9px 8px;min-width:0}
+.summary-cards .card label{font-size:14px;white-space:nowrap}
+.summary-cards .card strong{font-size:19px}
+.summary-cards .card small{font-size:15px}
 .card{background:#f7fafc;border:1px solid #b6cce0;border-left:5px solid var(--blue);border-radius:9px;min-height:88px;padding:10px 13px}
 .card.good-card{border-left-color:var(--green)}
 .card label{display:block;font-weight:700;color:#607a93;margin-bottom:4px}
@@ -68,7 +73,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .panchayat-table tbody td{font-weight:700}
 .engineer-progress-table{min-width:1050px}
 .empty{text-align:center!important;padding:20px;color:#647d95}
-@media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
+@media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-cards{grid-template-columns:repeat(6,minmax(150px,1fr));overflow-x:auto}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
 @page{size:A4 landscape;margin:8mm}
 @media print{
  body{padding:0;font-size:9pt}main{max-width:none;border:0;border-radius:0;padding:0}
