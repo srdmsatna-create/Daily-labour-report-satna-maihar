@@ -114,6 +114,8 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 (function(){
 const BASE=window.YUKTDHARA_DAILY_BASELINE,$=id=>document.getElementById(id);
 const JANPAD_DISTRICT={AMARPATAN:"Maihar",MAIHAR:"Maihar",RAMNAGAR:"Maihar",MAJHGAWAN:"Satna",NAGOD:"Satna",RAMPURBAGHELAN:"Satna",SOHAWAL:"Satna",SATNA:"Satna",UNCHAHARA:"Satna"};
+const JANPAD_ORDER=["AMARPATAN","MAIHAR","RAMNAGAR","MAJHGAWAN","NAGOD","RAMPURBAGHELAN","SOHAWAL","UNCHAHARA","SATNA"];
+function compareJanpads(a,b){const ka=janpadKey(a),kb=janpadKey(b),ia=JANPAD_ORDER.indexOf(ka),ib=JANPAD_ORDER.indexOf(kb);return (ia<0?999:ia)-(ib<0?999:ib)||ka.localeCompare(kb,"en");}
 const fmt=n=>Number(n||0).toLocaleString("en-IN");
 const norm=v=>String(v||"").normalize("NFKC").toUpperCase().replace(/[^\p{L}\p{N}]/gu,"");
 const janpadKey=v=>norm(v)==="RAMPORBAGHELAN"?"RAMPURBAGHELAN":norm(v);
@@ -143,7 +145,7 @@ function renderSummary(current){
  const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value;
  const oldMap=new Map(BASE.blocks.map(x=>[janpadKey(x.janpad),x])),newMap=new Map((current.blocks||[]).map(x=>[janpadKey(x.block),x]));
  const all=[...new Set([...oldMap.keys(),...newMap.keys()])];
- const janpads=all.filter(k=>isJanpad(k,district)&&(janpad==="ALL"||k===janpad)&&(engineer==="ALL"||engineer.split("|")[0]===k)&&(panchayat==="ALL"||panchayat.split("|")[0]===k)).sort();
+ const janpads=all.filter(k=>isJanpad(k,district)&&(janpad==="ALL"||k===janpad)&&(engineer==="ALL"||engineer.split("|")[0]===k)&&(panchayat==="ALL"||panchayat.split("|")[0]===k)).sort(compareJanpads);
  const keys=["gpReceived","worksReceived","worksCreated","yetToStart","ongoing","completed"],labels=["प्राप्त पंचायतें","Yuktdhara से प्राप्त कार्य","VBGRAMG में बने कार्य","शुरू नहीं हुए","प्रगतिरत","पूर्ण"];
  let rows="",oldAgg={},newAgg={};keys.forEach(k=>{oldAgg[k]=0;newAgg[k]=0;});
  janpads.forEach(k=>{const a=oldMap.get(k)||{},b=newMap.get(k)||{},j=b.block||a.janpad||k,d=JANPAD_DISTRICT[janpadKey(j)]||"Satna";keys.forEach(x=>{oldAgg[x]+=Number(a[x]||0);newAgg[x]+=Number(b[x]||0);});rows+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td>'+metricCells(keys,a,b)+'</tr>';});
@@ -163,7 +165,7 @@ function renderEngineers(current){
  const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value,old=new Map(),now=new Map();
  BASE.engineers.forEach(r=>old.set(janpadKey(r.janpad)+"|"+norm(r.engineer),r));
  (current.rows||[]).forEach(r=>now.set(janpadKey(r.janpad)+"|"+norm(r.engineer),r));
- let keys=[...new Set([...old.keys(),...now.keys()])].filter(k=>{const r=now.get(k)||old.get(k);return isJanpad(r.janpad,district)&&(janpad==="ALL"||janpadKey(r.janpad)===janpad)&&(engineer==="ALL"||k===engineer)&&(panchayat==="ALL"||panchayat.split("|")[0]===janpadKey(r.janpad));}).sort();
+ let keys=[...new Set([...old.keys(),...now.keys()])].filter(k=>{const r=now.get(k)||old.get(k);return isJanpad(r.janpad,district)&&(janpad==="ALL"||janpadKey(r.janpad)===janpad)&&(engineer==="ALL"||k===engineer)&&(panchayat==="ALL"||panchayat.split("|")[0]===janpadKey(r.janpad));}).sort((ka,kb)=>{const a=now.get(ka)||old.get(ka),b=now.get(kb)||old.get(kb),da=JANPAD_DISTRICT[janpadKey(a.janpad)]||"Satna",db=JANPAD_DISTRICT[janpadKey(b.janpad)]||"Satna";return (da==="Maihar"?0:1)-(db==="Maihar"?0:1)||compareJanpads(a.janpad,b.janpad)||String(a.engineer).localeCompare(String(b.engineer),"hi");});
  if(panchayat!=="ALL"){
   const gpKey=panchayat,gp=(window.YUKTDHARA_DATA?.mapping||[]).find(x=>janpadKey(x.janpad)+"|"+norm(x.gp)===gpKey),baseGp=(BASE.panchayats||[]).find(x=>janpadKey(x.janpad)+"|"+norm(x.gp)===gpKey),assigned=(gp||baseGp||{}).engineer;
   if(assigned)keys=keys.filter(k=>k===janpadKey((gp||baseGp).janpad)+"|"+norm(assigned));
