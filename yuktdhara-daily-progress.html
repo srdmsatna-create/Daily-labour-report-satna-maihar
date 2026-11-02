@@ -94,7 +94,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <p class="subtitle">27-10-2026 से Daily Updater के नवीनतम डेटा तक प्रगति<br><span id="sourceNote"></span></p>
 <nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी पंचायत में काम नहीं हुआ</button></nav>
 <div id="progressPanel" class="report-panel">
-<section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><div id="summaryCards" class="cards"></div>
+<section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><div id="summaryCards" class="cards summary-cards"></div>
 <div class="table-wrap"><table><thead><tr><th style="width:11%">जिला</th><th style="width:15%">जनपद</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th><th>शुरू नहीं हुए</th><th>प्रगतिरत</th><th>पूर्ण</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
 <section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><thead><tr><th style="width:8%">जिला</th><th style="width:12%">जनपद</th><th style="width:14%">क्लस्टर</th><th style="width:18%">उपयंत्री</th><th style="width:16%">प्राप्त पंचायतें</th><th style="width:16%">Yuktdhara से प्राप्त कार्य</th><th style="width:16%">VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
 
@@ -147,10 +147,10 @@ function renderSummary(current){
  const all=[...new Set([...oldMap.keys(),...newMap.keys()])];
  const janpads=all.filter(k=>isJanpad(k,district)&&(janpad==="ALL"||k===janpad)&&(engineer==="ALL"||engineer.split("|")[0]===k)&&(panchayat==="ALL"||panchayat.split("|")[0]===k)).sort(compareJanpads);
  const keys=["gpReceived","worksReceived","worksCreated","yetToStart","ongoing","completed"],labels=["प्राप्त पंचायतें","Yuktdhara से प्राप्त कार्य","VBGRAMG में बने कार्य","शुरू नहीं हुए","प्रगतिरत","पूर्ण"];
- let rows="",oldAgg={},newAgg={};keys.forEach(k=>{oldAgg[k]=0;newAgg[k]=0;});
+ const districtAgg={Maihar:{old:{},new:{}},Satna:{old:{},new:{}}};["Maihar","Satna"].forEach(d=>keys.forEach(k=>{districtAgg[d].old[k]=0;districtAgg[d].new[k]=0;}));let rows="";
  for(const d of ["Maihar","Satna"]){
   const group=janpads.filter(k=>isJanpad(k,d));if(!group.length)continue;
-  group.forEach(k=>{const a=oldMap.get(k)||{},b=newMap.get(k)||{},j=b.block||a.janpad||k;keys.forEach(x=>{oldAgg[x]+=Number(a[x]||0);newAgg[x]+=Number(b[x]||0);});rows+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td>'+metricCells(keys,a,b)+'</tr>';});
+  group.forEach(k=>{const a=oldMap.get(k)||{},b=newMap.get(k)||{},j=b.block||a.janpad||k;keys.forEach(x=>{districtAgg[d].old[x]+=Number(a[x]||0);districtAgg[d].new[x]+=Number(b[x]||0);});rows+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td>'+metricCells(keys,a,b)+'</tr>';});
   const t=aggregateMaps(keys,oldMap,newMap,group);
   rows+='<tr class="total-row district-total district-total-'+d.toLowerCase()+'"><td>'+toHindiPlace(d)+'</td><td>जिला योग</td>'+metricCells(keys,t.a,t.b)+'</tr>';
  }
@@ -159,7 +159,7 @@ function renderSummary(current){
   rows+='<tr class="total-row grand-total"><td colspan="2">कुल योग</td>'+metricCells(keys,t.a,t.b)+'</tr>';
  }
  $("janpadBody").innerHTML=rows||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
- $("summaryCards").innerHTML=keys.slice(0,3).map((k,i)=>'<div class="card '+(k==="worksCreated"?"good-card":"")+'"><label>'+labels[i]+'</label><strong>'+fmt(oldAgg[k])+' → '+fmt(newAgg[k])+'</strong><small class="'+deltaClass(newAgg[k]-oldAgg[k])+'">'+signed(newAgg[k]-oldAgg[k])+' बदलाव</small></div>').join("");
+ $("summaryCards").innerHTML=["Maihar","Satna"].filter(d=>janpads.some(k=>isJanpad(k,d))).flatMap(d=>keys.slice(0,3).map((k,i)=>{const a=districtAgg[d].old[k],b=districtAgg[d].new[k];return '<div class="card '+(k==="worksCreated"?"good-card":"")+'"><label>'+toHindiPlace(d)+' — '+labels[i]+'</label><strong>'+fmt(a)+' → '+fmt(b)+'</strong><small class="'+deltaClass(b-a)+'">'+signed(b-a)+' बदलाव</small></div>'; })).join("");
 }
 function renderEngineers(current){
  const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value,old=new Map(),now=new Map();
