@@ -55,6 +55,8 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .report-tabs .tab-button{border-radius:6px 6px 0 0;border-bottom:0}
 .report-tabs .tab-button.active{background:#1a4f7d;color:#fff;border-color:#1a4f7d}
 .report-panel[hidden]{display:none!important}
+.district-total-maihar{background:#d8eafb!important;color:#123e68!important}.district-total-maihar td{border-top:3px solid #176da7!important;font-weight:900!important}
+.district-total-satna{background:#e3e8ed!important;color:#324f69!important}.district-total-satna td{border-top:3px solid #647e96!important;font-weight:900!important}
 .no-work-filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0;padding:8px;background:#f1f6fb;border:1px solid #c8d9e9;border-radius:6px}
 .no-work-filters label{font-weight:700;color:#174e7d}
 .no-work-table tbody td{font-weight:700}
@@ -70,7 +72,10 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 @page{size:A4 landscape;margin:8mm}
 @media print{
  body{padding:0;font-size:9pt}main{max-width:none;border:0;border-radius:0;padding:0}
- .toolbar{display:none!important}.no-work-filters{display:none!important}h1{font-size:18pt;margin:0 0 2mm}
+ .toolbar,.no-work-filters,.report-tabs{display:none!important}
+ .report-panel{display:none!important}
+ body[data-print-panel="progressPanel"] #progressPanel,body[data-print-panel="panchayatPanel"] #panchayatPanel,body[data-print-panel="noWorkPanel"] #noWorkPanel{display:block!important}
+ h1{font-size:18pt;margin:0 0 2mm}
  h2{font-size:13pt}.subtitle{font-size:8pt;margin-bottom:3mm}
  .cards{gap:3mm;margin:2mm 0}.card{min-height:auto;padding:2mm 3mm}.card label{font-size:7pt}.card strong{font-size:11pt}.card small{font-size:8pt}
  .table-wrap{overflow:visible;border:0}table{min-width:0;width:100%;font-size:7pt}
@@ -84,7 +89,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 </style>
 </head>
 <body><main>
-<div class="toolbar"><a class="button" href="./">← मुख्य मेनू पर वापस</a><label for="districtFilter">जिला</label><select id="districtFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="janpadFilter">जनपद</label><select id="janpadFilter"><option value="ALL">सभी जनपद</option></select><label for="engineerFilter">उपयंत्री</label><select id="engineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="panchayatFilter">पंचायत</label><select id="panchayatFilter"><option value="ALL">सभी पंचायतें</option></select><button onclick="window.print()">Print / PDF</button></div>
+<div class="toolbar"><a class="button" href="./">← मुख्य मेनू पर वापस</a><label for="districtFilter">जिला</label><select id="districtFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="janpadFilter">जनपद</label><select id="janpadFilter"><option value="ALL">सभी जनपद</option></select><label for="engineerFilter">उपयंत्री</label><select id="engineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="panchayatFilter">पंचायत</label><select id="panchayatFilter"><option value="ALL">सभी पंचायतें</option></select><button type="button" id="printActiveTab">Print / PDF</button></div>
 <h1>दैनिक Yuktdhara प्रगति पत्रक — दिनांक <span id="reportDate">—</span></h1>
 <p class="subtitle">27-10-2026 से Daily Updater के नवीनतम डेटा तक प्रगति<br><span id="sourceNote"></span></p>
 <nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी पंचायत में काम नहीं हुआ</button></nav>
@@ -100,7 +105,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 </div>
 <div id="noWorkPanel" class="report-panel" hidden>
 <section><h2>आज तक काम शुरू नहीं करने वाली पंचायतें — क्लस्टरवार</h2><p class="status" id="noWorkCount">Bhuvan की वर्तमान पंचायत स्थिति के अनुसार जिन पंचायतों में Yuktdhara कार्य प्रारंभ दर्ज नहीं है।</p>
-<div class="no-work-filters"><label for="nwDistrictFilter">जिला</label><select id="nwDistrictFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="nwJanpadFilter">जनपद</label><select id="nwJanpadFilter"><option value="ALL">सभी जनपद</option></select><label for="nwEngineerFilter">उपयंत्री</label><select id="nwEngineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="nwClusterFilter">क्लस्टर</label><select id="nwClusterFilter"><option value="ALL">सभी क्लस्टर</option></select><button type="button" onclick="window.print()">Print / PDF</button></div>
+<div class="no-work-filters"><label for="nwDistrictFilter">जिला</label><select id="nwDistrictFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="nwJanpadFilter">जनपद</label><select id="nwJanpadFilter"><option value="ALL">सभी जनपद</option></select><label for="nwEngineerFilter">उपयंत्री</label><select id="nwEngineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="nwClusterFilter">क्लस्टर</label><select id="nwClusterFilter"><option value="ALL">सभी क्लस्टर</option></select><button type="button" id="printNoWork">Print / PDF</button></div>
 <div class="table-wrap"><table class="no-work-table"><thead><tr><th style="width:5%">जिला</th><th style="width:11%">जनपद</th><th style="width:16%">उपयंत्री</th><th style="width:9%">क्लस्टर</th><th style="width:7%">कुल GP</th><th style="width:7%">काम शुरू GP</th><th style="width:7%">बिना काम GP</th><th style="width:38%">वे GP जहाँ SIPRI में एक भी कार्य मैप नहीं किया गया</th></tr></thead><tbody id="noWorkBody"></tbody></table></div></section>
 </div>
 </main>
@@ -145,7 +150,7 @@ function renderSummary(current){
  for(const d of ["Maihar","Satna"]){
   const group=janpads.filter(k=>isJanpad(k,d));if(!group.length)continue;
   const t=aggregateMaps(keys,oldMap,newMap,group);
-  rows+='<tr class="total-row"><td>'+toHindiPlace(d)+'</td><td>जिला योग</td>'+metricCells(keys,t.a,t.b)+'</tr>';
+  rows+='<tr class="total-row district-total district-total-'+d.toLowerCase()+'"><td>'+toHindiPlace(d)+'</td><td>जिला योग</td>'+metricCells(keys,t.a,t.b)+'</tr>';
  }
  if(janpads.length){
   const t=aggregateMaps(keys,oldMap,newMap,janpads);
@@ -177,7 +182,7 @@ function renderEngineers(current){
   const selected=keys.filter(k=>(JANPAD_DISTRICT[janpadKey((now.get(k)||old.get(k)).janpad)]||"Satna")===d);
   if(!selected.length)return;
   const t=aggregateMaps(names,old,now,selected);
-  html+='<tr class="total-row"><td>'+toHindiPlace(d)+'</td><td colspan="3">जिला योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
+  html+='<tr class="total-row district-total district-total-'+d.toLowerCase()+'"><td>'+toHindiPlace(d)+'</td><td colspan="3">जिला योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
  });
  if(keys.length){const t=aggregateMaps(names,old,now,keys);html+='<tr class="total-row grand-total"><td colspan="4">कुल योग</td>'+metricCells(names,t.a,t.b)+'</tr>';}
  $("engineerBody").innerHTML=html||'<tr><td class="empty" colspan="7">डेटा उपलब्ध नहीं है।</td></tr>';
@@ -192,7 +197,16 @@ function renderGps(currentData){
  if(engineer!=="ALL")rows=rows.filter(x=>janpadKey(x.janpad)+"|"+norm((mapping.get(janpadKey(x.janpad)+"|"+norm(x.gp))||{}).engineer||((old.get(janpadKey(x.janpad)+"|"+norm(x.gp))||{}).engineer||""))===engineer);
  const stats=["started","submitted","notStarted","gasApproved"],titles=["युक्तधारा प्रारंभ","जमा","शुरू नहीं","GAS अनुमोदित"];
  $("gpCards").innerHTML=stats.map((key,i)=>{const baseRows=BASE.panchayats.filter(r=>isJanpad(r.janpad,district)),currentRows=masters.filter(r=>isJanpad(r.janpad,district));const oldN=baseRows.reduce((n,r)=>n+r[key],0),newN=currentRows.reduce((n,r)=>n+(sets[key]?.has(janpadKey(r.janpad)+"|"+norm(r.gp))?1:0),0),d=newN-oldN;return '<div class="card"><label>'+titles[i]+' पंचायतें</label><strong>'+fmt(oldN)+' → '+fmt(newN)+'</strong><small class="'+deltaClass(d)+'">'+signed(d)+' बदलाव</small></div>';}).join("");
- $("gpBody").innerHTML=rows.map(x=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp),a=old.get(k)||{},m=mapping.get(k)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",displayJ=x.janpad==="SATNA"?"Sohawal":x.janpad;return '<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(displayJ)+'</td><td>'+toHindiGp(x.gp)+'</td><td>'+((m.engineer)||a.engineer||"असाइन नहीं")+'</td>'+stats.map(s=>metric(a[s],sets[s]?.has(k)?1:0)).join("")+'</tr>';}).join("")||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
+ let html="";
+ const sumRows=(list)=>{const a={},b={};stats.forEach(s=>{a[s]=list.reduce((n,x)=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp);return n+Number((old.get(k)||{})[s]||0);},0);b[s]=list.reduce((n,x)=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp);return n+(sets[s]?.has(k)?1:0);},0);});return {a,b};};
+ const rowHtml=x=>{const k=janpadKey(x.janpad)+"|"+norm(x.gp),a=old.get(k)||{},m=mapping.get(k)||{},d=JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna",displayJ=x.janpad==="SATNA"?"Sohawal":x.janpad;return '<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(displayJ)+'</td><td>'+toHindiGp(x.gp)+'</td><td>'+((m.engineer)||a.engineer||"असाइन नहीं")+'</td>'+stats.map(s=>metric(a[s],sets[s]?.has(k)?1:0)).join("")+'</tr>';};
+ const districts=[...new Set(rows.map(x=>JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna"))].sort();
+ districts.forEach(d=>{const districtRows=rows.filter(x=>(JANPAD_DISTRICT[janpadKey(x.janpad)]||"Satna")===d),janpads=[...new Set(districtRows.map(x=>janpadKey(x.janpad)))].sort();
+  janpads.forEach(j=>{const list=districtRows.filter(x=>janpadKey(x.janpad)===j);list.forEach(x=>html+=rowHtml(x));const t=sumRows(list);html+='<tr class="total-row '+janpadTotalClass(j)+'"><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(stats,t.a,t.b)+'</tr>';});
+  const t=sumRows(districtRows);html+='<tr class="total-row district-total district-total-'+d.toLowerCase()+'"><td>'+toHindiPlace(d)+'</td><td colspan="3">जिला योग</td>'+metricCells(stats,t.a,t.b)+'</tr>';
+ });
+ if(rows.length){const t=sumRows(rows);html+='<tr class="total-row grand-total"><td colspan="4">कुल योग</td>'+metricCells(stats,t.a,t.b)+'</tr>';}
+ $("gpBody").innerHTML=html||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
 }
 function renderNoWork(gpData){
  const district=$("nwDistrictFilter").value,janpad=$("nwJanpadFilter").value,engineer=$("nwEngineerFilter").value,cluster=$("nwClusterFilter").value;
@@ -266,6 +280,10 @@ async function load(){
 ["districtFilter","janpadFilter","engineerFilter","panchayatFilter"].forEach(id=>$(id).addEventListener("change",function(){const r=window.YUKTDHARA_RECEIVED,g=window.YUKTDHARA_DATA;if(r&&g){renderSummary(r);renderEngineers(r);renderGps(g);}else load();}));
  ["nwDistrictFilter","nwJanpadFilter","nwEngineerFilter","nwClusterFilter"].forEach(id=>$(id).addEventListener("change",function(){const g=window.YUKTDHARA_DATA;if(g)renderNoWork(g);else load();}));
  document.querySelectorAll(".tab-button").forEach(btn=>btn.addEventListener("click",function(){document.querySelectorAll(".tab-button").forEach(x=>x.classList.toggle("active",x===btn));document.querySelectorAll(".report-panel").forEach(panel=>panel.hidden=panel.id!==btn.dataset.panel);}));
+ const printPanel=panelId=>{document.body.dataset.printPanel=panelId;window.print();};
+ $("printActiveTab").addEventListener("click",()=>printPanel(document.querySelector(".tab-button.active")?.dataset.panel||"progressPanel"));
+ $("printNoWork").addEventListener("click",()=>printPanel("noWorkPanel"));
+ window.addEventListener("afterprint",()=>delete document.body.dataset.printPanel);
  load();
 })();
 </script>
