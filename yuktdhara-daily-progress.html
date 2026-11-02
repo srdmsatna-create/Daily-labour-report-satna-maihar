@@ -25,6 +25,10 @@ h3{font-size:16px;color:#174e7d;margin:14px 0 7px}
 .summary-cards .card small{font-size:15px}
 .card{background:#f7fafc;border:1px solid #b6cce0;border-left:5px solid var(--blue);border-radius:9px;min-height:88px;padding:10px 13px}
 .card.good-card{border-left-color:var(--green)}
+.summary-cards .district-card-maihar{background:#e8f3fc;border-color:#9dc2df;border-left-color:#176da7}
+.summary-cards .district-card-maihar label{color:#176da7}
+.summary-cards .district-card-satna{background:#f0f2f5;border-color:#b7c1cc;border-left-color:#647e96}
+.summary-cards .district-card-satna label{color:#526b82}
 .card label{display:block;font-weight:700;color:#607a93;margin-bottom:4px}
 .card strong{font-size:22px;color:#174e7d}
 .card small{display:block;font-size:17px;font-weight:900;margin-top:2px}
@@ -164,7 +168,7 @@ function renderSummary(current){
   rows+='<tr class="total-row grand-total"><td colspan="2">कुल योग</td>'+metricCells(keys,t.a,t.b)+'</tr>';
  }
  $("janpadBody").innerHTML=rows||'<tr><td class="empty" colspan="8">डेटा उपलब्ध नहीं है।</td></tr>';
- $("summaryCards").innerHTML=["Maihar","Satna"].filter(d=>janpads.some(k=>isJanpad(k,d))).flatMap(d=>keys.slice(0,3).map((k,i)=>{const a=districtAgg[d].old[k],b=districtAgg[d].new[k];return '<div class="card '+(k==="worksCreated"?"good-card":"")+'"><label>'+toHindiPlace(d)+' — '+labels[i]+'</label><strong>'+fmt(a)+' → '+fmt(b)+'</strong><small class="'+deltaClass(b-a)+'">'+signed(b-a)+' बदलाव</small></div>'; })).join("");
+ $("summaryCards").innerHTML=["Maihar","Satna"].filter(d=>janpads.some(k=>isJanpad(k,d))).flatMap(d=>keys.slice(0,3).map((k,i)=>{const a=districtAgg[d].old[k],b=districtAgg[d].new[k];return '<div class="card district-card-'+d.toLowerCase()+' '+(k==="worksCreated"?"good-card":"")+'"><label>'+toHindiPlace(d)+' — '+labels[i]+'</label><strong>'+fmt(a)+' → '+fmt(b)+'</strong><small class="'+deltaClass(b-a)+'">'+signed(b-a)+' बदलाव</small></div>'; })).join("");
 }
 function renderEngineers(current){
  const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value,old=new Map(),now=new Map();
