@@ -94,8 +94,8 @@ td:nth-child(2){text-align:left;white-space:normal;overflow-wrap:anywhere}.money
   {key:'UNCHAHARA',name:'उचेहरा',district:'सतना'}
  ];
  const fmt=(n,d=0)=>Number(n||0).toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d});
- const sortHeading=label=>'<button type="button" class="sort-heading" aria-label="आरोही-अवरोही क्रम बदलें">'+label+' <span>'+(ascending?'▲ आरोही':'▼ अवरोही')+'</span></button>';
- const addHeadingControls=()=>document.querySelectorAll('#head th').forEach(th=>{if(th.querySelector('.sort-heading'))return;const label=th.innerHTML;th.innerHTML='<button type="button" class="sort-heading" aria-label="आरोही-अवरोही क्रम बदलें">'+label+' <span>'+(ascending?'▲ आरोही':'▼ अवरोही')+'</span></button>'});
+ const sortHeading=label=>'<button type="button" class="sort-heading" aria-label="आरोही-अवरोही क्रम बदलें">'+label+' <span>'+(ascending?'▲':'▼')+'</span></button>';
+ const addHeadingControls=()=>document.querySelectorAll('#head th').forEach(th=>{if(th.querySelector('.sort-heading'))return;const label=th.innerHTML;th.innerHTML='<button type="button" class="sort-heading" aria-label="आरोही-अवरोही क्रम बदलें">'+label+' <span>'+(ascending?'▲':'▼')+'</span></button>'});
  const num=v=>{const n=Number(v);return Number.isFinite(n)?n:0};
  const norm=v=>String(v??'').trim().replace(/\s+/g,' ');
  function districtFor(r){const raw=norm(r.janpad),place=blockInfo.find(x=>x.key===raw.toUpperCase());return place?.district||norm(r.district)||'अन्य'}
