@@ -293,10 +293,17 @@ async function load(){
 ["districtFilter","janpadFilter","engineerFilter","panchayatFilter"].forEach(id=>$(id).addEventListener("change",function(){const r=window.YUKTDHARA_RECEIVED,g=window.YUKTDHARA_DATA;if(r&&g){renderSummary(r);renderEngineers(r);renderGps(g);}else load();}));
  ["nwDistrictFilter","nwJanpadFilter","nwEngineerFilter","nwClusterFilter"].forEach(id=>$(id).addEventListener("change",function(){const g=window.YUKTDHARA_DATA;if(g)renderNoWork(g);else load();}));
  document.querySelectorAll(".tab-button").forEach(btn=>btn.addEventListener("click",function(){document.querySelectorAll(".tab-button").forEach(x=>x.classList.toggle("active",x===btn));document.querySelectorAll(".report-panel").forEach(panel=>panel.hidden=panel.id!==btn.dataset.panel);}));
- const printPanel=panelId=>{document.body.dataset.printPanel=panelId;window.print();};
+ const printPanel=panelId=>{
+  const panels=[...document.querySelectorAll(".report-panel")],hiddenBefore=panels.map(panel=>panel.hidden);
+  let restored=false;
+  const restore=()=>{if(restored)return;restored=true;panels.forEach((panel,i)=>panel.hidden=hiddenBefore[i]);delete document.body.dataset.printPanel;};
+  document.body.dataset.printPanel=panelId;
+  panels.forEach(panel=>panel.hidden=panel.id!==panelId);
+  window.addEventListener("afterprint",restore,{once:true});
+  try{window.print();}catch(error){restore();throw error;}
+ };
  $("printActiveTab").addEventListener("click",()=>printPanel(document.querySelector(".tab-button.active")?.dataset.panel||"progressPanel"));
  $("printNoWork").addEventListener("click",()=>printPanel("noWorkPanel"));
- window.addEventListener("afterprint",()=>delete document.body.dataset.printPanel);
  load();
 })();
 </script>
