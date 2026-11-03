@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-03T03:38:47.861231+00:00",
+  "checkedAt": "2026-11-03T04:32:24.795653+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -35,23 +35,19 @@
       "attempts": 1
     },
     "pending_mr_fto": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_pending_mr_fto.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_h_ykwzqq\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_h_ykwzqq\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_h_ykwzqq\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n",
+      "success": true,
       "files": [
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 3
+      "attempts": 1
     },
     "emb_pending": {
-      "success": false,
-      "message": "Current pending e-MB detail required",
-      "errorTail": "\nCOMMAND ['scripts_local/update_emb_pending.py']\nVerified Pending for Payment: 695 GPs; 7964 distinct MRs\r\n\nCOMMAND ['scripts_local/update_emb_pending.py']\nVerified Pending for Payment: 695 GPs; 7964 distinct MRs\r\n\nCOMMAND ['scripts_local/update_emb_pending.py']\nVerified Pending for Payment: 695 GPs; 7964 distinct MRs\r\n",
+      "success": true,
       "files": [
         "data/emb-pending-latest.json"
       ],
-      "attempts": 3
+      "attempts": 1
     },
     "yuktdhara_state": {
       "success": true,
@@ -140,7 +136,7 @@
       "files": [
         "secure-ts-data.js"
       ],
-      "attempts": 3
+      "attempts": 1
     },
     "ek_bagiya_payment": {
       "success": true,
