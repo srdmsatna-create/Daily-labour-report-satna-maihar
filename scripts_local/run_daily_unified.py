@@ -114,6 +114,11 @@ def main():
         states = refresh_reports(feeds, stage)
         status = {'checkedAt':datetime.now(timezone.utc).isoformat(), 'schedule':'08:00 Asia/Kolkata',
                   'reports':states, 'success':all(x['success'] for x in states.values())}
+        try:
+            (failure_root / 'daily-all-reports-latest.json').write_text(
+                json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
+        except OSError as exc:
+            print('WARNING: Could not save local current-run status: ' + str(exc), flush=True)
         (stage / 'all-tabs-auto-status.json').write_text(json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')
         # Failed groups remain atomic; optional publication includes successful groups only.
         if not status['success']:
