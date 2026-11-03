@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-02T07:28:51.526985+00:00",
+  "checkedAt": "2026-11-03T03:38:47.861231+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -37,7 +37,7 @@
     "pending_mr_fto": {
       "success": false,
       "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_pending_mr_fto.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_0ar4_fso\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_0ar4_fso\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_0ar4_fso\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_h_ykwzqq\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_h_ykwzqq\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n\nCOMMAND ['scripts_local/update_pending_mr_fto.py']\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_h_ykwzqq\\report\\scripts_local\\update_pending_mr_fto.py\", line 199\r\n    ,staff)\r\n          ^\r\nSyntaxError: unmatched ')'\r\n",
       "files": [
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
@@ -112,7 +112,7 @@
       "files": [
         "data/pmayg-physical-latest.json"
       ],
-      "attempts": 2
+      "attempts": 1
     },
     "pmayg": {
       "success": true,
@@ -140,7 +140,7 @@
       "files": [
         "secure-ts-data.js"
       ],
-      "attempts": 1
+      "attempts": 3
     },
     "ek_bagiya_payment": {
       "success": true,
