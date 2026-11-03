@@ -119,7 +119,12 @@ def before_stage_status(page):
 
 
 def setup_search(page, block):
-    page.goto(SEARCH_URL, wait_until="domcontentloaded", timeout=90000)
+    page.goto(SEARCH_URL, wait_until="networkidle", timeout=90000)
+    page.wait_for_timeout(1000)
+    if not page.locator("#ContentPlaceHolder1_ddl_state").count():
+        title = page.title()
+        body = clean(page.locator("body").inner_text())[:1200]
+        raise RuntimeError(f"Search form missing for {block}; title={title!r}; url={page.url!r}; body={body!r}")
     for selector, label in (("#ContentPlaceHolder1_ddl_state", "MADHYA PRADESH"),
                             ("#ContentPlaceHolder1_ddl_dist", "SATNA"),
                             ("#ContentPlaceHolder1_ddl_blk", block),
@@ -140,7 +145,9 @@ def main():
         try: browser = p.chromium.launch(channel="chrome", headless=True)
         except Exception: browser = p.chromium.launch(headless=True)
         try:
-            context = browser.new_context(extra_http_headers={"Cache-Control":"no-cache", "Pragma":"no-cache"})
+            context = browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+                extra_http_headers={"Cache-Control":"no-cache", "Pragma":"no-cache"})
             from vbgram_access import session_cookies
             cookies = session_cookies()
             if cookies: context.add_cookies(cookies)
