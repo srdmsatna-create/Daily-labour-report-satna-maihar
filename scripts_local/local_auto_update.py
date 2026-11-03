@@ -183,7 +183,7 @@ def _r69_status(page, category_index):
     except RuntimeError as exc:
         try:
             title = page.title()
-            visible = re.sub(r"\\s+", " ", page.locator("body").inner_text())[:1000]
+            visible = re.sub(r"\s+", " ", page.locator("body").inner_text())[:1000]
         except Exception as detail_exc:
             title = "unavailable"
             visible = "page diagnostic failed: " + str(detail_exc)
