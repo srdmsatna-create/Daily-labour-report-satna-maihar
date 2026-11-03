@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R-10.3 • VB G RAM G Work Demand Details</title>
+<style>
+:root{--navy:#123f72;--blue:#176da7;--ink:#18334b;--muted:#5b7187;--line:#c8d8e8;--bg:#f3f7fb;--green:#167443;--amber:#946200}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans Devanagari",sans-serif}
+header{background:linear-gradient(125deg,#103e68,#1976ae);color:#fff;padding:18px max(14px,calc((100vw - 1250px)/2));box-shadow:0 4px 15px #12365b26}
+h1{font-size:24px;margin:0}header p{margin:5px 0 0;font-size:13px}
+main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block;margin:0 0 10px;color:#12558a;font-weight:800}
+.scope,.panel,.card{background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 3px 12px #1a35520d}
+.scope{padding:10px 13px;margin:0 0 10px;color:#415c75;font-size:13px}.cards{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:9px;margin:10px 0}
+.card{padding:12px}.card small{font-weight:800;color:var(--muted)}.card strong{display:block;margin-top:4px;font-size:24px;color:var(--navy)}
+.panel{padding:12px;margin-bottom:10px}.panel h2{margin:0 0 9px;color:var(--navy);font-size:17px}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.filters select,.filters input,button{border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff;color:var(--ink);font-weight:650}.filters input{flex:1;min-width:200px}button{cursor:pointer;color:#fff;background:var(--blue);border-color:var(--blue)}.filters select{min-width:150px}
+.wrap{overflow:auto;border:1px solid var(--line);border-radius:8px}table{width:100%;border-collapse:collapse;min-width:780px;font-size:12px}th,td{border:1px solid #b6c9dd;padding:7px 8px;text-align:left;vertical-align:top}th{background:var(--navy);color:white;position:sticky;top:0}tbody tr:nth-child(even){background:#f7faff}.num{text-align:right;font-variant-numeric:tabular-nums}.total td{background:#ffedc9;font-weight:900}.meta{font-size:11px;color:var(--muted);margin:8px 0}.empty{text-align:center;color:var(--muted);padding:20px}
+.source{color:#12558a;font-weight:800}.pill{display:inline-block;padding:4px 9px;background:#e7f2fc;border-radius:20px;color:#164e7a;font-weight:800}
+@media(max-width:700px){h1{font-size:20px}.cards{grid-template-columns:repeat(2,1fr)}.card strong{font-size:21px}}
+@media print{body{background:#fff}header{padding:8px;background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{margin:8px auto}.back,.filters,button{display:none!important}.panel,.card,.scope{box-shadow:none}.wrap{overflow:visible}table{min-width:0;font-size:9px}th,td{padding:4px}th{position:static}a{color:inherit;text-decoration:none}}
+</style>
+<script src="work-demand-details-data.js?v=20261103-demand1"></script></head>
+<body><header><h1>R-10.3 • VB G RAM G Work Demand Details</h1><p id="meta">Report data load हो रहा है…</p></header>
+<main><a class="back" href="index.html">← मुख्य मेनू</a>
+<div class="scope" id="scope"></div>
+<section class="cards">
+<div class="card"><small>Demand आवेदन क्रमांक</small><strong id="requests">—</strong></div>
+<div class="card"><small>व्यक्ति-दemand प्रविष्टियाँ</small><strong id="entries">—</strong></div>
+<div class="card"><small>माँगे गए रोजगार-दिवस</small><strong id="days">—</strong></div>
+<div class="card"><small>Demand वाले GP / कुल GP</small><strong id="gps">—</strong></div>
+</section>
+<section class="panel"><h2>जनपद / GP / उपयंत्रीवार विवरण</h2>
+<div class="filters">
+<select id="group"><option value="janpad">जनपदवार</option><option value="gp">GPवार</option><option value="engineer">उपयंत्रीवार</option></select>
+<select id="district"><option value="ALL">सभी जिले</option><option value="SATNA">SATNA</option><option value="MAIHAR">MAIHAR</option></select>
+<select id="janpad"><option value="ALL">सभी जनपद</option></select>
+<select id="engineer"><option value="ALL">सभी उपयंत्री</option></select>
+<input id="query" type="search" placeholder="GP / उपयंत्री खोजें">
+<button type="button" id="csv">CSV डाउनलोड</button><button type="button" onclick="window.print()">Print / PDF</button>
+</div>
+<div class="wrap"><table><thead id="head"></thead><tbody id="body"></tbody></table></div><p class="meta" id="rowMeta"></p></section>
+<section class="panel"><h2>स्रोत एवं गिनती का आधार</h2><p class="meta">Official Work Demand report में household/job-card स्तर के नाम प्रकाशित नहीं किए गए हैं। इस R-10.3 में केवल जनपद, GP और उपयंत्री के aggregate counts रखे गए हैं। उपयंत्री का नाम GP-to-Sub Engineer master (01-11-2026) से लिया गया है।</p><p class="meta">Source: <a class="source" id="sourceLink" target="_blank" rel="noopener">Official Dynamic Report on Demand</a> • अवधि: 01-04-2026 से 03-11-2026 • Data snapshot: 03-11-2026</p></section>
+</main>
+<script>
+(()=>{
+const D=window.WORK_DEMAND_DATA,$=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('en-IN'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+if(!D){$('meta').textContent='Report data load नहीं हुआ।';return}
+const all=D.gpSummary||[],janOrder=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
+$('meta').textContent='FY 2026-27 • Data fetched: 03-11-2026 • Janpad / GP / Sub Engineer summary';
+$('scope').innerHTML='FY 2026-27 • Demand period: 01-04-2026 से 03-11-2026 • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithDemand)+' GP में demand</span> • Engineer grouping GP master mapping से';
+$('sourceLink').href=D.source;
+function fillFilters(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value;const js=[...new Set(all.filter(x=>d==='ALL'||x.district===d).map(x=>x.janpad))].sort((a,b)=>janOrder.indexOf(a)-janOrder.indexOf(b));$('janpad').innerHTML='<option value="ALL">सभी जनपद</option>'+js.map(x=>'<option>'+esc(x)+'</option>').join('');if(js.includes(j))$('janpad').value=j;const es=[...new Set(all.filter(x=>(d==='ALL'||x.district===d)&&($('janpad').value==='ALL'||x.janpad===$('janpad').value)).map(x=>x.subEngineer))].sort((a,b)=>a.localeCompare(b,'hi'));$('engineer').innerHTML='<option value="ALL">सभी उपयंत्री</option>'+es.map(x=>'<option>'+esc(x)+'</option>').join('');if(es.includes(e))$('engineer').value=e}
+function filtered(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value,q=$('query').value.trim().toLowerCase();return all.filter(x=>(d==='ALL'||x.district===d)&&(j==='ALL'||x.janpad===j)&&(e==='ALL'||x.subEngineer===e)&&(!q||[x.gp,x.subEngineer,x.janpad,x.district].join(' ').toLowerCase().includes(q)))}
+function aggregate(rows,kind){const m=new Map();for(const x of rows){let key,rec;if(kind==='janpad'){key=x.district+'|'+x.janpad;rec={kind, district:x.district,janpad:x.janpad,gps:new Set(),activeGP:new Set(),requests:0,entries:0,days:0}}else if(kind==='gp'){key=x.district+'|'+x.janpad+'|'+x.gp;rec={kind,district:x.district,janpad:x.janpad,gp:x.gp,subEngineer:x.subEngineer,gps:new Set(),activeGP:new Set(),requests:0,entries:0,days:0}}else{key=x.district+'|'+x.janpad+'|'+x.subEngineer;rec={kind,district:x.district,janpad:x.janpad,subEngineer:x.subEngineer,gps:new Set(),activeGP:new Set(),requests:0,entries:0,days:0}}if(!m.has(key))m.set(key,rec);const a=m.get(key);a.gps.add(x.gp);if(x.requests>0)a.activeGP.add(x.gp);a.requests+=x.requests;a.entries+=x.entries;a.days+=x.days}return [...m.values()].map(x=>({...x,gpCount:x.gps.size,activeGPCount:x.activeGP.size})).sort((a,b)=>a.district.localeCompare(b.district)||janOrder.indexOf(a.janpad)-janOrder.indexOf(b.janpad)||(a.gp||a.subEngineer||'').localeCompare(b.gp||b.subEngineer||'','hi'))}
+let current=[];
+function render(){const rows=filtered(),kind=$('group').value,agg=aggregate(rows,kind);$('requests').textContent=fmt(rows.reduce((s,x)=>s+x.requests,0));$('entries').textContent=fmt(rows.reduce((s,x)=>s+x.entries,0));$('days').textContent=fmt(rows.reduce((s,x)=>s+x.days,0));$('gps').textContent=fmt(rows.filter(x=>x.requests>0).length)+' / '+fmt(rows.length);
+let heads=kind==='janpad'?['जिला','जनपद','कुल GP','Demand वाले GP','Demand आवेदन क्रमांक','व्यक्ति-दemand प्रविष्टियाँ','माँगे गए रोजगार-दिवस']:kind==='gp'?['जिला','जनपद','ग्राम पंचायत','उपयंत्री','Demand आवेदन क्रमांक','व्यक्ति-दemand प्रविष्टियाँ','माँगे गए रोजगार-दिवस']:['जिला','जनपद','उपयंत्री','GP संख्या','Demand वाले GP','Demand आवेदन क्रमांक','व्यक्ति-दemand प्रविष्टियाँ','माँगे गए रोजगार-दिवस'];
+$('head').innerHTML='<tr>'+heads.map(x=>'<th>'+x+'</th>').join('')+'</tr>';
+current=agg.map(x=>kind==='janpad'?[x.district,x.janpad,x.gpCount,x.activeGPCount,x.requests,x.entries,x.days]:kind==='gp'?[x.district,x.janpad,x.gp,x.subEngineer,x.requests,x.entries,x.days]:[x.district,x.janpad,x.subEngineer,x.gpCount,x.activeGPCount,x.requests,x.entries,x.days]);
+$('body').innerHTML=current.map(r=>'<tr>'+r.map((v,i)=>'<td class="'+(typeof v==='number'?'num':'')+'">'+(typeof v==='number'?fmt(v):esc(v))+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="'+heads.length+'" class="empty">इन filters में कोई रिकॉर्ड नहीं मिला।</td></tr>';
+$('rowMeta').textContent=fmt(agg.length)+' पंक्तियाँ • '+(kind==='janpad'?'जनपदवार':kind==='gp'?'GPवार':'उपयंत्रीवार')+' • कुल GP: '+fmt(rows.length)}
+function csv(){const lines=[...$('head').querySelectorAll('th')].map(x=>x.innerText);const vals=current.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(','));const blob=new Blob(['\ufeff'+[lines.join(','),...vals].join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='R-10.3_Work_Demand_Details.csv';a.click();URL.revokeObjectURL(a.href)}
+fillFilters();render();$('district').addEventListener('change',()=>{fillFilters();render()});$('janpad').addEventListener('change',()=>{fillFilters();render()});$('engineer').addEventListener('change',render);$('query').addEventListener('input',render);$('group').addEventListener('change',render);$('csv').addEventListener('click',csv);
+})();
+</script></body></html>
