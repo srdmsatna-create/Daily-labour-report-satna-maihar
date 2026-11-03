@@ -29,6 +29,8 @@ def main():
         row["tsCount"] = block_counts[block]
 
     merged = {key(x.get("district"), x.get("block"), x.get("panchayat")): x for x in report.get("gpSummary", [])}
+    for item in merged.values():
+        item["tsCount"] = 0
     for gp in secure.get("panchayats", []):
         k = key(gp.get("district"), gp.get("block"), gp.get("panchayat"))
         item = merged.get(k)
