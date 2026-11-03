@@ -118,6 +118,26 @@ def before_stage_status(page):
     return "Unknown"
 
 
+def extract_as_sanction_date(page, expected_code):
+    """Read the sanction date from the official AS document listing."""
+    return page.locator("table").evaluate_all("""tables => {
+      const clean=s=>(s||'').replace(/\\s+/g,' ').trim();
+      for(const table of tables){
+        const rows=Array.from(table.rows).filter(r=>r.closest('table')===table);
+        const header=rows.map(r=>Array.from(r.cells).map(c=>clean(c.innerText)));
+        const hi=header.findIndex(c=>c.some(x=>/Work Code/i.test(x))&&c.some(x=>/Sanction Date/i.test(x)));
+        if(hi<0) continue;
+        const h=header[hi].map(x=>x.toLowerCase());
+        const codeIx=h.findIndex(x=>/work code/i.test(x)), dateIx=h.findIndex(x=>/sanction date/i.test(x));
+        for(const row of rows.slice(hi+1)){
+          const cells=Array.from(row.cells).map(c=>clean(c.innerText));
+          if(cells[codeIx]===expected_code) return cells[dateIx]||'';
+        }
+      }
+      return '';
+    }""")
+
+
 def setup_search(page, block):
     page.goto(SEARCH_URL, wait_until="networkidle", timeout=90000)
     page.wait_for_timeout(1000)
@@ -174,11 +194,13 @@ def main():
                         if not re.search(r"(?:^|/)YD(?:/|$)", code, re.I):
                             excluded["notYD"] += 1; continue
                         start_date = parse_date(fields.get("Work Start Date(DD/MM/YYYY):", ""))
-                        if not start_date or start_date < DATE_FROM:
-                            excluded["beforeCutoff"] += 1; continue
                         as_doc = docs.get("as", {})
-                        if norm(as_doc.get("status")) != "available":
+                        if norm(as_doc.get("status")) != "available" or not as_doc.get("href"):
                             excluded["noAS"] += 1; continue
+                        gallery.goto(safe_href(detail.url, as_doc["href"]), wait_until="domcontentloaded", timeout=90000)
+                        sanction_date = parse_date(extract_as_sanction_date(gallery, code))
+                        if not sanction_date or sanction_date < DATE_FROM:
+                            excluded["beforeCutoff"] += 1; continue
                         geo_doc = docs.get("geotag", {})
                         stage_status = "Not Available"
                         if norm(geo_doc.get("status")) == "available" and geo_doc.get("href"):
@@ -194,7 +216,8 @@ def main():
                             "workCode": code,
                             "workName": clean(fields.get("Work Name:", work["name"])),
                             "workStatus": clean(fields.get("Work Status:", work["status"])),
-                            "workStartDate": start_date.isoformat(),
+                            "workStartDate": start_date.isoformat() if start_date else "",
+                            "asSanctionDate": sanction_date.isoformat(),
                             "asStatus": "Available",
                             "beforePhotoStatus": stage_status,
                             "source": url,
