@@ -178,7 +178,18 @@ def _r69_category(page):
 
 
 def _r69_status(page, category_index):
-    return _select_with_option(page, PMAY_STATUS, exclude=category_index)[0]
+    try:
+        return _select_with_option(page, PMAY_STATUS, exclude=category_index)[0]
+    except RuntimeError as exc:
+        try:
+            title = page.title()
+            visible = re.sub(r"\\s+", " ", page.locator("body").inner_text())[:1000]
+        except Exception as detail_exc:
+            title = "unavailable"
+            visible = "page diagnostic failed: " + str(detail_exc)
+        raise RuntimeError(
+            f"{exc}; URL={page.url!r}; title={title!r}; page says: {visible}"
+        ) from exc
 
 def fetch_reports():
     from playwright.sync_api import sync_playwright
