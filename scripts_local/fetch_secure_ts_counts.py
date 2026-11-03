@@ -224,6 +224,12 @@ def main():
         "totals": {"janpadCount": len(output_blocks), "panchayatCount": len(output_gps), "ydTsCount": len(deduped)},
         "warnings": warnings,
     }
+    # Keep a compact, auditable snapshot: every Janpad is validated against all
+    # 695 source GPs, while only GPs with at least one /YD/ TS row need to ship.
+    data["totals"]["panchayatCount"] = len(output_gps)
+    data["totals"]["panchayatsWithYdTs"] = sum(1 for gp in output_gps if gp["ydTsCount"] > 0)
+    data["panchayatCountVerified"] = len(output_gps)
+    data["panchayats"] = [gp for gp in output_gps if gp["ydTsCount"] > 0]
     out = ROOT / "data" / "secure-ts-yuktadhara-fy2026-27.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -233,6 +239,7 @@ def main():
         "date": datetime.now().date().isoformat(), "fetchedAt": data["snapshotAt"],
         "startDate": None, "endDate": None, "source": PAGE,
         "basis": data["basis"], "blocks": data["blocks"],
+        "panchayatCountVerified": data["panchayatCountVerified"],
         "panchayats": data["panchayats"], "works": data["works"],
         "totals": data["totals"], "warnings": warnings,
     }, ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")
