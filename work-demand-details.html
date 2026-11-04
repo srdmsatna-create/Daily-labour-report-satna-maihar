@@ -64,7 +64,7 @@ function totalRow(items,kind,label,cls){
  const t=sumRows(items);
  if(kind==='janpad')return {cls,values:[label,'',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
  if(kind==='gp')return {cls,values:[label,'','जनपद कुल योग','',t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
- return {cls,values:[label,'जनपद कुल योग','',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
+ return cls==='district-total-row'?{cls,values:[label,'','',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]}:{cls,values:[items[0]?.district||'',label,'',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
 }
 
 function render(){
