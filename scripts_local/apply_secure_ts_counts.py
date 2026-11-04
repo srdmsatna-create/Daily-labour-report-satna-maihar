@@ -66,6 +66,16 @@ def main():
         if actual != expected:
             raise RuntimeError(f"GP /YD/ TS sum for {block} is {actual}; SECURE block sum is {expected}")
 
+    # Never publish a Janpad total that violates the user-verified process rule.
+    mismatches = [
+        (row.get("block", ""), int(row.get("asAvailable", 0)), int(row.get("tsCount", 0)))
+        for row in report.get("janpadSummary", [])
+        if int(row.get("asAvailable", 0)) > int(row.get("tsCount", 0))
+    ]
+    if mismatches:
+        detail = ", ".join(f"{block}: AS={as_count}, SECURE /YD/ TS={ts_count}" for block, as_count, ts_count in mismatches)
+        raise RuntimeError("Refusing to publish inconsistent AS/TS totals; correct the source mapping first: " + detail)
+
     AS_JS.write_text("window.AS_GEOTAG_BEFORE=" + json.dumps(report, ensure_ascii=False, separators=(",", ":")) + ";\n", encoding="utf-8")
     print(f"Merged SECURE /YD/ TS totals: {secure['totals']['ydTsCount']} across {len(report['gpSummary'])} AS/TS GPs")
     for row in report.get("janpadSummary", []):
