@@ -210,9 +210,27 @@ def fetch_reports():
                 cookies.append({'name':k,'value':v,'domain':'vbgramgrep.dord.gov.in','path':'/'})
         if cookies:context.add_cookies(cookies)
         page=context.new_page()
-        page.goto(REPORT_URL, wait_until="networkidle", timeout=60000)
-        page.wait_for_timeout(1500)
+        response = page.goto(REPORT_URL, wait_until="domcontentloaded", timeout=60000)
+        # R6.9 controls can appear after the page shell. Wait for the form instead
+        # of checking after a fixed 1.5 seconds.
+        try:
+            page.locator("select").first.wait_for(state="attached", timeout=20000)
+        except Exception:
+            try:
+                title = page.title()
+                visible = re.sub(r"\\s+", " ", page.locator("body").inner_text())[:1000]
+            except Exception as detail_exc:
+                title = "unavailable"
+                visible = "page diagnostic failed: " + str(detail_exc)
+            status = response.status if response else "unknown"
+            current_url = page.url
+            browser.close()
+            raise RuntimeError(
+                f"R6.9 form did not render within 20 seconds; HTTP={status}; "
+                f"URL={current_url!r}; title={title!r}; page says: {visible}"
+            )
 
+        page.wait_for_load_state("networkidle", timeout=60000)
         try:
             work_category, category_index = _r69_category(page)
         except RuntimeError as exc:
