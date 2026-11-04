@@ -172,6 +172,7 @@ function render(){
  }else if(kind==='engineer'){
   let janpadRows=[],districtRows=[];
   for(let i=0;i<agg.length;i++){view.push({cls:'',values:aggregateValues(agg[i],kind)});janpadRows.push(agg[i]);districtRows.push(agg[i]);const next=agg[i+1];if(!next||next.district!==agg[i].district||next.janpad!==agg[i].janpad){view.push(totalRow(janpadRows,kind,agg[i].janpad+' जनपद कुल योग','janpad-total-row'));janpadRows=[]}if(!next||next.district!==agg[i].district){view.push(totalRow(districtRows,kind,agg[i].district+' जिला योग','district-total-row'));districtRows=[]}}
+  const allScope=$('district').value==='ALL'&&$('janpad').value==='ALL'&&$('engineer').value==='ALL'&&!$('query').value.trim();view.push(totalRow(agg,kind,allScope?'सतना + मैहर जिला कुल योग':'फिल्टर कुल योग','grand-total-row'));
  }else{
   const districts=new Map();
   for(const x of agg){const dkey=x.district+'|'+x.janpad;if(!districts.has(dkey))districts.set(dkey,{district:x.district,janpad:x.janpad,rows:[]});districts.get(dkey).rows.push(x)}
@@ -194,7 +195,7 @@ function render(){
  $('body').innerHTML=view.map(r=>'<tr'+(r.cls?' class="'+r.cls+'"':'')+'>'+r.values.map((v,i)=>'<td class="'+(kind==='gp'&&(i===6||i===7)?'pct':typeof v==='number'?'num':(String(v).trim().toUpperCase().startsWith('RAMPUR BAGHELAN')?'rampur-janpad':''))+'">'+(typeof v==='number'?fmt(v):esc(v))+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="'+heads.length+'" class="empty">इन filters में कोई रिकॉर्ड नहीं मिला।</td></tr>';
  if(kind==='janpad')document.querySelectorAll('#body tr.district-total-row,#body tr.grand-total-row').forEach(tr=>{if(tr.cells.length>1){tr.cells[0].colSpan=2;tr.cells[1].remove()}});
  if(kind==='gp')document.querySelectorAll('#body tr.janpad-total-row,#body tr.district-total-row,#body tr.grand-total-row').forEach(tr=>{if(tr.cells.length>4){tr.cells[0].colSpan=4;tr.deleteCell(1);tr.deleteCell(1);tr.deleteCell(1)}});
- if(kind==='engineer')document.querySelectorAll('#body tr.janpad-total-row').forEach(tr=>{if(tr.cells.length>3){tr.cells[0].colSpan=3;tr.deleteCell(1);tr.deleteCell(1)}});
+ if(kind==='engineer')document.querySelectorAll('#body tr.janpad-total-row,#body tr.district-total-row,#body tr.grand-total-row').forEach(tr=>{if(tr.cells.length>3){tr.cells[0].colSpan=3;tr.deleteCell(1);tr.deleteCell(1)}});
  $('rowMeta').textContent=fmt(agg.length)+' पंक्तियाँ • '+(kind==='janpad'?'जनपदवार + जिला योग':kind==='gp'?'GPवार + उपयंत्री / जनपद / जिला योग':'उपयंत्रीवार + जनपद / जिला योग')+' • GP: '+fmt(rows.length)
 }
 function csv(){const lines=[...$('head').querySelectorAll('th')].map(x=>x.innerText);const vals=current.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(','));const blob=new Blob(['\ufeff'+[lines.join(','),...vals].join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='R-10.3_Work_Demand_Details.csv';a.click();URL.revokeObjectURL(a.href)}
