@@ -66,7 +66,7 @@ function totalRow(items,kind,label,cls){
  if(kind==='gp')return {cls,values:[label,'','जनपद कुल योग','',t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
  return {cls,values:[label,'जनपद कुल योग','',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
 }
-let current=[];
+
 function render(){
  const rows=filtered(),kind=$('group').value;
  let agg=aggregate(rows,kind);
