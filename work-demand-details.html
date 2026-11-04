@@ -16,8 +16,8 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
 .source{color:#12558a;font-weight:800}.pill{display:inline-block;padding:4px 9px;background:#e7f2fc;border-radius:20px;color:#164e7a;font-weight:800}
 @media(max-width:700px){h1{font-size:20px}.cards{grid-template-columns:repeat(2,1fr)}.card strong{font-size:21px}}
 @media print{body{background:#fff}header{padding:8px;background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{margin:8px auto}.back,.filters,button{display:none!important}.panel,.card,.scope{box-shadow:none}.wrap{overflow:visible}table{min-width:0;font-size:9px}th,td{padding:4px}.num{font-size:11px}th{position:static}a{color:inherit;text-decoration:none}}
-</style>
-<script src="work-demand-details-data.js?v=20261104-november2"></script></head>
+.grand-total-row td{background:#ffedc9;color:#713f00;font-weight:950;border-top:3px solid #d18a00}.pct{text-align:center!important;font-size:18px;font-weight:950;color:#07596a;background:#e9f5f5!important;font-variant-numeric:tabular-nums}#head[data-kind='gp'] th:nth-child(7){background:#187d82!important}#head[data-kind='gp'] th:nth-child(8){background:#167443!important}.period-highlight{display:inline-block;color:#167443;font-size:17px;font-weight:900}</style>
+<script src="work-demand-details-data.js?v=20261104-november32"></script></head>
 <body><header><h1>R-10.3 • VB G RAM G Work Demand Details</h1><p id="meta">Report data load हो रहा है…</p></header>
 <main><a class="back" href="index.html">← मुख्य मेनू</a>
 <div class="scope" id="scope"></div>
@@ -45,7 +45,7 @@ const D=window.WORK_DEMAND_DATA,$=id=>document.getElementById(id),fmt=n=>Number(
 if(!D){$('meta').textContent='Report data load नहीं हुआ।';return}
 const all=D.gpSummary||[],janOrder=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
 $('meta').textContent='FY 2026-27 • Data fetched: 04-11-2026 • Janpad / GP / Sub Engineer summary';
-$('scope').innerHTML='FY 2026-27 • Demand period: 01-11-2026 से 30-11-2026 • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithDemand)+' GP में demand</span> • Engineer grouping GP master mapping से';
+$('scope').innerHTML='<strong class="period-highlight">FY 2026-27 • Demand period: 01-11-2026 से 30-11-2026</strong> • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithDemand)+' GP में demand</span> • Engineer grouping GP master mapping से';
 $('sourceLink').href=D.source;
 function fillFilters(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value;const js=[...new Set(all.filter(x=>d==='ALL'||x.district===d).map(x=>x.janpad))].sort((a,b)=>janOrder.indexOf(a)-janOrder.indexOf(b));$('janpad').innerHTML='<option value="ALL">सभी जनपद</option>'+js.map(x=>'<option>'+esc(x)+'</option>').join('');if(js.includes(j))$('janpad').value=j;const es=[...new Set(all.filter(x=>(d==='ALL'||x.district===d)&&($('janpad').value==='ALL'||x.janpad===$('janpad').value)).map(x=>x.subEngineer))].sort((a,b)=>a.localeCompare(b,'hi'));$('engineer').innerHTML='<option value="ALL">सभी उपयंत्री</option>'+es.map(x=>'<option>'+esc(x)+'</option>').join('');if(es.includes(e))$('engineer').value=e}
 function filtered(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value,q=$('query').value.trim().toLowerCase();return all.filter(x=>(d==='ALL'||x.district===d)&&(j==='ALL'||x.janpad===j)&&(e==='ALL'||x.subEngineer===e)&&(!q||[x.gp,x.subEngineer,x.janpad,x.district].join(' ').toLowerCase().includes(q)))}
@@ -54,16 +54,17 @@ let current=[],sortIndex=null,sortDir=1;
 function sumRows(items){
  return items.reduce((a,x)=>({gpCount:a.gpCount+x.gpCount,activeGPCount:a.activeGPCount+x.activeGPCount,requests:a.requests+x.requests,entries:a.entries+x.entries,days:a.days+x.days}),{gpCount:0,activeGPCount:0,requests:0,entries:0,days:0});
 }
+function pct(n,d){return d?((n*100/d).toFixed(1).replace(/\.0$/,'')+'%'):'0%'}
 function aggregateValues(x,kind,label){
  const no=x.gpCount-x.activeGPCount;
  if(kind==='janpad')return [x.district,label||x.janpad,x.gpCount,x.activeGPCount,no,x.requests,x.entries,x.days];
- if(kind==='gp')return [x.district,x.janpad,label||x.gp,label==='उपयंत्री योग'?(x.subEngineer||''):(x.subEngineer||''),x.activeGPCount,no,x.requests,x.entries,x.days];
+ if(kind==='gp')return [x.district,x.janpad,label||x.gp,x.subEngineer||'',x.activeGPCount,no,pct(x.activeGPCount,x.gpCount),pct(no,x.gpCount),x.requests,x.entries,x.days];
  return [x.district,label||x.janpad,x.subEngineer||'',x.gpCount,x.activeGPCount,no,x.requests,x.entries,x.days];
 }
 function totalRow(items,kind,label,cls){
  const t=sumRows(items);
  if(kind==='janpad')return {cls,values:[label,'',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
- if(kind==='gp')return {cls,values:[label,'','जनपद कुल योग','',t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
+ if(kind==='gp'){const no=t.gpCount-t.activeGPCount;return {cls,values:[label,'','जनपद कुल योग','',t.activeGPCount,no,pct(t.activeGPCount,t.gpCount),pct(no,t.gpCount),t.requests,t.entries,t.days]};}
  return cls==='district-total-row'?{cls,values:[label,'','',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]}:{cls,values:[items[0]?.district||'',label,'',t.gpCount,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]};
 }
 
@@ -75,7 +76,7 @@ function render(){
  $('entries').textContent=fmt(rows.reduce((s,x)=>s+x.entries,0));
  $('days').textContent=fmt(rows.reduce((s,x)=>s+x.days,0));
  $('gps').textContent=fmt(rows.filter(x=>x.requests>0).length)+' / '+fmt(rows.length);
- let heads=kind==='janpad'?['जिला','जनपद','कुल GP','मांग वाले GP','मांग नहीं वाले GP','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:kind==='gp'?['जिला','जनपद','ग्राम पंचायत','उपयंत्री','मांग वाले GP','मांग नहीं वाले GP','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:['जिला','जनपद','उपयंत्री','कुल GP','मांग वाले GP','मांग नहीं वाले GP','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस'];
+ let heads=kind==='janpad'?['जिला','जनपद','कुल GP','मांग वाले GP','मांग नहीं वाले GP','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:kind==='gp'?['जिला','जनपद','ग्राम पंचायत','उपयंत्री','मांग वाले GP','मांग नहीं वाले GP','मांग वाले GP %','मांग नहीं वाले GP %','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:['जिला','जनपद','उपयंत्री','कुल GP','मांग वाले GP','मांग नहीं वाले GP','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस'];
  if(sortIndex!==null){
   const groupKey=x=>kind==='janpad'?x.district:kind==='gp'?x.district+'|'+x.janpad+'|'+x.subEngineer:x.district+'|'+x.janpad;
   const groupOrder=new Map();agg.forEach(x=>{const k=groupKey(x);if(!groupOrder.has(k))groupOrder.set(k,groupOrder.size)});
@@ -88,6 +89,8 @@ function render(){
  if(kind==='janpad'){
   let districtRows=[];
   for(let i=0;i<agg.length;i++){view.push({cls:'',values:aggregateValues(agg[i],kind)});districtRows.push(agg[i]);const next=agg[i+1];if(!next||next.district!==agg[i].district){view.push(totalRow(districtRows,kind,agg[i].district+' जिला योग','district-total-row'));districtRows=[]}}
+  const allScope=$('district').value==='ALL'&&$('janpad').value==='ALL'&&$('engineer').value==='ALL'&&!$('query').value.trim();
+  view.push(totalRow(agg,kind,allScope?'सतना + मैहर जिला कुल योग':'फिल्टर कुल योग','grand-total-row'));
  }else if(kind==='engineer'){
   let janpadRows=[],districtRows=[];
   for(let i=0;i<agg.length;i++){view.push({cls:'',values:aggregateValues(agg[i],kind)});janpadRows.push(agg[i]);districtRows.push(agg[i]);const next=agg[i+1];if(!next||next.district!==agg[i].district||next.janpad!==agg[i].janpad){view.push(totalRow(janpadRows,kind,agg[i].janpad+' जनपद कुल योग','janpad-total-row'));janpadRows=[]}if(!next||next.district!==agg[i].district){view.push(totalRow(districtRows,kind,agg[i].district+' जिला योग','district-total-row'));districtRows=[]}}
@@ -101,17 +104,17 @@ function render(){
    for(const x of group.rows){if(!engines.has(x.subEngineer))engines.set(x.subEngineer,[]);engines.get(x.subEngineer).push(x)}
    for(const [engine,items] of engines){
     for(const x of items){view.push({cls:'',values:aggregateValues(x,'gp')});janpadRows.push(x)}
-    const t=sumRows(items);view.push({cls:'engineer-total-row',values:[group.district,group.janpad,'उपयंत्री कुल',engine,t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]});
+    const t=sumRows(items),no=t.gpCount-t.activeGPCount;view.push({cls:'engineer-total-row',values:[group.district,group.janpad,'उपयंत्री कुल',engine,t.activeGPCount,no,pct(t.activeGPCount,t.gpCount),pct(no,t.gpCount),t.requests,t.entries,t.days]});
    }
-   const t=sumRows(janpadRows);view.push({cls:'janpad-total-row',values:[group.district,group.janpad,'जनपद कुल योग','',t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]});
+   const t=sumRows(janpadRows),no=t.gpCount-t.activeGPCount;view.push({cls:'janpad-total-row',values:[group.district,group.janpad,'जनपद कुल योग','',t.activeGPCount,no,pct(t.activeGPCount,t.gpCount),pct(no,t.gpCount),t.requests,t.entries,t.days]});
    if(!byDistrict.has(group.district))byDistrict.set(group.district,[]);
    byDistrict.get(group.district).push(...janpadRows);
   }
-  for(const [district,items] of byDistrict){const t=sumRows(items);view.push({cls:'district-total-row',values:[district+' जिला योग','','','',t.activeGPCount,t.gpCount-t.activeGPCount,t.requests,t.entries,t.days]})}
+  for(const [district,items] of byDistrict){const t=sumRows(items),no=t.gpCount-t.activeGPCount;view.push({cls:'district-total-row',values:[district+' जिला योग','','','',t.activeGPCount,no,pct(t.activeGPCount,t.gpCount),pct(no,t.gpCount),t.requests,t.entries,t.days]})}
  }
  current=view.map(x=>x.values);
- $('body').innerHTML=view.map(r=>'<tr'+(r.cls?' class="'+r.cls+'"':'')+'>'+r.values.map((v,i)=>'<td class="'+(typeof v==='number'?'num':(String(v).trim().toUpperCase().startsWith('RAMPUR BAGHELAN')?'rampur-janpad':''))+'">'+(typeof v==='number'?fmt(v):esc(v))+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="'+heads.length+'" class="empty">इन filters में कोई रिकॉर्ड नहीं मिला।</td></tr>';
- if(kind==='janpad')document.querySelectorAll('#body tr.district-total-row').forEach(tr=>{if(tr.cells.length>1){tr.cells[0].colSpan=2;tr.cells[1].remove()}});
+ $('body').innerHTML=view.map(r=>'<tr'+(r.cls?' class="'+r.cls+'"':'')+'>'+r.values.map((v,i)=>'<td class="'+(kind==='gp'&&(i===6||i===7)?'pct':typeof v==='number'?'num':(String(v).trim().toUpperCase().startsWith('RAMPUR BAGHELAN')?'rampur-janpad':''))+'">'+(typeof v==='number'?fmt(v):esc(v))+'</td>').join('')+'</tr>').join('')||'<tr><td colspan="'+heads.length+'" class="empty">इन filters में कोई रिकॉर्ड नहीं मिला।</td></tr>';
+ if(kind==='janpad')document.querySelectorAll('#body tr.district-total-row,#body tr.grand-total-row').forEach(tr=>{if(tr.cells.length>1){tr.cells[0].colSpan=2;tr.cells[1].remove()}});
  $('rowMeta').textContent=fmt(agg.length)+' पंक्तियाँ • '+(kind==='janpad'?'जनपदवार + जिला योग':kind==='gp'?'GPवार + उपयंत्री / जनपद / जिला योग':'उपयंत्रीवार + जनपद / जिला योग')+' • GP: '+fmt(rows.length)
 }
 function csv(){const lines=[...$('head').querySelectorAll('th')].map(x=>x.innerText);const vals=current.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(','));const blob=new Blob(['\ufeff'+[lines.join(','),...vals].join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='R-10.3_Work_Demand_Details.csv';a.click();URL.revokeObjectURL(a.href)}
