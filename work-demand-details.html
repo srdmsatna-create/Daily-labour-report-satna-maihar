@@ -17,7 +17,7 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
 @media(max-width:700px){h1{font-size:20px}.cards{grid-template-columns:repeat(2,1fr)}.card strong{font-size:21px}}
 @media print{body{background:#fff}header{padding:8px;background:var(--navy)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{margin:8px auto}.back,.filters,button{display:none!important}.panel,.card,.scope{box-shadow:none}.wrap{overflow:visible}table{min-width:0;font-size:9px}th,td{padding:4px}.num{font-size:11px}th{position:static}a{color:inherit;text-decoration:none}}
 </style>
-<script src="work-demand-details-data.js?v=20261103-demand2"></script></head>
+<script src="work-demand-details-data.js?v=20261104-november"></script></head>
 <body><header><h1>R-10.3 • VB G RAM G Work Demand Details</h1><p id="meta">Report data load हो रहा है…</p></header>
 <main><a class="back" href="index.html">← मुख्य मेनू</a>
 <div class="scope" id="scope"></div>
@@ -37,15 +37,15 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
 <button type="button" id="csv">CSV डाउनलोड</button><button type="button" onclick="window.print()">Print / PDF</button>
 </div>
 <div class="wrap"><table><thead id="head"></thead><tbody id="body"></tbody></table></div><p class="meta" id="rowMeta"></p></section>
-<section class="panel"><h2>स्रोत एवं गिनती का आधार</h2><p class="meta">Official Work Demand report में अलग-अलग जॉबकार्डधारी की पहचान/unique count उपलब्ध नहीं है। ‘कार्य मांग आवेदन संख्या’ स्रोत के Demand आवेदन क्रमांक की गिनती है; ‘मांग में शामिल श्रमिक संख्या’ व्यक्ति-demand प्रविष्टियाँ हैं। इसलिए आवेदन संख्या को unique जॉबकार्डधारी न मानें। बिना मांग वाले GP = कुल GP master − demand वाले GP। उपयंत्री का नाम GP-to-Sub Engineer master (01-11-2026) से लिया गया है।</p><p class="meta">Source: <a class="source" id="sourceLink" target="_blank" rel="noopener">Official Dynamic Report on Demand</a> • अवधि: 01-04-2026 से 03-11-2026 • Data snapshot: 03-11-2026</p></section>
+<section class="panel"><h2>स्रोत एवं गिनती का आधार</h2><p class="meta">Official Work Demand report में अलग-अलग जॉबकार्डधारी की पहचान/unique count उपलब्ध नहीं है। ‘कार्य मांग आवेदन संख्या’ स्रोत के Demand आवेदन क्रमांक की गिनती है; ‘मांग में शामिल श्रमिक संख्या’ व्यक्ति-demand प्रविष्टियाँ हैं। इसलिए आवेदन संख्या को unique जॉबकार्डधारी न मानें। बिना मांग वाले GP = कुल GP master − demand वाले GP। उपयंत्री का नाम GP-to-Sub Engineer master (01-11-2026) से लिया गया है।</p><p class="meta">Source: <a class="source" id="sourceLink" target="_blank" rel="noopener">Official Dynamic Report on Demand</a> • अवधि: 01-11-2026 से 30-11-2026 • Data snapshot: 04-11-2026</p></section>
 </main>
 <script>
 (()=>{
 const D=window.WORK_DEMAND_DATA,$=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('en-IN'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 if(!D){$('meta').textContent='Report data load नहीं हुआ।';return}
 const all=D.gpSummary||[],janOrder=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
-$('meta').textContent='FY 2026-27 • Data fetched: 03-11-2026 • Janpad / GP / Sub Engineer summary';
-$('scope').innerHTML='FY 2026-27 • Demand period: 01-04-2026 से 03-11-2026 • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithDemand)+' GP में demand</span> • Engineer grouping GP master mapping से';
+$('meta').textContent='FY 2026-27 • Data fetched: 04-11-2026 • Janpad / GP / Sub Engineer summary';
+$('scope').innerHTML='FY 2026-27 • Demand period: 01-11-2026 से 30-11-2026 • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithDemand)+' GP में demand</span> • Engineer grouping GP master mapping से';
 $('sourceLink').href=D.source;
 function fillFilters(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value;const js=[...new Set(all.filter(x=>d==='ALL'||x.district===d).map(x=>x.janpad))].sort((a,b)=>janOrder.indexOf(a)-janOrder.indexOf(b));$('janpad').innerHTML='<option value="ALL">सभी जनपद</option>'+js.map(x=>'<option>'+esc(x)+'</option>').join('');if(js.includes(j))$('janpad').value=j;const es=[...new Set(all.filter(x=>(d==='ALL'||x.district===d)&&($('janpad').value==='ALL'||x.janpad===$('janpad').value)).map(x=>x.subEngineer))].sort((a,b)=>a.localeCompare(b,'hi'));$('engineer').innerHTML='<option value="ALL">सभी उपयंत्री</option>'+es.map(x=>'<option>'+esc(x)+'</option>').join('');if(es.includes(e))$('engineer').value=e}
 function filtered(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value,q=$('query').value.trim().toLowerCase();return all.filter(x=>(d==='ALL'||x.district===d)&&(j==='ALL'||x.janpad===j)&&(e==='ALL'||x.subEngineer===e)&&(!q||[x.gp,x.subEngineer,x.janpad,x.district].join(' ').toLowerCase().includes(q)))}
