@@ -195,13 +195,28 @@ def fetch_reports():
     from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        # The official R6.9 page serves only its header to headless Chromium.
+        # Use a visible browser session, matching normal portal access on this PC.
+        browser = p.chromium.launch(
+            headless=False,
+            args=[
+                "--disable-blink-features=AutomationControlled",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+            ],
+        )
         context = browser.new_context(
             user_agent=(
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
                 "Chrome/128.0.0.0 Safari/537.36"
-            )
+            ),
+            locale="en-IN",
+            timezone_id="Asia/Kolkata",
+            viewport={"width": 1440, "height": 1000},
+        )
+        context.add_init_script(
+            "Object.defineProperty(navigator, 'webdriver', {get: () => undefined});"
         )
         cookies=[]
         for pair in os.environ.get('VBGRAM_COOKIE','').split(';'):
