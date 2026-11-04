@@ -186,7 +186,16 @@ td{font-size:10px;padding:4px 3px;overflow-wrap:normal}
 
 
 thead th{padding-top:4px!important;padding-bottom:4px!important}tbody td{padding-top:3px!important;padding-bottom:3px!important}a{color:inherit;text-decoration:none}
-}</style>
+}
+/* Screen layout: keep complete administrative and engineer names on one line. */
+@media screen{
+ .wrap table{table-layout:auto!important;width:max-content!important;min-width:100%!important}
+ #head[data-kind='janpad'] th:nth-child(1),#body[data-kind='janpad'] td:nth-child(1),#head[data-kind='gp'] th:nth-child(1),#body[data-kind='gp'] td:nth-child(1),#head[data-kind='engineer'] th:nth-child(1),#body[data-kind='engineer'] td:nth-child(1){width:150px!important;min-width:150px!important;max-width:none!important;white-space:nowrap!important;overflow-wrap:normal!important;word-break:keep-all!important}
+ #head[data-kind='janpad'] th:nth-child(2),#body[data-kind='janpad'] td:nth-child(2),#head[data-kind='gp'] th:nth-child(2),#body[data-kind='gp'] td:nth-child(2),#head[data-kind='engineer'] th:nth-child(2),#body[data-kind='engineer'] td:nth-child(2){width:220px!important;min-width:220px!important;max-width:none!important;white-space:nowrap!important;overflow-wrap:normal!important;word-break:keep-all!important}
+ #head[data-kind='gp'] th:nth-child(3),#body[data-kind='gp'] td:nth-child(3){width:200px!important;min-width:200px!important;max-width:none!important;white-space:nowrap!important;overflow-wrap:normal!important;word-break:keep-all!important}
+ #head[data-kind='gp'] th:nth-child(4),#body[data-kind='gp'] td:nth-child(4),#head[data-kind='engineer'] th:nth-child(3),#body[data-kind='engineer'] td:nth-child(3){width:230px!important;min-width:230px!important;max-width:none!important;white-space:nowrap!important;overflow-wrap:normal!important;word-break:keep-all!important}
+}
+</style>
 <script src="work-demand-details-data-2810.js"></script></head>
 <body><header><h1>R-10.3 • VB G RAM G Work Demand Details</h1><p id="meta">Report data load हो रहा है…</p></header>
 <main><div class="print-only-title">VB G RAM G Work Demand Details <span id="printDate"></span></div><a class="back" href="index.html">← मुख्य मेनू</a>
