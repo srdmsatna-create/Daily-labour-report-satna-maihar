@@ -47,10 +47,10 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
 #head[data-kind='engineer'] th:nth-child(8),#body[data-kind='engineer'] td:nth-child(8){width:13%;min-width:0;max-width:none}
 #head[data-kind='engineer'] th:nth-child(9),#body[data-kind='engineer'] td:nth-child(9){width:12%;min-width:0;max-width:none}
 #head th{overflow-wrap:normal;word-break:normal;line-height:1.2;padding:8px 5px}
-</style>
+.print-only-title{display:none}@media print{header{display:none!important}.print-only-title{display:block!important;text-align:center;font-size:18px;font-weight:900;color:#123f72;padding:0 0 10px;border-bottom:2px solid #123f72;margin-bottom:8px;-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style>
 <script src="work-demand-details-data-2810.js"></script></head>
 <body><header><h1>R-10.3 • VB G RAM G Work Demand Details</h1><p id="meta">Report data load हो रहा है…</p></header>
-<main><a class="back" href="index.html">← मुख्य मेनू</a>
+<main><div class="print-only-title">VB G RAM G Work Demand Details <span id="printDate"></span></div><a class="back" href="index.html">← मुख्य मेनू</a>
 <div class="scope" id="scope"></div>
 <section class="cards">
 <div class="card"><small>कार्य मांग आवेदन संख्या</small><strong id="requests">—</strong></div>
@@ -74,6 +74,7 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
 (()=>{
 const D=window.WORK_DEMAND_DATA,$=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('en-IN'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 if(!D){$('meta').textContent='Report data load नहीं हुआ।';return}
+const printDate=new Date().toLocaleDateString('en-GB',{timeZone:'Asia/Kolkata'}).replaceAll('/','-');$('printDate').textContent='दिनांक: '+printDate;
 const all=D.gpSummary||[],janOrder=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
 $('meta').textContent='FY 2026-27 • Data fetched: 04-11-2026 • Janpad / GP / Sub Engineer summary';
 $('scope').innerHTML='<strong class="period-highlight">FY 2026-27 • Demand period: 01-11-2026 से 30-11-2026</strong> • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithDemand)+' GP में demand</span> • Engineer grouping GP master mapping से';
