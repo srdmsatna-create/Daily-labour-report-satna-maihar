@@ -38,8 +38,22 @@ def publish(stage):
                 )
                 if resolved.returncode == 0:
                     subprocess.run(['git', 'add', '--', 'all-tabs-auto-status.json'], cwd=stage, check=True)
+                    # Git's rebase continuation invokes the editor for the replayed
+                    # commit message. A shell no-op can leave that message empty on
+                    # Windows, which makes Git reject the otherwise-resolved rebase.
+                    editor = stage.parent / 'srdm_rebase_editor.py'
+                    editor.write_text(
+                        "from pathlib import Path\\n"
+                        "import sys\\n"
+                        "p = Path(sys.argv[1])\\n"
+                        "try: text = p.read_text(encoding='utf-8')\\n"
+                        "except OSError: text = ''\\n"
+                        "meaningful = [line for line in text.splitlines() if line.strip() and not line.lstrip().startswith('#')]\\n"
+                        "if not meaningful: p.write_text('Verified daily report groups\\n', encoding='utf-8')\\n",
+                        encoding='utf-8'
+                    )
                     env = os.environ.copy()
-                    env['GIT_EDITOR'] = 'cmd /c exit 0' if os.name == 'nt' else 'true'
+                    env['GIT_EDITOR'] = subprocess.list2cmdline([sys.executable, str(editor)])
                     continued = subprocess.run(['git', 'rebase', '--continue'], cwd=stage, env=env)
                     if continued.returncode == 0:
                         result = continued
