@@ -43,13 +43,13 @@ def publish(stage):
                     # Windows, which makes Git reject the otherwise-resolved rebase.
                     editor = stage.parent / 'srdm_rebase_editor.py'
                     editor.write_text(
-                        "from pathlib import Path\\n"
-                        "import sys\\n"
-                        "p = Path(sys.argv[1])\\n"
-                        "try: text = p.read_text(encoding='utf-8')\\n"
-                        "except OSError: text = ''\\n"
-                        "meaningful = [line for line in text.splitlines() if line.strip() and not line.lstrip().startswith('#')]\\n"
-                        "if not meaningful: p.write_text('Verified daily report groups\\n', encoding='utf-8')\\n",
+                        "from pathlib import Path\n"
+                        "import sys\n"
+                        "p = Path(sys.argv[1])\n"
+                        "try: text = p.read_text(encoding='utf-8')\n"
+                        "except OSError: text = ''\n"
+                        "meaningful = [line for line in text.splitlines() if line.strip() and not line.lstrip().startswith('#')]\n"
+                        "if not meaningful: p.write_text('Verified daily report groups\n', encoding='utf-8')\n",
                         encoding='utf-8'
                     )
                     env = os.environ.copy()
