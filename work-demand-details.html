@@ -204,7 +204,7 @@ thead th{padding-top:4px!important;padding-bottom:4px!important}tbody td{padding
 <div class="card"><small>कार्य मांग आवेदन संख्या</small><strong id="requests">—</strong></div>
 <div class="card"><small>मांग में शामिल श्रमिक संख्या</small><strong id="entries">—</strong></div>
 <div class="card"><small>कुल मांग रोजगार-दिवस</small><strong id="days">—</strong></div>
-<div class="card"><small>Demand वाले GP / कुल GP</small><strong id="gps">—</strong></div>
+<div class="card"><small>कार्य प्रगतिरत GP (R6.9) / कुल GP</small><strong id="gps">—</strong></div>
 </section>
 <section class="panel"><h2>जनपद / GP / उपयंत्रीवार विवरण</h2>
 <div class="filters">
@@ -225,7 +225,7 @@ if(!D){$('meta').textContent='Report data load नहीं हुआ।';return
 const printDate=new Date().toLocaleDateString('en-GB',{timeZone:'Asia/Kolkata'}).replaceAll('/','-');$('printDate').textContent='दिनांक: '+printDate;
 const all=D.gpSummary||[],janOrder=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
 $('meta').textContent='FY 2026-27 • Data fetched: 04-11-2026 • Janpad / GP / Sub Engineer summary';
-$('scope').innerHTML='<strong class="period-highlight">FY 2026-27 • Demand period: 01-11-2026 से 30-11-2026</strong> • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithDemand)+' GP में demand</span> • <span class="screen-only">Engineer grouping GP master mapping से</span>';
+$('scope').innerHTML='<strong class="period-highlight">FY 2026-27 • Demand period: 01-11-2026 से 30-11-2026</strong> • <span class="pill">'+fmt(D.totals.gpCount)+' GP मास्टर</span> • <span class="pill">'+fmt(D.totals.gpWithProgress||D.totals.gpWithDemand)+' GP में कार्य प्रगतिरत</span> • <span class="screen-only">Engineer grouping GP master mapping से</span>';
 $('sourceLink').href=D.source;
 function fillFilters(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value;const js=[...new Set(all.filter(x=>d==='ALL'||x.district===d).map(x=>x.janpad))].sort((a,b)=>janOrder.indexOf(a)-janOrder.indexOf(b));$('janpad').innerHTML='<option value="ALL">सभी जनपद</option>'+js.map(x=>'<option>'+esc(x)+'</option>').join('');if(js.includes(j))$('janpad').value=j;const es=[...new Set(all.filter(x=>(d==='ALL'||x.district===d)&&($('janpad').value==='ALL'||x.janpad===$('janpad').value)).map(x=>x.subEngineer))].sort((a,b)=>a.localeCompare(b,'hi'));$('engineer').innerHTML='<option value="ALL">सभी उपयंत्री</option>'+es.map(x=>'<option>'+esc(x)+'</option>').join('');if(es.includes(e))$('engineer').value=e}
 function filtered(){const d=$('district').value,j=$('janpad').value,e=$('engineer').value,q=$('query').value.trim().toLowerCase();return all.filter(x=>(d==='ALL'||x.district===d)&&(j==='ALL'||x.janpad===j)&&(e==='ALL'||x.subEngineer===e)&&(!q||[x.gp,x.subEngineer,x.janpad,x.district].join(' ').toLowerCase().includes(q)))}
@@ -255,7 +255,7 @@ function render(){
  $('requests').textContent=fmt(rows.reduce((s,x)=>s+x.requests,0));
  $('entries').textContent=fmt(rows.reduce((s,x)=>s+x.entries,0));
  $('days').textContent=fmt(rows.reduce((s,x)=>s+x.days,0));
- $('gps').textContent=fmt(rows.filter(x=>x.requests>0).length)+' / '+fmt(rows.length);
+ $('gps').textContent=fmt(D.totals.gpWithProgress||D.totals.gpWithDemand)+' / '+fmt(D.totals.gpCount);
  let heads=kind==='janpad'?['जिला','जनपद','कुल GP','कार्य की मांग वाली GP संख्या','कार्य की मांग न करने वाली GP की संख्या','कार्य की मांग करने वाली GP का %','कार्य की मांग न करने वाली GP का %','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:kind==='gp'?['जिला','जनपद','ग्राम पंचायत','उपयंत्री','कार्य की मांग वाली GP संख्या','कार्य की मांग न करने वाली GP की संख्या','कार्य की मांग करने वाली GP का %','कार्य की मांग न करने वाली GP का %','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:['जिला','जनपद','उपयंत्री','कुल GP','कार्य की मांग वाली GP संख्या','कार्य की मांग न करने वाली GP की संख्या','कार्य की मांग करने वाली GP का %','कार्य की मांग न करने वाली GP का %','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस'];
  if(sortIndex!==null){
   const groupKey=x=>kind==='janpad'?x.district:kind==='gp'?x.district+'|'+x.janpad+'|'+x.subEngineer:x.district+'|'+x.janpad;
