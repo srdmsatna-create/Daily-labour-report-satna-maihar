@@ -262,49 +262,51 @@ def fetch_reports():
             browser.close()
             raise RuntimeError(f"{exc}; page says: {visible}") from exc
 
-        # 1) ALL report
-        _select_label(work_category, "ALL")
-        page.wait_for_load_state("networkidle", timeout=60000)
-        try:
-            proposed_status = _r69_status(page, category_index)
-        except RuntimeError as exc:
-            static_html = page.content()
-            if len(parse_all_report(static_html)) == 8:
-                browser.close()
-                return static_html, "", "", ""
-            browser.close()
-            raise
-        _select_label(proposed_status, "ALL")
-        page.wait_for_load_state("networkidle", timeout=60000)
-        _submit_and_wait(page)
+        # The official page already opens on ALL. Re-selecting ALL triggers an
+        # ASP.NET redirect that can return a header-only page with no controls.
+        # Read and validate the initial report before attempting category filters.
         all_html = page.content()
+        if len(parse_all_report(all_html)) != 8:
+            _submit_and_wait(page)
+            all_html = page.content()
+        if len(parse_all_report(all_html)) != 8:
+            browser.close()
+            raise RuntimeError(
+                f"R6.9 ALL report did not contain all 8 Janpads; URL={page.url!r}"
+            )
 
-        # 2) Individual
-        work_category, category_index = _r69_category(page)
-        _select_label(work_category, INDIVIDUAL_CATEGORY)
-        page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = _r69_status(page, category_index)
-        _select_label(proposed_status, "ALL")
-        _submit_and_wait(page)
-        individual_html = page.content()
+        try:
+            # 1) Individual
+            work_category, category_index = _r69_category(page)
+            _select_label(work_category, INDIVIDUAL_CATEGORY)
+            page.wait_for_load_state("networkidle", timeout=60000)
+            proposed_status = _r69_status(page, category_index)
+            _select_label(proposed_status, "ALL")
+            _submit_and_wait(page)
+            individual_html = page.content()
 
-        # 3) PMAY-G
-        work_category, category_index = _r69_category(page)
-        _select_label(work_category, INDIVIDUAL_CATEGORY)
-        page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = _r69_status(page, category_index)
-        _select_label(proposed_status, PMAY_STATUS)
-        _submit_and_wait(page)
-        pmay_html = page.content()
+            # 2) PMAY-G
+            work_category, category_index = _r69_category(page)
+            _select_label(work_category, INDIVIDUAL_CATEGORY)
+            page.wait_for_load_state("networkidle", timeout=60000)
+            proposed_status = _r69_status(page, category_index)
+            _select_label(proposed_status, PMAY_STATUS)
+            _submit_and_wait(page)
+            pmay_html = page.content()
 
-        # 4) Ek Bagiya
-        work_category, category_index = _r69_category(page)
-        _select_label(work_category, INDIVIDUAL_CATEGORY)
-        page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = _r69_status(page, category_index)
-        _select_label(proposed_status, EK_BAGIYA_STATUS)
-        _submit_and_wait(page)
-        ek_html = page.content()
+            # 3) Ek Bagiya
+            work_category, category_index = _r69_category(page)
+            _select_label(work_category, INDIVIDUAL_CATEGORY)
+            page.wait_for_load_state("networkidle", timeout=60000)
+            proposed_status = _r69_status(page, category_index)
+            _select_label(proposed_status, EK_BAGIYA_STATUS)
+            _submit_and_wait(page)
+            ek_html = page.content()
+        except Exception as exc:
+            # Keep the freshly validated ALL summary; combine_reports/update_csv
+            # will preserve the last validated category-specific columns.
+            browser.close()
+            return all_html, "", "", ""
 
         browser.close()
 
