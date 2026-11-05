@@ -29,6 +29,7 @@ GROUPS=[
  ('above75',[['scripts_local/update_above75.py']],['data/above75-latest.json']),
  ('planner',[['scripts/fetch_planner_portal_summary.py']],['planner-portal-data.js']),
  ('secure_ts',[['scripts_local/update_secure_ts.py']],['secure-ts-data.js']),
+ ('as_geotag_before',[['scripts_local/update_as_geotag_before.py']],['data/as-geotag-before-latest.json','as-geotag-before-data.js','index.html']),
  ('ek_bagiya_payment',[['scripts_local/update_ek_bagiya_payment.py']],['data/ek-bagiya-payment-latest.json']),
  ('rejected_wage',[['scripts/update_rejected_wage.py']],['data/rejected-wage-latest.json'])
 ]
