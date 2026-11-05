@@ -50,7 +50,9 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
   .summary th{font-size:8px}
   .summary td{font-size:9px!important}
   #summaryRows td:nth-child(n+3),#gpRows td:nth-child(n+4){font-size:9px!important}
-}}
+}
+main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:center!important;font-size:20px;font-weight:900}#engineerPanel td:nth-child(3){text-align:left!important}#engineerPanel table{min-width:1350px}
+@media print{main{max-width:none;padding:0}.summary,#engineerPanel table{min-width:0;width:100%;table-layout:fixed}.summary th,.summary th:nth-child(n+3){font-size:7px!important}.summary td,.yd-num{font-size:8px!important;overflow-wrap:anywhere}#engineerPanel{break-before:page}body[data-print-section="janpad"] #engineerPanel,body[data-print-section="gp"] #engineerPanel,body[data-print-section="engineer"] #janpadPanel,body[data-print-section="engineer"] #gpPanel,body[data-print-section="engineer"] #workPanel{display:none!important}}
 </style>
 <script src="secure-ts-data.js?v=20261105-refresh"></script>
 <script src="as-geotag-before-data.js?v=20261105-auto"></script>
@@ -100,5 +102,8 @@ function render(){const d=$('district').value,b=$('block').value,s=$('status').v
 if(!rows.length)$('workPanel').hidden=true;summary();renderGps();fillBlocks();render();$('gpFilter').addEventListener('input',renderGps);$('district').addEventListener('change',()=>{fillBlocks();render()});['block','status','query'].forEach(id=>$(id).addEventListener(id==='query'?'input':'change',render));$('sourceMeta').textContent=`स्रोत: AS/Before — VB-G RAM G R22.1 व R36.1 Before-stage status; SECURE TS — FY 2026-2027 की सभी approved entries में /YD/ Work Code, GP-wise स्वतंत्र गिनती। AS date cutoff: 01-10-2026। SECURE fetch: ${D.secureTs?.snapshotAt||'—'}`;
 })();
 </script>
+<script src="yuktdhara-received-data.js?v=20261105-r331"></script>
+<script src="yuktdhara-data.js?v=20261105-r331"></script>
+<script src="as-geotag-yuktdhara.js?v=20261105-r331"></script>
 </body>
 </html>

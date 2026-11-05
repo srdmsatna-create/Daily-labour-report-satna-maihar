@@ -26,7 +26,7 @@ def number(value):
 # Flatten spans and retain links at their original column positions.
 GRID = '''tables=>tables.map(t=>{const g=[];Array.from(t.rows).filter(r=>r.closest('table')===t).forEach((r,y)=>{g[y]??=[];let x=0;Array.from(r.cells).forEach(c=>{while(g[y][x]!==undefined)x++;const v={text:c.innerText.trim(),links:Array.from(c.querySelectorAll('a[href]')).map(a=>a.href)};for(let dy=0;dy<c.rowSpan;dy++){g[y+dy]??=[];for(let dx=0;dx<c.colSpan;dx++)g[y+dy][x+dx]=v}x+=c.colSpan})});return g})'''
 
-def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_gp=None):
+def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_gp=None, expected_yet=None):
     candidates=[]
     diagnostics=[]
     for table in tables:
@@ -38,6 +38,8 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_
             gi,wi=gps[0],works[0]; out={}; totals=[]
             created=[i for i,s in enumerate(names) if 'works created' in s and ('vb-g' in s or 'vb g' in s)]
             ci=created[0] if len(created)==1 else None
+            pending=[i for i,s in enumerate(names) if "works yet to start" in s]
+            yi=pending[0] if len(pending)==1 else None
             for row in table[hi+1:]:
                 # Official tables have a second header row numbered 1,2,3,... .
                 # It is column numbering, not a GP named "2" with three works.
@@ -57,6 +59,7 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_
                     if value>count:raise RuntimeError('Created works exceed received GP works: '+name)
                     out[key]['worksCreated']=value
                     out[key]['createdDetailLinks']=row[ci].get('links',[])
+                if yi is not None:out[key]['yetToStart']=number(row[yi]['text'])
             actual_works=sum(x['worksReceived'] for x in out.values())
             actual_gp=sum(x['worksReceived']>0 for x in out.values())
             actual_created=sum(x.get('worksCreated',0) for x in out.values())
@@ -66,6 +69,7 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_
             elif len(out)!=total_gp or not totals:continue
             if any(t!=actual_works for t in totals):continue
             if expected_created is not None and (ci is None or sum(x.get('worksCreated',0) for x in out.values())!=expected_created):continue
+            if expected_yet is not None and (yi is None or sum(x.get("yetToStart",0) for x in out.values())!=expected_yet):continue
             candidates.append(out)
     if not candidates:raise RuntimeError('GP detail does not reconcile: '+('; '.join(diagnostics) if diagnostics else 'received-work GP headers not found'))
     if any(c!=candidates[0] for c in candidates):raise RuntimeError('Ambiguous GP received-work tables')
@@ -99,18 +103,22 @@ def aggregate(blocks, details, mapping):
         if not engineer or engineer.lower()=='unmapped':continue
         if k in master and master[k]!=engineer:raise RuntimeError('Conflicting GP engineer mapping: '+str(k))
         master[k]=engineer
-    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0,'workTypes':{},'typesComplete':True,'worksCreated':0,'createdWorkTypes':{},'createdTypesComplete':True})
+    sums=defaultdict(lambda:{'gpReceived':0,'worksReceived':0,'workTypes':{},'typesComplete':True,'worksCreated':0,'createdWorkTypes':{},'createdTypesComplete':True,'yetToStart':0})
     for block in blocks:
         b=jan(block['block']); rows=details[b]
         if sum(r['worksReceived'] for r in rows)!=block['worksReceived'] or sum(r['worksReceived']>0 for r in rows)!=block['gpReceived']:
             raise RuntimeError('Block/GP totals mismatch: '+b)
         if sum(r.get('worksCreated',0) for r in rows)!=block['worksCreated']:
             raise RuntimeError('Created work GP/block totals mismatch: '+b)
+        if all('yetToStart' in r for r in rows) and sum(r['yetToStart'] for r in rows)!=block['yetToStart']:
+            raise RuntimeError('Yet-to-start GP/block totals mismatch: '+b)
         for r in rows:
             if not r['worksReceived']:continue
             k=(b,norm(r['gp']))
             if k not in master:raise RuntimeError('Received GP has no exact engineer mapping: '+str(k))
             a=sums[(b,master[k])];a['gpReceived']+=1;a['worksReceived']+=r['worksReceived'];a['worksCreated']+=r['worksCreated']
+            if 'yetToStart' not in r or a['yetToStart'] is None:a['yetToStart']=None
+            else:a['yetToStart']+=r['yetToStart']
             if r.get('worksCreated',0):
                 if 'createdWorkTypes' not in r:a['createdTypesComplete']=False
                 else:
@@ -201,6 +209,9 @@ def collect():
             for block in blocks:
                 rr=details[jan(block['block'])]
                 block['summaryGpReceived']=block['gpReceived'];block['summaryWorksReceived']=block['worksReceived']
+                if not all('yetToStart' in r for r in rr):raise RuntimeError('GP yet-to-start column missing: '+block['block'])
+                block['summaryYetToStart']=block['yetToStart']
+                block['yetToStart']=sum(r['yetToStart'] for r in rr)
                 block['gpReceived']=sum(r['worksReceived']>0 for r in rr)
                 block['worksReceived']=sum(r['worksReceived'] for r in rr)
             work_debug=[]
