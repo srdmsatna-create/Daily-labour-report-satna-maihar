@@ -254,8 +254,9 @@ def main():
 def patch_index():
     path = ROOT / "index.html"
     source = path.read_text(encoding="utf-8")
-    href = "as-geotag-before.html?v=20261103-r39-before"
-    if href in source: return
+    if re.search(r'href="as-geotag-before\.html(?:\?[^"]*)?"', source):
+        return
+    href = "as-geotag-before.html?v=20261105-before-auto"
     pattern = re.compile(r'(<a class="srdm-app-card srdm-portal-card" href="yuktdhara-r33-1\.html[^\"]*"[^>]*>.*?</a>)', re.S)
     card = ('\n    <a class="srdm-app-card srdm-portal-card" href="'+href+'" style="text-decoration:none;--app-accent:#176da7">'
             '<span class="srdm-app-icon">📍</span><span class="srdm-app-copy"><strong>AS स्वीकृत Yuktdhara कार्यों की Before Geotag स्थिति</strong>'
