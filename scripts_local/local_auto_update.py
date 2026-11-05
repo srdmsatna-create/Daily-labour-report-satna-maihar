@@ -427,16 +427,18 @@ def main():
         ek_lab = sum(d.get("ekLabour", 0) for d in data.values())
         ek_mr = sum(d.get("ekMR", 0) for d in data.values())
 
-        note = (
-            f"8/8 Janpads. "
-            f"Individual Labour/MR={int(ind_lab)}/{int(ind_mr)}; "
-            f"PMAY Labour/MR={int(pmay_lab)}/{int(pmay_mr)}; "
-            f"Ek Bagiya Labour/MR={int(ek_lab)}/{int(ek_mr)}."
-        )
-        if not (individual_html and pmay_html and ek_html):
-            note += (
-                " R6.9 category filters were unavailable; category-specific "
-                "figures were retained from the previous validated snapshot."
+        if individual_html and pmay_html and ek_html:
+            note = (
+                f"8/8 Janpads. "
+                f"Individual Labour/MR={int(ind_lab)}/{int(ind_mr)}; "
+                f"PMAY Labour/MR={int(pmay_lab)}/{int(pmay_mr)}; "
+                f"Ek Bagiya Labour/MR={int(ek_lab)}/{int(ek_mr)}."
+            )
+        else:
+            note = (
+                "8/8 Janpads. ALL report refreshed. R6.9 category filters "
+                "were unavailable; category-specific figures were retained "
+                "from the previous validated snapshot."
             )
         update_status(True, note)
         print("SUCCESS:", note)
