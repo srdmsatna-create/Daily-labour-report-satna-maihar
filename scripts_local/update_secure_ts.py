@@ -73,15 +73,34 @@ class Client:
                 try:
                     with self.opener.open(request, timeout=45) as response:
                         payload = json.load(response)
+                    if not isinstance(payload, dict):
+                        raise ValueError(
+                            f'Invalid SECURE response from {endpoint}: expected JSON object; '
+                            f'got {type(payload).__name__}: {str(payload)[:180]}'
+                        )
                     break
                 except (OSError, ValueError):
                     if attempt == 2:
                         raise
                     time.sleep(attempt + 1)
+            if 'data' not in payload or 'recordsFiltered' not in payload:
+                raise ValueError(
+                    f'Invalid SECURE response from {endpoint}: missing data/count fields; '
+                    f'keys={list(payload)[:20]}'
+                )
             page = payload.get('data')
-            count = int(payload['recordsFiltered'])
+            try:
+                count = int(payload['recordsFiltered'])
+            except (TypeError, ValueError) as exc:
+                raise ValueError(
+                    f'Invalid SECURE record count from {endpoint}: '
+                    f'{str(payload.get("recordsFiltered"))[:100]}'
+                ) from exc
             if not isinstance(page, list) or count < 0:
-                raise ValueError('Invalid SECURE response: ' + endpoint)
+                raise ValueError(
+                    f'Invalid SECURE data page from {endpoint}: expected list, '
+                    f'got {type(page).__name__}'
+                )
             if total is not None and count != total:
                 raise ValueError('SECURE count changed during pagination; rerun required')
             total = count
