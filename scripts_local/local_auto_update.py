@@ -230,7 +230,15 @@ def fetch_reports():
         # of checking after a fixed 1.5 seconds.
         try:
             page.locator("select").first.wait_for(state="attached", timeout=20000)
-        except Exception:
+        except Exception as wait_exc:
+            # Some portal responses now render the complete ALL table without
+            # the old filter controls. Use it only when all 8 Janpads parse;
+            # category-specific columns are then retained from the last valid
+            # snapshot by update_csv().
+            static_html = page.content()
+            if len(parse_all_report(static_html)) == 8:
+                browser.close()
+                return static_html, "", "", ""
             try:
                 title = page.title()
                 visible = re.sub(r"\s+", " ", page.locator("body").inner_text())[:1000]
@@ -242,7 +250,8 @@ def fetch_reports():
             browser.close()
             raise RuntimeError(
                 f"R6.9 form did not render within 20 seconds; HTTP={status}; "
-                f"URL={current_url!r}; title={title!r}; page says: {visible}"
+                f"URL={current_url!r}; title={title!r}; page says: {visible}; "
+                f"wait error={wait_exc}"
             )
 
         page.wait_for_load_state("networkidle", timeout=60000)
@@ -256,7 +265,15 @@ def fetch_reports():
         # 1) ALL report
         _select_label(work_category, "ALL")
         page.wait_for_load_state("networkidle", timeout=60000)
-        proposed_status = _r69_status(page, category_index)
+        try:
+            proposed_status = _r69_status(page, category_index)
+        except RuntimeError as exc:
+            static_html = page.content()
+            if len(parse_all_report(static_html)) == 8:
+                browser.close()
+                return static_html, "", "", ""
+            browser.close()
+            raise
         _select_label(proposed_status, "ALL")
         page.wait_for_load_state("networkidle", timeout=60000)
         _submit_and_wait(page)
@@ -414,6 +431,11 @@ def main():
             f"PMAY Labour/MR={int(pmay_lab)}/{int(pmay_mr)}; "
             f"Ek Bagiya Labour/MR={int(ek_lab)}/{int(ek_mr)}."
         )
+        if not (individual_html and pmay_html and ek_html):
+            note += (
+                " R6.9 category filters were unavailable; category-specific "
+                "figures were retained from the previous validated snapshot."
+            )
         update_status(True, note)
         print("SUCCESS:", note)
         print("Next: python scripts\\merge_official_summary.py")
