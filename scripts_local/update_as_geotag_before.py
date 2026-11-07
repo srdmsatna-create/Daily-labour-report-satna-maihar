@@ -120,7 +120,7 @@ def before_stage_status(page):
 
 def extract_as_sanction_date(page, expected_code):
     """Read the sanction date from the official AS document listing."""
-    return page.locator("table").evaluate_all("""tables => {
+    return page.locator("table").evaluate_all("""(tables, expected_code) => {
       const clean=s=>(s||'').replace(/\\s+/g,' ').trim();
       for(const table of tables){
         const rows=Array.from(table.rows).filter(r=>r.closest('table')===table);
@@ -135,7 +135,7 @@ def extract_as_sanction_date(page, expected_code):
         }
       }
       return '';
-    }""")
+    }""", expected_code)
 
 
 def setup_search(page, block):
