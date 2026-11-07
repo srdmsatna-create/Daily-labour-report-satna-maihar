@@ -102,13 +102,42 @@ def refresh_reports(feeds, stage, sleep=time.sleep):
             print(group + ': ' + ('VERIFIED' if state['success'] else 'FAILED; previous verified group retained'), flush=True)
     return states
 
+
+def report_inventory(root=ROOT):
+    """Check every registered updater before starting a long daily run."""
+    spec = importlib.util.spec_from_file_location('inventory_feeds', root / 'scripts_local/update_all_tabs.py')
+    feeds = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(feeds)
+    missing = []
+    print('AUTOMATIC REPORT GROUPS: ' + str(len(feeds.GROUPS)), flush=True)
+    for index, (group, commands, outputs) in enumerate(feeds.GROUPS, 1):
+        print(str(index) + '. ' + group + ': ' + ', '.join(c[0] for c in commands), flush=True)
+        missing.extend(c[0] for c in commands if not (root / c[0]).is_file())
+    print('SOURCE FILE / SEPARATE UPDATER REQUIRED: SIPRI Planning Summary Excel import; '
+          'R10.3 Work Demand; Phase-II After Geotag; JGSA; AwaasPlus installments. '
+          'These are not marked refreshed by this daily run.', flush=True)
+    if missing:
+        raise RuntimeError('Missing updater scripts: ' + ', '.join(sorted(set(missing))))
+    return feeds
+
+def print_report_summary(status):
+    print('\\nREPORT-WISE RESULT', flush=True)
+    for name, state in status['reports'].items():
+        print(('OK: ' if state['success'] else 'FAILED / OLD DATA RETAINED: ') + name, flush=True)
+    good = sum(bool(s['success']) for s in status['reports'].values())
+    print(str(good) + '/' + str(len(status['reports'])) + ' automatic groups verified.', flush=True)
+
 def main():
     prevent_console_pause()
     os.environ.setdefault('PMAY_FETCH_CACHE_DIR', str(ROOT / 'data' / 'pmayg-fetch-cache'))
     parser = argparse.ArgumentParser()
     parser.add_argument('--publish', action='store_true')
     parser.add_argument('--publish-verified', action='store_true', help='Publish only fully validated independent groups even when another group fails')
+    parser.add_argument('--list-reports', action='store_true', help='List and verify all registered updater scripts without fetching data')
     args = parser.parse_args()
+    if args.list_reports:
+        report_inventory()
+        return 0
     failure_root = Path(os.environ.get('SRDM_DAILY_REPO') or ROOT)
     lock = failure_root / '.unified-daily.lock'
     try:
@@ -125,9 +154,11 @@ def main():
         spec = importlib.util.spec_from_file_location('daily_feeds', stage / 'scripts_local/update_all_tabs.py')
         feeds = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(feeds)
+        report_inventory(stage)
         states = refresh_reports(feeds, stage)
         status = {'checkedAt':datetime.now(timezone.utc).isoformat(), 'schedule':'08:00 Asia/Kolkata',
                   'reports':states, 'success':all(x['success'] for x in states.values())}
+        print_report_summary(status)
         try:
             (failure_root / 'daily-all-reports-latest.json').write_text(
                 json.dumps(status, ensure_ascii=False, indent=2), encoding='utf-8')

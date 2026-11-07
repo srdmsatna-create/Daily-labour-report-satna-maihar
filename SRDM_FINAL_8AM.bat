@@ -1,6 +1,6 @@
 @echo off
 title SRDM FINAL - Daily 8 AM Reports
-echo SRDM FINAL 8AM - 09 OCT 2026 - VERSION CHECK ENABLED
+echo SRDM FINAL 8AM - 07 NOV 2026 - ALL REGISTERED REPORTS
 setlocal EnableExtensions DisableDelayedExpansion
 set "PYTHONUTF8=1"
 set "PYTHONIOENCODING=utf-8"
@@ -48,6 +48,9 @@ if not errorlevel 1 goto browser_ready
 %SRDM_DAILY_PY% -m playwright install chromium >> "%SRDM_DAILY_LOG%" 2>&1
 if errorlevel 1 goto failed
 :browser_ready
+echo Checking ALL registered report updaters...
+%SRDM_DAILY_PY% -u "%SRDM_DAILY_BOOT%\scripts_local\run_daily_unified.py" --list-reports
+if errorlevel 1 goto failed
 echo Refreshing all reports. Log: %SRDM_DAILY_LOG%
 powershell.exe -NoProfile -Command "$ErrorActionPreference='Stop'; $LASTEXITCODE=1; try { & $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish --publish-verified 2>&1 | Tee-Object -FilePath $env:SRDM_DAILY_LOG -Append; $rc=$LASTEXITCODE; if($rc -ne 0){exit $rc}; exit 0 } catch { Write-Host $_; exit 1 }"
 if errorlevel 1 goto failed
