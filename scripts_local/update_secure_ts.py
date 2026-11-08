@@ -302,7 +302,7 @@ def fetch(root=ROOT, workers=4):
     (data_dir / 'secure-ts-yuktadhara-fy2026-27.json').write_text(
         json.dumps(yd_payload, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     (ROOT / 'secure-ts-yuktadhara-data.js').write_text(
-        'window.SECURE_TS_YD_DATA = '+json.dumps(yd_payload, ensure_ascii=False, separators=(',',':'))+';\\n',
+        'window.SECURE_TS_YD_DATA = '+json.dumps(yd_payload, ensure_ascii=False, separators=(',',':'))+';\n',
         encoding='utf-8')
     print('SECURE SUCCESS: 8 Janpads / 695 GPs; eligible TS = '+str(len(works)),flush=True)
     print('SECURE /YD/ SUCCESS: eligible TS = '+str(len(yd_works)),flush=True)
