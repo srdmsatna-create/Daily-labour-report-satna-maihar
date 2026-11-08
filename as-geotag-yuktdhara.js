@@ -1,7 +1,7 @@
 /* R33.1 GP-verified counts, shared with the daily updater. */
 (()=>{
 'use strict';
-const Y=window.YUKTDHARA_RECEIVED,D=window.AS_GEOTAG_BEFORE,M=window.YUKTDHARA_DATA;
+const Y=window.YUKTDHARA_RECEIVED,D=window.AS_GEOTAG_BEFORE,M=window.YUKTDHARA_DATA,T=window.SECURE_TS_DATA;
 const fields=['worksReceived','worksCreated','yetToStart'],labels=['Works Received from Yuktdhara','Works Created in VB-G RAM G','Works yet to Start'];
 const e=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const norm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097F]/g,''),block=v=>({SATNA:'SOHAWAL',RAMPORBAGHELAN:'RAMPURBAGHELAN'}[norm(v)]||norm(v));
@@ -21,7 +21,7 @@ const gpByCode=new Map((T?.panchayats||[]).map(g=>[String(g.pcode||''),{
  tsCount:Number(g.tsCount||0),asAvailable:0,beforeAvailable:0,beforeNotAvailable:0,unknown:0
 }]));
 let crosswalkRows=0;
-for(const w of rows){
+for(const w of (D?.rows||[])){
  const code=String(w.workCode||''),pcode=code.split('/')[0],g=gpByCode.get(pcode);
  if(!g)continue;
  crosswalkRows++;
