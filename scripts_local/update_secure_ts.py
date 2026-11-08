@@ -300,7 +300,7 @@ def fetch(root=ROOT, workers=4):
     data_dir = ROOT / 'data'
     data_dir.mkdir(exist_ok=True)
     (data_dir / 'secure-ts-yuktadhara-fy2026-27.json').write_text(
-        json.dumps(yd_payload, ensure_ascii=False, indent=2)+'\\n', encoding='utf-8')
+        json.dumps(yd_payload, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     (ROOT / 'secure-ts-yuktadhara-data.js').write_text(
         'window.SECURE_TS_YD_DATA = '+json.dumps(yd_payload, ensure_ascii=False, separators=(',',':'))+';\\n',
         encoding='utf-8')
