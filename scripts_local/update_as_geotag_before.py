@@ -145,12 +145,31 @@ def extract_as_sanction_date(page, expected_code):
 
 
 def setup_search(page, block):
-    page.goto(SEARCH_URL, wait_until="networkidle", timeout=90000)
+    response = page.goto(SEARCH_URL, wait_until="networkidle", timeout=90000)
     page.wait_for_timeout(1000)
     if not page.locator("#ContentPlaceHolder1_ddl_state").count():
         title = page.title()
         body = clean(page.locator("body").inner_text())[:1200]
-        raise RuntimeError(f"Search form missing for {block}; title={title!r}; url={page.url!r}; body={body!r}")
+        auth_wall = bool(response and response.status in (401, 403)) or bool(
+            re.search(r"unauthori[sz]ed|login|sign.?in|session expired", title + " " + body, re.I)
+        )
+        if auth_wall and sys.stdin.isatty():
+            print("Portal login/session required. Log in in the opened browser, then return here.", flush=True)
+            try:
+                page.goto("https://vbgramgrep.dord.gov.in/VBGRAMG/", wait_until="domcontentloaded", timeout=90000)
+            except Exception:
+                pass
+            input("Portal login complete hone par Enter dabayein...")
+            response = page.goto(SEARCH_URL, wait_until="networkidle", timeout=90000)
+            page.wait_for_timeout(1000)
+        if not page.locator("#ContentPlaceHolder1_ddl_state").count():
+            title = page.title()
+            body = clean(page.locator("body").inner_text())[:1200]
+            status = response.status if response else "unknown"
+            raise RuntimeError(
+                f"Search form missing for {block}; HTTP={status}; title={title!r}; "
+                f"url={page.url!r}; body={body!r}"
+            )
     for selector, label in (("#ContentPlaceHolder1_ddl_state", "MADHYA PRADESH"),
                             ("#ContentPlaceHolder1_ddl_dist", "SATNA"),
                             ("#ContentPlaceHolder1_ddl_blk", block),
@@ -168,12 +187,19 @@ def main():
     excluded = {"notYD": 0, "wrongFY": 0, "detailErrors": 0, "noAS": 0, "beforeCutoff": 0}
     candidates = 0
     with sync_playwright() as p:
-        try: browser = p.chromium.launch(channel="chrome", headless=True)
-        except Exception: browser = p.chromium.launch(headless=True)
+        profile_dir = Path.home() / ".srdm_vbgram_profile"
+        profile_dir.mkdir(parents=True, exist_ok=True)
+        browser_options = {
+            "user_data_dir": str(profile_dir),
+            "headless": False,
+            "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+            "extra_http_headers": {"Cache-Control":"no-cache", "Pragma":"no-cache"},
+        }
         try:
-            context = browser.new_context(
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
-                extra_http_headers={"Cache-Control":"no-cache", "Pragma":"no-cache"})
+            context = p.chromium.launch_persistent_context(channel="chrome", **browser_options)
+        except Exception:
+            context = p.chromium.launch_persistent_context(**browser_options)
+        try:
             from vbgram_access import session_cookies
             cookies = session_cookies()
             if cookies: context.add_cookies(cookies)
@@ -235,7 +261,7 @@ def main():
                     if candidates % 20 == 0: print("  checked YD candidates: " + str(candidates), flush=True)
                     time.sleep(0.12)
             search.close(); detail.close(); gallery.close()
-        finally: browser.close()
+        finally: context.close()
 
     if excluded["detailErrors"]:
         raise RuntimeError(f"{excluded['detailErrors']} detail pages failed; previous complete snapshot retained")
