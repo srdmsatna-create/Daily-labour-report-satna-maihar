@@ -273,7 +273,39 @@ def fetch(root=ROOT, workers=4):
     temp = target.with_suffix('.tmp')
     temp.write_text('window.SECURE_TS_DATA = '+json.dumps(payload, ensure_ascii=False)+';\n',encoding='utf-8')
     os.replace(temp, target)
+    # Publish an explicit /YD/-only TS snapshot for Yuktdhara/Planner reports.
+    yd_works = [w for w in works if '/YD/' in str(w.get('code', '')).upper()]
+    yd_block_counts = {b['blockCode']: 0 for b in blocks}
+    yd_gp_counts = {}
+    for w in yd_works:
+        yd_block_counts[w['blockCode']] += 1
+        yd_gp_counts[w['pcode']] = yd_gp_counts.get(w['pcode'], 0) + 1
+    yd_blocks = [dict(district=b['district'], janpad=b['janpad'], blockCode=b['blockCode'],
+        panchayatCount=sum(g['blockCode'] == b['blockCode'] for g in gps),
+        ydTsCount=yd_block_counts[b['blockCode']]) for b in blocks]
+    yd_panchayats = [dict(district=g['district'], block=g['janpad'], blockCode=g['blockCode'],
+        panchayat=g['panchayat'], panchayatCode=g['pcode'], ydTsCount=yd_gp_counts[g['pcode']])
+        for g in gps if g['pcode'] in yd_gp_counts]
+    yd_payload = dict(success=True, fy=FY, date=today.isoformat(), snapshotAt=payload['fetchedAt'],
+        startDate=FY_START.isoformat(), endDate=today.isoformat(),
+        basis='SECURE TS approved works with /YD/ Work Code only; TS date 2026-10-01 through snapshot date; FY 2026-2027',
+        source=payload['source'], district='SATNA', districtCode='1712', workCodePattern='/YD/',
+        blocks=yd_blocks, panchayats=yd_panchayats, works=[
+            dict(district=w['district'], block=w['janpad'], blockCode=w['blockCode'],
+                 panchayat=w['panchayat'], panchayatCode=w['pcode'], workCode=w['code'],
+                 workName=w['name'], tsNo=w['tsNo'], tsDate=w['tsDate']) for w in yd_works],
+        totals=dict(janpadCount=len(yd_blocks), panchayatCount=len(gps),
+                    ydTsCount=len(yd_works), panchayatsWithYdTs=len(yd_panchayats)),
+        warnings=[])
+    data_dir = ROOT / 'data'
+    data_dir.mkdir(exist_ok=True)
+    (data_dir / 'secure-ts-yuktadhara-fy2026-27.json').write_text(
+        json.dumps(yd_payload, ensure_ascii=False, indent=2)+'\\n', encoding='utf-8')
+    (ROOT / 'secure-ts-yuktadhara-data.js').write_text(
+        'window.SECURE_TS_YD_DATA = '+json.dumps(yd_payload, ensure_ascii=False, separators=(',',':'))+';\\n',
+        encoding='utf-8')
     print('SECURE SUCCESS: 8 Janpads / 695 GPs; eligible TS = '+str(len(works)),flush=True)
+    print('SECURE /YD/ SUCCESS: eligible TS = '+str(len(yd_works)),flush=True)
     return payload
 
 
