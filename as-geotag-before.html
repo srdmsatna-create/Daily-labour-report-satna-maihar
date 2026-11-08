@@ -54,8 +54,8 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
 main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:center!important;font-size:20px;font-weight:900}#engineerPanel td:nth-child(3){text-align:left!important}#engineerPanel table{min-width:1350px}
 @media print{main{max-width:none;padding:0}.summary,#engineerPanel table{min-width:0;width:100%;table-layout:fixed}.summary th,.summary th:nth-child(n+3){font-size:7px!important}.summary td,.yd-num{font-size:8px!important;overflow-wrap:anywhere}#engineerPanel{break-before:page}body[data-print-section="janpad"] #engineerPanel,body[data-print-section="gp"] #engineerPanel,body[data-print-section="engineer"] #janpadPanel,body[data-print-section="engineer"] #gpPanel,body[data-print-section="engineer"] #workPanel{display:none!important}}
 </style>
-<script src="secure-ts-data.js?v=20261105-refresh"></script>
-<script src="as-geotag-before-data.js?v=20261105-auto"></script>
+<script src="secure-ts-data.js?v=20261108-auditfix"></script>
+<script src="as-geotag-before-data.js?v=20261108-auditfix"></script>
 </head>
 <body>
 <header><h1>AS, SECURE TS और Before जियो टैग स्थिति</h1><p id="reportMeta">रिपोर्ट data load हो रहा है…</p></header>
@@ -102,9 +102,9 @@ for(const r of rows){const block=normalizeBlock(r.block),district=maiharBlocks.h
 for(const r of (Array.isArray(T?.blocks)?T.blocks:[])){const block=normalizeBlock(r.janpad),district=String(r.district||'').toUpperCase(),key=(maiharBlocks.has(block)?'MAIHAR':district)+'|'+block,x=summaryMap.get(key);if(x)x.tsCount+=Number(r.tsCount||0)}
 const janpadSummary=[...summaryMap.values()];
 if(!Array.isArray(D.gpSummary)||!D.gpSummary.length){
- $('engineerPanel').hidden=true;$('gpPanel').hidden=true;
+ $('gpPanel').hidden=true;
  const note=document.createElement('p');note.className='meta';
- note.textContent='GP/उपयंत्रीवार AS–SECURE TS crosswalk सत्यापित स्रोत में उपलब्ध नहीं है; गलत शून्य दिखाने से बचने के लिए ये breakdown छिपाए गए हैं। ऊपर जनपदवार योग और नीचे कार्यवार आधिकारिक सूची उपलब्ध है।';
+ note.textContent='GP/उपयंत्रीवार AS–SECURE TS crosswalk स्रोत में उपलब्ध नहीं है। GP breakdown छिपाया गया है; उपयंत्री तालिका में इन अनुपलब्ध कॉलमों के लिए — दिखेगा।';
  $('janpadPanel').appendChild(note);
 }
 $('reportMeta').textContent=`${D.financialYear} • AS sanction 01-10-2026 से • SECURE TS पूरे FY का • Last fetched: ${new Date(D.fetchedAt).toLocaleString('en-IN')}`;const mismatches=janpadSummary.filter(x=>Number(x.asAvailable||0)>Number(x.tsCount||0));if(mismatches.length){$('dataQuality').hidden=false;$('dataQuality').textContent='स्रोत में AS > SECURE TS मिला: '+mismatches.map(x=>x.district+' • '+x.block+' (AS '+fmt(x.asAvailable)+', TS '+fmt(x.tsCount)+')').join('; ')+'। SECURE और AS रिकॉर्ड अलग-अलग स्रोत से लिए गए हैं; इस अंतर को संख्या बदलकर छिपाया नहीं गया है।'}
@@ -115,8 +115,8 @@ function render(){const d=$('district').value,b=$('block').value,s=$('status').v
 if(!rows.length)$('workPanel').hidden=true;summary();renderGps();fillBlocks();render();$('gpFilter').addEventListener('input',renderGps);$('district').addEventListener('change',()=>{fillBlocks();render()});['block','status','query'].forEach(id=>$(id).addEventListener(id==='query'?'input':'change',render));$('sourceMeta').textContent=`स्रोत: AS/Before — VB-G RAM G R22.1 व R36.1 Before-stage status; SECURE TS — FY 2026-2027 की सभी approved entries में /YD/ Work Code, GP-wise स्वतंत्र गिनती। AS date cutoff: 01-10-2026। SECURE fetch: ${D.secureTs?.snapshotAt||'—'}`;
 })();
 </script>
-<script src="yuktdhara-received-data.js?v=20261105-r331"></script>
-<script src="yuktdhara-data.js?v=20261105-r331"></script>
-<script src="as-geotag-yuktdhara.js?v=20261105-r331"></script>
+<script src="yuktdhara-received-data.js?v=20261108-auditfix"></script>
+<script src="yuktdhara-data.js?v=20261108-auditfix"></script>
+<script src="as-geotag-yuktdhara.js?v=20261108-auditfix"></script>
 </body>
 </html>
