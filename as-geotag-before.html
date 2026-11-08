@@ -93,6 +93,23 @@ const D=window.AS_GEOTAG_BEFORE,T=window.SECURE_TS_DATA;
 const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('en-IN');
 if(!D){$('reportMeta').textContent='Report data load नहीं हुआ।';return}
 const rows=Array.isArray(D.rows)?D.rows:[],districts=['SATNA','MAIHAR'];
+// Join independently fetched AS/Before and SECURE details by official GP code.
+const gpByCode=new Map((Array.isArray(T?.panchayats)?T.panchayats:[]).map(g=>[String(g.pcode||''),{
+ district:String(g.district||'').toUpperCase(),block:String(g.janpad||'').toUpperCase(),
+ panchayat:String(g.panchayat||''),pcode:String(g.pcode||''),tsCount:Number(g.tsCount||0),
+ asAvailable:0,beforeAvailable:0,beforeNotAvailable:0,unknown:0
+}]));
+let matchedWorkRows=0;
+for(const w of rows){
+ const gp=gpByCode.get(String(w.workCode||'').split('/')[0]);
+ if(!gp)continue;
+ matchedWorkRows++;
+ if(w.asStatus==='Available')gp.asAvailable++;
+ if(w.beforePhotoStatus==='Available')gp.beforeAvailable++;
+ if(w.beforePhotoStatus==='Not Available')gp.beforeNotAvailable++;
+ if(w.beforePhotoStatus==='Unknown')gp.unknown++;
+}
+if(gpByCode.size===695&&matchedWorkRows===rows.length)D.gpSummary=[...gpByCode.values()];
 const normalizeBlock=b=>{const x=String(b||'').trim().toUpperCase().replace(/\s+/g,' ');return x==='SATNA'?'SOHAWAL':x};
 const labelBlock=b=>normalizeBlock(b);
 const janpadOrder=['AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SOHAWAL','UNCHAHARA'];
@@ -117,6 +134,6 @@ if(!rows.length)$('workPanel').hidden=true;summary();renderGps();fillBlocks();re
 </script>
 <script src="yuktdhara-received-data.js?v=20261108-auditfix"></script>
 <script src="yuktdhara-data.js?v=20261108-auditfix"></script>
-<script src="as-geotag-yuktdhara.js?v=20261108-gpcode-crosswalk"></script>
+<script src="as-geotag-yuktdhara.js?v=20261108-gpcode-crosswalk2"></script>
 </body>
 </html>
