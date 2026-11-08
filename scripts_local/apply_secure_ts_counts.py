@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
-"""Merge date-bounded SECURE /YD/ TS counts into the AS/Before report."""
+"""Rebuild AS/Before + SECURE /YD/ + R33.1 Janpad totals from source snapshots."""
 import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA_JSON = ROOT / "data" / "secure-ts-yuktadhara-fy2026-27.json"
+AS_JSON = ROOT / "data" / "as-geotag-before-latest.json"
+SECURE_JSON = ROOT / "data" / "secure-ts-yuktadhara-fy2026-27.json"
+YUKTDHARA_JS = ROOT / "yuktdhara-official-data.js"
 AS_JS = ROOT / "as-geotag-before-data.js"
+
+
+def read_js(path):
+    text = path.read_text(encoding="utf-8-sig")
+    if "=" not in text:
+        raise ValueError("Unexpected JS data format: " + str(path))
+    return json.loads(text.split("=", 1)[1].strip().rstrip(";"))
 
 
 def norm(value):
@@ -14,93 +23,127 @@ def norm(value):
 
 
 def main():
-    secure = json.loads(DATA_JSON.read_text(encoding="utf-8"))
-    if secure.get("startDate") != "2026-10-01" or secure.get("workCodePattern") != "/YD/":
-        raise RuntimeError("SECURE snapshot must be FY 2026-27, from 01-10-2026, and /YD/ only")
-    source = AS_JS.read_text(encoding="utf-8")
-    match = re.fullmatch(r"\s*window\.AS_GEOTAG_BEFORE\s*=\s*(\{.*\})\s*;?\s*", source, re.S)
-    if not match:
-        raise RuntimeError("Unexpected AS_GEOTAG_BEFORE data file format")
-    report = json.loads(match.group(1))
+    source = json.loads(AS_JSON.read_text(encoding="utf-8"))
+    secure = json.loads(SECURE_JSON.read_text(encoding="utf-8"))
+    yuk = read_js(YUKTDHARA_JS)
 
-    blocks = {str(x["blockCode"]): x for x in secure["blocks"]}
-    block_codes_by_name = {norm(x["janpad"]): str(x["blockCode"]) for x in secure["blocks"]}
-    # The source portal has sometimes labelled block 1712002 as SATNA; SECURE's current
-    # Janpad master identifies that same code as SOHAWAL.
-    block_codes_by_name["SATNA"] = "1712002"
-    block_counts = {code: int(item["ydTsCount"]) for code, item in blocks.items()}
+    if source.get("financialYear") != "2026-2027" or source.get("dateFrom") != "2026-10-01" or source.get("workCodePattern") != "/YD/":
+        raise ValueError("AS source must cover FY 2026-27, from 01-10-2026, /YD/ only")
+    if secure.get("fy") != "2026-2027" or secure.get("startDate") != "2026-10-01" or secure.get("workCodePattern") != "/YD/":
+        raise ValueError("SECURE source must cover FY 2026-27, from 01-10-2026, /YD/ only")
+    if yuk.get("financialYear") != "2026-2027" or len(yuk.get("rows", [])) != 8:
+        raise ValueError("R33.1 source must contain all eight FY 2026-27 Janpads")
+    if len(secure.get("blocks", [])) != 8 or secure.get("totals", {}).get("ydTsCount") != sum(int(b.get("ydTsCount", 0)) for b in secure.get("blocks", [])):
+        raise ValueError("SECURE /YD/ Janpad counts are incomplete")
 
-    for row in report.get("janpadSummary", []):
-        code = str(row.get("blockCode") or block_codes_by_name.get(norm(row.get("block")), ""))
-        if code not in blocks:
-            raise RuntimeError(f"SECURE source missing Janpad mapping for {row.get('block')}")
-        row["blockCode"] = code
-        row["block"] = str(blocks[code]["janpad"]).upper()
-        row["district"] = str(blocks[code]["district"]).upper()
-        row["tsCount"] = block_counts[code]
+    blocks = {str(b["blockCode"]): {
+        "blockCode": str(b["blockCode"]),
+        "block": str(b["janpad"]).upper(),
+        "district": str(b["district"]).upper(),
+        "tsCount": int(b.get("ydTsCount", 0)),
+    } for b in secure["blocks"]}
+    by_name = {norm(b["block"]): code for code, b in blocks.items()}
+    # VBGRAMG sometimes labels block 1712002 as SATNA; SECURE master names it SOHAWAL.
+    by_name["SATNA"] = "1712002"
 
-    merged = {str(x.get("panchayatCode") or norm(x.get("district")) + "|" + norm(x.get("block")) + "|" + norm(x.get("panchayat"))): x
-              for x in report.get("gpSummary", [])}
-    for row in merged.values():
-        row["tsCount"] = 0
+    created = {}
+    for row in yuk["rows"]:
+        code = by_name.get(norm(row.get("block")))
+        if code is None:
+            raise ValueError("R33.1 Janpad missing from SECURE master: " + str(row.get("block")))
+        created[code] = int(row.get("worksCreated", 0))
 
-    for gp in secure.get("panchayats", []):
-        pcode = str(gp["panchayatCode"])
-        item = merged.get(pcode)
-        if item is None:
-            item = {"asAvailable": 0, "beforeAvailable": 0, "beforeNotAvailable": 0, "unknown": 0}
-            merged[pcode] = item
+    janpad = {}
+    for code, block in blocks.items():
+        janpad[code] = dict(block, ydWorksCreated=created.get(code, 0),
+            asAvailable=0, beforeAvailable=0, beforeNotAvailable=0, unknown=0)
+
+    gps = {}
+    rows = source.get("rows", [])
+    for row in rows:
+        work_code = str(row.get("workCode", ""))
+        if (row.get("financialYear") != "2026-2027" or "/YD/" not in work_code.upper()
+                or str(row.get("asSanctionDate", "")) < "2026-10-01"):
+            raise ValueError("AS row outside date/FY/Work Code scope: " + work_code)
+        pcode = work_code.split("/", 1)[0]
+        block_code = next((code for code in blocks if work_code.startswith(code)), None)
+        if not block_code or not pcode.startswith(block_code):
+            raise ValueError("AS Work Code does not map to SECURE Janpad: " + work_code)
+        block = janpad[block_code]
+        block["asAvailable"] += 1
+        status = row.get("beforePhotoStatus")
+        status_key = {"Available": "beforeAvailable", "Not Available": "beforeNotAvailable"}.get(status, "unknown")
+        block[status_key] += 1
+        item = gps.setdefault(pcode, {
+            "district": block["district"], "block": block["block"], "blockCode": block_code,
+            "panchayat": row.get("panchayat", ""), "panchayatCode": pcode,
+            "asAvailable": 0, "beforeAvailable": 0, "beforeNotAvailable": 0, "unknown": 0, "tsCount": 0,
+        })
+        item["asAvailable"] += 1
+        item[status_key] += 1
+
+    for row in secure.get("panchayats", []):
+        code, pcode = str(row["blockCode"]), str(row["panchayatCode"])
+        if code not in blocks or not pcode.startswith(code):
+            raise ValueError("SECURE GP does not map to its Janpad: " + pcode)
+        item = gps.setdefault(pcode, {
+            "asAvailable": 0, "beforeAvailable": 0, "beforeNotAvailable": 0, "unknown": 0,
+        })
         item.update({
-            "district": str(gp["district"]).upper(),
-            "block": str(gp["block"]).upper(),
-            "panchayat": gp["panchayat"],
-            "blockCode": str(gp["blockCode"]),
-            "panchayatCode": pcode,
-            "tsCount": int(gp.get("ydTsCount", 0)),
+            "district": str(row["district"]).upper(), "block": str(row["block"]).upper(),
+            "blockCode": code, "panchayat": row["panchayat"], "panchayatCode": pcode,
+            "tsCount": int(row.get("ydTsCount", 0)),
         })
 
-    # Normalize legacy GP labels by their official block code.
-    for item in merged.values():
-        pcode = str(item.get("panchayatCode") or "")
-        code = pcode[:7]
-        if code in blocks:
-            item["blockCode"] = code
-            item["block"] = str(blocks[code]["janpad"]).upper()
-            item["district"] = str(blocks[code]["district"]).upper()
-
-    report["gpSummary"] = sorted(
-        [x for x in merged.values() if any(int(x.get(k, 0) or 0) for k in
-         ("tsCount", "asAvailable", "beforeAvailable", "beforeNotAvailable", "unknown"))],
-        key=lambda x: (norm(x.get("district")), norm(x.get("block")), norm(x.get("panchayat")))
+    gp_rows = sorted(
+        [row for row in gps.values() if int(row.get("tsCount", 0)) or int(row.get("asAvailable", 0))],
+        key=lambda row: (row["blockCode"], norm(row.get("panchayat")))
     )
-    report["secureTs"] = {
-        "fy": secure["fy"], "dateFrom": secure["startDate"], "dateTo": secure["endDate"],
-        "snapshotAt": secure["snapshotAt"], "source": secure["source"],
-        "basis": secure["basis"], "workCodePattern": "/YD/",
-        "totalYdTs": secure["totals"]["ydTsCount"], "warnings": secure.get("warnings", []),
-    }
-    report["source"] = (
-        "AS / Before: AS sanction date >= 01-10-2026; Work Code ID contains /YD/. "
-        "SECURE TS: approved TS date 01-10-2026 through snapshot date; Work Code ID contains /YD/; "
-        "FY 2026-2027. Janpad names follow the SECURE master."
+    for code, block in blocks.items():
+        members = [row for row in gp_rows if row.get("blockCode") == code]
+        if sum(int(row.get("tsCount", 0)) for row in members) != block["tsCount"]:
+            raise ValueError("GP /YD/ TS rows do not reconcile for " + block["block"])
+        if sum(int(row.get("asAvailable", 0)) for row in members) != janpad[code]["asAvailable"]:
+            raise ValueError("GP AS rows do not reconcile for " + block["block"])
+
+    report = dict(source)
+    report.update({
+        "asAvailableCount": len(rows),
+        "beforePhotoAvailable": sum(row.get("beforePhotoStatus") == "Available" for row in rows),
+        "beforePhotoNotAvailable": sum(row.get("beforePhotoStatus") == "Not Available" for row in rows),
+        "beforePhotoUnknown": sum(row.get("beforePhotoStatus") == "Unknown" for row in rows),
+        "janpadSummary": list(janpad.values()),
+        "gpSummary": gp_rows,
+        "secureTs": {
+            "fy": secure["fy"], "dateFrom": secure["startDate"], "dateTo": secure["endDate"],
+            "snapshotAt": secure["snapshotAt"], "source": secure["source"], "basis": secure["basis"],
+            "workCodePattern": "/YD/", "totalYdTs": secure["totals"]["ydTsCount"],
+            "warnings": secure.get("warnings", []),
+        },
+        "yuktdhara": {
+            "financialYear": yuk["financialYear"], "officialDate": yuk.get("officialDate", ""),
+            "updatedAt": yuk.get("updatedAt", ""), "source": yuk.get("source", ""),
+            "totalWorksCreated": sum(int(row.get("worksCreated", 0)) for row in yuk["rows"]),
+        },
+        "source": (
+            "AS / Before: FY 2026-2027; AS sanction date from 01-10-2026; Work Code /YD/. "
+            "SECURE TS: approved TS date from 01-10-2026 to snapshot; Work Code /YD/. "
+            "Yuktdhara created Work Code count: official VBGRAMG R33.1."
+        ),
+    })
+    if report["asAvailableCount"] != int(source.get("asAvailableCount", len(rows))):
+        raise ValueError("AS detail row count does not match the source total")
+    if sum(row["ydWorksCreated"] for row in report["janpadSummary"]) != report["yuktdhara"]["totalWorksCreated"]:
+        raise ValueError("R33.1 created-work count does not reconcile")
+
+    AS_JS.write_text(
+        "window.AS_GEOTAG_BEFORE=" + json.dumps(report, ensure_ascii=False, separators=(",", ":")) + ";\n",
+        encoding="utf-8"
     )
-
-    for code, expected in block_counts.items():
-        actual = sum(int(x.get("tsCount", 0)) for x in report["gpSummary"]
-                     if str(x.get("blockCode", "")) == code)
-        if actual != expected:
-            raise RuntimeError(f"GP /YD/ TS sum for {blocks[code]['janpad']} is {actual}; expected {expected}")
-
-    mismatches = [(x.get("block", ""), int(x.get("asAvailable", 0)), int(x.get("tsCount", 0)))
-                  for x in report.get("janpadSummary", [])
-                  if int(x.get("asAvailable", 0)) > int(x.get("tsCount", 0))]
-    if mismatches:
-        detail = ", ".join(f"{b}: AS={a}, SECURE /YD/ TS={t}" for b, a, t in mismatches)
-        raise RuntimeError("Refusing inconsistent AS/TS totals: " + detail)
-
-    AS_JS.write_text("window.AS_GEOTAG_BEFORE=" + json.dumps(report, ensure_ascii=False, separators=(",", ":")) + ";\n",
-                     encoding="utf-8")
-    print(f"Merged SECURE /YD/ TS totals: {secure['totals']['ydTsCount']} across {len(report['gpSummary'])} GP rows")
+    print("Rebuilt report from AS rows, SECURE /YD/ rows and R33.1: "
+          + str(report["asAvailableCount"]) + " AS, "
+          + str(report["secureTs"]["totalYdTs"]) + " TS, "
+          + str(report["yuktdhara"]["totalWorksCreated"]) + " created Work Codes.")
 
 
 if __name__ == "__main__":
