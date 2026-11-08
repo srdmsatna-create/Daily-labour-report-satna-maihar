@@ -1687,7 +1687,10 @@
       "asSanctionDate": "2026-11-01",
       "asStatus": "Available",
       "beforePhotoStatus": "Not Available",
-      "source": "https://vbgramgrep.dord.gov.in/vbgramg/specific_work_rpt_dtl.aspx?state_name=MADHYA+PRADESH&state_code=17&short_name=MP&district_name=SATNA&district_code=1712&block_name=SATNA&block_code=1712002&panchayat_name=SEMRIKALA&panchayat_code=1712002009&work_code=1712002009%2fWC%2fVB%2fYD%2f22012035339618&work_name=%e0%a4%ae%e0%a4%bf%e0%a4%a8%e0%a5%80+%e0%a4%aa%e0%a4%b0%e0%a4%95%e0%a5%8b%e0%a4%b2%e0%a5%87%e0%a4%b6%e0%a4%a8+%e0%a4%9f%e0%a5%88%e0%a4%82%e0%a4%95+%e0%a4%a8%e0%a4%bf%e0%a4%b0%e0%a5%8d%e0%a4%ae%e0%a4%be%e0%a4%a3+%e0%a4%95%e0%a4%be%e0%a4%b0%e0%a5%8d%e0%a4%af+%e0%a4%97%e0%a5%8d%e0%a4%b0%e0%a4%be%e0%a4%ae+%e0%a4%a1%e0%a5%87%e0%a4%b9%e0%a5%81%e0%a4%9f%e0%a4%be+%e0%a4%97%e0%a5%8d%e0%a4%b0%e0%a4%be%e0%a4%ae%e0%a4%aa%e0%a4%82%e0%a4%9a%e0%a4%be%e0%a4%af%e0%a4%a4+%e0%a4%b8%e0%a4%bf%e0%a4%ae%e0%a4%b0%e0%a4%bf%e0%a4%95%e0%a4%b2%e0%a4%be%e0%a4%82+&fin_year=2026-2027&source=national&Digest=+YL9Ze/uiktErf3fNxpI9g"
+      "source": "https://vbgramgrep.dord.gov.in/vbgramg/specific_work_rpt_dtl.aspx?state_name=MADHYA+PRADESH&state_code=17&short_name=MP&district_name=SATNA&district_code=1712&block_name=SATNA&block_code=1712002&panchayat_name=SEMRIKALA&panchayat_code=1712002009&work_code=1712002009%2fWC%2fVB%2fYD%2f22012035339618&work_name=%e0%a4%ae%e0%a4%bf%e0%a4%a8%e0%a5%80+%e0%a4%aa%e0%a4%b0%e0%a4%95%e0%a5%8b%e0%a4%b2%e0%a5%87%e0%a4%b6%e0%a4%a8+%e0%a4%9f%e0%a5%88%e0%a4%82%e0%a4%95+%e0%a4%a8%e0%a4%bf%e0%a4%b0%e0%a5%8d%e0%a4%ae%e0%a4%be%e0%a4%a3+%e0%a4%95%e0%a4%be%e0%a4%b0%e0%a5%8d%e0%a4%af+%e0%a4%97%e0%a5%8d%e0%a4%b0%e0%a4%be%e0%a4%ae+%e0%a4%a1%e0%a5%87%e0%a4%b9%e0%a5%81%e0%a4%9f%e0%a4%be+%e0%a4%97%e0%a5%8d%e0%a4%b0%e0%a4%be%e0%a4%ae%e0%a4%aa%e0%a4%82%e0%a4%9a%e0%a4%be%e0%a4%af%e0%a4%a4+%e0%a4%b8%e0%a4%bf%e0%a4%ae%e0%a4%b0%e0%a4%bf%e0%a4%95%e0%a4%b2%e0%a4%be%e0%a4%82+&fin_year=2026-2027&source=national&Digest=+YL9Ze/uiktErf3fNxpI9g",
+      "geotagDocumentStatus": "Available",
+      "geotagDocumentStatusVerifiedAt": "2026-11-08",
+      "geotagDocumentVerifiedFrom": "Item 14 availability shown in user's portal screenshot"
     },
     {
       "district": "SATNA",
