@@ -226,6 +226,7 @@ def main():
                             "asSanctionDate": sanction_date.isoformat(),
                             "asStatus": "Available",
                             "beforePhotoStatus": stage_status,
+                            "geotagDocumentStatus": clean(geo_doc.get("status")) or "Unknown",
                             "source": url,
                         })
                     except Exception as error:
