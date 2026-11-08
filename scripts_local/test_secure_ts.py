@@ -10,11 +10,11 @@ import update_secure_ts as ts
 
 
 class SecureTests(unittest.TestCase):
-    def test_inclusive_dates_and_fiscal_year_end(self):
+    def test_inclusive_full_fiscal_year_dates_and_fiscal_year_end(self):
         end = date(2026, 10, 14)
-        for value in ('2026-08-06', '2026-09-30', '2026-10-15'):
+        for value in ('2026-03-31', '2026-10-15'):
             self.assertFalse(ts.eligible(value, end))
-        for value in ('2026-10-01', '2026-10-13', '14-10-2026', '14/10/2026'):
+        for value in ('2026-04-01', '2026-04-13', '14-10-2026', '14/10/2026'):
             self.assertTrue(ts.eligible(value, end))
         self.assertFalse(ts.eligible('2027-04-01', date(2027, 4, 1)))
         with self.assertRaises(ValueError):
