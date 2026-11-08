@@ -95,8 +95,6 @@ def before_stage_status(page):
       return {text:clean(table.innerText),rows,images:Array.from(table.querySelectorAll('img')).map(i=>({src:i.src,alt:i.alt,title:i.title}))};
     }""")
     text = clean(result.get("text"))
-    if re.search(r"not available", text, re.I):
-        return "Not Available"
     rows = result.get("rows", [])
     # Prefer an explicitly labelled Before row/cell when the portal supplies one.
     for row in rows:
@@ -106,7 +104,11 @@ def before_stage_status(page):
                 has_media = bool(cell.get("images") or cell.get("links"))
                 if not has_media and i + 1 < len(cells):
                     has_media = bool(cells[i + 1].get("images") or cells[i + 1].get("links"))
-                return "Available" if has_media else "Not Available"
+                if has_media:
+                    return "Available"
+                if re.search(r"not available|उपलब्ध नहीं", cell.get("text", ""), re.I):
+                    return "Not Available"
+                return "Not Available"
     # Some portal versions put stage labels in the preceding row and photos beneath.
     for i, row in enumerate(rows):
         if re.search(r"\\bbefore\\b|पूर्व", row.get("text", ""), re.I):
@@ -114,7 +116,11 @@ def before_stage_status(page):
                 next_row = rows[i + 1]
                 if any(c.get("images") or c.get("links") for c in next_row.get("cells", [])):
                     return "Available"
+            if re.search(r"not available|उपलब्ध नहीं", row.get("text", ""), re.I):
+                return "Not Available"
             return "Not Available"
+    # The overall gallery page may mention another stage's missing photo.
+    # Without an explicit Before-stage row, report Unknown instead of guessing.
     return "Unknown"
 
 
