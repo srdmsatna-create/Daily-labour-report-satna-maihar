@@ -95,10 +95,10 @@ if(!D){$('reportMeta').textContent='Report data load नहीं हुआ।';
 const rows=Array.isArray(D.rows)?D.rows:[],districts=['SATNA','MAIHAR'];
 // AS/Before rows use /YD/ works; count SECURE TS on that same work-code scope.
 const tsStart=String(T?.startDate||'2026-10-01'),tsEnd=String(T?.endDate||D.date||new Date().toISOString().slice(0,10));
-const tsInRange=w=>{const d=String(w.tsDate||'').slice(0,10);return /^\\d{4}-\\d{2}-\\d{2}$/.test(d)&&d>=tsStart&&d<=tsEnd};
-const dateLabel=d=>{const m=String(d||'').match(/^(\\d{4})-(\\d{2})-(\\d{2})$/);return m?`${m[3]}-${m[2]}-${m[1]}`:(d||'—')};
+const tsInRange=w=>{const d=String(w.tsDate||'').slice(0,10);return /^\d{4}-\d{2}-\d{2}$/.test(d)&&d>=tsStart&&d<=tsEnd};
+const dateLabel=d=>{const m=String(d||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);return m?`${m[3]}-${m[2]}-${m[1]}`:(d||'—')};
 const tsRange=`${dateLabel(tsStart)} से ${dateLabel(tsEnd)} तक`;
-const secureYdWorks=(Array.isArray(T?.works)?T.works:[]).filter(w=>/(?:^|\\/)YD(?:\\/|$)/i.test(String(w.code||''))&&tsInRange(w));
+const secureYdWorks=(Array.isArray(T?.works)?T.works:[]).filter(w=>/(?:^|\/)YD(?:\/|$)/i.test(String(w.code||''))&&tsInRange(w));
 const ydTsByPcode=new Map();
 for(const w of secureYdWorks){const pcode=String(w.pcode||String(w.code||'').split('/')[0]);ydTsByPcode.set(pcode,(ydTsByPcode.get(pcode)||0)+1)}
 const gpByCode=new Map((Array.isArray(T?.panchayats)?T.panchayats:[]).map(g=>[String(g.pcode||''),{
