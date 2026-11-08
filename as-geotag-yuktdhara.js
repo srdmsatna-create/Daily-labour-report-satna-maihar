@@ -16,9 +16,12 @@ for(const tr of document.querySelectorAll('#summaryRows tr')){
 }
 // Build the AS/Before and SECURE crosswalk from the official GP code (the
 // first component of each VB-G RAM G work code), not from display names.
+const secureYdWorks=(T?.works||[]).filter(w=>/(?:^|\\/)YD(?:\\/|$)/i.test(String(w.code||'')));
+const ydTsByPcode=new Map();
+for(const w of secureYdWorks){const pcode=String(w.pcode||String(w.code||'').split('/')[0]);ydTsByPcode.set(pcode,(ydTsByPcode.get(pcode)||0)+1)}
 const gpByCode=new Map((T?.panchayats||[]).map(g=>[String(g.pcode||''),{
  district:g.district,block:g.janpad,panchayat:g.panchayat,pcode:String(g.pcode||''),
- tsCount:Number(g.tsCount||0),asAvailable:0,beforeAvailable:0,beforeNotAvailable:0,unknown:0
+ tsCount:ydTsByPcode.get(String(g.pcode||''))||0,asAvailable:0,beforeAvailable:0,beforeNotAvailable:0,unknown:0
 }]));
 let crosswalkRows=0;
 for(const w of (D?.rows||[])){
@@ -33,7 +36,7 @@ for(const w of (D?.rows||[])){
 const gpSummary=[...gpByCode.values()];
 const hasVerifiedBreakdown=gpSummary.length===695 && rows.length>0 && crosswalkRows===rows.length;
 const panel=document.createElement('section');panel.id='engineerPanel';panel.className='panel';panel.style.marginTop='10px';
-panel.innerHTML='<div class="section-title-row"><h2>जिला / जनपद / उपयंत्रीवार योग</h2><button class="section-print" onclick="printReport(\'engineer\')">उपयंत्री PDF Print</button></div><div class="filters"><select id="ydDistrict"><option value="">सभी जिले</option><option>MAIHAR</option><option>SATNA</option></select><select id="ydBlock"><option value="">सभी जनपद</option></select><input id="ydEngineer" type="search" placeholder="उपयंत्री खोजें"></div><div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>उपयंत्री</th><th>SECURE से जारी TS संख्या</th><th>AS से जारी संख्या</th><th>Before Geo Tag किए गए कार्य</th><th>शेष Geo Tag (APO / GRS / सचिव)</th>'+labels.map(l=>'<th class="yd-head">'+l+'</th>').join('')+'</tr></thead><tbody id="ydEngineers"></tbody></table></div><p class="meta" id="ydMeta"></p>';
+panel.innerHTML='<div class="section-title-row"><h2>जिला / जनपद / उपयंत्रीवार योग</h2><button class="section-print" onclick="printReport(\'engineer\')">उपयंत्री PDF Print</button></div><div class="filters"><select id="ydDistrict"><option value="">सभी जिले</option><option>MAIHAR</option><option>SATNA</option></select><select id="ydBlock"><option value="">सभी जनपद</option></select><input id="ydEngineer" type="search" placeholder="उपयंत्री खोजें"></div><div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>उपयंत्री</th><th>SECURE से जारी TS संख्या (/YD/)</th><th>AS से जारी संख्या</th><th>Before Geo Tag किए गए कार्य</th><th>शेष Geo Tag (APO / GRS / सचिव)</th>'+labels.map(l=>'<th class="yd-head">'+l+'</th>').join('')+'</tr></thead><tbody id="ydEngineers"></tbody></table></div><p class="meta" id="ydMeta"></p>';
 document.getElementById('janpadPanel').after(panel);
 if(!hasVerifiedBreakdown){const warning=document.createElement('p');warning.className='meta';warning.textContent='GP/उपयंत्रीवार AS–SECURE TS crosswalk उपलब्ध नहीं है। इन चार कॉलमों में — का अर्थ स्रोत डेटा उपलब्ध नहीं है।';panel.appendChild(warning)}
 const mapping=new Map((M?.mapping||[]).map(r=>[block(r.janpad)+'|'+norm(r.gp),r.engineer]));
