@@ -251,11 +251,17 @@ function totalRow(items,kind,label,cls){
 function render(){
  const rows=filtered(),kind=$('group').value;$('body').dataset.kind=kind;$('head').dataset.kind=kind;
  const officialWipView=kind==='janpad'&&$('engineer').value==='ALL'&&!$('query').value.trim();
- let agg=aggregate(rows,kind,officialWipView);
+ let agg;
+ if(officialWipView&&Array.isArray(D.janpadSummary)){
+  const district=$('district').value,janpad=$('janpad').value;
+  agg=D.janpadSummary.filter(x=>(district==='ALL'||x.district===district)&&(janpad==='ALL'||x.janpad===janpad))
+   .map(x=>({...x,activeGPCount:Number(x.activeGP||0)}));
+ }else agg=aggregate(rows,kind,officialWipView);
  if(kind==='gp')agg.sort((a,b)=>a.district.localeCompare(b.district)||janOrder.indexOf(a.janpad)-janOrder.indexOf(b.janpad)||a.subEngineer.localeCompare(b.subEngineer,'hi')||a.gp.localeCompare(b.gp,'hi'));
- $('requests').textContent=fmt(rows.reduce((s,x)=>s+x.requests,0));
- $('entries').textContent=fmt(rows.reduce((s,x)=>s+x.entries,0));
- $('days').textContent=fmt(rows.reduce((s,x)=>s+x.days,0));
+ const metricRows=officialWipView?agg:rows;
+ $('requests').textContent=fmt(metricRows.reduce((s,x)=>s+x.requests,0));
+ $('entries').textContent=fmt(metricRows.reduce((s,x)=>s+x.entries,0));
+ $('days').textContent=fmt(metricRows.reduce((s,x)=>s+x.days,0));
  $('gps').textContent=fmt(D.totals.gpWithProgress||D.totals.gpWithDemand)+' / '+fmt(D.totals.gpCount);
  let heads=kind==='janpad'?['जिला','जनपद','कुल GP',officialWipView?'कार्य प्रगतिरत GP संख्या (R6.9)':'कार्य की मांग वाली GP संख्या',officialWipView?'कार्य प्रगतिरत नहीं GP संख्या':'कार्य की मांग न करने वाली GP की संख्या',officialWipView?'कार्य प्रगति वाली GP का %':'कार्य की मांग करने वाली GP का %',officialWipView?'कार्य प्रगति नहीं वाली GP का %':'कार्य की मांग न करने वाली GP का %','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:kind==='gp'?['जिला','जनपद','ग्राम पंचायत','उपयंत्री','कार्य की मांग वाली GP संख्या','कार्य की मांग न करने वाली GP की संख्या','कार्य की मांग करने वाली GP का %','कार्य की मांग न करने वाली GP का %','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस']:['जिला','जनपद','उपयंत्री','कुल GP','कार्य की मांग वाली GP संख्या','कार्य की मांग न करने वाली GP की संख्या','कार्य की मांग करने वाली GP का %','कार्य की मांग न करने वाली GP का %','कार्य मांग आवेदन संख्या','मांग में शामिल श्रमिक','कुल मांग रोजगार-दिवस'];
  if(sortIndex!==null){
