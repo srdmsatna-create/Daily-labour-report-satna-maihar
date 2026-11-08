@@ -10,6 +10,7 @@ on:
       - 'scripts_local/update_all_tabs.py'
       - 'scripts_local/update_as_geotag_before.py'
       - 'scripts_local/update_secure_ts.py'
+      - 'scripts_local/test_secure_ts.py'
       - 'scripts_local/local_auto_update.py'
       - 'scripts/fetch_planner_portal_summary.py'
       - 'scripts_local/vbgram_access.py'
