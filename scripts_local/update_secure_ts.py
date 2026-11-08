@@ -186,7 +186,7 @@ def validate(d, today=None):
 
 def fetch(root=ROOT, workers=4):
     today = datetime.now(IST).date()
-    if today < START or today > date(2027, 3, 31):
+    if today < FY_START or today > date(2027, 3, 31):
         raise ValueError('This TS policy is for FY 2026-27; update the policy before a new FY')
     client = Client()
     source_blocks = client.table('tsregisterbk', Dcode='1712')
