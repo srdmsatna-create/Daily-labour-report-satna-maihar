@@ -27,7 +27,7 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://secure.dord.gov.in/reportv2/'
 FY = '2026-2027'
-START = date(2026, 10, 1)
+FY_START = date(2026, 4, 1)
 IST = timezone(timedelta(hours=5, minutes=30))
 EXPECTED = {'1712006': ('Amarpatan', 'Maihar', 75),
             '1712008': ('Maihar', 'Maihar', 115),
@@ -135,12 +135,12 @@ def approved_date(value):
 
 
 def eligible(value, end):
-    return START <= approved_date(value) <= min(end, date(2027, 3, 31))
+    return FY_START <= approved_date(value) <= min(end, date(2027, 3, 31))
 
 
 def validate(d, today=None):
     today = today or datetime.now(IST).date()
-    if d.get('schemaVersion') != 1 or d.get('fy') != FY or d.get('startDate') != START.isoformat():
+    if d.get('schemaVersion') != 1 or d.get('fy') != FY or d.get('startDate') != FY_START.isoformat():
         raise ValueError('Invalid SECURE date policy')
     if d.get('date') != today.isoformat() or d.get('endDate') != today.isoformat() or not d.get('success'):
         raise ValueError('Current complete SECURE snapshot required')
@@ -261,10 +261,10 @@ def fetch(root=ROOT, workers=4):
             tsCount=len(ww), tsAmount=float(sum((Decimal(str(w['amount'])) for w in ww), Decimal(0))),
             sourceTotalWorks=int(b['totalnrega'] or 0), sourceCurrentTS=int(b['current_tscount'] or 0)))
     payload = dict(schemaVersion=1, success=True, fy=FY, date=today.isoformat(),
-        fetchedAt=datetime.now(IST).isoformat(), startDate=START.isoformat(), endDate=today.isoformat(),
+        fetchedAt=datetime.now(IST).isoformat(), startDate=FY_START.isoformat(), endDate=today.isoformat(),
         source=BASE+'tsregister?mvsl=69',
         sourceCountWarnings=client.count_warnings,
-        basis='TS approved On, inclusive 01 October 2026 through snapshot date; selected FY 2026-2027',
+        basis='TS approved On, inclusive 01 April 2026 through snapshot date; selected FY 2026-2027',
         blocks=blocks, panchayats=sorted(gps, key=lambda x:(x['blockCode'], x['pcode'])),
         works=sorted(works, key=lambda x:(x['blockCode'],x['pcode'],x['code'])),
         totals=dict(tsCount=len(works),tsAmount=float(sum((Decimal(str(w['amount'])) for w in works),Decimal(0)))))
