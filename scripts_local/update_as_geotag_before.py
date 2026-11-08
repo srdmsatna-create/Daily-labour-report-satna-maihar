@@ -182,7 +182,6 @@ def setup_search(page, block):
 
 def main():
     from playwright.sync_api import sync_playwright
-    fetched_at = datetime.now(timezone.utc).isoformat()
     rows = []
     excluded = {"notYD": 0, "wrongFY": 0, "detailErrors": 0, "noAS": 0, "beforeCutoff": 0}
     candidates = 0
@@ -265,6 +264,8 @@ def main():
 
     if excluded["detailErrors"]:
         raise RuntimeError(f"{excluded['detailErrors']} detail pages failed; previous complete snapshot retained")
+    # Stamp the completed scrape, not its start; long runs must show the real finish time.
+    fetched_at = datetime.now(timezone.utc).isoformat()
     rows.sort(key=lambda r: (r["district"], r["block"], r["panchayat"], r["workCode"]))
     yes = sum(r["beforePhotoStatus"] == "Available" for r in rows)
     no = sum(r["beforePhotoStatus"] == "Not Available" for r in rows)
@@ -278,11 +279,23 @@ def main():
         "excluded": excluded, "rows": rows,
     }
     (ROOT / "data").mkdir(exist_ok=True)
+    patch_data_cache(fetched_at)
     (ROOT / "data" / "as-geotag-before-latest.json").write_text(json.dumps(data, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     (ROOT / "as-geotag-before-data.js").write_text("window.AS_GEOTAG_BEFORE="+json.dumps(data, ensure_ascii=False, separators=(",",":"))+";\n", encoding="utf-8")
-    patch_index()
     print("SUCCESS before-stage counts: AS="+str(len(rows))+", available="+str(yes)+", not available="+str(no)+", unknown="+str(data["beforePhotoUnknown"]), flush=True)
 
+
+
+def patch_data_cache(fetched_at):
+    """Force browsers to load the newly fetched report data script."""
+    path = ROOT / "as-geotag-before.html"
+    source = path.read_text(encoding="utf-8")
+    version = re.sub(r"\D", "", fetched_at)
+    pattern = re.compile(r'(<script src="as-geotag-before-data\.js\?v=)[^"]+("\></script>)')
+    updated, count = pattern.subn(lambda m: m.group(1) + version + m.group(2), source, count=1)
+    if count != 1:
+        raise RuntimeError("Before-Geotag data script tag not found; cache key was not changed")
+    path.write_text(updated, encoding="utf-8")
 
 def patch_index():
     path = ROOT / "index.html"
