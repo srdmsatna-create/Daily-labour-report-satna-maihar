@@ -35,11 +35,28 @@ cards = f'''<a class="srdm-app-card srdm-portal-card srdm-portal-planner" href="
     </a>
     '''
 
-pattern = re.compile(r'(<div class="srdm-app-grid">\s*)(?:<a class="srdm-app-card srdm-portal-card.*?</a>\s*)+(?=<button type="button" class="srdm-app-card")', re.S)
-match = pattern.search(s)
-if not match:
-    raise SystemExit('Portal card block not found in index.html')
-s = s[:match.start()] + match.group(1) + cards + s[match.end():]
+portal_classes = {'srdm-portal-planner', 'srdm-portal-jgsa', 'srdm-portal-rims', 'srdm-portal-planner-sipri'}
+card_re = re.compile(r'<a class="([^"]*)"[^>]*>[\\s\\S]*?</a>', re.S)
+new_cards = re.findall(r'<a class="[^"]*"[^>]*>[\\s\\S]*?</a>', cards)
+if len(new_cards) != 4:
+    raise SystemExit('Expected four replacement portal cards')
+for replacement_card in new_cards:
+    class_match = re.match(r'<a class="([^"]*)"', replacement_card)
+    target = next((name for name in portal_classes if name in class_match.group(1).split()), None)
+    if not target:
+        continue
+    state = {'done': False}
+    def replace_target(match):
+        if target in match.group(1).split() and not state['done']:
+            state['done'] = True
+            return replacement_card
+        return match.group(0)
+    s = card_re.sub(replace_target, s)
+    if not state['done']:
+        grid = re.search(r'<div class="srdm-app-grid" id="reportMenuGrid">', s)
+        if not grid:
+            raise SystemExit('Report menu grid not found in index.html')
+        s = s[:grid.end()] + '\\n' + replacement_card + '\\n' + s[grid.end():]
 
 if 'SRDM_FIXED_PORTAL_CARDS_V2' not in s:
     css = '''\n/* SRDM_FIXED_PORTAL_CARDS_V2 */\n.srdm-portal-card .srdm-app-icon.srdm-thumb-icon{width:70px!important;height:70px!important;min-width:70px!important;padding:0!important;overflow:hidden!important;background:#fff!important;border-radius:15px!important;display:inline-flex!important;align-items:center!important;justify-content:center!important}.srdm-portal-card .srdm-app-icon.srdm-thumb-icon svg,.srdm-portal-card .srdm-app-icon.srdm-thumb-icon img{width:100%!important;height:100%!important;display:block!important;object-fit:cover!important}.srdm-portal-jgsa .srdm-app-icon{font-size:34px!important;background:#04a6b7!important;color:#fff!important}\n'''
