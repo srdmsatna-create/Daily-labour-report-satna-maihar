@@ -282,6 +282,7 @@ def main():
     patch_data_cache(fetched_at)
     (ROOT / "data" / "as-geotag-before-latest.json").write_text(json.dumps(data, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     (ROOT / "as-geotag-before-data.js").write_text("window.AS_GEOTAG_BEFORE="+json.dumps(data, ensure_ascii=False, separators=(",",":"))+";\n", encoding="utf-8")
+    patch_index()
     print("SUCCESS before-stage counts: AS="+str(len(rows))+", available="+str(yes)+", not available="+str(no)+", unknown="+str(data["beforePhotoUnknown"]), flush=True)
 
 
