@@ -101,6 +101,12 @@ const summaryMap=new Map(janpadOrder.map(block=>{const district=maiharBlocks.has
 for(const r of rows){const block=normalizeBlock(r.block),district=maiharBlocks.has(block)?'MAIHAR':'SATNA',x=summaryMap.get(district+'|'+block);if(!x)continue;x.asAvailable+=r.asStatus==='Available'?1:0;x.beforeAvailable+=r.beforePhotoStatus==='Available'?1:0;x.beforePhotoNotAvailable+=r.beforePhotoStatus==='Not Available'?1:0;x.beforePhotoUnknown+=r.beforePhotoStatus==='Unknown'?1:0}
 for(const r of (Array.isArray(T?.blocks)?T.blocks:[])){const block=normalizeBlock(r.janpad),district=String(r.district||'').toUpperCase(),key=(maiharBlocks.has(block)?'MAIHAR':district)+'|'+block,x=summaryMap.get(key);if(x)x.tsCount+=Number(r.tsCount||0)}
 const janpadSummary=[...summaryMap.values()];
+if(!Array.isArray(D.gpSummary)||!D.gpSummary.length){
+ $('engineerPanel').hidden=true;$('gpPanel').hidden=true;
+ const note=document.createElement('p');note.className='meta';
+ note.textContent='GP/उपयंत्रीवार AS–SECURE TS crosswalk सत्यापित स्रोत में उपलब्ध नहीं है; गलत शून्य दिखाने से बचने के लिए ये breakdown छिपाए गए हैं। ऊपर जनपदवार योग और नीचे कार्यवार आधिकारिक सूची उपलब्ध है।';
+ $('janpadPanel').appendChild(note);
+}
 $('reportMeta').textContent=`${D.financialYear} • AS sanction 01-10-2026 से • SECURE TS पूरे FY का • Last fetched: ${new Date(D.fetchedAt).toLocaleString('en-IN')}`;const mismatches=janpadSummary.filter(x=>Number(x.asAvailable||0)>Number(x.tsCount||0));if(mismatches.length){$('dataQuality').hidden=false;$('dataQuality').textContent='स्रोत में AS > SECURE TS मिला: '+mismatches.map(x=>x.district+' • '+x.block+' (AS '+fmt(x.asAvailable)+', TS '+fmt(x.tsCount)+')').join('; ')+'। SECURE और AS रिकॉर्ड अलग-अलग स्रोत से लिए गए हैं; इस अंतर को संख्या बदलकर छिपाया नहीं गया है।'}
 const count=(rs,s)=>rs.filter(r=>r.beforePhotoStatus===s).length;
 const janpadColorIndex={AMARPATAN:0,MAIHAR:1,RAMNAGAR:2,MAJHGAWAN:3,NAGOD:4,'RAMPUR BAGHELAN':5,SATNA:6,UNCHAHARA:7};
