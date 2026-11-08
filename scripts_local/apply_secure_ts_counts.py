@@ -18,7 +18,7 @@ def main():
     if secure.get("startDate") != "2026-10-01" or secure.get("workCodePattern") != "/YD/":
         raise RuntimeError("SECURE snapshot must be FY 2026-27, from 01-10-2026, and /YD/ only")
     source = AS_JS.read_text(encoding="utf-8")
-    match = re.fullmatch(r"\\s*window\\.AS_GEOTAG_BEFORE\\s*=\\s*(\\{.*\\})\\s*;?\\s*", source, re.S)
+    match = re.fullmatch(r"\s*window\.AS_GEOTAG_BEFORE\s*=\s*(\{.*\})\s*;?\s*", source, re.S)
     if not match:
         raise RuntimeError("Unexpected AS_GEOTAG_BEFORE data file format")
     report = json.loads(match.group(1))
@@ -98,7 +98,7 @@ def main():
         detail = ", ".join(f"{b}: AS={a}, SECURE /YD/ TS={t}" for b, a, t in mismatches)
         raise RuntimeError("Refusing inconsistent AS/TS totals: " + detail)
 
-    AS_JS.write_text("window.AS_GEOTAG_BEFORE=" + json.dumps(report, ensure_ascii=False, separators=(",", ":")) + ";\\n",
+    AS_JS.write_text("window.AS_GEOTAG_BEFORE=" + json.dumps(report, ensure_ascii=False, separators=(",", ":")) + ";\n",
                      encoding="utf-8")
     print(f"Merged SECURE /YD/ TS totals: {secure['totals']['ydTsCount']} across {len(report['gpSummary'])} GP rows")
 
