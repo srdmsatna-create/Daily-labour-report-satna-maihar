@@ -27,7 +27,7 @@ import urllib.request
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://secure.dord.gov.in/reportv2/'
 FY = '2026-2027'
-FY_START = date(2026, 4, 1)
+FY_START = date(2026, 10, 1)
 IST = timezone(timedelta(hours=5, minutes=30))
 EXPECTED = {'1712006': ('Amarpatan', 'Maihar', 75),
             '1712008': ('Maihar', 'Maihar', 115),
@@ -264,7 +264,7 @@ def fetch(root=ROOT, workers=4):
         fetchedAt=datetime.now(IST).isoformat(), startDate=FY_START.isoformat(), endDate=today.isoformat(),
         source=BASE+'tsregister?mvsl=69',
         sourceCountWarnings=client.count_warnings,
-        basis='TS approved On, inclusive 01 April 2026 through snapshot date; selected FY 2026-2027',
+        basis='TS approved On, inclusive 01 October 2026 through snapshot date; selected FY 2026-2027',
         blocks=blocks, panchayats=sorted(gps, key=lambda x:(x['blockCode'], x['pcode'])),
         works=sorted(works, key=lambda x:(x['blockCode'],x['pcode'],x['code'])),
         totals=dict(tsCount=len(works),tsAmount=float(sum((Decimal(str(w['amount'])) for w in works),Decimal(0)))))
