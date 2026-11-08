@@ -36,6 +36,13 @@ if errorlevel 1 (
   exit /b 1
 )
 
+%PY% scripts_local/apply_secure_ts_counts.py
+if errorlevel 1 (
+  echo FAILED: AS, SECURE TS aur R33.1 source ko merge/reconcile nahi kiya ja saka.
+  pause
+  exit /b 1
+)
+
 git add -- data/as-geotag-before-latest.json as-geotag-before-data.js as-geotag-before.html index.html
 if errorlevel 1 (
   echo ERROR: Refreshed files stage nahi ho sake.
