@@ -61,28 +61,47 @@ def selected_values(src,d):
         o=re.search(r'<option[^>]*selected=["\']selected["\'][^>]*value=["\']([^"\']*)',body,re.I) or re.search(r'<option[^>]*value=["\']([^"\']*)',body,re.I)
         if o:d[name]=html.unescape(o.group(1))
 
+def block_options(src):
+    sm=re.search(r'<select\\b[^>]*name=["\\']([^"\\']*ddl_blk[^"\\']*)["\\'][^>]*>(.*?)</select>',src,re.I|re.S)
+    if not sm:raise RuntimeError('MIS 6.12 Janpad selector not found')
+    expected={'AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA'}
+    aliases={'SATNA':'SOHAWAL'}
+    found={}
+    for om in re.finditer(r'<option\\b([^>]*)>(.*?)</option>',sm.group(2),re.I|re.S):
+        vm=re.search(r'value=["\\']([^"\\']*)["\\']',om.group(1),re.I)
+        if not vm:continue
+        label=clean(re.sub(r'<[^>]+>',' ',om.group(2)))
+        key=re.sub(r'[^A-Z0-9]','',label.upper())
+        key=aliases.get(key,key)
+        if key in expected and vm.group(1).strip():found[key]=vm.group(1).strip()
+    missing=sorted(expected-set(found))
+    if missing:raise RuntimeError('MIS 6.12 Janpad options incomplete: '+', '.join(missing))
+    return [(name,found[name]) for name in ('AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA')]
+
 def fetch():
     opener=session_opener()
     home,home_url=open_text(opener,URL)
     d=hidden_fields(home);d.update({'__EVENTTARGET':'ctl00$ContentPlaceHolder1$ddl_dist','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712'})
     district,district_url=open_text(opener,form_action(home,home_url),urllib.parse.urlencode(d).encode())
-    if 'value="1712006"' not in district:raise RuntimeError('SATNA block options did not load')
+    janpads=block_options(district)
     base=hidden_fields(district);selected_values(district,base)
-    base.update({'__EVENTTARGET':'','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712','ctl00$ContentPlaceHolder1$ddl_blk':'ALL','ctl00$ContentPlaceHolder1$ddl_pan':'ALL','ctl00$ContentPlaceHolder1$Ddlworkcategory':'ALL','ctl00$ContentPlaceHolder1$ddlprostatus':'ALL','ctl00$ContentPlaceHolder1$ddlexp':'ALL','ctl00$ContentPlaceHolder1$ddlexpnest':'ALL','ctl00$ContentPlaceHolder1$ddlFin_year':'ALL','ctl00$ContentPlaceHolder1$filter':'ALL','ctl00$ContentPlaceHolder1$Button1':'Submit'})
-    action=form_action(district,district_url);all_rows=[];counts={}
-    for code,name in STATUSES:
-        payload=dict(base);payload['ctl00$ContentPlaceHolder1$Ddlwork_status']=code
-        req=urllib.request.Request(action,data=urllib.parse.urlencode(payload).encode(),headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/128 Safari/537.36','Content-Type':'application/x-www-form-urlencoded','Cache-Control':'no-cache'})
-        parser=ResultRows(name)
-        with opener.open(req,timeout=300) as response:
-            while True:
-                chunk=response.read(1024*1024)
-                if not chunk:break
-                parser.feed(chunk.decode('utf-8','ignore'))
-        parser.close();counts[name]=len(parser.rows)
-        if not parser.rows:raise RuntimeError(f'MIS 6.12 returned zero {name} rows')
-        all_rows.extend(parser.rows);print(f'MIS 6.12 {name}: {len(parser.rows)} rows')
+    base.update({'__EVENTTARGET':'','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712','ctl00$ContentPlaceHolder1$ddl_pan':'ALL','ctl00$ContentPlaceHolder1$Ddlworkcategory':'ALL','ctl00$ContentPlaceHolder1$ddlprostatus':'ALL','ctl00$ContentPlaceHolder1$ddlexp':'ALL','ctl00$ContentPlaceHolder1$ddlexpnest':'ALL','ctl00$ContentPlaceHolder1$ddlFin_year':'ALL','ctl00$ContentPlaceHolder1$filter':'ALL','ctl00$ContentPlaceHolder1$Button1':'Submit'})
+    action=form_action(district,district_url);all_rows=[];counts={name:0 for _,name in STATUSES}
+    for janpad,block_code in janpads:
+        for code,name in STATUSES:
+            payload=dict(base);payload['ctl00$ContentPlaceHolder1$ddl_blk']=block_code;payload['ctl00$ContentPlaceHolder1$Ddlwork_status']=code
+            req=urllib.request.Request(action,data=urllib.parse.urlencode(payload).encode(),headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/128 Safari/537.36','Content-Type':'application/x-www-form-urlencoded','Cache-Control':'no-cache'})
+            parser=ResultRows(name)
+            with opener.open(req,timeout=300) as response:
+                while True:
+                    chunk=response.read(1024*1024)
+                    if not chunk:break
+                    parser.feed(chunk.decode('utf-8','ignore'))
+            parser.close();counts[name]+=len(parser.rows)
+            if not parser.rows:raise RuntimeError(f'MIS 6.12 returned zero {name} rows for {janpad}')
+            all_rows.extend(parser.rows);print(f'MIS 6.12 {janpad} {name}: {len(parser.rows)} rows')
     unique={(r['Work Code'],r['Work Status'].upper()):r for r in all_rows}
+    if len(unique)<1000:raise RuntimeError(f'MIS 6.12 Janpad-wise combined rows are incomplete: {len(unique)}')
     return list(unique.values()),counts
 
 def main():
