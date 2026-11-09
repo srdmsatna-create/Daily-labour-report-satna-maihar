@@ -232,5 +232,98 @@ document.querySelectorAll("button.copy").forEach(button=>button.addEventListener
  try{await navigator.clipboard.writeText(field.value);status.textContent="संदेश कॉपी हो गया।"}
  catch(e){field.focus();field.select();document.execCommand("copy");status.textContent="संदेश कॉपी हो गया।"}
 }));
+
+async function refreshDailyMessages() {
+ const notice = document.querySelector('.notice');
+ const read = async (path, assignment = false) => {
+  const response = await fetch(path, {cache: 'no-store'});
+  if (!response.ok) throw new Error(path);
+  if (!assignment) return response.json();
+  const source = await response.text();
+  return JSON.parse(source.slice(source.indexOf('=') + 1).trim().replace(/;$/, ''));
+ };
+ const [gp, works, mis] = await Promise.all([
+  read('shramik-gp-progress-data.js', true),
+  read('ongoing-details.js', true),
+  read('data/mis-6.12-status.json')
+ ]);
+ const blocks = [
+  ['MAJHGAWAN','मझगवां'], ['NAGOD','नागौद'], ['RAMPUR BAGHELAN','रामपुर बघेलान'],
+  ['SATNA','सोहावल'], ['UNCHAHARA','उचेहरा'], ['AMARPATAN','अमरपाटन'],
+  ['MAIHAR','मैहर'], ['RAMNAGAR','रामनगर']
+ ];
+ const key = value => String(value || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+ const blockKey = value => ({SOHAWAL:'SATNA',RAMPORBAGHELAN:'RAMPURBAGHELAN'}[key(value)] || key(value));
+ const gpKey = row => blockKey(row.janpad) + '|' + key(row.panchayat);
+ const byGP = new Map(gp.rows.map(row => [gpKey(row), row]));
+ if (!gp.gpProgressVerified || gp.rows.length !== 695 || byGP.size !== 695 || !gp.sourceLastUpdated || !mis.updatedAt) {
+  throw new Error('Incomplete source data');
+ }
+ const ongoing = new Map();
+ const seen = new Set();
+ for (const work of works) {
+  if (String(work.status).trim().toUpperCase() !== 'ONGOING' || !work.code || seen.has(work.code)) continue;
+  const id = gpKey(work);
+  if (!byGP.has(id)) throw new Error('Unmatched ongoing work');
+  seen.add(work.code);
+  ongoing.set(id, (ongoing.get(id) || 0) + 1);
+ }
+ if (seen.size !== mis.statusCounts?.Ongoing) throw new Error('Ongoing total differs from R6.12');
+ const sum = rows => ({
+  gps: rows.length,
+  progress: rows.reduce((n, row) => n + Number(row.gpsProgress), 0),
+  labour: rows.reduce((n, row) => n + Number(row.labour), 0),
+  mr: rows.every(row => row.mrs != null) ? rows.reduce((n, row) => n + Number(row.mrs), 0) : null,
+  mrWorks: rows.reduce((n, row) => n + Number(row.worksMR), 0),
+  ongoing: rows.reduce((n, row) => n + (ongoing.get(gpKey(row)) || 0), 0),
+  zero: rows.filter(row => Number(row.labour) === 0).length
+ });
+ const fmt = n => n == null ? 'अनुपलब्ध' : n.toLocaleString('en-IN');
+ const pct = (a,b) => b ? (100*a/b).toFixed(1) + '%' : '—';
+ const stamp = value => new Date(value).toLocaleString('en-IN', {timeZone:'Asia/Kolkata'});
+ const source = 'डेटा स्रोत दिनांक: ' + gp.sourceLastUpdated + '\nश्रमिक/GP डेटा fetch: ' + stamp(gp.fetchedAt) + ' IST\nR6.12 कार्य-सूची अपडेट: ' + stamp(mis.updatedAt) + ' IST';
+ const describe = s => [
+  'पंचायतें: ' + fmt(s.gps) + ' | कार्य प्रगतिरत: ' + fmt(s.progress) + ' (' + pct(s.progress,s.gps) + ')',
+  'संलग्न श्रमिक: ' + fmt(s.labour) + ' | श्रमिक शून्य पंचायतें: ' + fmt(s.zero),
+  'जारी MR: ' + fmt(s.mr) + ' | MR वाले कार्य / Ongoing: ' + fmt(s.mrWorks) + ' / ' + fmt(s.ongoing) + ' (' + pct(s.mrWorks,s.ongoing) + ')'
+ ].join('\n');
+ const districtRows = list => gp.rows.filter(row => list.some(([code]) => blockKey(code) === blockKey(row.janpad)));
+ const satna = districtRows(blocks.slice(0,5)), maihar = districtRows(blocks.slice(5));
+ if (satna.length !== 450 || maihar.length !== 245 || blocks.some(([code]) => !districtRows([[code]]).length)) throw new Error('Janpad coverage mismatch');
+ const districtMessage = (name, list, rows) => {
+  const parts = ['🌿 **VB-G RAM G — ' + name + ' दैनिक सारांश**', source, '**जिला कुल**\n' + describe(sum(rows))];
+  for (const [code,label] of list) {
+   const janpadRows = districtRows([[code]]);
+   const engineers = new Map();
+   for (const row of janpadRows) {
+    const label = (row.engineer || 'आवंटन उपलब्ध नहीं') + ' / ' + (row.cluster || '—');
+    if (!engineers.has(label)) engineers.set(label, []);
+    engineers.get(label).push(row);
+   }
+   const lines = ['| उपयंत्री / क्लस्टर | जारी MR | Ongoing | MR वाले कार्य | कार्य % | संलग्न श्रमिक | शून्य GP |'];
+   lines.push('|---|---:|---:|---:|---:|---:|---:|');
+   for (const [label, group] of engineers) {
+    const s = sum(group);
+    lines.push('| ' + [label, fmt(s.mr), fmt(s.ongoing), fmt(s.mrWorks), pct(s.mrWorks,s.ongoing), fmt(s.labour), fmt(s.zero)].join(' | ') + ' |');
+   }
+   parts.push('**' + label + '**\n' + describe(sum(janpadRows)) + '\n\n' + lines.join('\n'));
+  }
+  parts.push('सक्रिय श्रमिक और संलग्नता प्रतिशत: सत्यापित डेटा उपलब्ध नहीं।');
+  return parts.join('\n\n');
+ };
+ const messages = [
+  districtMessage('सतना', blocks.slice(0,5), satna),
+  districtMessage('मैहर', blocks.slice(5), maihar),
+  ['🌿 **सतना–मैहर संयुक्त दैनिक सारांश**', source, '**सतना**\n' + describe(sum(satna)),
+   '**मैहर**\n' + describe(sum(maihar)), '**संयुक्त कुल**\n' + describe(sum(gp.rows)),
+   '✅ 450 + 245 = 695 पंचायतें।'].join('\n\n')
+ ];
+ document.querySelectorAll('textarea').forEach((field,i) => {field.value = messages[i];});
+ notice.textContent = source + '\nतीनों संदेश Daily Updater के नवीनतम सत्यापित स्रोतों से बने हैं।';
+}
+refreshDailyMessages().catch(() => {
+ const notice = document.querySelector('.notice');
+ notice.textContent = 'नवीनतम स्रोतों का पूरा मिलान उपलब्ध नहीं है। नीचे सहेजे गए पुराने संदेश हैं।\n\n' + notice.innerText;
+});
 </script>
 </body></html>
