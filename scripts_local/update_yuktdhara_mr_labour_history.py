@@ -13,7 +13,7 @@ SATNA = {"MAJHGAWAN", "NAGOD", "RAMPUR BAGHELAN", "SATNA", "UNCHAHARA"}
 
 def load_js(path: Path):
     text = path.read_text(encoding="utf-8")
-    match = re.search(r"=\s*(\\{.*\\}|\\[.*\\])\s*;?\s*$", text, re.S)
+    match = re.search(r"=\s*(\{.*\}|\[.*\])\s*;?\s*$", text, re.S)
     if not match:
         raise ValueError(f"No JSON payload found in {path}")
     return json.loads(match.group(1))
