@@ -8,6 +8,7 @@ on:
       - '.github/workflows/all-tabs-daily.yml'
       - 'scripts_local/run_daily_unified.py'
       - 'scripts_local/update_all_tabs.py'
+      - 'scripts_local/update_mis_612_work_details.py'
       - 'scripts_local/update_as_geotag_before.py'
       - 'scripts_local/update_secure_ts.py'
       - 'scripts_local/test_secure_ts.py'
