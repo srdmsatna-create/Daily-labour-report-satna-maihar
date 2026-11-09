@@ -20,6 +20,8 @@ textarea{width:100%;min-height:260px;resize:vertical;border:1px solid var(--line
 .message-preview th{background:#eef5fb;color:var(--navy)}
 .message-preview td:not(:first-child){text-align:right;white-space:nowrap}
 .message-preview p{margin:6px 0;white-space:pre-wrap}
+.message-preview th{background:var(--section-color,#eef5fb)}
+.message-preview .janpad-heading{font-weight:800;padding:6px 9px;border-radius:5px}
 </style></head>
 <body>
 <header><h1>🌿 Message वाली रिपोर्ट — सतना–मैहर दैनिक संदेश</h1><p>तीन संदेश • कॉपी करके साझा करें • नवीनतम उपलब्ध स्रोत डेटा सहित</p></header>
@@ -276,21 +278,22 @@ async function refreshDailyMessages() {
  });
  const fmt = n => n == null ? 'अनुपलब्ध' : n.toLocaleString('en-IN');
  const pct = (a,b) => b ? (100*a/b).toFixed(1) + '%' : '—';
- const describe = s => [
-  '| विवरण | आँकड़े |',
-  '|---|---:|',
-  '| कुल पंचायतें | ' + fmt(s.gps) + ' |',
-  '| कार्य प्रगतिरत पंचायतें | ' + fmt(s.progress) + ' (' + pct(s.progress,s.gps) + ') |',
-  '| संलग्न श्रमिक | ' + fmt(s.labour) + ' |',
-  '| श्रमिक शून्य पंचायतें | ' + fmt(s.zero) + ' |',
-  '| जारी MR | ' + fmt(s.mr) + ' |',
-  '| MR वाले कार्य / प्रगतिरत कार्य | ' + fmt(s.mrWorks) + ' / ' + fmt(s.ongoing) + ' (' + pct(s.mrWorks,s.ongoing) + ') |'
+ const summaryTable = entries => [
+  '| जनपद / जिला | कुल पंचायतें | कार्य प्रगतिरत पंचायतें | संलग्न श्रमिक | श्रमिक शून्य पंचायतें | जारी MR | MR वाले कार्य / प्रगतिरत कार्य |',
+  '|---|---:|---:|---:|---:|---:|---:|',
+  ...entries.map(([label, rows]) => {
+   const s = sum(rows);
+   return '| ' + [label, fmt(s.gps), fmt(s.progress) + ' (' + pct(s.progress,s.gps) + ')',
+    fmt(s.labour), fmt(s.zero), fmt(s.mr), fmt(s.mrWorks) + ' / ' + fmt(s.ongoing) +
+    ' (' + pct(s.mrWorks,s.ongoing) + ')'].join(' | ') + ' |';
+  })
  ].join('\n');
  const districtRows = list => gp.rows.filter(row => list.some(([code]) => blockKey(code) === blockKey(row.janpad)));
  const satna = districtRows(blocks.slice(0,5)), maihar = districtRows(blocks.slice(5));
  if (satna.length !== 450 || maihar.length !== 245 || blocks.some(([code]) => !districtRows([[code]]).length)) throw new Error('Janpad coverage mismatch');
+ const janpadEntries = list => list.map(([code,label]) => [label, districtRows([[code]])]);
  const districtMessage = (name, list, rows) => {
-  const parts = ['🌿 **VB-G RAM G — ' + name + ' दैनिक सारांश**', '**जिला कुल**\n' + describe(sum(rows))];
+  const parts = ['🌿 **VB-G RAM G — ' + name + ' दैनिक सारांश**', summaryTable([...janpadEntries(list), [name + ' जिला योग', rows]])];
   for (const [code,label] of list) {
    const janpadRows = districtRows([[code]]);
    const engineers = new Map();
@@ -305,7 +308,7 @@ async function refreshDailyMessages() {
     const s = sum(group);
     lines.push('| ' + [label, fmt(s.mr), fmt(s.ongoing), fmt(s.mrWorks), pct(s.mrWorks,s.ongoing), fmt(s.labour), fmt(s.zero)].join(' | ') + ' |');
    }
-   parts.push('**' + label + '**\n' + describe(sum(janpadRows)) + '\n\n' + lines.join('\n'));
+   parts.push('**' + label + '**\n' + lines.join('\n'));
   }
   parts.push('सक्रिय श्रमिक और संलग्नता प्रतिशत: सत्यापित डेटा उपलब्ध नहीं।');
   return parts.join('\n\n');
@@ -313,19 +316,25 @@ async function refreshDailyMessages() {
  const messages = [
   districtMessage('सतना', blocks.slice(0,5), satna),
   districtMessage('मैहर', blocks.slice(5), maihar),
-  ['🌿 **सतना–मैहर संयुक्त दैनिक सारांश**', '**सतना**\n' + describe(sum(satna)),
-   '**मैहर**\n' + describe(sum(maihar)), '**संयुक्त कुल**\n' + describe(sum(gp.rows)),
-   '✅ 450 + 245 = 695 पंचायतें।'].join('\n\n')
+  ['🌿 **सतना–मैहर संयुक्त दैनिक सारांश**',
+   summaryTable([...janpadEntries(blocks.slice(0,5)), ['सतना जिला योग', satna],
+    ...janpadEntries(blocks.slice(5)), ['मैहर जिला योग', maihar], ['संयुक्त कुल', gp.rows]])
+  ].join('\n\n')
  ];
  document.querySelectorAll('textarea').forEach((field,i) => {field.value = messages[i];});
  notice.textContent = 'तीनों संदेश Daily Updater के नवीनतम सत्यापित स्रोतों से बने हैं।';
 }
 function renderMessageTables() {
+ const janpadColors = new Map([
+  ['मझगवां','#e7f3ff'], ['नागौद','#eaf6e3'], ['रामपुर बघेलान','#fff1d8'],
+  ['सोहावल','#f1e7fa'], ['उचेहरा','#fde9e7'], ['अमरपाटन','#def5f0'],
+  ['मैहर','#fff6cc'], ['रामनगर','#e8ecff']
+ ]);
  for (const field of document.querySelectorAll('textarea')) {
   const preview = document.createElement('div');
   preview.className = 'message-preview';
   const lines = field.value.split('\n');
-  let table;
+  let table, sectionColor;
   for (const line of lines) {
    const clean = line.trim().replace(/\*\*/g, '');
    if (clean.startsWith('|') && clean.endsWith('|')) {
@@ -334,6 +343,9 @@ function renderMessageTables() {
     const header = !table;
     if (header) {table = document.createElement('table'); preview.append(table);}
     const row = table.insertRow();
+    const rowColor = janpadColors.get(cells[0]) || (/जिला योग|संयुक्त कुल/.test(cells[0]) ? '#e1edf7' : null);
+    if (rowColor) row.style.backgroundColor = rowColor;
+    if (header && sectionColor) table.style.setProperty('--section-color',sectionColor);
     for (const cell of cells) {
      const element = document.createElement(header ? 'th' : 'td');
      element.textContent = cell;
@@ -344,6 +356,8 @@ function renderMessageTables() {
     if (!clean) continue;
     const paragraph = document.createElement('p');
     paragraph.textContent = clean;
+    sectionColor = janpadColors.get(clean);
+    if (sectionColor) {paragraph.className = 'janpad-heading'; paragraph.style.backgroundColor = sectionColor;}
     preview.append(paragraph);
    }
   }
