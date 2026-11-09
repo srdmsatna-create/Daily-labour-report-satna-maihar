@@ -9,6 +9,9 @@ on:
       - 'yuktdhara-official-data.js'
       - 'muster-emb-data.js'
       - 'shramik-gp-progress-data.js'
+      - 'ongoing-details.js'
+      - 'gp-emuster-data.js'
+      - 'data/mis-6.12-status.json'
       - 'scripts_local/update_yuktdhara_mr_labour_history.py'
       - '.github/workflows/r33-1-mr-labour-history.yml'
 
