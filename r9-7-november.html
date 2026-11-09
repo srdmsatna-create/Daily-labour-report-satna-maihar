@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>R9.7 | श्रमिक नियोजन — नवंबर 2026</title>
+<style>
+body{margin:0;background:#f1f7f4;color:#17352e;font:16px system-ui,sans-serif}
+main{max-width:1420px;margin:auto;padding:22px}
+h1{margin-bottom:.3em} a{color:#075c48} nav{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}
+button{font:inherit;padding:8px 13px;border:1px solid #427565;border-radius:5px;background:#fff;color:#164b3e;cursor:pointer}
+button[aria-pressed=true]{background:#075c48;color:#fff}
+.scroll{overflow:auto} table{width:100%;min-width:870px;border-collapse:collapse;background:white}
+th,td{padding:8px;border:1px solid #9bb9af;text-align:center}
+thead th{background:#075c48;color:white} tbody th{text-align:left}
+tr:nth-child(even){background:#eef7f3} tr.total{background:#d8ede5;font-weight:750}
+p{line-height:1.5} .unit{font-weight:700}
+@media print{body{background:white} main{padding:0} nav,.back{display:none} table{min-width:0;font-size:9pt} th,td{padding:4px} thead{display:table-header-group} tr{break-inside:avoid} @page{size:A4 landscape;margin:9mm}}
+</style>
+</head>
+<body><main>
+<a class="back" href="./">← SRDM पोर्टल</a>
+<h1>R9.7 — श्रमिक नियोजन</h1>
+<p>नवंबर 2026 की स्थिति • <strong>09-11-2026</strong> तक • <span class="unit">मानव दिवस लाख में</span></p>
+<nav aria-label="रिपोर्ट स्तर">
+<button type="button" data-level="district">जिला</button>
+<button type="button" data-level="division">रीवा संभाग</button>
+<button type="button" data-level="block">जनपद</button>
+<button type="button" id="download">CSV डाउनलोड</button>
+<button type="button" id="print">प्रिंट / PDF</button>
+</nav>
+<h2 id="level-title"></h2>
+<div class="scroll"><table aria-labelledby="level-title"><thead><tr id="columns"></tr></thead><tbody id="rows"></tbody></table></div>
+<p>अंतर = FY 2025–26 जुलाई–नवंबर − FY 2026–27 जुलाई से रिपोर्ट तारीख तक। वित्तीय वर्ष का कुल = MGNREGA अप्रैल–जून + VB-G RAM G जुलाई से रिपोर्ट तारीख तक।</p>
+<p>प्रदेश के 52 स्रोत जिलों में SATNA के अंतर्गत सतना और मैहर के आठ जनपद शामिल हैं। जिला और संभाग तालिका में दोनों का अलग योग दिखाया गया है।</p>
+<p>स्रोत <a href="https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;fin_year=2025-2026&amp;page1=s&amp;state_code=17&amp;state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&amp;Digest=i5whoIuaneyTcd%2fKUX8XXg">MGNREGA 2025–26</a> · <a href="https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;fin_year=2026-2027&amp;page1=s&amp;state_code=17&amp;state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&amp;Digest=SfOoa7y+eBupeEgyvw7OcA">MGNREGA 2026–27</a> · <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;page1=s&amp;state_name=MADHYA+PRADESH&amp;state_code=17&amp;fin=2026-2027&amp;fin_year=2026-2027&amp;source=national&amp;Digest=T5jPevIAyKZwnVDL7xdTaQ">VB-G RAM G 2026–27</a></p>
+<script>
+'use strict';
+// Each row contains the name, prior July–November, current April–June,
+// current July–October, and current November persondays.
+function parseRows(data) {
+  return data.trim().split('\n').map(line => {
+    const [name, ...months] = line.split('|');
+    return [name, ...months.map(Number)];
+  });
+}
+const sourceDistricts = parseRows(`
+AGAR-MALWA|804021|344778|498688|1373
+ALIRAJPUR|1176343|186210|310220|12
+ANUPPUR|336661|527368|105292|0
+ASHOK NAGAR|1019851|808263|399184|47
+BALAGHAT|440465|671418|204266|1
+BARWANI|1298138|592152|429446|2
+BETUL|870866|363307|261163|1226
+BHIND|193639|87069|36929|64
+BHOPAL|352583|194534|192729|7
+BURHANPUR|331842|120851|153675|21
+CHHATARPUR|1089599|927950|330417|17
+CHHINDWARA|1211574|1001221|786046|101
+DAMOH|1504447|1143921|444540|6
+DATIA|212223|192926|49479|0
+DEWAS|1350229|371631|248391|722
+DHAR|2516273|469038|646642|277
+DINDORI|1034295|609106|1566047|13
+GUNA|1070779|1260941|317283|295
+GWALIOR|324748|308460|56455|0
+HARDA|290483|97326|95633|17
+INDORE|324021|95655|110075|66
+JABALPUR|810742|335139|329010|121
+JHABUA|928588|430110|261128|18
+KATNI|682126|281869|319451|0
+KHANDWA|1269827|569058|330202|603
+KHARGONE|2279680|857288|530500|398
+MANDLA|975995|615767|408381|192
+MANDSAUR|1312689|466319|528060|1597
+MORENA|4728121|2770319|34790|0
+NARMADAPURAM|630655|144004|223097|168
+NARSINGHPUR|554714|302130|318303|169
+NEEMUCH|477806|235601|257628|489
+NIWARI|136097|159069|63121|0
+PANNA|598360|383833|128980|31
+RAISEN|760298|386583|419770|50
+RAJGARH|1079319|798863|689026|33
+RATLAM|1274948|673046|595859|625
+REWA|775315|383493|298884|32
+SAGAR|966818|603275|449684|115
+SATNA|763652|190360|189582|122
+SEHORE|1010208|352623|442377|34
+SEONI|856160|490201|243037|16
+SHAHDOL|626178|410770|198075|0
+SHAJAPUR|828892|339560|274093|2239
+SHEOPUR|1276795|286758|184414|0
+SHIVPURI|1739272|634080|413552|0
+SIDHI|941331|400218|352764|120
+SINGRAULI|1070426|377852|201610|75
+TIKAMGARH|389993|421314|204178|20
+UJJAIN|1371847|373936|317324|106
+UMARIA|453002|147682|103684|0
+VIDISHA|798604|682774|688613|612
+`);
+const satnaBlocks = parseRows(`
+मझगवां|62985|52181|14619|0
+नागौद|93742|34273|30482|20
+रामपुर बघेलान|175416|17905|32896|15
+सोहावल|110216|29163|16038|3
+उचेहरा|60684|12203|15480|1
+`);
+const maiharBlocks = parseRows(`
+अमरपाटन|78203|9265|22445|0
+मैहर|94107|24183|36065|1
+रामनगर|88299|11187|21557|82
+`);
+function total(name, rows) {
+  return [name, ...[1, 2, 3, 4].map(index => rows.reduce((sum, row) => sum + row[index], 0))];
+}
+const satna = total('सतना जिला', satnaBlocks);
+const maihar = total('मैहर जिला', maiharBlocks);
+const divisionRows = [...sourceDistricts.filter(([name]) => ['REWA','SIDHI','SINGRAULI'].includes(name)), satna, maihar];
+const reports = {
+  district: ['जिला रिपोर्ट', [...sourceDistricts.flatMap(row => row[0] === 'SATNA' ? [satna, maihar] : [row]), total('मध्य प्रदेश कुल', sourceDistricts)]],
+  division: ['रीवा संभाग रिपोर्ट', [...divisionRows, total('रीवा संभाग कुल', divisionRows)]],
+  block: ['सतना एवं मैहर जनपद रिपोर्ट', [...satnaBlocks, satna, ...maiharBlocks, maihar, total('सतना–मैहर संयुक्त', [satna, maihar])]]
+};
+const headers = ['क्षेत्र', 'FY 2025–26 जुलाई–नवंबर', 'FY 2026–27 अप्रैल–जून (MGNREGA)', 'FY 2026–27 जुलाई–अक्टूबर', 'नवंबर 2026', 'कुल सृजित जुलाई से अब तक', 'अंतर', 'शेष दिन', 'FY 2026–27 कुल अप्रैल से अब तक'];
+const lakh = number => (number / 100000).toFixed(5);
+function values([name, baseline, aprilJune, julyOctober, november]) {
+  const current = julyOctober + november;
+  return [name, ...[baseline, aprilJune, julyOctober, november, current, baseline - current].map(lakh), 21, lakh(aprilJune + current)];
+}
+let activeLevel;
+const filters = [...document.querySelectorAll('button[data-level]')];
+function render(level) {
+  activeLevel = level;
+  const [title, rows] = reports[level];
+  document.getElementById('level-title').textContent = title;
+  filters.forEach(button => button.setAttribute('aria-pressed', button.dataset.level === level));
+  document.getElementById('rows').replaceChildren(...rows.map(row => {
+    const tr = document.createElement('tr');
+    if (row === satna || row === maihar || row === rows.at(-1)) tr.className = 'total';
+    values(row).forEach((value, index) => {
+      const cell = document.createElement(index === 0 ? 'th' : 'td');
+      if (index === 0) cell.scope = 'row';
+      cell.textContent = value;
+      tr.append(cell);
+    });
+    return tr;
+  }));
+}
+for (const header of headers) {
+  const th = document.createElement('th');
+  th.scope = 'col';
+  th.textContent = header;
+  document.getElementById('columns').append(th);
+}
+filters.forEach(button => button.addEventListener('click', () => render(button.dataset.level)));
+document.getElementById('print').onclick = () => window.print();
+document.getElementById('download').onclick = () => {
+  const lines = [headers, ...reports[activeLevel][1].map(values)];
+  const csv = lines.map(row => row.map(value => '"' + String(value).replaceAll('"', '""') + '"').join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob(['\uFEFF', csv], {type: 'text/csv;charset=utf-8'}));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'R9.7-' + activeLevel + '-2026-11-09.csv';
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+};
+render('district');
+</script>
+</main></body></html>

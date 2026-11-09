@@ -2,6 +2,11 @@
 'use strict';
 const section=document.getElementById('shramikNiyojanReport');
 if(!section)return;
+const novemberLink = document.createElement('a');
+novemberLink.href = 'r9-7-november.html';
+novemberLink.textContent = 'R9.7 • नवंबर 2026 — जिला, संभाग और जनपद रिपोर्ट';
+novemberLink.style.cssText = 'display:inline-block;margin:10px 0;padding:9px 14px;background:#075d46;color:white;border-radius:6px;font-weight:800';
+section.querySelector('.sn-head').insertAdjacentElement('afterend', novemberLink);
 const names=["AGAR-MALWA","ALIRAJPUR","ANUPPUR","ASHOK NAGAR","BALAGHAT","BARWANI","BETUL","BHIND","BHOPAL","BURHANPUR","CHHATARPUR","CHHINDWARA","DAMOH","DATIA","DEWAS","DHAR","DINDORI","GUNA","GWALIOR","HARDA","INDORE","JABALPUR","JHABUA","KATNI","KHANDWA","KHARGONE","MANDLA","MANDSAUR","MORENA","NARMADAPURAM","NARSINGHPUR","NEEMUCH","NIWARI","PANNA","RAISEN","RAJGARH","RATLAM","REWA","SAGAR","SATNA","SEHORE","SEONI","SHAHDOL","SHAJAPUR","SHEOPUR","SHIVPURI","SIDHI","SINGRAULI","TIKAMGARH","UJJAIN","UMARIA","VIDISHA"], region=['REWA','SATNA','SIDHI','SINGRAULI'];
 const tools=section.querySelector('.sn-tools'), originalWrap=section.querySelector('.sn-wrap'), originalKpis=section.querySelector('.sn-kpis');
 const label=document.createElement('label');label.style.cssText='display:grid;gap:3px;font-weight:850;color:#075d46';
