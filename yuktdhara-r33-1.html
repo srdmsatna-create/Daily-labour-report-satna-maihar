@@ -24,7 +24,7 @@ tr.district-satna td{background:var(--satna);font-weight:850}
 tr.grand td{background:var(--total);font-weight:900;border-top:2px solid #b07a27}
 .source{font-size:12px;color:#587086;margin:10px 0 0}
 @media(max-width:700px){.cards{grid-template-columns:1fr}.card strong{font-size:22px}h1{font-size:21px}}
-.history-filters{display:flex;align-items:center;gap:8px;margin:8px 0 12px}.history-filters select{padding:8px;border:1px solid #8ba9c3;border-radius:6px;font:inherit}.history-note{background:#fff8e8;border-left:4px solid #cb8b28;padding:9px 11px;color:#634a20}.history-table{min-width:1000px}.history-table td.num{text-align:center;font-weight:800}.history-table tr.total td{background:var(--total);font-weight:900}.history-table tr.district-total td{background:#e8f0f8;font-weight:850}.delta-positive{color:#086b45;font-weight:800}.delta-negative{color:#a34427;font-weight:800}
+.history-filters{display:flex;align-items:center;gap:8px;margin:8px 0 12px}.history-filters select{padding:8px;border:1px solid #8ba9c3;border-radius:6px;font:inherit}.history-note{background:#fff8e8;border-left:4px solid #cb8b28;padding:9px 11px;color:#634a20}.history-table{min-width:1400px}.history-details{min-width:950px}.history-details td{font-size:13px}.history-table td.num{text-align:center;font-weight:800}.history-table tr.total td{background:var(--total);font-weight:900}.history-table tr.district-total td{background:#e8f0f8;font-weight:850}.delta-positive{color:#086b45;font-weight:800}.delta-negative{color:#a34427;font-weight:800}
 @media print{body{background:white}header{padding:8px;background:#174e7d!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}main{margin:8px auto}.back{display:none!important}.box,.card{box-shadow:none}th,td{padding:6px;font-size:11px;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 </style>
 <script src="yuktdhara-official-data.js?v=20261030-r331"></script>
@@ -48,15 +48,17 @@ tr.grand td{background:var(--total);font-weight:900;border-top:2px solid #b07a27
 <p class="source" id="sourceText"></p>
 </section>
 <section class="box" id="dailyMrLabourHistory">
-<h2>R-33.1 नवीन कार्य — तारीखवार MR और श्रमिक रिकॉर्ड</h2>
-<p class="meta">हर दिन का R-33.1 नया कार्य snapshot, जारी MR और संलग्न श्रमिक की स्थिति। तारीख चुनकर पुराना रिकॉर्ड देखें।</p>
+<h2>R-33.1 प्रगतिरत कार्य — R-6.12 MR मिलान और तारीखवार श्रमिक रिकॉर्ड</h2>
+<p class="meta">R-33.1 की प्रगतिरत स्थिति को R-6.12 के Yuktdhara work-code और MR-जारी सूची से मिलाकर तारीखवार रिकॉर्ड। तारीख चुनकर पुराना snapshot देखें।</p>
 <p class="history-note" id="historyScope"></p>
 <div class="history-filters"><label for="historyDate">रिपोर्ट तारीख:</label><select id="historyDate"></select></div>
 <p class="meta" id="historySourceMeta">इतिहास लोड हो रहा है…</p>
 <div class="wrap"><table class="history-table">
-<thead><tr><th>जिला</th><th>जनपद</th><th>R-33.1 बने कार्य</th><th>जारी MR कुल</th><th>पिछले snapshot से MR बदलाव</th><th>संलग्न श्रमिक कुल</th><th>पिछले snapshot से श्रमिक बदलाव</th></tr></thead>
+<thead><tr><th>जिला</th><th>जनपद</th><th>R-33.1 प्रगतिरत कार्य</th><th>R-6.12 ongoing /YD/ कार्य</th><th>इनमें MR जारी काम (work-code match)</th><th>पिछले snapshot से नए MR-जारी match</th><th>matched पंचायतें</th><th>इन पंचायतों के संलग्न श्रमिक (GP कुल)</th></tr></thead>
 <tbody id="historyRows"></tbody></table></div>
-<p class="source">जारी MR कुल R4.4 से और संलग्न श्रमिक कुल श्रमिक/GP snapshot से हैं। अंतर पिछले दर्ज snapshot की तुलना में है। स्रोत में work-code स्तर का मिलान उपलब्ध नहीं है।</p>
+<h2 style="margin-top:16px">MR-जारी matched कामों की सूची</h2>
+<div class="wrap"><table class="history-details"><thead><tr><th>जनपद</th><th>पंचायत</th><th>Work Code</th><th>कार्य का नाम</th></tr></thead><tbody id="historyWorkRows"></tbody></table></div>
+<p class="source">R-33.1 जनपदवार प्रगतिरत संख्या देता है। exact work-code मिलान R-6.12 के ongoing /YD/ works और GP e-Muster के MR-जारी work-code list से है। “संलग्न श्रमिक” उन पंचायतों का GP कुल है जहाँ matched काम मिला; यह किसी एक काम के श्रमिकों की संख्या नहीं है। matched काम का count है, अलग-अलग MR पर्चियों की संख्या नहीं।</p>
 </section>
 </main>
 <script>
@@ -86,9 +88,11 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
 (async function(){
  const fmt=n=>n===null||n===undefined?'—':Number(n).toLocaleString('en-IN');
  const signed=n=>n===null||n===undefined?'—':(Number(n)>0?'+':'')+fmt(n);
- const deltaClass=n=>Number(n)>0?'delta-positive':Number(n)<0?'delta-negative':'';
+ const cls=n=>Number(n)>0?'delta-positive':Number(n)<0?'delta-negative':'';
+ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const select=document.getElementById('historyDate');
  const rowsEl=document.getElementById('historyRows');
+ const workRowsEl=document.getElementById('historyWorkRows');
  const meta=document.getElementById('historySourceMeta');
  const scope=document.getElementById('historyScope');
  try{
@@ -101,26 +105,32 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
   select.innerHTML=snapshots.slice().reverse().map(s=>'<option value="'+s.snapshotDate+'">'+s.snapshotDate.split('-').reverse().join('-')+'</option>').join('');
   const render=s=>{
    const rows=s.rows||[];
-   let html='',districtTotals={SATNA:{mr:0,mrChange:0,workers:0,workersChange:0,created:0},MAIHAR:{mr:0,mrChange:0,workers:0,workersChange:0,created:0}},grand={mr:0,mrChange:0,workers:0,workersChange:0,created:0};
+   const totals={SATNA:{r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true},MAIHAR:{r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true}};
+   let grand={r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true};
+   let html='',workHtml='';
    for(const r of rows){
-    const x={mr:Number(r.musterIssuedTotal||0),mrChange:r.musterIssuedChange,workers:Number(r.workersAttachedTotal||0),workersChange:r.workersAttachedChange,created:Number(r.newWorksCreated||0)};
-    for(const k of Object.keys(x)){if(x[k]!==null&&x[k]!==undefined){districtTotals[r.district][k]+=Number(x[k]);grand[k]+=Number(x[k])}}
-    html+='<tr><td>'+r.district+'</td><td>'+r.janpad+'</td><td>'+fmt(r.newWorksCreated)+'</td><td>'+fmt(r.musterIssuedTotal)+'</td><td class="'+deltaClass(r.musterIssuedChange)+'">'+signed(r.musterIssuedChange)+'</td><td>'+fmt(r.workersAttachedTotal)+'</td><td class="'+deltaClass(r.workersAttachedChange)+'">'+signed(r.workersAttachedChange)+'</td></tr>';
+    const d=totals[r.district]?'SATNA':'MAIHAR';
+    const t=totals[d];
+    t.r331+=Number(r.r331OngoingWorks||0);t.r612+=Number(r.r612YuktdharaOngoingWorks||0);
+    t.matched+=Number(r.ongoingWorksWithIssuedMR||0);t.panchayats+=Number(r.matchedPanchayats||0);
+    t.workers+=Number(r.workersOnMatchedPanchayats||0);
+    if(r.newMrMatchedWorksSincePrevious===null||r.newMrMatchedWorksSincePrevious===undefined)t.newReady=false;else t.newMatched+=Number(r.newMrMatchedWorksSincePrevious);
+    html+='<tr><td>'+esc(r.district)+'</td><td>'+esc(r.janpad)+'</td><td>'+fmt(r.r331OngoingWorks)+'</td><td>'+fmt(r.r612YuktdharaOngoingWorks)+'</td><td>'+fmt(r.ongoingWorksWithIssuedMR)+'</td><td class="'+cls(r.newMrMatchedWorksSincePrevious)+'">'+signed(r.newMrMatchedWorksSincePrevious)+'</td><td>'+fmt(r.matchedPanchayats)+'</td><td>'+fmt(r.workersOnMatchedPanchayats)+'</td></tr>';
+    for(const w of r.matchedWorks||[])workHtml+='<tr><td>'+esc(r.janpad)+'</td><td>'+esc(w.panchayat)+'</td><td>'+esc(w.code)+'</td><td>'+esc(w.name)+'</td></tr>';
    }
    for(const d of ['SATNA','MAIHAR']){
-    const t=districtTotals[d];
-    html+='<tr class="district-total"><td>'+d+' कुल</td><td>जिला योग</td><td>'+fmt(t.created)+'</td><td>'+fmt(t.mr)+'</td><td>'+signed(t.mrChange)+'</td><td>'+fmt(t.workers)+'</td><td>'+signed(t.workersChange)+'</td></tr>';
+    const t=totals[d];
+    html+='<tr class="district-total"><td>'+d+' कुल</td><td>जिला योग</td><td>'+fmt(t.r331)+'</td><td>'+fmt(t.r612)+'</td><td>'+fmt(t.matched)+'</td><td>'+signed(t.newReady?t.newMatched:null)+'</td><td>'+fmt(t.panchayats)+'</td><td>'+fmt(t.workers)+'</td></tr>';
+    grand.r331+=t.r331;grand.r612+=t.r612;grand.matched+=t.matched;grand.panchayats+=t.panchayats;grand.workers+=t.workers;grand.newMatched+=t.newMatched;grand.newReady=grand.newReady&&t.newReady;
    }
-   html+='<tr class="total"><td>कुल</td><td>सतना + मैहर</td><td>'+fmt(grand.created)+'</td><td>'+fmt(grand.mr)+'</td><td>'+signed(grand.mrChange)+'</td><td>'+fmt(grand.workers)+'</td><td>'+signed(grand.workersChange)+'</td></tr>';
+   html+='<tr class="total"><td>कुल</td><td>सतना + मैहर</td><td>'+fmt(grand.r331)+'</td><td>'+fmt(grand.r612)+'</td><td>'+fmt(grand.matched)+'</td><td>'+signed(grand.newReady?grand.newMatched:null)+'</td><td>'+fmt(grand.panchayats)+'</td><td>'+fmt(grand.workers)+'</td></tr>';
    rowsEl.innerHTML=html;
-   meta.textContent='R-33.1 डेटा: '+(s.yuktdharaDataDate||'—')+' • MR डेटा: '+(s.musterDataDate||'—')+' • श्रमिक डेटा: '+(s.workersDataDate||'—')+' • लिया गया: '+(s.capturedAt||'—')+' • तुलना: '+(s.previousSnapshotDate||'पहला snapshot');
+   workRowsEl.innerHTML=workHtml||'<tr><td colspan="4">इस तारीख के पुराने snapshot में work-code match सूची उपलब्ध नहीं थी।</td></tr>';
+   meta.textContent='R-33.1 डेटा: '+(s.yuktdharaDataDate||'—')+' • R-6.12 अद्यतन: '+(s.mis612UpdatedAt||'—')+' • e-Muster डेटा: '+(s.emusterDataDate||'—')+' • श्रमिक डेटा: '+(s.workersDataDate||'—')+' • तुलना: '+(s.previousSnapshotDate||'पहला snapshot');
   };
   select.addEventListener('change',()=>render(snapshots.find(s=>s.snapshotDate===select.value)));
   render(snapshots[snapshots.length-1]);
- }catch(e){
-  meta.textContent='दैनिक MR/श्रमिक इतिहास नहीं खुला: '+e.message;
-  scope.textContent='R-33.1 का मूल आधिकारिक डेटा ऊपर उपलब्ध है।';
- }
+ }catch(e){meta.textContent='दैनिक MR/श्रमिक इतिहास नहीं खुला: '+e.message;scope.textContent='R-33.1 का मूल आधिकारिक डेटा ऊपर उपलब्ध है।';}
 })();
 </script>
 </body></html>
