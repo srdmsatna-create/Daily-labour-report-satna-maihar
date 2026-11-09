@@ -353,7 +353,7 @@ function renderMessageTables() {
 }
 refreshDailyMessages().catch(() => {
  const notice = document.querySelector('.notice');
- notice.textContent = 'नवीनतम स्रोतों का पूरा मिलान उपलब्ध नहीं है। नीचे सहेजे गए पुराने संदेश हैं।' + notice.innerText;
+ notice.textContent = 'नवीनतम स्रोतों का पूरा मिलान उपलब्ध नहीं है। नीचे सहेजे गए पुराने संदेश हैं।';
 }).finally(renderMessageTables);
 </script>
 </body></html>
