@@ -62,12 +62,12 @@ def selected_values(src,d):
         if o:d[name]=html.unescape(o.group(1))
 
 def block_options(src):
-    sm=re.search(r'<select\\b[^>]*name=["\\']([^"\\']*ddl_blk[^"\\']*)["\\'][^>]*>(.*?)</select>',src,re.I|re.S)
+    sm=re.search(r'<select\b[^>]*name=["\']([^"\']*ddl_blk[^"\']*)["\'][^>]*>(.*?)</select>',src,re.I|re.S)
     if not sm:raise RuntimeError('MIS 6.12 Janpad selector not found')
     expected={'AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA'}
     aliases={'SATNA':'SOHAWAL'}
     found={}
-    for om in re.finditer(r'<option\\b([^>]*)>(.*?)</option>',sm.group(2),re.I|re.S):
+    for om in re.finditer(r'<option\b([^>]*)>(.*?)</option>',sm.group(2),re.I|re.S):
         vm=re.search(r'value=["\\']([^"\\']*)["\\']',om.group(1),re.I)
         if not vm:continue
         label=clean(re.sub(r'<[^>]+>',' ',om.group(2)))
