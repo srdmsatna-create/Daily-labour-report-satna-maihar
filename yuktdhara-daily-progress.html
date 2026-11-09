@@ -207,9 +207,27 @@ function renderSummary(current){
  $("summaryCards").innerHTML=["Maihar","Satna"].filter(d=>janpads.some(k=>isJanpad(k,d))).flatMap(d=>keys.slice(0,3).map((k,i)=>{const a=districtAgg[d].old[k],b=districtAgg[d].new[k];return '<div class="card district-card-'+d.toLowerCase()+' '+(k==="worksCreated"?"good-card":"")+'"><label>'+toHindiPlace(d)+' — '+labels[i]+'</label><strong>'+fmt(a)+' → '+fmt(b)+'</strong><small class="'+deltaClass(b-a)+'">'+signed(b-a)+' बदलाव</small></div>'; })).join("");
 }
 function renderEngineers(current){
- const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value,old=new Map(),now=new Map();
+ const district=$("districtFilter").value,janpad=$("janpadFilter").value,panchayat=$("panchayatFilter").value,old=new Map(),now=new Map();
  BASE.engineers.forEach(r=>old.set(janpadKey(r.janpad)+"|"+norm(r.engineer),r));
  (current.rows||[]).forEach(r=>now.set(janpadKey(r.janpad)+"|"+norm(r.engineer),r));
+ // Sajjanpur moved from the vacant baseline assignment to the current engineer.
+ const sajjanpurJanpad="RAMPURBAGHELAN";
+ const vacantKey=sajjanpurJanpad+"|"+norm("रिक्त / आवंटित नहीं");
+ const assignedKey=sajjanpurJanpad+"|"+norm("मोतीलाल लढ़िया अति0");
+ const mergeSajjanpur=old.has(vacantKey)&&!now.has(vacantKey)&&now.has(assignedKey);
+ if(mergeSajjanpur){
+  const vacant=old.get(vacantKey);
+  const assigned=old.get(assignedKey)||now.get(assignedKey);
+  const baseline=old.get(assignedKey);
+  const merged={...assigned};
+  for(const metric of ["gpReceived","worksReceived","worksCreated"]){
+   merged[metric]=Number(baseline?.[metric]||0)+Number(vacant[metric]||0);
+  }
+  old.set(assignedKey,merged);
+  old.delete(vacantKey);
+ }
+ const selectedEngineer=$("engineerFilter").value;
+ const engineer=mergeSajjanpur&&selectedEngineer===vacantKey?assignedKey:selectedEngineer;
  let keys=[...new Set([...old.keys(),...now.keys()])].filter(k=>{const r=now.get(k)||old.get(k);return isJanpad(r.janpad,district)&&(janpad==="ALL"||janpadKey(r.janpad)===janpad)&&(engineer==="ALL"||k===engineer)&&(panchayat==="ALL"||panchayat.split("|")[0]===janpadKey(r.janpad));}).sort((ka,kb)=>{const a=now.get(ka)||old.get(ka),b=now.get(kb)||old.get(kb),da=JANPAD_DISTRICT[janpadKey(a.janpad)]||"Satna",db=JANPAD_DISTRICT[janpadKey(b.janpad)]||"Satna";return (da==="Maihar"?0:1)-(db==="Maihar"?0:1)||compareJanpads(a.janpad,b.janpad)||String(a.engineer).localeCompare(String(b.engineer),"hi");});
  if(panchayat!=="ALL"){
   const gpKey=panchayat,gp=(window.YUKTDHARA_DATA?.mapping||[]).find(x=>janpadKey(x.janpad)+"|"+norm(x.gp)===gpKey),baseGp=(BASE.panchayats||[]).find(x=>janpadKey(x.janpad)+"|"+norm(x.gp)===gpKey),assigned=(gp||baseGp||{}).engineer;
