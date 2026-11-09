@@ -24,6 +24,7 @@ GROUPS=[
  ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js','ongoing-details.json.gz']),
+ ('yuktdhara_mr_labour_history', [['scripts_local/update_yuktdhara_mr_labour_history.py']], ['data/yuktdhara-mr-labour-history.json']),
  ('pmayg_physical',[['scripts_local/update_pmayg_physical.py']],['data/pmayg-physical-latest.json']),
  ('pmayg',[['scripts_local/update_pmayg.py']],['data/pmayg-latest.json']),
  ('above75',[['scripts_local/update_above75.py']],['data/above75-latest.json']),
@@ -76,6 +77,16 @@ def validate(group,root):
  elif group=='ek_bagiya_payment':
   d=data(root/'data/ek-bagiya-payment-latest.json')
   if d.get('logicVersion')!='sabhi-reports-logic-v1' or len(d.get('rows',[]))!=8 or d.get('retrievedDate')!=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d/%m/%Y') or not d.get('sourceDates') or not d.get('works'):raise ValueError('Current complete payment source required')
+ elif group=='yuktdhara_mr_labour_history':
+  d=data(root/'data/yuktdhara-mr-labour-history.json')
+  today=datetime.now(ZoneInfo('Asia/Kolkata')).date()
+  snapshots=d.get('snapshots',[])
+  s=snapshots[-1] if snapshots else {}
+  if s.get('snapshotDate')!=today.isoformat() or len(s.get('rows',[]))!=8:raise ValueError('Current R33.1/MR work-code history snapshot required')
+  if datetime.fromisoformat(s.get('mis612UpdatedAt','')).astimezone(ZoneInfo('Asia/Kolkata')).date()!=today:raise ValueError('Current-day MIS 6.12 source required')
+  if s.get('yuktdharaDataDate')!=today.strftime('%d/%m/%Y') or s.get('emusterDataDate')!=today.strftime('%d-%m-%Y') or s.get('workersDataDate')!=today.strftime('%d-%m-%Y'):raise ValueError('R33.1, e-Muster and worker sources must all be current-day')
+  codes=[w.get('code') for r in s['rows'] for w in r.get('matchedWorks',[]) if w.get('code')]
+  if len(codes)!=len(set(codes)) or len(codes)!=int(s.get('totalOngoingWorksWithIssuedMR',-1)):raise ValueError('Matched MR work-code list does not reconcile')
  elif group=='pmayg_physical':
   runpy.run_path(str(root/'scripts_local/update_pmayg_physical.py'))['validate'](data(root/'data/pmayg-physical-latest.json'))
  elif group=='pmayg':
