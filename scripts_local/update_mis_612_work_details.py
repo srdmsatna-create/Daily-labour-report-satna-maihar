@@ -85,8 +85,7 @@ def fetch():
     home,home_url=open_text(opener,URL)
     d=hidden_fields(home);d.update({'__EVENTTARGET':'ctl00$ContentPlaceHolder1$ddl_dist','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712'})
     district,district_url=open_text(opener,form_action(home,home_url),urllib.parse.urlencode(d).encode())
-    # User-provided R-6.12 link is district-wide: fetch Block=ALL once per status.
-    janpads=[('ALL','ALL')]
+    janpads=block_options(district)
     base=hidden_fields(district);selected_values(district,base)
     base.update({'__EVENTTARGET':'','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712','ctl00$ContentPlaceHolder1$ddl_pan':'ALL','ctl00$ContentPlaceHolder1$Ddlworkcategory':'ALL','ctl00$ContentPlaceHolder1$ddlprostatus':'ALL','ctl00$ContentPlaceHolder1$ddlexp':'ALL','ctl00$ContentPlaceHolder1$ddlexpnest':'ALL','ctl00$ContentPlaceHolder1$ddlFin_year':'ALL','ctl00$ContentPlaceHolder1$filter':'ALL','ctl00$ContentPlaceHolder1$Button1':'Submit'})
     action=form_action(district,district_url);all_rows=[];counts={name:0 for _,name in STATUSES}
