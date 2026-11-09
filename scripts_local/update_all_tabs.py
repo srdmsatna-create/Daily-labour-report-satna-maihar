@@ -87,6 +87,10 @@ def validate(group,root):
   if s.get('yuktdharaDataDate')!=today.strftime('%d/%m/%Y') or s.get('emusterDataDate')!=today.strftime('%d-%m-%Y') or s.get('workersDataDate')!=today.strftime('%d-%m-%Y'):raise ValueError('R33.1, e-Muster and worker sources must all be current-day')
   codes=[w.get('code') for r in s['rows'] for w in r.get('matchedWorks',[]) if w.get('code')]
   if len(codes)!=len(set(codes)) or len(codes)!=int(s.get('totalOngoingWorksWithIssuedMR',-1)):raise ValueError('Matched MR work-code list does not reconcile')
+  for r in s['rows']:
+   if r.get('mrIssuedWithoutConvergence') is None or r.get('mrIssuedWithConvergence') is None or r.get('totalNewWorksCreated') is None:raise ValueError('R6.12 Is Secure categories and R33.1 new-work total are required')
+   if int(r['mrIssuedWithoutConvergence'])+int(r['mrIssuedWithConvergence'])!=int(r['ongoingWorksWithIssuedMR']):raise ValueError('R6.12 Is Secure MR categories do not reconcile')
+  if sum(int(r['totalNewWorksCreated']) for r in s['rows'])!=int(s.get('totalNewWorksCreated',-1)):raise ValueError('R33.1 total new works do not reconcile')
  elif group=='pmayg_physical':
   runpy.run_path(str(root/'scripts_local/update_pmayg_physical.py'))['validate'](data(root/'data/pmayg-physical-latest.json'))
  elif group=='pmayg':
