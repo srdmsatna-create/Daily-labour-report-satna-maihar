@@ -74,10 +74,10 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .no-work-table tbody td:nth-child(2),.no-work-table tbody td:nth-child(4){font-size:12px;padding:3px}
 .no-work-table{min-width:1100px}
 .panchayat-table{min-width:1150px}
-.janpad-progress-table{min-width:1560px;width:100%}.mr-labour-cell{font-weight:800;min-width:135px;color:#123e68}.mr-labour-cell b{font-size:17px}.mr-labour-cell small{font-size:12px;color:#087b4d;font-weight:900}
-.janpad-progress-table{min-width:1560px;table-layout:fixed}.janpad-progress-table td.metric{padding-left:3px;padding-right:3px}.janpad-progress-table .metric b{font-size:19px;letter-spacing:-.25px}.janpad-progress-table .metric small{font-size:16px;margin-left:2px}.janpad-progress-table .mr-labour-cell{min-width:0;padding-left:3px;padding-right:3px}.janpad-progress-table .mr-labour-cell b{font-size:16px}.janpad-progress-table .mr-labour-cell .worker-count{color:#7b2cbf;font-size:14px;font-weight:900}
+.janpad-progress-table{min-width:1580px;width:100%}.mr-labour-cell{font-weight:800;min-width:135px;color:#123e68}.mr-labour-cell b{font-size:17px}.mr-labour-cell small{font-size:12px;color:#087b4d;font-weight:900}
+.janpad-progress-table{min-width:1580px;table-layout:fixed}.janpad-progress-table td.metric{padding-left:3px;padding-right:3px}.janpad-progress-table .metric b{font-size:19px;letter-spacing:-.25px}.janpad-progress-table .metric small{font-size:16px;margin-left:2px}.janpad-progress-table .mr-labour-cell{min-width:0;padding-left:3px;padding-right:3px}.janpad-progress-table .mr-labour-cell b{font-size:16px}.janpad-progress-table .mr-labour-cell .worker-count{color:#7b2cbf;font-size:14px;font-weight:900}
 .panchayat-table tbody td{font-weight:700}
-.engineer-progress-table{min-width:1050px}
+.engineer-progress-table{min-width:950px;table-layout:fixed}.engineer-progress-table thead th{padding:5px 3px;font-size:12px;line-height:1.05}.engineer-progress-table tbody td{padding:2px 3px;font-size:12px;line-height:1.05;overflow-wrap:anywhere}.engineer-progress-table tbody td:nth-child(1),.engineer-progress-table tbody td:nth-child(2){font-size:11px;padding-left:2px;padding-right:2px}
 .empty{text-align:center!important;padding:20px;color:#647d95}
 .mr-labour-cell{font-weight:800;min-width:155px;color:#123e68}.mr-labour-cell b{font-size:18px}.mr-labour-cell small{font-size:12px;color:#536f89}
 @media(max-width:760px){body{padding:4px}main{padding:12px 8px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.summary-cards{grid-template-columns:repeat(6,minmax(150px,1fr));overflow-x:auto}h1{font-size:23px}.toolbar{gap:7px}button,a.button,select{font-size:14px;padding:9px}}
@@ -87,7 +87,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
  body{padding:0;font-size:9pt}main{max-width:none;border:0;border-radius:0;padding:0}
  .toolbar,.no-work-filters,.report-tabs{display:none!important}
  .report-panel{display:none!important}
- body[data-print-panel="progressPanel"] #progressPanel,body[data-print-panel="panchayatPanel"] #panchayatPanel,body[data-print-panel="noWorkPanel"] #noWorkPanel{display:block!important}
+ body[data-print-panel="progressPanel"] #progressPanel,body[data-print-panel="panchayatPanel"] #panchayatPanel,body[data-print-panel="noWorkPanel"] #noWorkPanel,body[data-print-panel="engineerPanel"] #progressPanel{display:block!important} body[data-print-panel="engineerPanel"] #progressPanel>section:first-child{display:none!important} body[data-print-panel="engineerPanel"] #engineerPanel{display:block!important}
  h1{font-size:18pt;margin:0 0 2mm}
  h2{font-size:13pt}.subtitle{font-size:8pt;margin-bottom:3mm}
  .cards{gap:3mm;margin:2mm 0}.card{min-height:auto;padding:2mm 3mm}.card label{font-size:7pt}.card strong{font-size:11pt}.card small{font-size:8pt}
@@ -102,14 +102,14 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 </style>
 </head>
 <body><main>
-<div class="toolbar"><a class="button" href="./">← मुख्य मेनू पर वापस</a><label for="districtFilter">जिला</label><select id="districtFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="janpadFilter">जनपद</label><select id="janpadFilter"><option value="ALL">सभी जनपद</option></select><label for="engineerFilter">उपयंत्री</label><select id="engineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="panchayatFilter">पंचायत</label><select id="panchayatFilter"><option value="ALL">सभी पंचायतें</option></select><button type="button" id="printActiveTab">Print / PDF</button></div>
+<div class="toolbar"><a class="button" href="./">← मुख्य मेनू पर वापस</a><label for="districtFilter">जिला</label><select id="districtFilter"><option value="ALL">सभी जिले</option><option value="Maihar">मैहर</option><option value="Satna">सतना</option></select><label for="janpadFilter">जनपद</label><select id="janpadFilter"><option value="ALL">सभी जनपद</option></select><label for="engineerFilter">उपयंत्री</label><select id="engineerFilter"><option value="ALL">सभी उपयंत्री</option></select><label for="panchayatFilter">पंचायत</label><select id="panchayatFilter"><option value="ALL">सभी पंचायतें</option></select><button type="button" id="printActiveTab">Print / PDF</button><button type="button" id="printEngineerProgress">जनपद / उपयंत्री Print / PDF</button></div>
 <h1>दैनिक Yuktdhara प्रगति पत्रक — दिनांक <span id="reportDate">—</span></h1>
 <p class="subtitle">27-10-2026 से Daily Updater के नवीनतम डेटा तक प्रगति<br><span id="sourceNote"></span></p>
 <nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी पंचायत में काम नहीं हुआ</button></nav>
 <div id="progressPanel" class="report-panel">
 <section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><p class="status" id="mrHistoryStatus"></p><div id="summaryCards" class="cards summary-cards"></div>
-<div class="table-wrap"><table class="janpad-progress-table"><colgroup><col style="width:60px"><col style="width:90px"><col style="width:150px"><col style="width:190px"><col style="width:180px"><col style="width:160px"><col style="width:160px"><col style="width:180px"><col style="width:180px"><col style="width:210px"></colgroup><thead><tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">प्राप्त पंचायतें</th><th rowspan="2">Yuktdhara से प्राप्त कार्य</th><th rowspan="2">VBGRAMG में बने कार्य</th><th rowspan="2">शुरू नहीं हुए</th><th rowspan="2">प्रगतिरत</th><th colspan="3">R-6.9 &amp; 6.12 के अनुसार Is Secure के अनुसार MR स्थिति</th></tr><tr><th>बिना अभिसरण<br>(Is Secure=YES)<br>MR जारी काम</th><th>अभिसरण<br>(Is Secure=NO)<br>MR जारी काम</th><th>MR जारी / Total New Works (%)<br>• संलग्न श्रमिक</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
-<section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><thead><tr><th style="width:8%">जिला</th><th style="width:12%">जनपद</th><th style="width:14%">क्लस्टर</th><th style="width:18%">उपयंत्री</th><th style="width:16%">प्राप्त पंचायतें</th><th style="width:16%">Yuktdhara से प्राप्त कार्य</th><th style="width:16%">VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
+<div class="table-wrap"><table class="janpad-progress-table"><colgroup><col style="width:48px"><col style="width:72px"><col style="width:150px"><col style="width:205px"><col style="width:200px"><col style="width:175px"><col style="width:175px"><col style="width:175px"><col style="width:175px"><col style="width:205px"></colgroup><thead><tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">प्राप्त पंचायतें</th><th rowspan="2">Yuktdhara से प्राप्त कार्य</th><th rowspan="2">VBGRAMG में बने कार्य</th><th rowspan="2">शुरू नहीं हुए</th><th rowspan="2">प्रगतिरत</th><th colspan="3">R-6.9 &amp; 6.12 के अनुसार Is Secure के अनुसार MR स्थिति</th></tr><tr><th>बिना अभिसरण<br>(Is Secure=YES)<br>MR जारी काम</th><th>अभिसरण<br>(Is Secure=NO)<br>MR जारी काम</th><th>MR जारी / Total New Works (%)<br>• संलग्न श्रमिक</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
+<section id="engineerPanel"><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><colgroup><col style="width:52px"><col style="width:78px"><col style="width:130px"><col style="width:160px"><col style="width:145px"><col style="width:195px"><col style="width:190px"></colgroup><thead><tr><th>जिला</th><th>जनपद</th><th>क्लस्टर</th><th>उपयंत्री</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
 
 </div>
 <div id="panchayatPanel" class="report-panel" hidden>
@@ -319,12 +319,12 @@ async function load(){
   let restored=false;
   const restore=()=>{if(restored)return;restored=true;panels.forEach((panel,i)=>panel.hidden=hiddenBefore[i]);delete document.body.dataset.printPanel;};
   document.body.dataset.printPanel=panelId;
-  panels.forEach(panel=>panel.hidden=panel.id!==panelId);
+  panels.forEach(panel=>panel.hidden=panelId==="engineerPanel"?panel.id!=="progressPanel":panel.id!==panelId);
   window.addEventListener("afterprint",restore,{once:true});
   try{window.print();}catch(error){restore();throw error;}
  };
  $("printActiveTab").addEventListener("click",()=>printPanel(document.querySelector(".tab-button.active")?.dataset.panel||"progressPanel"));
- $("printNoWork").addEventListener("click",()=>printPanel("noWorkPanel"));
+ $("printNoWork").addEventListener("click",()=>printPanel("noWorkPanel")); $("printEngineerProgress").addEventListener("click",()=>printPanel("engineerPanel"));
  load();
 })();
 </script>
