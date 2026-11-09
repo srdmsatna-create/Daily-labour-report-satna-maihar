@@ -205,14 +205,24 @@ function renderEngineers(current){
   if(assigned)keys=keys.filter(k=>k===janpadKey((gp||baseGp).janpad)+"|"+norm(assigned));
  }
  const names=["gpReceived","worksReceived","worksCreated"],clusterMap=new Map();
- (window.YUKTDHARA_DATA?.mapping||[]).forEach(m=>{const k=janpadKey(m.janpad)+"|"+norm(m.engineer);if(!clusterMap.has(k))clusterMap.set(k,new Set());if(m.cluster)clusterMap.get(k).add(m.cluster);});
- const clusterName=k=>[...(clusterMap.get(k)||[])].sort((a,b)=>a.localeCompare(b,"hi")).map(toHindiPlace).join(", ")||"क्लस्टर आवंटित नहीं";
+ // The panchayat feed uses SATNA for the block reported as SOHAWAL in the progress feed.
+ const clusterKey=(janpad,engineer)=>{
+  const block=janpadKey(janpad);
+  return (block==="SATNA"?"SOHAWAL":block)+"|"+norm(engineer);
+ };
+ for(const {janpad,engineer,cluster} of window.YUKTDHARA_DATA?.mapping||[]){
+  if(!cluster)continue;
+  const key=clusterKey(janpad,engineer);
+  if(!clusterMap.has(key))clusterMap.set(key,new Set());
+  clusterMap.get(key).add(cluster);
+ }
+ const clusterName=(janpad,engineer)=>[...(clusterMap.get(clusterKey(janpad,engineer))||[])].sort((a,b)=>a.localeCompare(b,"hi")).map(toHindiPlace).join(", ")||"क्लस्टर आवंटित नहीं";
  const janpads=[...new Set(keys.map(k=>(now.get(k)||old.get(k)).janpad))],districts=["Maihar","Satna"];let html="";
  districts.forEach(d=>{
   const districtJanpads=janpads.filter(j=>(JANPAD_DISTRICT[janpadKey(j)]||"Satna")===d);
   districtJanpads.forEach(j=>{
    const selected=keys.filter(k=>janpadKey((now.get(k)||old.get(k)).janpad)===janpadKey(j));
-   selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a;html+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+clusterName(k)+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
+   selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a;html+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+clusterName(r.janpad,r.engineer)+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
    const t=aggregateMaps(names,old,now,selected);
    html+='<tr class="total-row '+janpadTotalClass(j)+'"><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
   });
