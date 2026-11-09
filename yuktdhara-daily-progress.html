@@ -100,6 +100,23 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .no-work-table tbody td:nth-child(8){font-size:11px!important;line-height:1.15!important;font-weight:700!important}
 .no-work-table .grand-total td{background:#075c39!important;color:#fff!important;border-color:#064b30!important;font-weight:900!important}
 #janpadBody .grand-total td,#engineerBody .grand-total td{background:#075c39!important;color:#fff!important;border-color:#064b30!important;font-weight:900!important}\n#janpadBody .grand-total .metric b,#janpadBody .grand-total .metric small,#engineerBody .grand-total .metric b,#engineerBody .grand-total .metric small{color:#fff!important}
+
+.engineer-progress-table th:nth-child(-n+4),
+.engineer-progress-table td:not(.metric):not(.empty) {
+  text-align: left;
+}
+.engineer-progress-table th:nth-child(n+2):nth-child(-n+4),
+.engineer-progress-table td:not(.metric):not(.empty):nth-child(n+2) {
+  font-size: 16px;
+  line-height: 1.2;
+  overflow-wrap: normal;
+}
+@media print {
+  .engineer-progress-table th:nth-child(n+2):nth-child(-n+4),
+  .engineer-progress-table td:not(.metric):not(.empty):nth-child(n+2) {
+    font-size: 10pt;
+  }
+}
 </style>
 </head>
 <body><main>
@@ -110,7 +127,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <div id="progressPanel" class="report-panel">
 <section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><p class="status" id="mrHistoryStatus"></p><div id="summaryCards" class="cards summary-cards"></div>
 <div class="table-wrap"><table class="janpad-progress-table"><colgroup><col style="width:4%"><col style="width:8%"><col style="width:9%"><col style="width:11%"><col style="width:11%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:10%"><col style="width:19%"></colgroup><thead><tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">प्राप्त पंचायतें</th><th rowspan="2">Yuktdhara से प्राप्त कार्य</th><th rowspan="2">VBGRAMG में बने कार्य</th><th rowspan="2">शुरू नहीं हुए</th><th rowspan="2">प्रगतिरत</th><th colspan="3">R-6.9 &amp; 6.12 के अनुसार Is Secure के अनुसार MR स्थिति</th></tr><tr><th>बिना अभिसरण<br>(Is Secure=YES)<br>MR जारी काम</th><th>अभिसरण<br>(Is Secure=NO)<br>MR जारी काम</th><th>MR जारी / Total New Works (%)<br>• संलग्न श्रमिक</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
-<section id="engineerPanel"><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><colgroup><col style="width:52px"><col style="width:78px"><col style="width:130px"><col style="width:160px"><col style="width:145px"><col style="width:195px"><col style="width:190px"></colgroup><thead><tr><th>जिला</th><th>जनपद</th><th>क्लस्टर</th><th>उपयंत्री</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
+<section id="engineerPanel"><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><colgroup><col style="width:44px"><col style="width:70px"><col><col><col><col><col></colgroup><thead><tr><th>जिला</th><th>जनपद</th><th>क्लस्टर</th><th>उपयंत्री</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
 
 </div>
 <div id="panchayatPanel" class="report-panel" hidden>
