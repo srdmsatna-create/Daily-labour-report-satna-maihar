@@ -109,7 +109,7 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
    let grand={r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true};
    let html='',workHtml='';
    for(const r of rows){
-    const d=totals[r.district]?'SATNA':'MAIHAR';
+    const d=String(r.district||'').toUpperCase()==='SATNA'?'SATNA':'MAIHAR';
     const t=totals[d];
     t.r331+=Number(r.r331OngoingWorks||0);t.r612+=Number(r.r612YuktdharaOngoingWorks||0);
     t.matched+=Number(r.ongoingWorksWithIssuedMR||0);t.panchayats+=Number(r.matchedPanchayats||0);
