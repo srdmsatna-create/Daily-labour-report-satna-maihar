@@ -15,8 +15,8 @@ textarea{width:100%;min-height:260px;resize:vertical;border:1px solid var(--line
 .status{min-height:18px;margin-top:5px;color:#167443;font-size:13px;font-weight:700}
 @media(max-width:640px){header{padding:15px 14px}h1{font-size:20px}.card{padding:10px}textarea{min-height:220px;font-size:13px}}
 .message-preview{overflow:auto;max-height:560px;padding:10px;border:1px solid var(--line);border-radius:8px}
-.message-preview table{border-collapse:collapse;width:100%;margin:10px 0}
-.message-preview th,.message-preview td{border:1px solid var(--line);padding:6px 9px;text-align:left}
+.message-preview table{border:2px solid #526b82;border-collapse:collapse;width:100%;margin:10px 0}
+.message-preview th,.message-preview td{border:1px solid #71869a;padding:6px 9px;text-align:left}
 .message-preview th{background:#eef5fb;color:var(--navy)}
 .message-preview td:not(:first-child){text-align:right;white-space:nowrap}
 .message-preview p{margin:6px 0;white-space:pre-wrap}
@@ -232,8 +232,9 @@ document.querySelectorAll("button.copy").forEach(button=>button.addEventListener
   const copy = preview.cloneNode(true);
   for (const table of copy.querySelectorAll('table')) {
    table.style.borderCollapse = 'collapse';
+   table.style.border = '2px solid #526b82';
    for (const cell of table.querySelectorAll('th, td')) {
-    cell.style.border = '1px solid #c8d8e8';
+    cell.style.border = '1px solid #71869a';
     cell.style.padding = '6px 9px';
     if (cell.tagName === 'TH') cell.style.backgroundColor = table.style.getPropertyValue('--section-color') || '#eef5fb';
    }
