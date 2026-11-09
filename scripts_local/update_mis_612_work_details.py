@@ -68,7 +68,7 @@ def block_options(src):
     aliases={'SATNA':'SOHAWAL'}
     found={}
     for om in re.finditer(r'<option\b([^>]*)>(.*?)</option>',sm.group(2),re.I|re.S):
-        vm=re.search(r'value=["\\']([^"\\']*)["\\']',om.group(1),re.I)
+        vm=re.search(r"""value=["']([^"']*)["']""",om.group(1),re.I)
         if not vm:continue
         label=clean(re.sub(r'<[^>]+>',' ',om.group(2)))
         key=re.sub(r'[^A-Z0-9]','',label.upper())
