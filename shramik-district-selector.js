@@ -228,7 +228,8 @@ function render(){
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
  const all=records();
  const chosen=[...(selected==='__ALL__'?sourceNames:selected==='__REWA__'?region:selected==='__BLOCK__'?Object.keys(all).filter(n=>n.includes(' / ')):[selected])];
- const days=30-Number(novemberDate.split('-')[0]);
+ const [day, month, year]=novemberDate.split('-').map(Number);
+ const days=Math.max(0,Math.round((Date.UTC(2026,10,30)-Date.UTC(year,month-1,day))/86400000));
  if(sortColumn!=null)chosen.sort((a,b)=>{const av=sortValue(all[a],a,sortColumn,days),bv=sortValue(all[b],b,sortColumn,days);if(av==null||bv==null)return av==null?(bv==null?a.localeCompare(b):1):-1;const diff=typeof av==='string'?av.localeCompare(bv):av-bv;return (sortDirection==='asc'?diff:-diff)||a.localeCompare(b);});
  sortHeaders.forEach((th,i)=>{th.setAttribute('aria-sort',i===sortColumn?(sortDirection==='asc'?'ascending':'descending'):'none');const arrow=th.querySelector('.sn-sort-arrow');if(arrow)arrow.textContent=i===sortColumn?(sortDirection==='asc'?'↑':'↓'):'↕';});
  document.getElementById('snStateDate').textContent='दिनांक '+novemberDate;document.getElementById('snStateDate').hidden=true;
