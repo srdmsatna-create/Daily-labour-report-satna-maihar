@@ -37,7 +37,7 @@ def main():
     ongoing_yukt = []
     for w in ongoing:
         code = norm(w.get("code"))
-        if "/YD/" not in code or norm(w.get("status")) != "ONGOING":
+        if "/YD/" not in code or norm(w.get("fy")) != "2026-2027" or norm(w.get("status")) != "ONGOING":
             continue
         janpad = norm(w.get("janpad"))
         panchayat = norm(w.get("panchayat"))
@@ -66,7 +66,7 @@ def main():
             "district": "SATNA" if janpad in SATNA else "MAIHAR",
             "janpad": janpad,
             "r331OngoingWorks": r331_by_janpad.get(janpad, 0),
-            "r612YuktdharaOngoingWorks": len(block_ongoing),
+            "r612CurrentFyYuktdharaOngoingWorks": len(block_ongoing),
             "ongoingWorksWithIssuedMR": len(matched_rows),
             "matchedPanchayats": len({w["panchayat"] for w in matched_rows}),
             "workersOnMatchedPanchayats": sum(labour_by_gp.get((janpad, p), 0) for p in {w["panchayat"] for w in matched_rows}),
@@ -105,7 +105,7 @@ def main():
         "workersSourceLastUpdated": workers.get("sourceLastUpdated"),
         "previousSnapshotDate": previous_snapshot.get("snapshotDate") if previous_snapshot else None,
         "totalR331OngoingWorks": sum(r["r331OngoingWorks"] for r in rows),
-        "totalR612YuktdharaOngoingWorks": sum(r["r612YuktdharaOngoingWorks"] for r in rows),
+        "totalR612CurrentFyYuktdharaOngoingWorks": sum(r["r612CurrentFyYuktdharaOngoingWorks"] for r in rows),
         "totalOngoingWorksWithIssuedMR": sum(r["ongoingWorksWithIssuedMR"] for r in rows),
         "matchedPanchayats": len(matched_gps),
         "workersOnMatchedPanchayats": workers_on_matched_gps,
@@ -122,7 +122,7 @@ def main():
     snapshots.sort(key=lambda s: s["snapshotDate"])
     history["title"] = "R-33.1 प्रगतिरत Yuktdhara कार्यों का तारीखवार MR/श्रमिक रिकॉर्ड"
     history["scopeNote"] = (
-        "R-33.1 जनपदवार प्रगतिरत संख्या देता है। कामों का work-code मिलान R-6.12 में ongoing "
+        "R-33.1 जनपदवार प्रगतिरत संख्या देता है। कामों का work-code मिलान R-6.12 FY 2026-27 में ongoing "
         "/YD/ codes और GP e-Muster में MR-जारी work-code सूची के intersection से है। "
         "संलग्न श्रमिक केवल उन matched कामों वाली पंचायतों का GP कुल है; स्रोत में काम-विशिष्ट "
         "श्रमिक संख्या उपलब्ध नहीं है। यह गिनती MR-जारी कामों की है, अलग-अलग MR पर्चियों की नहीं।"
@@ -130,7 +130,7 @@ def main():
     history["snapshots"] = snapshots
     HISTORY.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Recorded {date_key}: R33.1 ongoing {snapshot['totalR331OngoingWorks']}; "
-          f"R6.12 /YD/ ongoing {snapshot['totalR612YuktdharaOngoingWorks']}; "
+          f"R6.12 FY2026-27 /YD/ ongoing {snapshot['totalR612CurrentFyYuktdharaOngoingWorks']}; "
           f"with issued MR {snapshot['totalOngoingWorksWithIssuedMR']}")
 
 if __name__ == "__main__":
