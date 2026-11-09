@@ -299,7 +299,7 @@ async function load(){
   const [r1,r2]=await Promise.all([fetch("yuktdhara-received-data.js?dailyUpdater="+Date.now(),{cache:"no-store"}),fetch("yuktdhara-data.js?dailyUpdater="+Date.now(),{cache:"no-store"})]);
   if(!r1.ok||!r2.ok)throw new Error("Updater data fetch failed");
   const [s1,s2]=await Promise.all([r1.text(),r2.text()]);
-  const j1=s1.match(/window\\.YUKTDHARA_RECEIVED\\s*=\\s*(\\{[\\s\\S]*\\})\\s*;?\\s*$/),j2=s2.match(/window\\.YUKTDHARA_DATA\\s*=\\s*(\\{[\\s\\S]*\\})\\s*;?\\s*$/);
+  const j1=s1.match(/window\.YUKTDHARA_RECEIVED\s*=\s*(\{[\s\S]*\})\s*;?\s*$/),j2=s2.match(/window\.YUKTDHARA_DATA\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
   if(!j1||!j2)throw new Error("Yuktdhara feed format not recognized");
   const rec=JSON.parse(j1[1]),gp=JSON.parse(j2[1]);window.YUKTDHARA_RECEIVED=rec;window.YUKTDHARA_DATA=gp;
   const updated=rec.updatedAt?new Date(rec.updatedAt).toLocaleString("hi-IN",{timeZone:"Asia/Kolkata"}):rec.officialDate||"उपलब्ध नहीं";
