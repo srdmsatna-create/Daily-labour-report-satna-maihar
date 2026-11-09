@@ -10,6 +10,7 @@ on:
       - 'muster-emb-data.js'
       - 'shramik-gp-progress-data.js'
       - 'scripts_local/update_yuktdhara_mr_labour_history.py'
+      - '.github/workflows/r33-1-mr-labour-history.yml'
 
 permissions:
   contents: write
