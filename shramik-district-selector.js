@@ -7,7 +7,7 @@ const names=sourceNames.flatMap(name=>name==='REWA'?['रीवा','मऊग�
 const tools=section.querySelector('.sn-tools'), originalWrap=section.querySelector('.sn-wrap'), originalKpis=section.querySelector('.sn-kpis');
 const label=document.createElement('label');label.style.cssText='display:grid;gap:3px;font-weight:850;color:#075d46';
 label.textContent='प्रदेश के 52 स्रोत जिले';
-const select=document.createElement('select');select.id='snStateDistrict';select.innerHTML='<option value="__ALL__">प्रदेश — जिलावार रिपोर्ट</option><option value="__REWA__">रीवा संभाग — 6 जिले</option><option value="__BLOCK__">जनपदवार — सतना, मैहर, रीवा, मऊगंज</option><option value="">अक्टूबर रिपोर्ट — सतना + मैहर</option>'+names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
+const select=document.createElement('select');select.id='snStateDistrict';select.innerHTML='<option value="__ALL__">सभी 52 जिले — जिलावार रिपोर्ट</option><option value="__REWA__">रीवा संभाग — 6 जिले</option><option value="__BLOCK__">जनपदवार — सतना, मैहर, रीवा, मऊगंज</option><option value="">अक्टूबर रिपोर्ट — सतना + मैहर</option>'+names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
 label.appendChild(select);tools.insertBefore(label,tools.firstChild);
 const metricLabel=document.createElement('label');metricLabel.style.cssText=label.style.cssText;metricLabel.textContent='रैंकिंग पैरामीटर';const metricSelect=document.createElement('select');metricSelect.id='snRankParameter';metricSelect.innerHTML='<option value="achievement">उपलब्धि %</option><option value="labour">आज संलग्न श्रमिक</option><option value="mr">मस्टर रोल जारी %</option>';metricLabel.appendChild(metricSelect);label.insertAdjacentElement('afterend',metricLabel);
 const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0';
@@ -227,12 +227,12 @@ function render(){
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el)el.disabled=external;}
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
  const all=records();
- const chosen=[...(selected==='__ALL__'?names:selected==='__REWA__'?region:selected==='__BLOCK__'?Object.keys(all).filter(n=>n.includes(' / ')):[selected])];
+ const chosen=[...(selected==='__ALL__'?sourceNames:selected==='__REWA__'?region:selected==='__BLOCK__'?Object.keys(all).filter(n=>n.includes(' / ')):[selected])];
  const days=30-Number(novemberDate.split('-')[0]);
  if(sortColumn!=null)chosen.sort((a,b)=>{const av=sortValue(all[a],a,sortColumn,days),bv=sortValue(all[b],b,sortColumn,days);if(av==null||bv==null)return av==null?(bv==null?a.localeCompare(b):1):-1;const diff=typeof av==='string'?av.localeCompare(bv):av-bv;return (sortDirection==='asc'?diff:-diff)||a.localeCompare(b);});
  sortHeaders.forEach((th,i)=>{th.setAttribute('aria-sort',i===sortColumn?(sortDirection==='asc'?'ascending':'descending'):'none');const arrow=th.querySelector('.sn-sort-arrow');if(arrow)arrow.textContent=i===sortColumn?(sortDirection==='asc'?'↑':'↓'):'↕';});
  document.getElementById('snStateDate').textContent='दिनांक '+novemberDate;document.getElementById('snStateDate').hidden=true;
- document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
+ document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
  const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
  const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
  const kpiTarget=kpiSum('target'),kpiAchievement=kpiSum('achievement'),kpiGap=Math.max(0,kpiTarget-kpiAchievement),kpiDaily=Math.ceil(kpiGap/days);
