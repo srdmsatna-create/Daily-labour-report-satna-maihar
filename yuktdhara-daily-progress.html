@@ -117,6 +117,17 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
     font-size: 10pt;
   }
 }
+
+.engineer-progress-table tbody td { padding: 4px 6px; }
+.engineer-progress-table td.metric { text-align: center; }
+.engineer-progress-table td.metric b { font-size: 18px; }
+.engineer-progress-table td.metric small { font-size: 14px; }
+@media print {
+  .engineer-progress-table { min-width: 0; }
+  .engineer-progress-table tbody td { padding: 1mm; }
+  .engineer-progress-table td.metric b { font-size: 9pt; }
+  .engineer-progress-table td.metric small { font-size: 8pt; }
+}
 </style>
 </head>
 <body><main>
@@ -126,8 +137,8 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी पंचायत में काम नहीं हुआ</button></nav>
 <div id="progressPanel" class="report-panel">
 <section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><p class="status" id="mrHistoryStatus"></p><div id="summaryCards" class="cards summary-cards"></div>
-<div class="table-wrap"><table class="janpad-progress-table"><colgroup><col style="width:4%"><col style="width:8%"><col style="width:9%"><col style="width:11%"><col style="width:11%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:10%"><col style="width:19%"></colgroup><thead><tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">प्राप्त पंचायतें</th><th rowspan="2">Yuktdhara से प्राप्त कार्य</th><th rowspan="2">VBGRAMG में बने कार्य</th><th rowspan="2">शुरू नहीं हुए</th><th rowspan="2">प्रगतिरत</th><th colspan="3">R-6.9 &amp; 6.12 के अनुसार Is Secure के अनुसार MR स्थिति</th></tr><tr><th>बिना अभिसरण<br>(Is Secure=YES)<br>MR जारी काम</th><th>अभिसरण<br>(Is Secure=NO)<br>MR जारी काम</th><th>MR जारी / Total New Works (%)<br>• संलग्न श्रमिक</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
-<section id="engineerPanel"><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><colgroup><col style="width:44px"><col style="width:70px"><col><col><col><col><col></colgroup><thead><tr><th>जिला</th><th>जनपद</th><th>क्लस्टर</th><th>उपयंत्री</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
+<div class="table-wrap"><table class="janpad-progress-table"><colgroup><col style="width:4%"><col style="width:10%"><col style="width:9%"><col style="width:11%"><col style="width:11%"><col style="width:9%"><col style="width:9%"><col style="width:10%"><col style="width:10%"><col style="width:17%"></colgroup><thead><tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">प्राप्त पंचायतें</th><th rowspan="2">Yuktdhara से प्राप्त कार्य</th><th rowspan="2">VBGRAMG में बने कार्य</th><th rowspan="2">शुरू नहीं हुए</th><th rowspan="2">प्रगतिरत</th><th colspan="3">R-6.9 &amp; 6.12 के अनुसार Is Secure के अनुसार MR स्थिति</th></tr><tr><th>बिना अभिसरण<br>(Is Secure=YES)<br>MR जारी काम</th><th>अभिसरण<br>(Is Secure=NO)<br>MR जारी काम</th><th>MR जारी / Total New Works (%)<br>• संलग्न श्रमिक</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
+<section id="engineerPanel"><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><colgroup><col style="width:52px"><col style="width:128px"><col><col><col><col><col></colgroup><thead><tr><th>जिला</th><th>जनपद</th><th>क्लस्टर</th><th>उपयंत्री</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
 
 </div>
 <div id="panchayatPanel" class="report-panel" hidden>
@@ -216,13 +227,29 @@ function renderEngineers(current){
   if(!clusterMap.has(key))clusterMap.set(key,new Set());
   clusterMap.get(key).add(cluster);
  }
- const clusterName=(janpad,engineer)=>[...(clusterMap.get(clusterKey(janpad,engineer))||[])].sort((a,b)=>a.localeCompare(b,"hi")).map(toHindiPlace).join(", ")||"क्लस्टर आवंटित नहीं";
+ const clustersByPanchayat=new Map();
+ for(const {janpad,gp,cluster} of window.YUKTDHARA_DATA?.mapping||[]){
+  if(cluster)clustersByPanchayat.set(clusterKey(janpad,gp),cluster);
+ }
+ const historicalClusters=new Map();
+ for(const {janpad,gp,engineer} of BASE.panchayats||[]){
+  const cluster=clustersByPanchayat.get(clusterKey(janpad,gp));
+  if(!cluster)continue;
+  const key=clusterKey(janpad,engineer);
+  if(!historicalClusters.has(key))historicalClusters.set(key,new Set());
+  historicalClusters.get(key).add(cluster);
+ }
+ const clusterName=(janpad,engineer,isHistorical)=>{
+  const key=clusterKey(janpad,engineer);
+  const clusters=clusterMap.get(key)||(isHistorical?historicalClusters.get(key):null);
+  return [...(clusters||[])].sort((a,b)=>a.localeCompare(b,"hi")).map(toHindiPlace).join(", ")||"क्लस्टर आवंटित नहीं";
+ };
  const janpads=[...new Set(keys.map(k=>(now.get(k)||old.get(k)).janpad))],districts=["Maihar","Satna"];let html="";
  districts.forEach(d=>{
   const districtJanpads=janpads.filter(j=>(JANPAD_DISTRICT[janpadKey(j)]||"Satna")===d);
   districtJanpads.forEach(j=>{
    const selected=keys.filter(k=>janpadKey((now.get(k)||old.get(k)).janpad)===janpadKey(j));
-   selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a;html+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+clusterName(r.janpad,r.engineer)+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
+   selected.forEach(k=>{const a=old.get(k)||{},b=now.get(k)||{},r=b.janpad?b:a;html+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(r.janpad==="SATNA"?"Sohawal":r.janpad)+'</td><td>'+clusterName(r.janpad,r.engineer,!now.has(k))+'</td><td>'+r.engineer+'</td>'+metricCells(names,a,b)+'</tr>';});
    const t=aggregateMaps(names,old,now,selected);
    html+='<tr class="total-row '+janpadTotalClass(j)+'"><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td><td colspan="2">जनपद योग</td>'+metricCells(names,t.a,t.b)+'</tr>';
   });
