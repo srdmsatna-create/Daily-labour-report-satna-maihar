@@ -115,7 +115,7 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
     t.matched+=Number(r.ongoingWorksWithIssuedMR||0);t.panchayats+=Number(r.matchedPanchayats||0);
     t.workers+=Number(r.workersOnMatchedPanchayats||0);
     if(r.newMrMatchedWorksSincePrevious===null||r.newMrMatchedWorksSincePrevious===undefined)t.newReady=false;else t.newMatched+=Number(r.newMrMatchedWorksSincePrevious);
-    html+='<tr><td>'+esc(r.district)+'</td><td>'+esc(r.janpad)+'</td><td>'+fmt(r.r331OngoingWorks)+'</td><td>'+fmt(r.r612CurrentFyYuktdharaOngoingWorks)+'</td><td>'+fmt(r.ongoingWorksWithIssuedMR)+'</td><td class="'+cls(r.newMrMatchedWorksSincePrevious)+'">'+signed(r.newMrMatchedWorksSincePrevious)+'</td><td>'+fmt(r.matchedPanchayats)+'</td><td>'+fmt(r.workersOnMatchedPanchayats)+'</td></tr>';
+    html+='<tr><td>'+esc(r.district)+'</td><td>'+esc(r.janpad)+'</td><td>'+fmt(r.r331OngoingWorks??r.worksOngoing)+'</td><td>'+fmt(r.r612CurrentFyYuktdharaOngoingWorks)+'</td><td>'+fmt(r.ongoingWorksWithIssuedMR)+'</td><td class="'+cls(r.newMrMatchedWorksSincePrevious)+'">'+signed(r.newMrMatchedWorksSincePrevious)+'</td><td>'+fmt(r.matchedPanchayats)+'</td><td>'+fmt(r.workersOnMatchedPanchayats)+'</td></tr>';
     for(const w of r.matchedWorks||[])workHtml+='<tr><td>'+esc(r.janpad)+'</td><td>'+esc(w.panchayat)+'</td><td>'+esc(w.code)+'</td><td>'+esc(w.name)+'</td></tr>';
    }
    for(const d of ['SATNA','MAIHAR']){
@@ -123,7 +123,7 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
     html+='<tr class="district-total"><td>'+d+' कुल</td><td>जिला योग</td><td>'+fmt(t.r331)+'</td><td>'+fmt(t.hasMatchData?t.r612:null)+'</td><td>'+fmt(t.hasMatchData?t.matched:null)+'</td><td>'+signed(t.newReady?t.newMatched:null)+'</td><td>'+fmt(t.hasMatchData?t.panchayats:null)+'</td><td>'+fmt(t.hasMatchData?t.workers:null)+'</td></tr>';
     grand.r331+=t.r331;if(t.hasMatchData){grand.hasMatchData=true;grand.r612+=t.r612;grand.matched+=t.matched;grand.panchayats+=t.panchayats;grand.workers+=t.workers;}grand.newMatched+=t.newMatched;grand.newReady=grand.newReady&&t.newReady;
    }
-   html+='<tr class="total"><td>कुल</td><td>सतना + मैहर</td><td>'+fmt(grand.r331)+'</td><td>'+fmt(grand.r612)+'</td><td>'+fmt(grand.matched)+'</td><td>'+signed(grand.newReady?grand.newMatched:null)+'</td><td>'+fmt(grand.panchayats)+'</td><td>'+fmt(grand.workers)+'</td></tr>';
+   html+='<tr class="total"><td>कुल</td><td>सतना + मैहर</td><td>'+fmt(grand.r331)+'</td><td>'+fmt(grand.hasMatchData?grand.r612:null)+'</td><td>'+fmt(grand.hasMatchData?grand.matched:null)+'</td><td>'+signed(grand.newReady?grand.newMatched:null)+'</td><td>'+fmt(grand.hasMatchData?grand.panchayats:null)+'</td><td>'+fmt(grand.hasMatchData?grand.workers:null)+'</td></tr>';
    rowsEl.innerHTML=html;
    workRowsEl.innerHTML=workHtml||'<tr><td colspan="4">इस तारीख के पुराने snapshot में work-code match सूची उपलब्ध नहीं थी।</td></tr>';
    meta.textContent='R-33.1 डेटा: '+(s.yuktdharaDataDate||'—')+' • R-6.12 अद्यतन: '+(s.mis612UpdatedAt||'—')+' • e-Muster डेटा: '+(s.emusterDataDate||'—')+' • श्रमिक डेटा: '+(s.workersDataDate||'—')+' • तुलना: '+(s.previousSnapshotDate||'पहला snapshot');
