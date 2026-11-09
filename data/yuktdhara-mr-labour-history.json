@@ -646,11 +646,14 @@
     },
     {
       "snapshotDate": "2026-11-09",
+      "capturedAt": "2026-11-09T13:38:10+05:30",
       "yuktdharaDataDate": "09/11/2026",
+      "yuktdharaUpdatedAt": "2026-11-09T03:49:47.673866+00:00",
       "musterDataDate": "08/11/2026",
+      "musterUpdatedAt": "2026-11-09T03:48:53.181394+00:00",
       "workersDataDate": "09-11-2026",
       "workersSourceLastUpdated": "08-11-2026",
-      "capturedAt": "2026-11-09T03:49:47.673866+00:00",
+      "previousSnapshotDate": "2026-11-08",
       "rows": [
         {
           "district": "MAIHAR",
@@ -677,6 +680,18 @@
           "workersAttachedChange": -28
         },
         {
+          "district": "MAIHAR",
+          "janpad": "RAMNAGAR",
+          "newWorksCreated": 68,
+          "worksYetToStart": 54,
+          "worksOngoing": 13,
+          "worksCompleted": 0,
+          "musterIssuedTotal": 3065,
+          "workersAttachedTotal": 326,
+          "musterIssuedChange": 0,
+          "workersAttachedChange": 0
+        },
+        {
           "district": "SATNA",
           "janpad": "MAJHGAWAN",
           "newWorksCreated": 97,
@@ -699,18 +714,6 @@
           "workersAttachedTotal": 726,
           "musterIssuedChange": 0,
           "workersAttachedChange": -3
-        },
-        {
-          "district": "MAIHAR",
-          "janpad": "RAMNAGAR",
-          "newWorksCreated": 68,
-          "worksYetToStart": 54,
-          "worksOngoing": 13,
-          "worksCompleted": 0,
-          "musterIssuedTotal": 3065,
-          "workersAttachedTotal": 326,
-          "musterIssuedChange": 0,
-          "workersAttachedChange": 0
         },
         {
           "district": "SATNA",
@@ -748,8 +751,7 @@
           "musterIssuedChange": 0,
           "workersAttachedChange": -15
         }
-      ],
-      "previousSnapshotDate": "2026-11-08"
+      ]
     }
   ]
 }
