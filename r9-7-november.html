@@ -31,7 +31,7 @@ p{line-height:1.5} .unit{font-weight:700}
 </nav>
 <h2 id="level-title"></h2>
 <div class="scroll"><table aria-labelledby="level-title"><thead><tr id="columns"></tr></thead><tbody id="rows"></tbody></table></div>
-<p>अंतर = FY 2025–26 जुलाई–नवंबर − FY 2026–27 जुलाई से रिपोर्ट तारीख तक। शेष दिन रिपोर्ट तारीख के अगले दिन से 30 नवंबर तक हैं। प्रतिदिन का लक्ष्य = शेष सकारात्मक मानव दिवस ÷ शेष दिन, अगले पूर्णांक तक। लक्ष्य पूरा होने पर 0 और अवधि समाप्त होने पर लक्ष्य के लिए — दिखाया गया है। वित्तीय वर्ष का कुल = MGNREGA अप्रैल–जून + VB-G RAM G जुलाई से रिपोर्ट तारीख तक।</p>
+<p>अंतर = FY 2025–26 जुलाई–नवंबर − FY 2026–27 जुलाई से रिपोर्ट तारीख तक। शेष दिन रिपोर्ट तारीख के अगले दिन से 30 नवंबर तक हैं। दैनिक लक्ष्य = शेष सकारात्मक मानव दिवस ÷ शेष दिन, अगले पूर्णांक तक। श्रमिक नियोजन में कमी = दैनिक लक्ष्य − 9 नवंबर को संलग्न श्रमिक, न्यूनतम 0। दैनिक लक्ष्य, संलग्न श्रमिक और कमी पूर्ण संख्या में हैं। लक्ष्य पूरा होने पर 0 और अवधि समाप्त होने पर लक्ष्य के लिए — दिखाया गया है। वित्तीय वर्ष का कुल = MGNREGA अप्रैल–जून + VB-G RAM G जुलाई से रिपोर्ट तारीख तक।</p>
 <p>प्रदेश के 52 स्रोत जिलों में SATNA के अंतर्गत सतना और मैहर के आठ जनपद शामिल हैं। जिला और संभाग तालिका में दोनों का अलग योग दिखाया गया है।</p>
 <p>स्रोत <a href="https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;fin_year=2025-2026&amp;page1=s&amp;state_code=17&amp;state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&amp;Digest=i5whoIuaneyTcd%2fKUX8XXg">MGNREGA 2025–26</a> · <a href="https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;fin_year=2026-2027&amp;page1=s&amp;state_code=17&amp;state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&amp;Digest=SfOoa7y+eBupeEgyvw7OcA">MGNREGA 2026–27</a> · <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;page1=s&amp;state_name=MADHYA+PRADESH&amp;state_code=17&amp;fin=2026-2027&amp;fin_year=2026-2027&amp;source=national&amp;Digest=T5jPevIAyKZwnVDL7xdTaQ">VB-G RAM G 2026–27</a></p>
 <script>
@@ -110,8 +110,13 @@ const maiharBlocks = parseRows(`
 मैहर|94107|24183|36065|1
 रामनगर|88299|11187|21557|82
 `);
+// 9 November labour counts from the existing district and Janpad reports.
+const districtLabour = {"AGAR-MALWA":4613,"ALIRAJPUR":4894,"ANUPPUR":8,"ASHOK NAGAR":2611,"BALAGHAT":4467,"BARWANI":16083,"BETUL":2039,"BHIND":101,"BHOPAL":3237,"BURHANPUR":959,"CHHATARPUR":3581,"CHHINDWARA":11212,"DAMOH":2248,"DATIA":29,"DEWAS":3417,"DHAR":2560,"DINDORI":2679,"GUNA":1906,"GWALIOR":0,"HARDA":801,"INDORE":762,"JABALPUR":3228,"JHABUA":1721,"KATNI":1727,"KHANDWA":3004,"KHARGONE":8706,"MANDLA":3101,"MANDSAUR":7009,"MORENA":0,"NARMADAPURAM":2461,"NARSINGHPUR":3332,"NEEMUCH":1782,"NIWARI":1199,"PANNA":1886,"RAISEN":5483,"RAJGARH":12613,"RATLAM":7456,"REWA":4433,"SAGAR":3411,"SATNA":4111,"SEHORE":5133,"SEONI":8144,"SHAHDOL":120,"SHAJAPUR":4536,"SHEOPUR":0,"SHIVPURI":10,"SIDHI":6784,"SINGRAULI":5981,"TIKAMGARH":2830,"UJJAIN":4501,"UMARIA":94,"VIDISHA":8331};
+const blockLabour = {"अमरपाटन":332,"मैहर":576,"रामनगर":326,"मझगवां":651,"नागौद":726,"रामपुर बघेलान":789,"सोहावल":490,"उचेहरा":221};
+sourceDistricts.forEach(row => row.push(districtLabour[row[0]]));
+[...satnaBlocks, ...maiharBlocks].forEach(row => row.push(blockLabour[row[0]]));
 function total(name, rows) {
-  return [name, ...[1, 2, 3, 4].map(index => rows.reduce((sum, row) => sum + row[index], 0))];
+  return [name, ...[1, 2, 3, 4, 5].map(index => rows.reduce((sum, row) => sum + row[index], 0))];
 }
 const satna = total('सतना जिला', satnaBlocks);
 const maihar = total('मैहर जिला', maiharBlocks);
@@ -121,17 +126,18 @@ const reports = {
   division: ['रीवा संभाग रिपोर्ट', [...divisionRows, total('रीवा संभाग कुल', divisionRows)]],
   block: ['सतना एवं मैहर जनपद रिपोर्ट', [...satnaBlocks, satna, ...maiharBlocks, maihar, total('सतना–मैहर संयुक्त', [satna, maihar])]]
 };
-const headers = ['क्षेत्र', 'FY 2025–26 जुलाई–नवंबर', 'FY 2026–27 अप्रैल–जून (MGNREGA)', 'FY 2026–27 जुलाई–अक्टूबर', 'नवंबर 2026', 'कुल सृजित जुलाई से अब तक', 'अंतर', 'शेष दिन', 'प्रतिदिन का लक्ष्य (मानव दिवस)', 'FY 2026–27 कुल अप्रैल से अब तक'];
+const headers = ['क्षेत्र', 'FY 2025–26 जुलाई–नवंबर', 'FY 2026–27 अप्रैल–जून (MGNREGA)', 'FY 2026–27 जुलाई–अक्टूबर', 'नवंबर 2026', 'कुल सृजित जुलाई से अब तक', 'अंतर', 'शेष दिन', 'दैनिक लक्ष्य', 'आज संलग्न श्रमिक', 'लक्ष्य अनुसार श्रमिक नियोजन में कमी', 'FY 2026–27 कुल अप्रैल से अब तक'];
 const lakh = number => (number / 100000).toFixed(5);
 const [day, month, year] = document.getElementById('report-date').textContent.split('-').map(Number);
 const reportDate = Date.UTC(year, month - 1, day);
 const periodEnd = Date.UTC(2026, 10, 30);
 const remainingDays = Math.max(0, Math.round((periodEnd - reportDate) / 86400000));
-function values([name, baseline, aprilJune, julyOctober, november]) {
+function values([name, baseline, aprilJune, julyOctober, november, labour]) {
   const current = julyOctober + november;
   const gap = baseline - current;
   const dailyTarget = remainingDays ? Math.ceil(Math.max(0, gap) / remainingDays) : gap <= 0 ? 0 : '—';
-  return [name, ...[baseline, aprilJune, julyOctober, november, current, gap].map(lakh), remainingDays, dailyTarget, lakh(aprilJune + current)];
+  const shortage = typeof dailyTarget === 'number' ? Math.max(0, dailyTarget - labour) : '—';
+  return [name, ...[baseline, aprilJune, julyOctober, november, current, gap].map(lakh), remainingDays, dailyTarget, labour, shortage, lakh(aprilJune + current)];
 }
 let activeLevel;
 const filters = [...document.querySelectorAll('button[data-level]')];
