@@ -13,13 +13,13 @@ SATNA = {"MAJHGAWAN", "NAGOD", "RAMPUR BAGHELAN", "SATNA", "UNCHAHARA"}
 
 def load_js(path: Path):
     text = path.read_text(encoding="utf-8")
-    match = re.search(r"=\\s*(\\{.*\\}|\\[.*\\])\\s*;?\\s*$", text, re.S)
+    match = re.search(r"=\s*(\\{.*\\}|\\[.*\\])\s*;?\s*$", text, re.S)
     if not match:
         raise ValueError(f"No JSON payload found in {path}")
     return json.loads(match.group(1))
 
 def norm(value):
-    return re.sub(r"\\s+", " ", str(value or "")).strip().upper()
+    return re.sub(r"\s+", " ", str(value or "")).strip().upper()
 
 def main():
     yuk = load_js(ROOT / "yuktdhara-official-data.js")
@@ -128,7 +128,7 @@ def main():
         "श्रमिक संख्या उपलब्ध नहीं है। यह गिनती MR-जारी कामों की है, अलग-अलग MR पर्चियों की नहीं।"
     )
     history["snapshots"] = snapshots
-    HISTORY.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
+    HISTORY.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Recorded {date_key}: R33.1 ongoing {snapshot['totalR331OngoingWorks']}; "
           f"R6.12 /YD/ ongoing {snapshot['totalR612YuktdharaOngoingWorks']}; "
           f"with issued MR {snapshot['totalOngoingWorksWithIssuedMR']}")
