@@ -198,6 +198,7 @@ def main():
                 'panchayat': gp,
                 'fy': clean(pick(r, 'Work Start Fin Year', 'Work FY', 'Financial Year')),
                 'status': clean(pick(r, 'Work Status', 'Status')),
+                'isSecure': clean(pick(r, 'Is Secure', 'isSecure')),
                 'code': code,
                 'name': clean(pick(r, 'Work Name', 'Name of Work')),
                 'type': clean(pick(r, 'Work Type', 'WORK TYPE as per new work creation Module', 'Original Work Category')),
