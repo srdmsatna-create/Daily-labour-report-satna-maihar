@@ -227,8 +227,39 @@ ICHAUL में स्रोत में दो उपयंत्री आ�
 <script>
 document.querySelectorAll("button.copy").forEach(button=>button.addEventListener("click",async()=>{
  const i=button.dataset.copy,field=document.querySelectorAll("textarea")[Number(i)],status=document.getElementById("status-"+i);
- try{await navigator.clipboard.writeText(field.value);status.textContent="संदेश कॉपी हो गया।"}
- catch(e){field.hidden=false;field.focus();field.select();const copied=document.execCommand('copy');field.hidden=copied;status.textContent=copied?'संदेश कॉपी हो गया।':'चुना हुआ संदेश कॉपी करें।';}
+ const preview = field.parentElement.querySelector('.message-preview');
+ if (preview && typeof ClipboardItem !== 'undefined' && navigator.clipboard?.write) {
+  const copy = preview.cloneNode(true);
+  for (const table of copy.querySelectorAll('table')) {
+   table.style.borderCollapse = 'collapse';
+   for (const cell of table.querySelectorAll('th, td')) {
+    cell.style.border = '1px solid #c8d8e8';
+    cell.style.padding = '6px 9px';
+    if (cell.tagName === 'TH') cell.style.backgroundColor = table.style.getPropertyValue('--section-color') || '#eef5fb';
+   }
+  }
+  try {
+   await navigator.clipboard.write([new ClipboardItem({
+    'text/html': new Blob([copy.innerHTML], {type:'text/html'}),
+    'text/plain': new Blob([field.value], {type:'text/plain'})
+   })]);
+   status.textContent = 'टेबल फ़ॉर्मेट में कॉपी हो गया।';
+   return;
+  } catch (error) {
+   // Some browsers only support copying plain text.
+  }
+ }
+ try {
+  await navigator.clipboard.writeText(field.value);
+  status.textContent = 'टेक्स्ट कॉपी हो गया।';
+ } catch (error) {
+  field.hidden = false;
+  field.focus();
+  field.select();
+  const copied = document.execCommand('copy');
+  field.hidden = copied;
+  status.textContent = copied ? 'टेक्स्ट कॉपी हो गया।' : 'चुना हुआ संदेश कॉपी करें।';
+ }
 }));
 
 async function refreshDailyMessages() {
