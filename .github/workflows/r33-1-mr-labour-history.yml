@@ -1,0 +1,58 @@
+name: R33.1 daily MR and worker history
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 2 * * *'
+  push:
+    paths:
+      - 'yuktdhara-official-data.js'
+      - 'muster-emb-data.js'
+      - 'shramik-gp-progress-data.js'
+      - 'scripts_local/update_yuktdhara_mr_labour_history.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r33-1-mr-labour-history
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Record latest report snapshot
+        run: python scripts_local/update_yuktdhara_mr_labour_history.py
+      - name: Commit date-wise history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/yuktdhara-mr-labour-history.json
+          if git diff --cached --quiet; then
+            echo "No history changes."
+            exit 0
+          fi
+          git commit -m "Record R33.1 muster roll and labour history"
+          for i in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main || {
+              git rebase --abort || true
+              sleep 5
+              continue
+            }
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "History push failed after retries."
+          exit 1
