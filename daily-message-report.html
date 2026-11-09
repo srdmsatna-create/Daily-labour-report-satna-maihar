@@ -14,18 +14,21 @@ h2{margin:0;color:var(--navy);font-size:19px}button{border:0;border-radius:8px;p
 textarea{width:100%;min-height:260px;resize:vertical;border:1px solid var(--line);border-radius:8px;padding:12px;background:#fbfdff;color:#18334b;font:14px/1.55 Arial,"Noto Sans Devanagari",sans-serif;white-space:pre}
 .status{min-height:18px;margin-top:5px;color:#167443;font-size:13px;font-weight:700}
 @media(max-width:640px){header{padding:15px 14px}h1{font-size:20px}.card{padding:10px}textarea{min-height:220px;font-size:13px}}
+.message-preview{overflow:auto;max-height:560px;padding:10px;border:1px solid var(--line);border-radius:8px}
+.message-preview table{border-collapse:collapse;width:100%;margin:10px 0}
+.message-preview th,.message-preview td{border:1px solid var(--line);padding:6px 9px;text-align:left}
+.message-preview th{background:#eef5fb;color:var(--navy)}
+.message-preview td:not(:first-child){text-align:right;white-space:nowrap}
+.message-preview p{margin:6px 0;white-space:pre-wrap}
 </style></head>
 <body>
 <header><h1>🌿 Message वाली रिपोर्ट — सतना–मैहर दैनिक संदेश</h1><p>तीन संदेश • कॉपी करके साझा करें • नवीनतम उपलब्ध स्रोत डेटा सहित</p></header>
 <main><a class="back" href="index.html">← मुख्य मेनू</a>
-<div class="notice">**8 नवंबर 2026 की सुबह उपलब्ध नवीनतम डेटा 7 नवंबर रात का है। नीचे उसे 8 नवंबर का नया डेटा नहीं बताया गया है।**<br><br>संदेश का डेटा स्रोत दिनांक: 07-11-2026 • रिपोर्ट तैयार: 08-11-2026। यह संदेश-पृष्ठ नवीनतम उपलब्ध snapshot है; इसमें WhatsApp अपने आप नहीं भेजा जाता।</div>
+<div class="notice">नवीनतम सत्यापित संदेश लोड हो रहे हैं…</div>
 <section class="card"><div class="card-head"><h2>सतना जिला</h2><button class="copy" data-copy="0">कॉपी करें</button></div><textarea readonly spellcheck="false" aria-label="सतना जिला दैनिक संदेश">**मैसेज 1 — सतना जिला**
 
 🌿 **VB-G RAM G — सतना दैनिक सारांश**
 📅 प्रस्तुति: 08-11-2026  
-डेटा तारीख एवं `sourceLastUpdated`: **07-11-2026**  
-श्रमिक/GP डेटा fetch: **07-11-2026, रात 10:05:55 IST**  
-R6.12 कार्य-सूची अपडेट: **07-11-2026, रात 10:17:44 IST**
 
 **जिला कुल**
 - पंचायतें: **450**; कार्य प्रगतिरत पंचायतें: **417 — 92.7%**
@@ -129,9 +132,6 @@ ICHAUL में स्रोत में दो उपयंत्री आ�
 
 🌿 **VB-G RAM G — मैहर दैनिक सारांश**
 📅 प्रस्तुति: 08-11-2026  
-डेटा तारीख एवं `sourceLastUpdated`: **07-11-2026**  
-श्रमिक/GP डेटा fetch: **07-11-2026, रात 10:05:55 IST**  
-R6.12 कार्य-सूची अपडेट: **07-11-2026, रात 10:17:44 IST**
 
 **जिला कुल**
 - पंचायतें: **245**; कार्य प्रगतिरत पंचायतें: **227 — 92.7%**
@@ -199,10 +199,6 @@ R6.12 कार्य-सूची अपडेट: **07-11-2026, रात 10:1
 
 🌿 **VB-G RAM G — दोनों जिलों का दैनिक सारांश**
 📅 प्रस्तुति: **08-11-2026**  
-⚠️ नवीनतम उपलब्ध डेटा: **07-11-2026**; यह 8 नवंबर का नया snapshot नहीं है।  
-`sourceLastUpdated`: **07-11-2026**  
-श्रमिक/GP fetch: **07-11-2026, रात 10:05:55 IST**  
-R6.12 अपडेट: **07-11-2026, रात 10:17:44 IST**
 
 | विवरण | सतना | मैहर | संयुक्त |
 |---|---:|---:|---:|
@@ -230,7 +226,7 @@ R6.12 अपडेट: **07-11-2026, रात 10:17:44 IST**
 document.querySelectorAll("button.copy").forEach(button=>button.addEventListener("click",async()=>{
  const i=button.dataset.copy,field=document.querySelectorAll("textarea")[Number(i)],status=document.getElementById("status-"+i);
  try{await navigator.clipboard.writeText(field.value);status.textContent="संदेश कॉपी हो गया।"}
- catch(e){field.focus();field.select();document.execCommand("copy");status.textContent="संदेश कॉपी हो गया।"}
+ catch(e){field.hidden=false;field.focus();field.select();const copied=document.execCommand('copy');field.hidden=copied;status.textContent=copied?'संदेश कॉपी हो गया।':'चुना हुआ संदेश कॉपी करें।';}
 }));
 
 async function refreshDailyMessages() {
@@ -280,18 +276,21 @@ async function refreshDailyMessages() {
  });
  const fmt = n => n == null ? 'अनुपलब्ध' : n.toLocaleString('en-IN');
  const pct = (a,b) => b ? (100*a/b).toFixed(1) + '%' : '—';
- const stamp = value => new Date(value).toLocaleString('en-IN', {timeZone:'Asia/Kolkata'});
- const source = 'डेटा स्रोत दिनांक: ' + gp.sourceLastUpdated + '\nश्रमिक/GP डेटा fetch: ' + stamp(gp.fetchedAt) + ' IST\nR6.12 कार्य-सूची अपडेट: ' + stamp(mis.updatedAt) + ' IST';
  const describe = s => [
-  'पंचायतें: ' + fmt(s.gps) + ' | कार्य प्रगतिरत: ' + fmt(s.progress) + ' (' + pct(s.progress,s.gps) + ')',
-  'संलग्न श्रमिक: ' + fmt(s.labour) + ' | श्रमिक शून्य पंचायतें: ' + fmt(s.zero),
-  'जारी MR: ' + fmt(s.mr) + ' | MR वाले कार्य / Ongoing: ' + fmt(s.mrWorks) + ' / ' + fmt(s.ongoing) + ' (' + pct(s.mrWorks,s.ongoing) + ')'
+  '| विवरण | आँकड़े |',
+  '|---|---:|',
+  '| कुल पंचायतें | ' + fmt(s.gps) + ' |',
+  '| कार्य प्रगतिरत पंचायतें | ' + fmt(s.progress) + ' (' + pct(s.progress,s.gps) + ') |',
+  '| संलग्न श्रमिक | ' + fmt(s.labour) + ' |',
+  '| श्रमिक शून्य पंचायतें | ' + fmt(s.zero) + ' |',
+  '| जारी MR | ' + fmt(s.mr) + ' |',
+  '| MR वाले कार्य / प्रगतिरत कार्य | ' + fmt(s.mrWorks) + ' / ' + fmt(s.ongoing) + ' (' + pct(s.mrWorks,s.ongoing) + ') |'
  ].join('\n');
  const districtRows = list => gp.rows.filter(row => list.some(([code]) => blockKey(code) === blockKey(row.janpad)));
  const satna = districtRows(blocks.slice(0,5)), maihar = districtRows(blocks.slice(5));
  if (satna.length !== 450 || maihar.length !== 245 || blocks.some(([code]) => !districtRows([[code]]).length)) throw new Error('Janpad coverage mismatch');
  const districtMessage = (name, list, rows) => {
-  const parts = ['🌿 **VB-G RAM G — ' + name + ' दैनिक सारांश**', source, '**जिला कुल**\n' + describe(sum(rows))];
+  const parts = ['🌿 **VB-G RAM G — ' + name + ' दैनिक सारांश**', '**जिला कुल**\n' + describe(sum(rows))];
   for (const [code,label] of list) {
    const janpadRows = districtRows([[code]]);
    const engineers = new Map();
@@ -314,16 +313,47 @@ async function refreshDailyMessages() {
  const messages = [
   districtMessage('सतना', blocks.slice(0,5), satna),
   districtMessage('मैहर', blocks.slice(5), maihar),
-  ['🌿 **सतना–मैहर संयुक्त दैनिक सारांश**', source, '**सतना**\n' + describe(sum(satna)),
+  ['🌿 **सतना–मैहर संयुक्त दैनिक सारांश**', '**सतना**\n' + describe(sum(satna)),
    '**मैहर**\n' + describe(sum(maihar)), '**संयुक्त कुल**\n' + describe(sum(gp.rows)),
    '✅ 450 + 245 = 695 पंचायतें।'].join('\n\n')
  ];
  document.querySelectorAll('textarea').forEach((field,i) => {field.value = messages[i];});
- notice.textContent = source + '\nतीनों संदेश Daily Updater के नवीनतम सत्यापित स्रोतों से बने हैं।';
+ notice.textContent = 'तीनों संदेश Daily Updater के नवीनतम सत्यापित स्रोतों से बने हैं।';
+}
+function renderMessageTables() {
+ for (const field of document.querySelectorAll('textarea')) {
+  const preview = document.createElement('div');
+  preview.className = 'message-preview';
+  const lines = field.value.split('\n');
+  let table;
+  for (const line of lines) {
+   const clean = line.trim().replace(/\*\*/g, '');
+   if (clean.startsWith('|') && clean.endsWith('|')) {
+    const cells = clean.slice(1,-1).split('|').map(cell => cell.trim());
+    if (cells.every(cell => /^:?-{3,}:?$/.test(cell))) continue;
+    const header = !table;
+    if (header) {table = document.createElement('table'); preview.append(table);}
+    const row = table.insertRow();
+    for (const cell of cells) {
+     const element = document.createElement(header ? 'th' : 'td');
+     element.textContent = cell;
+     row.append(element);
+    }
+   } else {
+    table = null;
+    if (!clean) continue;
+    const paragraph = document.createElement('p');
+    paragraph.textContent = clean;
+    preview.append(paragraph);
+   }
+  }
+  field.before(preview);
+  field.hidden = true;
+ }
 }
 refreshDailyMessages().catch(() => {
  const notice = document.querySelector('.notice');
- notice.textContent = 'नवीनतम स्रोतों का पूरा मिलान उपलब्ध नहीं है। नीचे सहेजे गए पुराने संदेश हैं।\n\n' + notice.innerText;
-});
+ notice.textContent = 'नवीनतम स्रोतों का पूरा मिलान उपलब्ध नहीं है। नीचे सहेजे गए पुराने संदेश हैं।' + notice.innerText;
+}).finally(renderMessageTables);
 </script>
 </body></html>
