@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT_CSV=ROOT/'data'/'Ongoing_Works_dynamic_work_details_latest.csv'
-URL='https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=4PmH2eRA9khYNUNqz1h5yt9D8POKLA7Afp0nercX3xt22K65u-hNco55SZiMHr78IufQr-Pyxw1-2tJEz-65UMtG5kOTBzCEHurJmRrAtoAIfVSTK-qhJdX02vLZMWrVbwM-oS9xX58g6SiO5ODhhFid9RqKvnwTnS-hLkXfa1-25phIp66JlphIcilUU7cK'
+URL='https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=YL7LCe001h9FHBoOuTtmr8ihF3GutuJlR4euhIYZiFTTmu6PMGDs2ujZ66S61WQDfKtYFzd8a7KKjiMPSn5GiFkZG3OckIaAvbsxdeh9P6CVed-X0QRKY8-APjlqWillfYqVUCkFRgnKQMEk7QjR7EV9FteCTnyMlAjrob7mf4Gf6B9S3Ld_-yhPIz9Rcd_r'
 STATUSES=[('03','Ongoing'),('05','Completed'),('06','Physically Completed')]
 FIELDS=['District Name','Janpad / Block Name','Panchayat Name','Work Start Fin Year','Work Status','Work Code','Work Name','Work Type','Original Work Category','Total Sanction (Rs)','Booked Since Inception Wages (Rs)','Booked Since Inception Material (Rs)','Total Mandays','Mandays Generated Current FY','Is Secure']
 
@@ -35,8 +35,10 @@ class ResultRows(HTMLParser):
         elif tag=='tr' and self.row is not None:
             c=self.row;self.row=None
             if len(c)>=32 and c[0].isdigit() and c[1].upper()=='SATNA' and c[6] and '/' in c[6]:
-                secure_index=self.secure_index if self.secure_index is not None else len(c)-1
-                if secure_index>=len(c):raise RuntimeError('R-6.12 Is Secure column index is outside the work row')
+                # The report's grouped header has fewer cells than each work row; in the
+                # current R-6.12 layout Is Secure is data-cell 28 (0-based), before convergence/date/JCN.
+                secure_index=28 if len(c)>=32 and c[28].upper() in ('YES','NO') else (self.secure_index if self.secure_index is not None else -1)
+                if secure_index<0 or secure_index>=len(c):raise RuntimeError('R-6.12 Is Secure column index could not be resolved')
                 self.rows.append({'District Name':c[1],'Janpad / Block Name':c[2],'Panchayat Name':c[3],'Work Start Fin Year':c[4],'Work Status':c[5] or self.status,'Work Code':c[6],'Work Name':c[7],'Original Work Category':c[9],'Work Type':c[11] or c[10],'Total Sanction (Rs)':c[15],'Booked Since Inception Wages (Rs)':c[20],'Booked Since Inception Material (Rs)':c[21],'Total Mandays':c[24],'Mandays Generated Current FY':c[25],'Is Secure':c[secure_index]})
 
 def hidden_fields(src):
@@ -83,7 +85,8 @@ def fetch():
     home,home_url=open_text(opener,URL)
     d=hidden_fields(home);d.update({'__EVENTTARGET':'ctl00$ContentPlaceHolder1$ddl_dist','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712'})
     district,district_url=open_text(opener,form_action(home,home_url),urllib.parse.urlencode(d).encode())
-    janpads=block_options(district)
+    # User-provided R-6.12 link is district-wide: fetch Block=ALL once per status.
+    janpads=[('ALL','ALL')]
     base=hidden_fields(district);selected_values(district,base)
     base.update({'__EVENTTARGET':'','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712','ctl00$ContentPlaceHolder1$ddl_pan':'ALL','ctl00$ContentPlaceHolder1$Ddlworkcategory':'ALL','ctl00$ContentPlaceHolder1$ddlprostatus':'ALL','ctl00$ContentPlaceHolder1$ddlexp':'ALL','ctl00$ContentPlaceHolder1$ddlexpnest':'ALL','ctl00$ContentPlaceHolder1$ddlFin_year':'ALL','ctl00$ContentPlaceHolder1$filter':'ALL','ctl00$ContentPlaceHolder1$Button1':'Submit'})
     action=form_action(district,district_url);all_rows=[];counts={name:0 for _,name in STATUSES}
