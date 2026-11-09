@@ -2,23 +2,19 @@
 'use strict';
 const section=document.getElementById('shramikNiyojanReport');
 if(!section)return;
-const novemberLink = document.createElement('a');
-novemberLink.href = 'r9-7-november.html';
-novemberLink.textContent = 'R9.7 • नवंबर 2026 — जिला, संभाग और जनपद रिपोर्ट';
-novemberLink.style.cssText = 'display:inline-block;margin:10px 0;padding:9px 14px;background:#075d46;color:white;border-radius:6px;font-weight:800';
-section.querySelector('.sn-head').insertAdjacentElement('afterend', novemberLink);
-const names=["AGAR-MALWA","ALIRAJPUR","ANUPPUR","ASHOK NAGAR","BALAGHAT","BARWANI","BETUL","BHIND","BHOPAL","BURHANPUR","CHHATARPUR","CHHINDWARA","DAMOH","DATIA","DEWAS","DHAR","DINDORI","GUNA","GWALIOR","HARDA","INDORE","JABALPUR","JHABUA","KATNI","KHANDWA","KHARGONE","MANDLA","MANDSAUR","MORENA","NARMADAPURAM","NARSINGHPUR","NEEMUCH","NIWARI","PANNA","RAISEN","RAJGARH","RATLAM","REWA","SAGAR","SATNA","SEHORE","SEONI","SHAHDOL","SHAJAPUR","SHEOPUR","SHIVPURI","SIDHI","SINGRAULI","TIKAMGARH","UJJAIN","UMARIA","VIDISHA"], region=['REWA','SATNA','SIDHI','SINGRAULI'];
+const sourceNames=["AGAR-MALWA","ALIRAJPUR","ANUPPUR","ASHOK NAGAR","BALAGHAT","BARWANI","BETUL","BHIND","BHOPAL","BURHANPUR","CHHATARPUR","CHHINDWARA","DAMOH","DATIA","DEWAS","DHAR","DINDORI","GUNA","GWALIOR","HARDA","INDORE","JABALPUR","JHABUA","KATNI","KHANDWA","KHARGONE","MANDLA","MANDSAUR","MORENA","NARMADAPURAM","NARSINGHPUR","NEEMUCH","NIWARI","PANNA","RAISEN","RAJGARH","RATLAM","REWA","SAGAR","SATNA","SEHORE","SEONI","SHAHDOL","SHAJAPUR","SHEOPUR","SHIVPURI","SIDHI","SINGRAULI","TIKAMGARH","UJJAIN","UMARIA","VIDISHA"], region=['रीवा','मऊगंज','सतना','मैहर','SIDHI','SINGRAULI'];
+const names=sourceNames.flatMap(name=>name==='REWA'?['रीवा','मऊगंज']:name==='सतना'?['सतना','मैहर']:[name]);
 const tools=section.querySelector('.sn-tools'), originalWrap=section.querySelector('.sn-wrap'), originalKpis=section.querySelector('.sn-kpis');
 const label=document.createElement('label');label.style.cssText='display:grid;gap:3px;font-weight:850;color:#075d46';
 label.textContent='प्रदेश के 52 स्रोत जिले';
-const select=document.createElement('select');select.id='snStateDistrict';select.innerHTML='<option value="__ALL__">सभी 52 जिले — जिलावार रिपोर्ट</option><option value="__REWA__">रीवा संभाग — 4 स्रोत जिले</option><option value="">वर्तमान सतना + मैहर रिपोर्ट</option>'+names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
+const select=document.createElement('select');select.id='snStateDistrict';select.innerHTML='<option value="__ALL__">प्रदेश — जिलावार रिपोर्ट</option><option value="__REWA__">रीवा संभाग — 6 जिले</option><option value="__BLOCK__">जनपदवार — सतना, मैहर, रीवा, मऊगंज</option><option value="">अक्टूबर रिपोर्ट — सतना + मैहर</option>'+names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
 label.appendChild(select);tools.insertBefore(label,tools.firstChild);
 const metricLabel=document.createElement('label');metricLabel.style.cssText=label.style.cssText;metricLabel.textContent='रैंकिंग पैरामीटर';const metricSelect=document.createElement('select');metricSelect.id='snRankParameter';metricSelect.innerHTML='<option value="achievement">उपलब्धि %</option><option value="labour">आज संलग्न श्रमिक</option><option value="mr">मस्टर रोल जारी %</option>';metricLabel.appendChild(metricSelect);label.insertAdjacentElement('afterend',metricLabel);
 const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0';
-rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • सतना • सीधी • सिंगरौली</small></div>';
+rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • मऊगंज • सतना • मैहर • सीधी • सिंगरौली</small></div>';
 section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);
 const state=document.createElement('div');state.id='snStateDistrictReport';state.hidden=true;
-state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से अक्टूबर में<br>सृजित मानव<br>दिवस (लाख)","वित्तीय वर्ष<br>2026–27<br>जुलाई से<br>सितम्बर तक<br>(लाख)","वित्तीय वर्ष<br>2026–27<br>अक्टूबर माह<br>में (लाख)","कुल सृजित मानव दिवस<br>(लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
+state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से नवंबर तक<br>सृजित मानव<br>दिवस (लाख)","वित्तीय वर्ष<br>2026–27<br>जुलाई से<br>अक्टूबर तक<br>(लाख)","वित्तीय वर्ष<br>2026–27<br>नवंबर माह<br>में (लाख)","कुल सृजित मानव दिवस<br>(लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","लक्ष्य अनुसार श्रमिक नियोजन में कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %","FY 2026–27 कुल अप्रैल से अब तक (लाख)"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
 originalWrap.insertAdjacentElement('afterend',state);
 let sortColumn=null,sortDirection='desc';
 const sortHeaders=[...state.querySelectorAll('thead th')];
@@ -38,7 +34,7 @@ function sortValue(d,name,i,days){
  if(!valid(d))return null;
  const sum=k=>d.rows.reduce((a,r)=>a+Number(r[k]||0),0),known=k=>d.rows.every(r=>r[k]!=null)?sum(k):null;
  const target=sum('target'),p1=sum('julyToSeptemberAchievement'),p2=sum('octoberAchievement'),achievement=p1+p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0,labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued');
- return [null,name,...gpStats(d),target,p1,p2,achievement,gap,days,daily,labour,achievement*100/target,labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?mr*100/ongoing:0][i];
+ return [null,name,...gpStats(d),target,p1,p2,achievement,gap,days,daily,labour,achievement*100/target,labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?mr*100/ongoing:0,sum('aprilJune')+achievement][i];
 }
 
 const boxStyle=document.createElement('style');
@@ -102,9 +98,112 @@ section.appendChild(localStyle);
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=v=>v==null?'—':Number(v).toLocaleString('en-IN');
-const fixedBaseline={"financialYear":"2025-2026","period":"July-October","locked":true,"source":"User-supplied NREGA district Persondays table, 01-10-2026","districtScope":"52 source districts; SATNA includes the eight source blocks including Maihar","rows":[{"district":"AGAR-MALWA","july":236809,"august":173885,"september":156009,"october":127387,"total":694090},{"district":"ALIRAJPUR","july":422387,"august":234031,"september":212406,"october":147886,"total":1016710},{"district":"ANUPPUR","july":94166,"august":62700,"september":55281,"october":62098,"total":274245},{"district":"ASHOK NAGAR","july":302139,"august":181536,"september":165169,"october":159631,"total":808475},{"district":"BALAGHAT","july":108334,"august":66511,"september":54068,"october":72350,"total":301263},{"district":"BARWANI","july":331367,"august":257606,"september":226729,"october":259651,"total":1075353},{"district":"BETUL","july":257503,"august":199519,"september":201476,"october":114594,"total":773092},{"district":"BHIND","july":87039,"august":32449,"september":37557,"october":22063,"total":179108},{"district":"BHOPAL","july":76892,"august":47053,"september":62104,"october":66528,"total":252577},{"district":"BURHANPUR","july":103284,"august":64713,"september":66782,"october":53083,"total":287862},{"district":"CHHATARPUR","july":259712,"august":150947,"september":217100,"october":203503,"total":831262},{"district":"CHHINDWARA","july":340558,"august":240543,"september":278735,"october":185561,"total":1045397},{"district":"DAMOH","july":444297,"august":214756,"september":263993,"october":245637,"total":1168683},{"district":"DATIA","july":52394,"august":47818,"september":44393,"october":34402,"total":179007},{"district":"DEWAS","july":465994,"august":291737,"september":263308,"october":185237,"total":1206276},{"district":"DHAR","july":868460,"august":637622,"september":408036,"october":333943,"total":2248061},{"district":"DINDORI","july":254003,"august":181874,"september":198758,"october":155087,"total":789722},{"district":"GUNA","july":269233,"august":249597,"september":184481,"october":168633,"total":871944},{"district":"GWALIOR","july":57192,"august":40129,"september":61655,"october":83208,"total":242184},{"district":"HARDA","july":74810,"august":61772,"september":64350,"october":58914,"total":259846},{"district":"INDORE","july":130375,"august":72718,"september":51136,"october":33663,"total":287892},{"district":"JABALPUR","july":178558,"august":165730,"september":227318,"october":157028,"total":728634},{"district":"JHABUA","july":329034,"august":239887,"september":135664,"october":88424,"total":793009},{"district":"KATNI","july":106591,"august":124836,"september":226675,"october":116061,"total":574163},{"district":"KHANDWA","july":249706,"august":240641,"september":334169,"october":230853,"total":1055369},{"district":"KHARGONE","july":615787,"august":451927,"september":451389,"october":362670,"total":1881773},{"district":"MANDLA","july":239775,"august":154096,"september":176453,"october":137598,"total":707922},{"district":"MANDSAUR","july":362501,"august":248676,"september":272264,"october":226978,"total":1110419},{"district":"MORENA","july":1426361,"august":492451,"september":840050,"october":1061790,"total":3820652},{"district":"NARMADAPURAM","july":140339,"august":175030,"september":141068,"october":103350,"total":559787},{"district":"NARSINGHPUR","july":119984,"august":117924,"september":149945,"october":104180,"total":492033},{"district":"NEEMUCH","july":167845,"august":113065,"september":84534,"october":57377,"total":422821},{"district":"NIWARI","july":28849,"august":18621,"september":20946,"october":17158,"total":85574},{"district":"PANNA","july":229594,"august":86169,"september":111972,"october":75348,"total":503083},{"district":"RAISEN","july":140918,"august":153019,"september":217353,"october":122183,"total":633473},{"district":"RAJGARH","july":403607,"august":168756,"september":155774,"october":141239,"total":869376},{"district":"RATLAM","july":409113,"august":314387,"september":264177,"october":152407,"total":1140084},{"district":"REWA","july":169019,"august":119789,"september":183664,"october":185717,"total":658189},{"district":"SAGAR","july":184761,"august":149514,"september":183959,"october":240424,"total":758658},{"district":"SATNA","july":164281,"august":138914,"september":144163,"october":174194,"total":621552},{"district":"SEHORE","july":240609,"august":217043,"september":241145,"october":169853,"total":868650},{"district":"SEONI","july":174364,"august":162384,"september":192789,"october":116163,"total":645700},{"district":"SHAHDOL","july":100681,"august":120974,"september":190051,"october":90764,"total":502470},{"district":"SHAJAPUR","july":227522,"august":199266,"september":176055,"october":129057,"total":731900},{"district":"SHEOPUR","july":385614,"august":233167,"september":277370,"october":171968,"total":1068119},{"district":"SHIVPURI","july":436530,"august":425381,"september":377143,"october":224169,"total":1463223},{"district":"SIDHI","july":186758,"august":161996,"september":230052,"october":184248,"total":763054},{"district":"SINGRAULI","july":230466,"august":156399,"september":197725,"october":250790,"total":835380},{"district":"TIKAMGARH","july":92899,"august":67233,"september":80412,"october":77119,"total":317663},{"district":"UJJAIN","july":357268,"august":399116,"september":319628,"october":191230,"total":1267242},{"district":"UMARIA","july":145911,"august":85303,"september":90611,"october":76003,"total":397828},{"district":"VIDISHA","july":229976,"august":232928,"september":152652,"october":112200,"total":727756}],"totals":{"july":13712169,"august":9644138,"september":10120696,"october":8321602,"total":41798605}};
-function records(){const incoming=window.SHRAMIK_DISTRICT_REPORTS?.districts||{};return Object.fromEntries(Object.entries(incoming).map(([name,d])=>{const b=fixedBaseline.rows.find(r=>r.district===name);if(!b||!Array.isArray(d.rows)||d.rows.length!==1)return [name,d];return [name,{...d,rows:d.rows.map(r=>({...r,target:b.total}))}];}));}
-function valid(d){return d&&d.officialDate===window.SHRAMIK_DISTRICT_REPORTS?.snapshotDate&&d.period==='2025-26-Jul-Oct_vs_2026-27-Jul-Sep-Oct'&&Array.isArray(d.rows)&&d.rows.length>0&&d.rows.every(r=>Number(r.target)>0&&Number.isFinite(Number(r.achievement)));}
+const novemberDate='09-11-2026';
+const districtLabour={"AGAR-MALWA":4613,"ALIRAJPUR":4894,"ANUPPUR":8,"ASHOK NAGAR":2611,"BALAGHAT":4467,"BARWANI":16083,"BETUL":2039,"BHIND":101,"BHOPAL":3237,"BURHANPUR":959,"CHHATARPUR":3581,"CHHINDWARA":11212,"DAMOH":2248,"DATIA":29,"DEWAS":3417,"DHAR":2560,"DINDORI":2679,"GUNA":1906,"GWALIOR":0,"HARDA":801,"INDORE":762,"JABALPUR":3228,"JHABUA":1721,"KATNI":1727,"KHANDWA":3004,"KHARGONE":8706,"MANDLA":3101,"MANDSAUR":7009,"MORENA":0,"NARMADAPURAM":2461,"NARSINGHPUR":3332,"NEEMUCH":1782,"NIWARI":1199,"PANNA":1886,"RAISEN":5483,"RAJGARH":12613,"RATLAM":7456,"REWA":4433,"SAGAR":3411,"SATNA":4111,"SEHORE":5133,"SEONI":8144,"SHAHDOL":120,"SHAJAPUR":4536,"SHEOPUR":0,"SHIVPURI":10,"SIDHI":6784,"SINGRAULI":5981,"TIKAMGARH":2830,"UJJAIN":4501,"UMARIA":94,"VIDISHA":8331};
+const blockLabour={"अमरपाटन":332,"मैहर":576,"रामनगर":326,"मझगवां":651,"नागौद":726,"रामपुर बघेलान":789,"सोहावल":490,"उचेहरा":221};
+function parseNovember(text, labourByName, metrics={}) {
+ return Object.fromEntries(text.trim().split('\n').map(line=>{
+  const [name,...parts]=line.split('|'),[target,aprilJune,julyToSeptemberAchievement,octoberAchievement,labour]=parts.map(Number);
+  return [name,{...metrics[name],target,aprilJune,julyToSeptemberAchievement,octoberAchievement,
+   achievement:julyToSeptemberAchievement+octoberAchievement,todayLabour:labour??labourByName[name]}];
+ }));
+}
+const novemberDistricts=parseNovember(`AGAR-MALWA|804021|344778|498688|1373
+ALIRAJPUR|1176343|186210|310220|12
+ANUPPUR|336661|527368|105292|0
+ASHOK NAGAR|1019851|808263|399184|47
+BALAGHAT|440465|671418|204266|1
+BARWANI|1298138|592152|429446|2
+BETUL|870866|363307|261163|1226
+BHIND|193639|87069|36929|64
+BHOPAL|352583|194534|192729|7
+BURHANPUR|331842|120851|153675|21
+CHHATARPUR|1089599|927950|330417|17
+CHHINDWARA|1211574|1001221|786046|101
+DAMOH|1504447|1143921|444540|6
+DATIA|212223|192926|49479|0
+DEWAS|1350229|371631|248391|722
+DHAR|2516273|469038|646642|277
+DINDORI|1034295|609106|1566047|13
+GUNA|1070779|1260941|317283|295
+GWALIOR|324748|308460|56455|0
+HARDA|290483|97326|95633|17
+INDORE|324021|95655|110075|66
+JABALPUR|810742|335139|329010|121
+JHABUA|928588|430110|261128|18
+KATNI|682126|281869|319451|0
+KHANDWA|1269827|569058|330202|603
+KHARGONE|2279680|857288|530500|398
+MANDLA|975995|615767|408381|192
+MANDSAUR|1312689|466319|528060|1597
+MORENA|4728121|2770319|34790|0
+NARMADAPURAM|630655|144004|223097|168
+NARSINGHPUR|554714|302130|318303|169
+NEEMUCH|477806|235601|257628|489
+NIWARI|136097|159069|63121|0
+PANNA|598360|383833|128980|31
+RAISEN|760298|386583|419770|50
+RAJGARH|1079319|798863|689026|33
+RATLAM|1274948|673046|595859|625
+REWA|775315|383493|298884|32
+SAGAR|966818|603275|449684|115
+SATNA|763652|190360|189582|122
+SEHORE|1010208|352623|442377|34
+SEONI|856160|490201|243037|16
+SHAHDOL|626178|410770|198075|0
+SHAJAPUR|828892|339560|274093|2239
+SHEOPUR|1276795|286758|184414|0
+SHIVPURI|1739272|634080|413552|0
+SIDHI|941331|400218|352764|120
+SINGRAULI|1070426|377852|201610|75
+TIKAMGARH|389993|421314|204178|20
+UJJAIN|1371847|373936|317324|106
+UMARIA|453002|147682|103684|0
+VIDISHA|798604|682774|688613|612`,districtLabour);
+const novemberBlocks={
+ सतना:parseNovember(`मझगवां|62985|52181|14619|0
+नागौद|93742|34273|30482|20
+रामपुर बघेलान|175416|17905|32896|15
+सोहावल|110216|29163|16038|3
+उचेहरा|60684|12203|15480|1`,blockLabour),
+ मैहर:parseNovember(`अमरपाटन|78203|9265|22445|0
+मैहर|94107|24183|36065|1
+रामनगर|88299|11187|21557|82`,blockLabour),
+ रीवा:parseNovember(`गंगेव|92802|54367|39569|0|470
+जवा|90617|28556|19345|7|281
+रायपुर कर्चुलियान|83366|48620|41188|0|696
+रीवा|66699|35509|21400|0|527
+सिरमौर|136879|38613|23824|0|605
+त्योंथर|54409|39261|25569|18|292`,{},{
+ 'गंगेव':{totalGP:88,workingGP:64,mrIssued:328},'जवा':{totalGP:80,workingGP:56,mrIssued:136},
+ 'रायपुर कर्चुलियान':{totalGP:104,workingGP:99,mrIssued:503},'रीवा':{totalGP:92,workingGP:83,mrIssued:388},
+ 'सिरमौर':{totalGP:103,workingGP:70,mrIssued:405},'त्योंथर':{totalGP:97,workingGP:59,mrIssued:226}}),
+ मऊगंज:parseNovember(`मऊगंज|68040|42301|39571|7|597
+हनुमना|108246|53720|47150|0|564
+नईगढ़ी|74257|42546|41268|0|514`,{},{
+ 'मऊगंज':{totalGP:82,workingGP:77,mrIssued:387},'हनुमना':{totalGP:98,workingGP:56,mrIssued:439},
+ 'नईगढ़ी':{totalGP:76,workingGP:58,mrIssued:428}})
+};
+const localOfficial=Object.fromEntries((window.AUTO_REPORT?.meta?.sourceDates?.OfficialSummary===novemberDate?window.AUTO_REPORT.official:[]).map(r=>[r.janpad,r]));
+const localNames={'मझगवां':'MAJHGAWAN','नागौद':'NAGOD','रामपुर बघेलान':'RAMPUR BAGHELAN','सोहावल':'SATNA','उचेहरा':'UNCHAHARA','अमरपाटन':'AMARPATAN','मैहर':'MAIHAR','रामनगर':'RAMNAGAR'};
+function records(){
+ const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===novemberDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
+ const wrap=rows=>({rows});
+ const result=Object.fromEntries(Object.entries(novemberDistricts).map(([name,row])=>[
+  name,wrap([{...(saved[name]?.rows[0]||{}),...row}])
+ ]));
+ for(const [district,blocks] of Object.entries(novemberBlocks)){
+  const rows=Object.entries(blocks).map(([name,row])=>{
+   const m=localOfficial[localNames[name]];
+   const merged=m?{totalGP:m.totalGP,workingGP:m.musterGP,ongoing:m.ongoingAll,mrIssued:m.mrAll,...row}:row;
+   result[district+' / '+name]=wrap([merged]);
+   return merged;
+  });
+  result[district]=wrap(rows);
+ }
+ return result;
+}
+function valid(d){return d?.rows.length>0&&d.rows.every(r=>Number.isFinite(r.target)&&Number.isFinite(r.achievement));}
 function score(d){
  if(!valid(d))return null;
  const sum=k=>d.rows.reduce((a,r)=>a+Number(r[k]),0),known=k=>d.rows.every(r=>r[k]!=null&&Number.isFinite(Number(r[k])));
@@ -113,42 +212,47 @@ function score(d){
  return sum('achievement')*100/sum('target');
 }
 function ranks(){
- const all=records(),satnaScore=score(all.SATNA);
- const rankFor=list=>satnaScore!=null&&list.every(n=>score(all[n])!=null)?(1+list.filter(n=>score(all[n])>satnaScore).length)+' / '+list.length:'तुलना डेटा उपलब्ध नहीं';
- document.getElementById('snStateRank').textContent=rankFor(names);
- document.getElementById('snDivisionRank').textContent=rankFor(region);
+ const all=records();
+ const rankFor=(list,satnaScore)=>satnaScore!=null&&list.every(n=>score(all[n])!=null)?(1+list.filter(n=>score(all[n])>satnaScore).length)+' / '+list.length:'तुलना डेटा उपलब्ध नहीं';
+ document.getElementById('snStateRank').textContent=rankFor(sourceNames,score(all.SATNA));
+ document.getElementById('snDivisionRank').textContent=rankFor(region,score(all['सतना']));
 }
 function render(){
  const selected=select.value, external=!!selected;
- originalWrap.hidden=external;originalKpis.hidden=external;state.hidden=!external;
+ originalWrap.hidden=external;originalKpis.hidden=false;state.hidden=!external;
+ document.getElementById('snWarnings').hidden=external;
+ section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से नवंबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
+ if(external)document.getElementById('snDate').textContent='दिनांक '+novemberDate;
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el){const field=el.closest('label')||el;field.hidden=external;field.style.display=external?'none':'';}}
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el)el.disabled=external;}
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
- const chosen=[...(selected==='__ALL__'?names:selected==='__REWA__'?region:[selected])], all=records();
- const snapshot=window.SHRAMIK_DISTRICT_REPORTS.snapshotDate;
- const today=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(p=>[p.type,p.value]));
- const days=Number(today.year)===2026&&Number(today.month)===10?Math.max(0,31-Number(today.day)):0;
+ const all=records();
+ const chosen=[...(selected==='__ALL__'?names:selected==='__REWA__'?region:selected==='__BLOCK__'?Object.keys(all).filter(n=>n.includes(' / ')):[selected])];
+ const days=30-Number(novemberDate.split('-')[0]);
  if(sortColumn!=null)chosen.sort((a,b)=>{const av=sortValue(all[a],a,sortColumn,days),bv=sortValue(all[b],b,sortColumn,days);if(av==null||bv==null)return av==null?(bv==null?a.localeCompare(b):1):-1;const diff=typeof av==='string'?av.localeCompare(bv):av-bv;return (sortDirection==='asc'?diff:-diff)||a.localeCompare(b);});
  sortHeaders.forEach((th,i)=>{th.setAttribute('aria-sort',i===sortColumn?(sortDirection==='asc'?'ascending':'descending'):'none');const arrow=th.querySelector('.sn-sort-arrow');if(arrow)arrow.textContent=i===sortColumn?(sortDirection==='asc'?'↑':'↓'):'↕';});
- const metricReady=chosen.every(n=>all[n]?.rows.every(r=>r.todayLabour!=null&&r.mrIssued!=null));
- document.getElementById('snStateDate').textContent='';document.getElementById('snStateDate').hidden=true;
- document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
- const totals={totalGP:0,workingGP:0,inactiveGP:0,target:0,period1:0,period2:0,achievement:0,gap:0,daily:0,labour:0,ongoing:0,mr:0}, complete={totalGP:true,workingGP:true,inactiveGP:true,labour:true,ongoing:true,mr:true}, tb=document.getElementById('snStateRows');
- function cells(values){return values.map((v,j)=>'<td style="'+(j===1?'text-align:left;font-weight:850;':j===14?'text-align:right;font-weight:950;color:#06452b;background:#e6f2eb;':j===15?'text-align:right;font-weight:950;color:#7f1010;background:#fbeaea;':'text-align:right;font-weight:800;')+'">'+(v==null?'<span class="sn-missing">—</span>':typeof v==='string'?(j===14?'<span class="sn-achievement-pill">'+esc(v)+'</span>':esc(v)):(j>=6&&j<=10?Number(v/100000).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}):fmt(v)))+'</td>').join('');}
+ document.getElementById('snStateDate').textContent='दिनांक '+novemberDate;document.getElementById('snStateDate').hidden=true;
+ document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
+ const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
+ const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
+ const kpiTarget=kpiSum('target'),kpiAchievement=kpiSum('achievement'),kpiGap=Math.max(0,kpiTarget-kpiAchievement),kpiDaily=Math.ceil(kpiGap/days);
+ [fmt(kpiTarget),fmt(kpiAchievement),fmt(kpiGap),fmt(kpiDaily),(kpiAchievement*100/kpiTarget).toFixed(1)+'%',fmt(Math.max(0,kpiDaily-kpiSum('todayLabour')))].forEach((v,i)=>{const kpi=originalKpis.querySelectorAll('strong')[i];if(kpi)kpi.textContent=v;});
+ const totals={totalGP:0,workingGP:0,inactiveGP:0,target:0,period1:0,period2:0,achievement:0,gap:0,daily:0,labour:0,ongoing:0,mr:0,aprilJune:0}, complete={totalGP:true,workingGP:true,inactiveGP:true,labour:true,ongoing:true,mr:true}, tb=document.getElementById('snStateRows');
+ function cells(values){return values.map((v,j)=>'<td style="'+(j===1?'text-align:left;font-weight:850;':j===14?'text-align:right;font-weight:950;color:#06452b;background:#e6f2eb;':j===15?'text-align:right;font-weight:950;color:#7f1010;background:#fbeaea;':'text-align:right;font-weight:800;')+'">'+(v==null?'<span class="sn-missing">—</span>':typeof v==='string'?(j===14?'<span class="sn-achievement-pill">'+esc(v)+'</span>':esc(v)):(((j>=6&&j<=10)||j===19)?Number(v/100000).toLocaleString('en-IN',{minimumFractionDigits:5,maximumFractionDigits:5}):fmt(v)))+'</td>').join('');}
  tb.innerHTML=chosen.map((name,i)=>{
   const d=all[name];if(!valid(d))return '<tr><td>'+ (i+1) +'</td><td>'+esc(name)+'</td><td colspan="17">समान अवधि के आँकड़े उपलब्ध नहीं हैं</td></tr>';
   const sum=k=>d.rows.reduce((a,r)=>a+Number(r[k]||0),0);
   const target=sum('target'),p1=sum('julyToSeptemberAchievement'),p2=sum('octoberAchievement'),achievement=p1+p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0;
   const known=k=>d.rows.every(r=>r[k]!=null)?sum(k):null;
   const labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued'),incomplete=known('incompleteWorks');
-  for(const [k,v] of Object.entries({target,period1:p1,period2:p2,achievement,gap,daily}))totals[k]+=v;
+  for(const [k,v] of Object.entries({target,period1:p1,period2:p2,achievement,gap,daily,aprilJune:sum('aprilJune')}))totals[k]+=v;
   for(const [k,v] of Object.entries({labour,ongoing,mr})){if(v==null)complete[k]=false;else totals[k]+=v;}
   const gp=gpStats(d);
   for(const [j,k] of ['totalGP','workingGP','inactiveGP'].entries()){if(gp[j]==null)complete[k]=false;else totals[k]+=gp[j];}
-  const values=[i+1,name,...gp.slice(0,3),gp[3]==null?null:gp[3].toFixed(2)+'%',target,p1,p2,achievement,gap,days,daily,labour,(achievement*100/target).toFixed(1)+'%',labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?(mr*100/ongoing).toFixed(1)+'%':'0.0%'];
+  const values=[i+1,name,...gp.slice(0,3),gp[3]==null?null:gp[3].toFixed(2)+'%',target,p1,p2,achievement,gap,days,daily,labour,(achievement*100/target).toFixed(1)+'%',labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?(mr*100/ongoing).toFixed(1)+'%':'0.0%',sum('aprilJune')+achievement];
   return '<tr'+(name==='SATNA'?' style="background:#d8f3df;"':'')+'>'+cells(values)+'</tr>';
  }).join('');
- if(chosen.every(n=>valid(all[n]))){tb.innerHTML+='<tr style="background:#075d46;color:white;">'+cells(['','योग',complete.totalGP?totals.totalGP:null,complete.workingGP?totals.workingGP:null,complete.inactiveGP?totals.inactiveGP:null,complete.totalGP&&complete.workingGP&&totals.totalGP>0?((totals.totalGP-totals.workingGP)*100/totals.totalGP).toFixed(2)+'%':null,totals.target,totals.period1,totals.period2,totals.achievement,totals.gap,days,totals.daily,complete.labour?totals.labour:null,(totals.achievement*100/totals.target).toFixed(1)+'%',complete.labour?Math.max(0,totals.daily-totals.labour):null,complete.ongoing?totals.ongoing:null,complete.mr?totals.mr:null,complete.ongoing&&complete.mr?(totals.ongoing?(totals.mr*100/totals.ongoing).toFixed(1):'0.0')+'%':null])+'</tr>';}
+ if(chosen.every(n=>valid(all[n]))){totals.gap=Math.max(0,totals.target-totals.achievement);totals.daily=Math.ceil(totals.gap/days);tb.innerHTML+='<tr style="background:#075d46;color:white;">'+cells(['','योग',complete.totalGP?totals.totalGP:null,complete.workingGP?totals.workingGP:null,complete.inactiveGP?totals.inactiveGP:null,complete.totalGP&&complete.workingGP&&totals.totalGP>0?((totals.totalGP-totals.workingGP)*100/totals.totalGP).toFixed(2)+'%':null,totals.target,totals.period1,totals.period2,totals.achievement,totals.gap,days,totals.daily,complete.labour?totals.labour:null,(totals.achievement*100/totals.target).toFixed(1)+'%',complete.labour?Math.max(0,totals.daily-totals.labour):null,complete.ongoing?totals.ongoing:null,complete.mr?totals.mr:null,complete.ongoing&&complete.mr?(totals.ongoing?(totals.mr*100/totals.ongoing).toFixed(1):'0.0')+'%':null,totals.aprilJune+totals.achievement])+'</tr>';}
  ranks();
 }
 document.getElementById('snExcel').addEventListener('click',e=>{if(!select.value)return;e.preventDefault();e.stopImmediatePropagation();const table=state.querySelector('table'),lines=[...table.rows].map(r=>[...r.cells].map(c=>'"'+c.innerText.replace(/"/g,'""')+'"').join(',')).join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines],{type:'text/csv;charset=utf-8'}));a.download='Shramik_52_Districts_'+window.SHRAMIK_DISTRICT_REPORTS.snapshotDate+'.csv';a.click();URL.revokeObjectURL(a.href)},true);
@@ -184,9 +288,11 @@ singlePrint.addEventListener('click',()=>{
 // Route the normal Print/PDF button through the same isolated local layout.
 const localPrintButton=document.getElementById('snReadablePrint');
 if(localPrintButton)localPrintButton.addEventListener('click',event=>{
- if(select.value)return;
  event.preventDefault();event.stopImmediatePropagation();singlePrint.click();
 },true);
-metricSelect.addEventListener('change',ranks);select.addEventListener('change',render);render();
+metricSelect.addEventListener('change',ranks);select.addEventListener('change',render);
+document.getElementById('shramikNiyojanLauncher').addEventListener('click',render);
+new MutationObserver(()=>{if(select.value&&!section.classList.contains('sn-cluster-mode'))render();}).observe(originalKpis,{childList:true});
+render();
 })();
 
