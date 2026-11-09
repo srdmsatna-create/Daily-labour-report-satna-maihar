@@ -21,7 +21,7 @@ p{line-height:1.5} .unit{font-weight:700}
 <body><main>
 <a class="back" href="./">← SRDM पोर्टल</a>
 <h1>R9.7 — श्रमिक नियोजन</h1>
-<p>सत्यापित मासिक रिपोर्ट • <strong>09-11-2026</strong> तक • <span class="unit">मानव दिवस लाख में</span></p>
+<p>सत्यापित मासिक रिपोर्ट • <strong id="report-date">09-11-2026</strong> तक • <span class="unit">मानव दिवस लाख में</span></p>
 <nav aria-label="रिपोर्ट स्तर">
 <button type="button" data-level="district">जिला</button>
 <button type="button" data-level="division">रीवा संभाग</button>
@@ -31,7 +31,7 @@ p{line-height:1.5} .unit{font-weight:700}
 </nav>
 <h2 id="level-title"></h2>
 <div class="scroll"><table aria-labelledby="level-title"><thead><tr id="columns"></tr></thead><tbody id="rows"></tbody></table></div>
-<p>अंतर = FY 2025–26 जुलाई–नवंबर − FY 2026–27 जुलाई से रिपोर्ट तारीख तक। वित्तीय वर्ष का कुल = MGNREGA अप्रैल–जून + VB-G RAM G जुलाई से रिपोर्ट तारीख तक।</p>
+<p>अंतर = FY 2025–26 जुलाई–नवंबर − FY 2026–27 जुलाई से रिपोर्ट तारीख तक। शेष दिन रिपोर्ट तारीख के अगले दिन से 30 नवंबर तक हैं। प्रतिदिन का लक्ष्य = शेष सकारात्मक मानव दिवस ÷ शेष दिन, अगले पूर्णांक तक। लक्ष्य पूरा होने पर 0 और अवधि समाप्त होने पर लक्ष्य के लिए — दिखाया गया है। वित्तीय वर्ष का कुल = MGNREGA अप्रैल–जून + VB-G RAM G जुलाई से रिपोर्ट तारीख तक।</p>
 <p>प्रदेश के 52 स्रोत जिलों में SATNA के अंतर्गत सतना और मैहर के आठ जनपद शामिल हैं। जिला और संभाग तालिका में दोनों का अलग योग दिखाया गया है।</p>
 <p>स्रोत <a href="https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;fin_year=2025-2026&amp;page1=s&amp;state_code=17&amp;state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&amp;Digest=i5whoIuaneyTcd%2fKUX8XXg">MGNREGA 2025–26</a> · <a href="https://mnregaweb2.dord.gov.in/netnrega/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;fin_year=2026-2027&amp;page1=s&amp;state_code=17&amp;state_name=%u092e%u0927%u094d%u092f+%u092a%u094d%u0930%u0926%u0947%u0936+&amp;Digest=SfOoa7y+eBupeEgyvw7OcA">MGNREGA 2026–27</a> · <a href="https://vbgramgrep.dord.gov.in/VBGRAMG/demand_emp_demand.aspx?lflag=eng&amp;file1=empprov&amp;page1=s&amp;state_name=MADHYA+PRADESH&amp;state_code=17&amp;fin=2026-2027&amp;fin_year=2026-2027&amp;source=national&amp;Digest=T5jPevIAyKZwnVDL7xdTaQ">VB-G RAM G 2026–27</a></p>
 <script>
@@ -121,11 +121,17 @@ const reports = {
   division: ['रीवा संभाग रिपोर्ट', [...divisionRows, total('रीवा संभाग कुल', divisionRows)]],
   block: ['सतना एवं मैहर जनपद रिपोर्ट', [...satnaBlocks, satna, ...maiharBlocks, maihar, total('सतना–मैहर संयुक्त', [satna, maihar])]]
 };
-const headers = ['क्षेत्र', 'FY 2025–26 जुलाई–नवंबर', 'FY 2026–27 अप्रैल–जून (MGNREGA)', 'FY 2026–27 जुलाई–अक्टूबर', 'नवंबर 2026', 'कुल सृजित जुलाई से अब तक', 'अंतर', 'शेष दिन', 'FY 2026–27 कुल अप्रैल से अब तक'];
+const headers = ['क्षेत्र', 'FY 2025–26 जुलाई–नवंबर', 'FY 2026–27 अप्रैल–जून (MGNREGA)', 'FY 2026–27 जुलाई–अक्टूबर', 'नवंबर 2026', 'कुल सृजित जुलाई से अब तक', 'अंतर', 'शेष दिन', 'प्रतिदिन का लक्ष्य (मानव दिवस)', 'FY 2026–27 कुल अप्रैल से अब तक'];
 const lakh = number => (number / 100000).toFixed(5);
+const [day, month, year] = document.getElementById('report-date').textContent.split('-').map(Number);
+const reportDate = Date.UTC(year, month - 1, day);
+const periodEnd = Date.UTC(2026, 10, 30);
+const remainingDays = Math.max(0, Math.round((periodEnd - reportDate) / 86400000));
 function values([name, baseline, aprilJune, julyOctober, november]) {
   const current = julyOctober + november;
-  return [name, ...[baseline, aprilJune, julyOctober, november, current, baseline - current].map(lakh), 21, lakh(aprilJune + current)];
+  const gap = baseline - current;
+  const dailyTarget = remainingDays ? Math.ceil(Math.max(0, gap) / remainingDays) : gap <= 0 ? 0 : '—';
+  return [name, ...[baseline, aprilJune, julyOctober, november, current, gap].map(lakh), remainingDays, dailyTarget, lakh(aprilJune + current)];
 }
 let activeLevel;
 const filters = [...document.querySelectorAll('button[data-level]')];
