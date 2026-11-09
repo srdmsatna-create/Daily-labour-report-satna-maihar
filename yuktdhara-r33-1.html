@@ -105,13 +105,13 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
   select.innerHTML=snapshots.slice().reverse().map(s=>'<option value="'+s.snapshotDate+'">'+s.snapshotDate.split('-').reverse().join('-')+'</option>').join('');
   const render=s=>{
    const rows=s.rows||[];
-   const totals={SATNA:{r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true},MAIHAR:{r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true}};
-   let grand={r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true};
+   const totals={SATNA:{r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true,hasMatchData:false},MAIHAR:{r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true}};
+   let grand={r331:0,r612:0,matched:0,newMatched:0,panchayats:0,workers:0,newReady:true,hasMatchData:false};
    let html='',workHtml='';
    for(const r of rows){
     const d=String(r.district||'').toUpperCase()==='SATNA'?'SATNA':'MAIHAR';
     const t=totals[d];
-    t.r331+=Number(r.r331OngoingWorks||0);t.r612+=Number(r.r612CurrentFyYuktdharaOngoingWorks||0);
+    t.r331+=Number(r.r331OngoingWorks??r.worksOngoing??0);const hasMatchData=r.r612CurrentFyYuktdharaOngoingWorks!==null&&r.r612CurrentFyYuktdharaOngoingWorks!==undefined;t.hasMatchData=t.hasMatchData||hasMatchData;if(hasMatchData)t.r612+=Number(r.r612CurrentFyYuktdharaOngoingWorks||0);
     t.matched+=Number(r.ongoingWorksWithIssuedMR||0);t.panchayats+=Number(r.matchedPanchayats||0);
     t.workers+=Number(r.workersOnMatchedPanchayats||0);
     if(r.newMrMatchedWorksSincePrevious===null||r.newMrMatchedWorksSincePrevious===undefined)t.newReady=false;else t.newMatched+=Number(r.newMrMatchedWorksSincePrevious);
@@ -120,8 +120,8 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
    }
    for(const d of ['SATNA','MAIHAR']){
     const t=totals[d];
-    html+='<tr class="district-total"><td>'+d+' कुल</td><td>जिला योग</td><td>'+fmt(t.r331)+'</td><td>'+fmt(t.r612)+'</td><td>'+fmt(t.matched)+'</td><td>'+signed(t.newReady?t.newMatched:null)+'</td><td>'+fmt(t.panchayats)+'</td><td>'+fmt(t.workers)+'</td></tr>';
-    grand.r331+=t.r331;grand.r612+=t.r612;grand.matched+=t.matched;grand.panchayats+=t.panchayats;grand.workers+=t.workers;grand.newMatched+=t.newMatched;grand.newReady=grand.newReady&&t.newReady;
+    html+='<tr class="district-total"><td>'+d+' कुल</td><td>जिला योग</td><td>'+fmt(t.r331)+'</td><td>'+fmt(t.hasMatchData?t.r612:null)+'</td><td>'+fmt(t.hasMatchData?t.matched:null)+'</td><td>'+signed(t.newReady?t.newMatched:null)+'</td><td>'+fmt(t.hasMatchData?t.panchayats:null)+'</td><td>'+fmt(t.hasMatchData?t.workers:null)+'</td></tr>';
+    grand.r331+=t.r331;if(t.hasMatchData){grand.hasMatchData=true;grand.r612+=t.r612;grand.matched+=t.matched;grand.panchayats+=t.panchayats;grand.workers+=t.workers;}grand.newMatched+=t.newMatched;grand.newReady=grand.newReady&&t.newReady;
    }
    html+='<tr class="total"><td>कुल</td><td>सतना + मैहर</td><td>'+fmt(grand.r331)+'</td><td>'+fmt(grand.r612)+'</td><td>'+fmt(grand.matched)+'</td><td>'+signed(grand.newReady?grand.newMatched:null)+'</td><td>'+fmt(grand.panchayats)+'</td><td>'+fmt(grand.workers)+'</td></tr>';
    rowsEl.innerHTML=html;
