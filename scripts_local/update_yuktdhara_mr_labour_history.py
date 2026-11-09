@@ -33,6 +33,7 @@ def main():
     labour_by_gp = {(norm(r.get("janpad")), norm(r.get("panchayat"))): int(r.get("labour", 0) or 0)
                     for r in workers["rows"]}
     r331_by_janpad = {norm(r.get("block")): int(r.get("ongoing", 0) or 0) for r in yuk["rows"]}
+    new_works_by_janpad = {norm(r.get("block")): int(r.get("worksCreated", 0) or 0) for r in yuk["rows"]}
 
     ongoing_yukt = []
     for w in ongoing:
@@ -47,10 +48,14 @@ def main():
             "panchayat": panchayat,
             "code": str(w.get("code") or "").strip(),
             "name": str(w.get("name") or "").strip(),
+            "isSecure": norm(w.get("isSecure")),
             "mrIssued": code in issued_codes,
         })
 
     matched = [w for w in ongoing_yukt if w["mrIssued"]]
+    unknown_secure = [w["code"] for w in matched if w["isSecure"] not in {"YES", "NO"}]
+    if unknown_secure:
+        raise ValueError(f"R-6.12 Is Secure missing/invalid for {len(unknown_secure)} MR-matched ongoing works; sample: {unknown_secure[:3]}")
     matched_gps = {(w["janpad"], w["panchayat"]) for w in matched if w["janpad"] and w["panchayat"]}
     workers_on_matched_gps = sum(labour_by_gp.get(gp, 0) for gp in matched_gps)
 
@@ -66,11 +71,14 @@ def main():
             "district": "SATNA" if janpad in SATNA else "MAIHAR",
             "janpad": janpad,
             "r331OngoingWorks": r331_by_janpad.get(janpad, 0),
+            "totalNewWorksCreated": new_works_by_janpad.get(janpad, 0),
             "r612CurrentFyYuktdharaOngoingWorks": len(block_ongoing),
             "ongoingWorksWithIssuedMR": len(matched_rows),
+            "mrIssuedWithoutConvergence": sum(1 for w in matched_rows if w["isSecure"] == "YES"),
+            "mrIssuedWithConvergence": sum(1 for w in matched_rows if w["isSecure"] == "NO"),
             "matchedPanchayats": len({w["panchayat"] for w in matched_rows}),
             "workersOnMatchedPanchayats": sum(labour_by_gp.get((janpad, p), 0) for p in {w["panchayat"] for w in matched_rows}),
-            "matchedWorks": [{"code": w["code"], "panchayat": w["panchayat"], "name": w["name"]} for w in matched_rows],
+            "matchedWorks": [{"code": w["code"], "panchayat": w["panchayat"], "name": w["name"], "isSecure": w["isSecure"]} for w in matched_rows],
         })
     rows.sort(key=lambda r: (r["district"], r["janpad"]))
 
@@ -107,6 +115,8 @@ def main():
         "totalR331OngoingWorks": sum(r["r331OngoingWorks"] for r in rows),
         "totalR612CurrentFyYuktdharaOngoingWorks": sum(r["r612CurrentFyYuktdharaOngoingWorks"] for r in rows),
         "totalOngoingWorksWithIssuedMR": sum(r["ongoingWorksWithIssuedMR"] for r in rows),
+        "totalNewWorksCreated": sum(r["totalNewWorksCreated"] for r in rows),
+        "mrIssuePctOfTotalNewWorks": (100 * sum(r["ongoingWorksWithIssuedMR"] for r in rows) / sum(r["totalNewWorksCreated"] for r in rows)) if sum(r["totalNewWorksCreated"] for r in rows) else None,
         "matchedPanchayats": len(matched_gps),
         "workersOnMatchedPanchayats": workers_on_matched_gps,
         "rows": rows,
@@ -122,10 +132,9 @@ def main():
     snapshots.sort(key=lambda s: s["snapshotDate"])
     history["title"] = "R-33.1 प्रगतिरत Yuktdhara कार्यों का तारीखवार MR/श्रमिक रिकॉर्ड"
     history["scopeNote"] = (
-        "R-33.1 जनपदवार प्रगतिरत संख्या देता है। कामों का work-code मिलान R-6.12 FY 2026-27 में ongoing "
-        "/YD/ codes और GP e-Muster में MR-जारी work-code सूची के intersection से है। "
+        "R-33.1 का worksCreated कुल नए कार्यों का हर है। R-6.12 FY 2026-27 ongoing /YD/ कार्यों को GP e-Muster की MR-जारी work-code सूची से मिलाया गया है। Is Secure=YES को बिना अभिसरण और Is Secure=NO को अभिसरण माना गया है। "
         "संलग्न श्रमिक केवल उन matched कामों वाली पंचायतों का GP कुल है; स्रोत में काम-विशिष्ट "
-        "श्रमिक संख्या उपलब्ध नहीं है। यह गिनती MR-जारी कामों की है, अलग-अलग MR पर्चियों की नहीं।"
+        "श्रमिक संख्या उपलब्ध नहीं है। यह MR-जारी कार्यों का work-code count है, अलग-अलग MR पर्चियों की संख्या नहीं।"
     )
     history["snapshots"] = snapshots
     HISTORY.write_text(json.dumps(history, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
