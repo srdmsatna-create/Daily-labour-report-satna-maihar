@@ -17,22 +17,27 @@ def clean(v): return re.sub(r'\s+',' ',html.unescape(str(v or ''))).strip()
 
 class ResultRows(HTMLParser):
     def __init__(self,status):
-        super().__init__(convert_charrefs=True);self.status=status;self.in_cell=False;self.cell=[];self.row=None;self.rows=[]
+        super().__init__(convert_charrefs=True);self.status=status;self.in_cell=False;self.cell=[];self.row=None;self.rows=[];self.row_has_header=False;self.secure_index=None
     def handle_starttag(self,tag,attrs):
         tag=tag.lower()
-        if tag=='tr':self.row=[]
-        elif tag in ('td','th') and self.row is not None:self.in_cell=True;self.cell=[]
+        if tag=='tr':self.row=[];self.row_has_header=False
+        elif tag in ('td','th') and self.row is not None:
+            self.in_cell=True;self.cell=[]
+            if tag=='th':self.row_has_header=True
         elif tag=='br' and self.in_cell:self.cell.append(' ')
     def handle_data(self,data):
         if self.in_cell:self.cell.append(data)
     def handle_endtag(self,tag):
         tag=tag.lower()
         if tag in ('td','th') and self.in_cell:
-            self.row.append(clean(''.join(self.cell)));self.in_cell=False
+            value=clean(''.join(self.cell));self.row.append(value);self.in_cell=False
+            if re.sub(r'[^a-z]','',value.lower())=='issecure':self.secure_index=len(self.row)-1
         elif tag=='tr' and self.row is not None:
             c=self.row;self.row=None
             if len(c)>=32 and c[0].isdigit() and c[1].upper()=='SATNA' and c[6] and '/' in c[6]:
-                self.rows.append({'District Name':c[1],'Janpad / Block Name':c[2],'Panchayat Name':c[3],'Work Start Fin Year':c[4],'Work Status':c[5] or self.status,'Work Code':c[6],'Work Name':c[7],'Original Work Category':c[9],'Work Type':c[11] or c[10],'Total Sanction (Rs)':c[15],'Booked Since Inception Wages (Rs)':c[20],'Booked Since Inception Material (Rs)':c[21],'Total Mandays':c[24],'Mandays Generated Current FY':c[25],'Is Secure':c[31]})
+                secure_index=self.secure_index if self.secure_index is not None else len(c)-1
+                if secure_index>=len(c):raise RuntimeError('R-6.12 Is Secure column index is outside the work row')
+                self.rows.append({'District Name':c[1],'Janpad / Block Name':c[2],'Panchayat Name':c[3],'Work Start Fin Year':c[4],'Work Status':c[5] or self.status,'Work Code':c[6],'Work Name':c[7],'Original Work Category':c[9],'Work Type':c[11] or c[10],'Total Sanction (Rs)':c[15],'Booked Since Inception Wages (Rs)':c[20],'Booked Since Inception Material (Rs)':c[21],'Total Mandays':c[24],'Mandays Generated Current FY':c[25],'Is Secure':c[secure_index]})
 
 def hidden_fields(src):
     d={}
