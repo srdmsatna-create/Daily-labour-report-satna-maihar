@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-09T03:37:58.880959+00:00",
+  "checkedAt": "2026-11-09T04:37:52.169308+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -38,7 +38,7 @@
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1
+      "attempts": 2
     },
     "emb_pending": {
       "success": true,
@@ -52,7 +52,7 @@
       "files": [
         "data/yuktdhara-state-latest.json"
       ],
-      "attempts": 1
+      "attempts": 3
     },
     "yuktdhara": {
       "success": true,
@@ -159,7 +159,7 @@
       "files": [
         "data/rejected-wage-latest.json"
       ],
-      "attempts": 2
+      "attempts": 1
     }
   },
   "success": true
