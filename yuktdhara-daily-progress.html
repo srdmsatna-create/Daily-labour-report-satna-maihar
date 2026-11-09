@@ -74,7 +74,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 .no-work-table tbody td:nth-child(2),.no-work-table tbody td:nth-child(4){font-size:12px;padding:3px}
 .no-work-table{min-width:1100px}
 .panchayat-table{min-width:1150px}
-.janpad-progress-table{min-width:1450px}
+.janpad-progress-table{min-width:1750px}.mr-labour-cell{font-weight:800;min-width:135px;color:#123e68}.mr-labour-cell b{font-size:17px}.mr-labour-cell small{font-size:12px;color:#536f89}
 .panchayat-table tbody td{font-weight:700}
 .engineer-progress-table{min-width:1050px}
 .empty{text-align:center!important;padding:20px;color:#647d95}
@@ -106,7 +106,7 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
 <nav class="report-tabs" role="tablist" aria-label="रिपोर्ट टैब"><button type="button" class="tab-button active" data-panel="progressPanel">दैनिक प्रगति</button><button type="button" class="tab-button" data-panel="panchayatPanel">पंचायतवार स्थिति</button><button type="button" class="tab-button" data-panel="noWorkPanel">जहाँ किसी पंचायत में काम नहीं हुआ</button></nav>
 <div id="progressPanel" class="report-panel">
 <section><h2>Yuktdhara कार्य प्रगति — जिला / जनपदवार सारांश</h2><p class="status" id="feedStatus">Daily Updater की Yuktdhara फ़ीड लोड हो रही है…</p><p class="status" id="mrHistoryStatus">आज जारी MR और संलग्न श्रमिकों का तारीखवार मिलान लोड हो रहा है…</p><div id="summaryCards" class="cards summary-cards"></div>
-<div class="table-wrap"><table class="janpad-progress-table"><thead><tr><th style="width:11%">जिला</th><th style="width:15%">जनपद</th><th>प्राप्त पंचायतें</th><th>Yuktdhara से प्राप्त कार्य</th><th>VBGRAMG में बने कार्य</th><th>शुरू नहीं हुए</th><th>प्रगतिरत</th><th>पूर्ण</th><th>MR-जारी कार्य / संलग्न श्रमिक (GP कुल)</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
+<div class="table-wrap"><table class="janpad-progress-table"><thead><tr><th rowspan="2" style="width:11%">जिला</th><th rowspan="2" style="width:15%">जनपद</th><th rowspan="2">प्राप्त पंचायतें</th><th rowspan="2">Yuktdhara से प्राप्त कार्य</th><th rowspan="2">VBGRAMG में बने कार्य</th><th rowspan="2">शुरू नहीं हुए</th><th rowspan="2">प्रगतिरत</th><th rowspan="2">पूर्ण</th><th colspan="3">R-6.12 Is Secure के अनुसार MR स्थिति</th></tr><tr><th>बिना अभिसरण<br>(Is Secure=YES)<br>MR जारी काम</th><th>अभिसरण<br>(Is Secure=NO)<br>MR जारी काम</th><th>MR जारी / Total New Works (%)<br>• संलग्न श्रमिक</th></tr></thead><tbody id="janpadBody"></tbody></table></div></section>
 <section><h2>जनपद / उपयंत्रीवार प्रगति</h2><div class="table-wrap"><table class="engineer-progress-table"><thead><tr><th style="width:8%">जिला</th><th style="width:12%">जनपद</th><th style="width:14%">क्लस्टर</th><th style="width:18%">उपयंत्री</th><th style="width:16%">प्राप्त पंचायतें</th><th style="width:16%">Yuktdhara से प्राप्त कार्य</th><th style="width:16%">VBGRAMG में बने कार्य</th></tr></thead><tbody id="engineerBody"></tbody></table></div></section>
 
 </div>
@@ -153,8 +153,8 @@ function aggregateMaps(keys,oldMap,newMap,selector){
  return {a,b};
 }
 function metricCells(keys,a,b){return keys.map(k=>metric(a[k],b[k])).join("");}
-function mrCell(r){if(!r)return '<td class="mr-labour-cell">—</td>';return '<td class="mr-labour-cell"><b>'+fmt(r.ongoingWorksWithIssuedMR)+' काम</b><br><small>'+fmt(r.workersOnMatchedPanchayats)+' श्रमिक</small></td>';}
-function mrAggregate(keys,map){return keys.reduce((t,k)=>{const r=map.get(k)||{};t.ongoingWorksWithIssuedMR+=Number(r.ongoingWorksWithIssuedMR||0);t.workersOnMatchedPanchayats+=Number(r.workersOnMatchedPanchayats||0);return t;},{ongoingWorksWithIssuedMR:0,workersOnMatchedPanchayats:0});}
+function mrCells(r){if(!r||r.mrIssuedWithoutConvergence===undefined||r.mrIssuedWithConvergence===undefined||r.totalNewWorksCreated===undefined)return '<td class="mr-labour-cell">—</td><td class="mr-labour-cell">—</td><td class="mr-labour-cell">—</td>';const issued=Number(r.ongoingWorksWithIssuedMR||0),total=Number(r.totalNewWorksCreated||0),pct=total?(issued*100/total).toFixed(1)+'%':'—';return '<td class="mr-labour-cell">'+fmt(r.mrIssuedWithoutConvergence)+'</td><td class="mr-labour-cell">'+fmt(r.mrIssuedWithConvergence)+'</td><td class="mr-labour-cell"><b>'+fmt(issued)+' / '+fmt(total)+' ('+pct+')</b><br><small>'+fmt(r.workersOnMatchedPanchayats)+' श्रमिक (GP कुल)</small></td>';}
+function mrAggregate(keys,map){const rows=keys.map(k=>map.get(k));if(rows.some(r=>!r||r.mrIssuedWithoutConvergence===undefined||r.mrIssuedWithConvergence===undefined||r.totalNewWorksCreated===undefined))return null;return rows.reduce((t,r)=>{for(const k of ['ongoingWorksWithIssuedMR','mrIssuedWithoutConvergence','mrIssuedWithConvergence','totalNewWorksCreated','workersOnMatchedPanchayats'])t[k]+=Number(r[k]||0);return t;},{ongoingWorksWithIssuedMR:0,mrIssuedWithoutConvergence:0,mrIssuedWithConvergence:0,totalNewWorksCreated:0,workersOnMatchedPanchayats:0});}
 function renderSummary(current){
  const district=$("districtFilter").value,janpad=$("janpadFilter").value,engineer=$("engineerFilter").value,panchayat=$("panchayatFilter").value;
  const oldMap=new Map(BASE.blocks.map(x=>[janpadKey(x.janpad),x])),newMap=new Map((current.blocks||[]).map(x=>[janpadKey(x.block),x])),mrMap=new Map((MR_HISTORY?.rows||[]).map(x=>[janpadKey(x.janpad),x]));
@@ -164,15 +164,15 @@ function renderSummary(current){
  const districtAgg={Maihar:{old:{},new:{}},Satna:{old:{},new:{}}};["Maihar","Satna"].forEach(d=>keys.forEach(k=>{districtAgg[d].old[k]=0;districtAgg[d].new[k]=0;}));let rows="";
  for(const d of ["Maihar","Satna"]){
   const group=janpads.filter(k=>isJanpad(k,d));if(!group.length)continue;
-  group.forEach(k=>{const a=oldMap.get(k)||{},b=newMap.get(k)||{},j=b.block||a.janpad||k;keys.forEach(x=>{districtAgg[d].old[x]+=Number(a[x]||0);districtAgg[d].new[x]+=Number(b[x]||0);});rows+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td>'+metricCells(keys,a,b)+mrCell(mrMap.get(k))+'</tr>';});
+  group.forEach(k=>{const a=oldMap.get(k)||{},b=newMap.get(k)||{},j=b.block||a.janpad||k;keys.forEach(x=>{districtAgg[d].old[x]+=Number(a[x]||0);districtAgg[d].new[x]+=Number(b[x]||0);});rows+='<tr><td>'+toHindiPlace(d)+'</td><td>'+toHindiPlace(j==="SATNA"?"Sohawal":j)+'</td>'+metricCells(keys,a,b)+mrCells(mrMap.get(k))+'</tr>';});
   const t=aggregateMaps(keys,oldMap,newMap,group);
-  rows+='<tr class="total-row district-total district-total-'+d.toLowerCase()+'"><td>'+toHindiPlace(d)+'</td><td>जिला योग</td>'+metricCells(keys,t.a,t.b)+mrCell(mrAggregate(group,mrMap))+'</tr>';
+  rows+='<tr class="total-row district-total district-total-'+d.toLowerCase()+'"><td>'+toHindiPlace(d)+'</td><td>जिला योग</td>'+metricCells(keys,t.a,t.b)+mrCells(mrAggregate(group,mrMap))+'</tr>';
  }
  if(janpads.length){
   const t=aggregateMaps(keys,oldMap,newMap,janpads);
-  rows+='<tr class="total-row grand-total"><td colspan="2">कुल योग</td>'+metricCells(keys,t.a,t.b)+mrCell(mrAggregate(janpads,mrMap))+'</tr>';
+  rows+='<tr class="total-row grand-total"><td colspan="2">कुल योग</td>'+metricCells(keys,t.a,t.b)+mrCells(mrAggregate(janpads,mrMap))+'</tr>';
  }
- $("janpadBody").innerHTML=rows||'<tr><td class="empty" colspan="9">डेटा उपलब्ध नहीं है।</td></tr>';
+ $("janpadBody").innerHTML=rows||'<tr><td class="empty" colspan="11">डेटा उपलब्ध नहीं है।</td></tr>';
  $("summaryCards").innerHTML=["Maihar","Satna"].filter(d=>janpads.some(k=>isJanpad(k,d))).flatMap(d=>keys.slice(0,3).map((k,i)=>{const a=districtAgg[d].old[k],b=districtAgg[d].new[k];return '<div class="card district-card-'+d.toLowerCase()+' '+(k==="worksCreated"?"good-card":"")+'"><label>'+toHindiPlace(d)+' — '+labels[i]+'</label><strong>'+fmt(a)+' → '+fmt(b)+'</strong><small class="'+deltaClass(b-a)+'">'+signed(b-a)+' बदलाव</small></div>'; })).join("");
 }
 function renderEngineers(current){
@@ -286,7 +286,7 @@ async function load(){
   if(!r1.ok||!r2.ok||!r3.ok)throw new Error("Updater data fetch failed");
   const [s1,s2,mrHistory]=await Promise.all([r1.text(),r2.text(),r3.json()]);
   MR_HISTORY=(mrHistory.snapshots||[]).slice().sort((a,b)=>a.snapshotDate.localeCompare(b.snapshotDate)).at(-1)||null;
-  $("mrHistoryStatus").textContent=MR_HISTORY?"तारीखवार MR मिलान: "+MR_HISTORY.snapshotDate.split("-").reverse().join("-")+" • R-33.1 प्रगतिरत कार्य ↔ R-6.12 FY 2026–27 /YD/ सूची":"आज का MR / श्रमिक रिकॉर्ड उपलब्ध नहीं है";
+  $("mrHistoryStatus").textContent=MR_HISTORY?"तारीखवार मिलान: "+MR_HISTORY.snapshotDate.split("-").reverse().join("-")+" • R-6.12 Is Secure=YES: बिना अभिसरण, NO: अभिसरण • प्रतिशत = MR-जारी कार्य / R-33.1 कुल नए कार्य":"आज का MR / श्रमिक रिकॉर्ड उपलब्ध नहीं है";
   const j1=s1.match(/window\.YUKTDHARA_RECEIVED\s*=\s*(\{[\s\S]*\})\s*;?\s*$/),j2=s2.match(/window\.YUKTDHARA_DATA\s*=\s*(\{[\s\S]*\})\s*;?\s*$/);
   if(!j1||!j2)throw new Error("Yuktdhara feed format not recognized");
   const rec=JSON.parse(j1[1]),gp=JSON.parse(j2[1]);window.YUKTDHARA_RECEIVED=rec;window.YUKTDHARA_DATA=gp;
