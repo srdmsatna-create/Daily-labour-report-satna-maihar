@@ -2,6 +2,9 @@ name: R33.1 daily MR and worker history
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Complete SRDM daily reports at 7 AM India"]
+    types: [completed]
 
 permissions:
   contents: write
@@ -12,6 +15,7 @@ concurrency:
 
 jobs:
   snapshot:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout latest main
