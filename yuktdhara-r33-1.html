@@ -111,11 +111,11 @@ document.getElementById('sourceText').textContent='स्रोत: आधिक
    for(const r of rows){
     const d=String(r.district||'').toUpperCase()==='SATNA'?'SATNA':'MAIHAR';
     const t=totals[d];
-    t.r331+=Number(r.r331OngoingWorks||0);t.r612+=Number(r.r612YuktdharaOngoingWorks||0);
+    t.r331+=Number(r.r331OngoingWorks||0);t.r612+=Number(r.r612CurrentFyYuktdharaOngoingWorks||0);
     t.matched+=Number(r.ongoingWorksWithIssuedMR||0);t.panchayats+=Number(r.matchedPanchayats||0);
     t.workers+=Number(r.workersOnMatchedPanchayats||0);
     if(r.newMrMatchedWorksSincePrevious===null||r.newMrMatchedWorksSincePrevious===undefined)t.newReady=false;else t.newMatched+=Number(r.newMrMatchedWorksSincePrevious);
-    html+='<tr><td>'+esc(r.district)+'</td><td>'+esc(r.janpad)+'</td><td>'+fmt(r.r331OngoingWorks)+'</td><td>'+fmt(r.r612YuktdharaOngoingWorks)+'</td><td>'+fmt(r.ongoingWorksWithIssuedMR)+'</td><td class="'+cls(r.newMrMatchedWorksSincePrevious)+'">'+signed(r.newMrMatchedWorksSincePrevious)+'</td><td>'+fmt(r.matchedPanchayats)+'</td><td>'+fmt(r.workersOnMatchedPanchayats)+'</td></tr>';
+    html+='<tr><td>'+esc(r.district)+'</td><td>'+esc(r.janpad)+'</td><td>'+fmt(r.r331OngoingWorks)+'</td><td>'+fmt(r.r612CurrentFyYuktdharaOngoingWorks)+'</td><td>'+fmt(r.ongoingWorksWithIssuedMR)+'</td><td class="'+cls(r.newMrMatchedWorksSincePrevious)+'">'+signed(r.newMrMatchedWorksSincePrevious)+'</td><td>'+fmt(r.matchedPanchayats)+'</td><td>'+fmt(r.workersOnMatchedPanchayats)+'</td></tr>';
     for(const w of r.matchedWorks||[])workHtml+='<tr><td>'+esc(r.janpad)+'</td><td>'+esc(w.panchayat)+'</td><td>'+esc(w.code)+'</td><td>'+esc(w.name)+'</td></tr>';
    }
    for(const d of ['SATNA','MAIHAR']){
