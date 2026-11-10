@@ -180,6 +180,13 @@ def setup_search(page, block):
     page.wait_for_timeout(1200)
 
 
+def open_detail_page(page, url):
+    response = page.goto(url, wait_until="domcontentloaded", timeout=90000)
+    if response is None or not response.ok:
+        status = response.status if response else "no response"
+        raise RuntimeError(f"Official detail page returned HTTP {status}: {urlparse(url).path}")
+
+
 def main():
     from playwright.sync_api import sync_playwright
     rows = []
@@ -215,48 +222,53 @@ def main():
                         excluded["notYD"] += 1; continue
                     candidates += 1
                     url = safe_href(search.url, work["href"])
-                    try:
-                        detail.goto(url, wait_until="domcontentloaded", timeout=90000)
-                        parsed = extract_detail(detail)
-                        fields, docs = parsed["fields"], parsed["docs"]
-                        header = clean(detail.locator("#ContentPlaceHolder1_lbl_head").inner_text())
-                        panchayat_match = re.search(r"Panchayat\s*:\s*(.+)$", header, re.I)
-                        code = clean(fields.get("Work Code:", work["code"]))
-                        if not re.search(r"(?:^|/)YD(?:/|$)", code, re.I):
-                            excluded["notYD"] += 1; continue
-                        start_date = parse_date(fields.get("Work Start Date(DD/MM/YYYY):", ""))
-                        as_doc = docs.get("as", {})
-                        if norm(as_doc.get("status")) != "available" or not as_doc.get("href"):
-                            excluded["noAS"] += 1; continue
-                        gallery.goto(safe_href(detail.url, as_doc["href"]), wait_until="domcontentloaded", timeout=90000)
-                        sanction_date = parse_date(extract_as_sanction_date(gallery, code))
-                        if not sanction_date or sanction_date < DATE_FROM:
-                            excluded["beforeCutoff"] += 1; continue
-                        geo_doc = docs.get("geotag", {})
-                        stage_status = "Not Available"
-                        if norm(geo_doc.get("status")) == "available" and geo_doc.get("href"):
-                            gallery.goto(safe_href(detail.url, geo_doc["href"]), wait_until="domcontentloaded", timeout=90000)
-                            stage_status = before_stage_status(gallery)
-                        elif norm(geo_doc.get("status")) not in ("not available", "unavailable"):
-                            stage_status = "Unknown"
-                        rows.append({
-                            "district": "MAIHAR" if block in MAIHAR_BLOCKS else "SATNA",
-                            "block": block,
-                            "panchayat": clean(fields.get("Panchayat :", panchayat_match.group(1) if panchayat_match else "")),
-                            "financialYear": FY,
-                            "workCode": code,
-                            "workName": clean(fields.get("Work Name:", work["name"])),
-                            "workStatus": clean(fields.get("Work Status:", work["status"])),
-                            "workStartDate": start_date.isoformat() if start_date else "",
-                            "asSanctionDate": sanction_date.isoformat(),
-                            "asStatus": "Available",
-                            "beforePhotoStatus": stage_status,
-                            "geotagDocumentStatus": clean(geo_doc.get("status")) or "Unknown",
-                            "source": url,
-                        })
-                    except Exception as error:
-                        excluded["detailErrors"] += 1
-                        print("  detail failed for " + work["code"] + ": " + str(error)[:180], flush=True)
+                    for attempt in range(1, 4):
+                        try:
+                            open_detail_page(detail, url)
+                            parsed = extract_detail(detail)
+                            fields, docs = parsed["fields"], parsed["docs"]
+                            header = clean(detail.locator("#ContentPlaceHolder1_lbl_head").inner_text())
+                            panchayat_match = re.search(r"Panchayat\s*:\s*(.+)$", header, re.I)
+                            code = clean(fields.get("Work Code:", work["code"]))
+                            if not re.search(r"(?:^|/)YD(?:/|$)", code, re.I):
+                                excluded["notYD"] += 1; break
+                            start_date = parse_date(fields.get("Work Start Date(DD/MM/YYYY):", ""))
+                            as_doc = docs.get("as", {})
+                            if norm(as_doc.get("status")) != "available" or not as_doc.get("href"):
+                                excluded["noAS"] += 1; break
+                            open_detail_page(gallery, safe_href(detail.url, as_doc["href"]))
+                            sanction_date = parse_date(extract_as_sanction_date(gallery, code))
+                            if not sanction_date or sanction_date < DATE_FROM:
+                                excluded["beforeCutoff"] += 1; break
+                            geo_doc = docs.get("geotag", {})
+                            stage_status = "Not Available"
+                            if norm(geo_doc.get("status")) == "available" and geo_doc.get("href"):
+                                open_detail_page(gallery, safe_href(detail.url, geo_doc["href"]))
+                                stage_status = before_stage_status(gallery)
+                            elif norm(geo_doc.get("status")) not in ("not available", "unavailable"):
+                                stage_status = "Unknown"
+                            rows.append({
+                                "district": "MAIHAR" if block in MAIHAR_BLOCKS else "SATNA",
+                                "block": block,
+                                "panchayat": clean(fields.get("Panchayat :", panchayat_match.group(1) if panchayat_match else "")),
+                                "financialYear": FY,
+                                "workCode": code,
+                                "workName": clean(fields.get("Work Name:", work["name"])),
+                                "workStatus": clean(fields.get("Work Status:", work["status"])),
+                                "workStartDate": start_date.isoformat() if start_date else "",
+                                "asSanctionDate": sanction_date.isoformat(),
+                                "asStatus": "Available",
+                                "beforePhotoStatus": stage_status,
+                                "geotagDocumentStatus": clean(geo_doc.get("status")) or "Unknown",
+                                "source": url,
+                            })
+                            break
+                        except Exception as error:
+                            print(f"  detail failed for {work['code']} ({attempt}/3): {str(error)[:180]}", flush=True)
+                            if attempt == 3:
+                                excluded["detailErrors"] += 1
+                            else:
+                                time.sleep(attempt * 2)
                     if candidates % 20 == 0: print("  checked YD candidates: " + str(candidates), flush=True)
                     time.sleep(0.12)
             search.close(); detail.close(); gallery.close()
