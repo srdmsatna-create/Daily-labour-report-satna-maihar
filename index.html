@@ -2859,26 +2859,43 @@ function renderStateDistrict(){
 }
 
 function renderEmuster(){
-  const order=['AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA'];
-  const dmap=new Map(dailyFiltered().map(r=>[normJanpad(r.janpad),r]));
-  const omap=new Map(officialFiltered().map(r=>[normJanpad(r.janpad),r]));
-  let data=order.map(j=>dmap.get(j)).filter(Boolean).map((r,i)=>({
-    sno:i+1,janpad:normJanpad(r.janpad),totalGP:num(r.totalGP),gpsProgress:num(r.gpsProgress),gpProgress:num(r.gpsProgress),
-    labour:num(r.labour),worksMR:num(r.worksMR),ongoing:num(omap.get(normJanpad(r.janpad))?.ongoingAll),mrs:num(r.mrs)
+  // Official R6.9 e-Muster figures verified from the 10/11/2026 portal report.
+  // Kept local to this report so it does not change other dashboard datasets.
+  const source=[
+    {janpad:'AMARPATAN',totalGP:75,gpProgress:64,labour:329,worksMR:222,noEkyc:0,mrs:222},
+    {janpad:'MAIHAR',totalGP:115,gpProgress:107,labour:572,worksMR:334,noEkyc:0,mrs:339},
+    {janpad:'MAJHGAWAN',totalGP:96,gpProgress:95,labour:650,worksMR:230,noEkyc:0,mrs:251},
+    {janpad:'NAGOD',totalGP:94,gpProgress:84,labour:750,worksMR:433,noEkyc:0,mrs:443},
+    {janpad:'RAMNAGAR',totalGP:55,gpProgress:54,labour:253,worksMR:185,noEkyc:0,mrs:185},
+    {janpad:'RAMPUR BAGHELAN',totalGP:97,gpProgress:80,labour:830,worksMR:604,noEkyc:0,mrs:608},
+    {janpad:'SATNA',totalGP:93,gpProgress:93,labour:490,worksMR:265,noEkyc:0,mrs:267},
+    {janpad:'UNCHAHARA',totalGP:70,gpProgress:61,labour:207,worksMR:114,noEkyc:0,mrs:115}
+  ];
+  const selectedDistrict=$('districtFilter')?.value||'ALL';
+  const selectedJanpad=$('janpadFilter')?.value||'ALL';
+  let data=source.filter(r=>
+    (selectedDistrict==='ALL'||districtOf(r.janpad)===selectedDistrict) &&
+    (selectedJanpad==='ALL'||normJanpad(r.janpad)===normJanpad(selectedJanpad))
+  ).map((r,i)=>({sno:i+1,...r}));
+  lastExport=data.map(r=>({
+    SNo:r.sno,Blocks:r.janpad,'Total No. of Gram Panchayats (GPs)':r.totalGP,
+    'No. of Gram Panchayats (GPs) with Works in Progress':r.gpProgress,
+    'Maximum Expected Unskilled Labour Engagement as per e-Muster Roll*':r.labour,
+    'No. of Ongoing Works for which Muster Rolls (MRs) have been Issued':r.worksMR,
+    'Workers without e-KYC':r.noEkyc,'No. of Muster Rolls (MRs)':r.mrs
   }));
-  data=sortRows(data,'ongoing',['janpad']).map((r,i)=>({...r,sno:i+1}));
-  lastExport=data;
   $('viewTitle').textContent='R6.9 Daily Status of VB-G RAM G Based on e-Muster Issuance';
-  $('viewMeta').textContent=`Official Screen-2 • SATNA + MAIHAR 8 Janpad • as on ${emusterReportDate()}`;
+  const reportDate='10/11/2026';
+  $('viewMeta').textContent=`Official R6.9 • SATNA + MAIHAR 8 Janpad • as on ${reportDate}`;
   const cols=8;
-  let h=`<thead><tr class="emuster-title-row"><th colspan="${cols}">R6.9 Daily Status of VB-G RAM G Based on e-Muster Issuance as on ${esc(emusterReportDate())}</th></tr>
-  <tr class="emuster-note-row"><th colspan="${cols}"><i>Official R6.9 Screen-2 format</i></th></tr>
-  <tr class="emuster-group-row"><th>SNo.</th><th>Blocks</th><th>Total No. of Gram Panchayats (GPs)</th><th>No. of Gram Panchayats (GPs) with Works in Progress</th><th>Maximum Expected Unskilled Labour Engagement as per e-Muster Roll*</th><th>No. of Ongoing Works for which Muster Rolls (MRs) have been Issued</th><th>Total Ongoing Work</th><th>No. of Muster Rolls (MRs)</th></tr></thead><tbody>`;
-  const t={totalGP:sum(data,'totalGP'),gpProgress:sum(data,'gpProgress'),labour:sum(data,'labour'),worksMR:sum(data,'worksMR'),ongoing:sum(data,'ongoing'),mrs:sum(data,'mrs')};
-  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.ongoing,true)}${cell(t.mrs,true)}</tr>`;
-  for(const r of data){h+=`<tr>${cell(r.sno,true)}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.gpProgress,true)}${cell(r.labour,true)}${cell(r.worksMR,true)}${cell(r.ongoing,true)}${cell(r.mrs,true)}</tr>`;}
-  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.ongoing,true)}${cell(t.mrs,true)}</tr>`;
-  if(!data.length)h+=`<tr><td colspan="${cols}" class="empty-table">Current filter में R6.9 data नहीं मिला।</td></tr>`;
+  let h=`<thead><tr class="emuster-title-row"><th colspan="${cols}">R6.9 Daily Status of VB-G RAM G Based on e-Muster Issuance as on ${reportDate}</th></tr>
+  <tr class="emuster-note-row"><th colspan="${cols}"><i>Official R6.9 Screen-2 format • Data as on 10/11/2026</i></th></tr>
+  <tr class="emuster-group-row"><th>SNo.</th><th>Blocks</th><th>Total No. of Gram Panchayats (GPs)</th><th>No. of Gram Panchayats (GPs) with Works in Progress</th><th>Maximum Expected Unskilled Labour Engagement as per e-Muster Roll*</th><th>No. of Ongoing Works for which Muster Rolls (MRs) have been Issued</th><th>No. of Workers without e-KYC</th><th>No. of Muster Rolls (MRs)</th></tr></thead><tbody>`;
+  const t={totalGP:sum(data,'totalGP'),gpProgress:sum(data,'gpProgress'),labour:sum(data,'labour'),worksMR:sum(data,'worksMR'),noEkyc:sum(data,'noEkyc'),mrs:sum(data,'mrs')};
+  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.noEkyc,true)}${cell(t.mrs,true)}</tr>`;
+  for(const r of data){h+=`<tr>${cell(r.sno,true)}${cell(r.janpad)}${cell(r.totalGP,true)}${cell(r.gpProgress,true)}${cell(r.labour,true)}${cell(r.worksMR,true)}${cell(r.noEkyc,true)}${cell(r.mrs,true)}</tr>`;}
+  h+=`<tr class="total-row"><td></td><td>Total</td>${cell(t.totalGP,true)}${cell(t.gpProgress,true)}${cell(t.labour,true)}${cell(t.worksMR,true)}${cell(t.noEkyc,true)}${cell(t.mrs,true)}</tr>`;
+  if(!data.length)h+=`<tr><td colspan="${cols}" class="empty-table">चयनित फ़िल्टर में R6.9 data नहीं मिला।</td></tr>`;
   h+='</tbody>';$('reportTable').innerHTML=h;
 }
 
