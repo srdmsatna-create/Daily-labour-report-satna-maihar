@@ -33,7 +33,7 @@ function sortValue(d,name,i,days){
  if(i===1)return name;
  if(!valid(d))return null;
  const sum=k=>d.rows.reduce((a,r)=>a+Number(r[k]||0),0),known=k=>d.rows.every(r=>r[k]!=null)?sum(k):null;
- const target=sum('target'),p1=sum('nregaAprilJune'),p2=sum('vbgramJulyNovember'),achievement=p1+p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0,labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued');
+ const target=sum('target'),p2=sum('vbgramJulyNovember'),achievement=p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0,labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued');
  return [null,name,...gpStats(d),target,p2,achievement,gap,days,daily,labour,achievement*100/target,labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?mr*100/ongoing:0][i];
 }
 
@@ -178,84 +178,84 @@ const districtLabour={"AGAR-MALWA":4613,"ALIRAJPUR":4894,"ANUPPUR":8,"ASHOK NAGA
 const blockLabour={"अमरपाटन":332,"मैहर":576,"रामनगर":326,"मझगवां":651,"नागौद":726,"रामपुर बघेलान":789,"सोहावल":490,"उचेहरा":221};
 function parseNovember(text, labourByName, metrics={}) {
  return Object.fromEntries(text.trim().split('\n').map(line=>{
-  const [name,...parts]=line.split('|'),[target,nregaAprilJune,vbgramJulyNovember,labour]=parts.map(Number);
-  return [name,{...metrics[name],target,nregaAprilJune,vbgramJulyNovember,
-   achievement:nregaAprilJune+vbgramJulyNovember,todayLabour:labour??labourByName[name]}];
+  const [name,...parts]=line.split('|'),[target,vbgramJulyNovember,labour]=parts.map(Number);
+  return [name,{...metrics[name],target,vbgramJulyNovember,
+   achievement:vbgramJulyNovember,todayLabour:labour??labourByName[name]}];
  }));
 }
-const novemberDistricts=parseNovember(`AGAR-MALWA|804021|344778|500061
-ALIRAJPUR|1176343|186210|310232
-ANUPPUR|336661|527368|105292
-ASHOK NAGAR|1019851|808263|399231
-BALAGHAT|440465|671418|204267
-BARWANI|1298138|592152|429448
-BETUL|870866|363307|262389
-BHIND|193639|87069|36993
-BHOPAL|352583|194534|192736
-BURHANPUR|331842|120851|153696
-CHHATARPUR|1089599|927950|330434
-CHHINDWARA|1211574|1001221|786147
-DAMOH|1504447|1143921|444546
-DATIA|212223|192926|49479
-DEWAS|1350229|371631|249113
-DHAR|2516273|469038|646919
-DINDORI|1034295|609106|1566060
-GUNA|1070779|1260941|317578
-GWALIOR|324748|308460|56455
-HARDA|290483|97326|95650
-INDORE|324021|95655|110141
-JABALPUR|810742|335139|329131
-JHABUA|928588|430110|261146
-KATNI|682126|281869|319451
-KHANDWA|1269827|569058|330805
-KHARGONE|2279680|857288|530898
-MANDLA|975995|615767|408573
-MANDSAUR|1312689|466319|529657
-MORENA|4728121|2770319|34790
-NARMADAPURAM|630655|144004|223265
-NARSINGHPUR|554714|302130|318472
-NEEMUCH|477806|235601|258117
-NIWARI|136097|159069|63121
-PANNA|598360|383833|129011
-RAISEN|760298|386583|419820
-RAJGARH|1079319|798863|689059
-RATLAM|1274948|673046|596484
-REWA|775315|383493|298916
-SAGAR|966818|603275|449799
-SATNA|763652|190360|189704
-SEHORE|1010208|352623|442411
-SEONI|856160|490201|243053
-SHAHDOL|626178|410770|198075
-SHAJAPUR|828892|339560|276332
-SHEOPUR|1276795|286758|184414
-SHIVPURI|1739272|634080|413552
-SIDHI|941331|400218|352884
-SINGRAULI|1070426|377852|201685
-TIKAMGARH|389993|421314|204198
-UJJAIN|1371847|373936|317430
-UMARIA|453002|147682|103684
-VIDISHA|798604|682774|689225`,districtLabour);
+const novemberDistricts=parseNovember(`AGAR-MALWA|804021|500061
+ALIRAJPUR|1176343|310232
+ANUPPUR|336661|105292
+ASHOK NAGAR|1019851|399231
+BALAGHAT|440465|204267
+BARWANI|1298138|429448
+BETUL|870866|262389
+BHIND|193639|36993
+BHOPAL|352583|192736
+BURHANPUR|331842|153696
+CHHATARPUR|1089599|330434
+CHHINDWARA|1211574|786147
+DAMOH|1504447|444546
+DATIA|212223|49479
+DEWAS|1350229|249113
+DHAR|2516273|646919
+DINDORI|1034295|1566060
+GUNA|1070779|317578
+GWALIOR|324748|56455
+HARDA|290483|95650
+INDORE|324021|110141
+JABALPUR|810742|329131
+JHABUA|928588|261146
+KATNI|682126|319451
+KHANDWA|1269827|330805
+KHARGONE|2279680|530898
+MANDLA|975995|408573
+MANDSAUR|1312689|529657
+MORENA|4728121|34790
+NARMADAPURAM|630655|223265
+NARSINGHPUR|554714|318472
+NEEMUCH|477806|258117
+NIWARI|136097|63121
+PANNA|598360|129011
+RAISEN|760298|419820
+RAJGARH|1079319|689059
+RATLAM|1274948|596484
+REWA|775315|298916
+SAGAR|966818|449799
+SATNA|763652|189704
+SEHORE|1010208|442411
+SEONI|856160|243053
+SHAHDOL|626178|198075
+SHAJAPUR|828892|276332
+SHEOPUR|1276795|184414
+SHIVPURI|1739272|413552
+SIDHI|941331|352884
+SINGRAULI|1070426|201685
+TIKAMGARH|389993|204198
+UJJAIN|1371847|317430
+UMARIA|453002|103684
+VIDISHA|798604|689225`,districtLabour);
 const novemberBlocks={
- सतना:parseNovember(`मझगवां|62985|52181|14619
-नागौद|93742|34273|30502
-रामपुर बघेलान|175416|17905|32911
-सोहावल|110216|29163|16041
-उचेहरा|60684|12203|15481`,blockLabour),
- मैहर:parseNovember(`अमरपाटन|78203|9265|22445
-मैहर|94107|24183|36066
-रामनगर|88299|11187|21639`,blockLabour),
- रीवा:parseNovember(`गंगेव|92802|54367|40015|470
-जवा|90617|28556|19352|281
-रायपुर कर्चुलियान|83366|48620|41397|696
-रीवा|66699|35509|21786|527
-सिरमौर|136879|38613|23938|605
-त्योंथर|54409|39261|25651|292`,{},{
+ सतना:parseNovember(`मझगवां|62985|14619
+नागौद|93742|30502
+रामपुर बघेलान|175416|32911
+सोहावल|110216|16041
+उचेहरा|60684|15481`,blockLabour),
+ मैहर:parseNovember(`अमरपाटन|78203|22445
+मैहर|94107|36066
+रामनगर|88299|21639`,blockLabour),
+ रीवा:parseNovember(`गंगेव|92802|40015|470
+जवा|90617|19352|281
+रायपुर कर्चुलियान|83366|41397|696
+रीवा|66699|21786|527
+सिरमौर|136879|23938|605
+त्योंथर|54409|25651|292`,{},{
  'गंगेव':{totalGP:88,workingGP:64,mrIssued:328},'जवा':{totalGP:80,workingGP:56,mrIssued:136},
  'रायपुर कर्चुलियान':{totalGP:104,workingGP:99,mrIssued:503},'रीवा':{totalGP:92,workingGP:83,mrIssued:388},
  'सिरमौर':{totalGP:103,workingGP:70,mrIssued:405},'त्योंथर':{totalGP:97,workingGP:59,mrIssued:226}}),
- मऊगंज:parseNovember(`मऊगंज|68040|42301|39591|597
-हनुमना|108246|53720|48353|564
-नईगढ़ी|74257|42546|41496|514`,{},{
+ मऊगंज:parseNovember(`मऊगंज|68040|39591|597
+हनुमना|108246|48353|564
+नईगढ़ी|74257|41496|514`,{},{
  'मऊगंज':{totalGP:82,workingGP:77,mrIssued:387},'हनुमना':{totalGP:98,workingGP:56,mrIssued:439},
  'नईगढ़ी':{totalGP:76,workingGP:58,mrIssued:428}})
 };
@@ -297,7 +297,7 @@ function render(){
  const selected=select.value, external=!!selected;
  originalWrap.hidden=external;originalKpis.hidden=false;state.hidden=!external;
  document.getElementById('snWarnings').hidden=external;
- section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से नवंबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
+ section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से नवंबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 जुलाई से नवंबर की VB-G RAM G उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
  if(external)document.getElementById('snDate').textContent='दिनांक '+novemberDate;
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el){const field=el.closest('label')||el;field.hidden=external;field.style.display=external?'none':'';}}
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el)el.disabled=external;}
@@ -319,7 +319,7 @@ function render(){
  tb.innerHTML=chosen.map((name,i)=>{
   const d=all[name];if(!valid(d))return '<tr><td>'+ (i+1) +'</td><td>'+esc(name)+'</td><td colspan="16">समान अवधि के आँकड़े उपलब्ध नहीं हैं</td></tr>';
   const sum=k=>d.rows.reduce((a,r)=>a+Number(r[k]||0),0);
-  const target=sum('target'),p1=sum('nregaAprilJune'),p2=sum('vbgramJulyNovember'),achievement=p1+p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0;
+  const target=sum('target'),p2=sum('vbgramJulyNovember'),achievement=p2,gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0;
   const known=k=>d.rows.every(r=>r[k]!=null)?sum(k):null;
   const labour=known('todayLabour'),ongoing=known('ongoing'),mr=known('mrIssued'),incomplete=known('incompleteWorks');
   for(const [k,v] of Object.entries({target,period2:p2,achievement,gap,daily}))totals[k]+=v;
