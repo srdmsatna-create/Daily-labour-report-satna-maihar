@@ -148,6 +148,19 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
   .grand-total, .grand-total td { background-color: #075c39 !important; color: #fff !important; border-color: #064b30 !important; }
   .grand-total .metric b, .grand-total .metric small { color: #fff !important; }
 }
+
+@media print {
+  @page { size: A4 landscape; margin: 7mm; }
+  h1 { font-size: 22pt !important; font-weight: 900 !important; color: #075c39 !important; margin: 0 0 3mm !important; }
+  h2 { font-size: 15pt !important; font-weight: 900 !important; color: #075c39 !important; margin: 2mm 0 !important; }
+  .subtitle { font-size: 9pt !important; line-height: 1.35 !important; color: #244866 !important; }
+  thead th { font-size: 8pt !important; font-weight: 900 !important; }
+  .total-row td { font-size: 8pt !important; font-weight: 900 !important; line-height: 1.35 !important; white-space: normal !important; padding: 1.5mm .8mm !important; }
+  .total-row .metric b { font-size: 9pt !important; font-weight: 900 !important; white-space: normal !important; }
+  .total-row .metric small { font-size: 8pt !important; font-weight: 900 !important; white-space: normal !important; }
+  .grand-total, .grand-total td { background-color: #075c39 !important; color: #fff !important; border-color: #064b30 !important; }
+  .grand-total .metric b, .grand-total .metric small { color: #fff !important; }
+}
 </style>
 </head>
 <body><main>
