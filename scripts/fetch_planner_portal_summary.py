@@ -1,9 +1,10 @@
 from pathlib import Path
 from urllib.parse import urljoin
-import json,re,datetime
+import json,re,datetime,time
 import requests
 from bs4 import BeautifulSoup
 from requests.adapters import HTTPAdapter
+from urllib3.exceptions import MaxRetryError, NameResolutionError
 from urllib3.util.retry import Retry
 
 BASE='https://planner.nregsmp.org/reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block'
@@ -27,7 +28,18 @@ def rows_from_table(table):
         if cells: out.append((tr,cells))
     return out
 
-html=get(BASE); soup=BeautifulSoup(html,'html.parser')
+def get_district_report():
+    try:
+        return get(BASE)
+    except requests.ConnectionError as error:
+        reason = error.args[0] if error.args else None
+        if not isinstance(reason, MaxRetryError) or not isinstance(reason.reason, NameResolutionError):
+            raise
+        print('Planner DNS lookup failed after connection retries; retrying district report in 60 seconds', flush=True)
+        time.sleep(60)
+        return get(BASE)
+
+html=get_district_report(); soup=BeautifulSoup(html,'html.parser')
 blocks=[]; block_links={}
 for table in soup.find_all('table'):
     for tr,c in rows_from_table(table):
