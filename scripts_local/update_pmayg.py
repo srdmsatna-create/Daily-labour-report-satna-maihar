@@ -29,7 +29,7 @@ def open_with_retry(opener,url,data=None,timeout=60):
   finally:stop.set();worker.join(timeout=1)
 
 
-def fetch_source(source_url):
+def district_form(source_url):
  opener=session_opener();src,url=open_with_retry(opener,source_url)
  d=hidden_fields(src);selected_values(src,d);d.update({'__EVENTTARGET':'ctl00$ContentPlaceHolder1$ddl_dist','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712'})
  src,url=open_with_retry(opener,form_action(src,url),urllib.parse.urlencode(d).encode())
@@ -37,6 +37,12 @@ def fetch_source(source_url):
  base=hidden_fields(src);selected_values(src,base)
  prefix='ctl00$ContentPlaceHolder1$'
  base.update({'__EVENTTARGET':'',prefix+'ddl_blk':'ALL',prefix+'ddl_pan':'ALL',prefix+'Ddlworkcategory':'ALL',prefix+'ddlFin_year':'ALL',prefix+'filter':'ALL',prefix+'Button1':'Submit'})
+ return opener,form_action(src,url),base
+
+
+def fetch_source(source_url):
+ opener,action,base=district_form(source_url)
+ prefix='ctl00$ContentPlaceHolder1$'
  cache_dir=Path(os.environ.get('PMAY_FETCH_CACHE_DIR','')) if os.environ.get('PMAY_FETCH_CACHE_DIR') else ROOT/'data'/'pmayg-fetch-cache';cache_dir.mkdir(parents=True,exist_ok=True)
  today=datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat()
  rows=[]
@@ -48,9 +54,18 @@ def fetch_source(source_url):
     saved=json.loads(cache.read_text(encoding='utf-8'))
     if saved.get('date')==today and saved.get('status')==label:
      rows.extend(saved['rows']);print('CHECKPOINT '+label+' / '+kind+': '+str(len(saved['rows']))+' rows',flush=True);continue
-   payload=dict(base);payload.update({prefix+'Ddlwork_status':status,prefix+'ddlprostatus':kind})
    print('Fetching '+label+' / '+kind,flush=True)
-   page,_=open_with_retry(opener,form_action(src,url),urllib.parse.urlencode(payload).encode(),timeout=180)
+   for attempt in range(2):
+    payload=dict(base);payload.update({prefix+'Ddlwork_status':status,prefix+'ddlprostatus':kind})
+    try:
+     page,_=open_with_retry(opener,action,urllib.parse.urlencode(payload).encode(),timeout=180)
+     break
+    except urllib.error.HTTPError as error:
+     if error.code!=404 or attempt:
+      host=urllib.parse.urlparse(source_url).hostname
+      raise RuntimeError(f'{host}: {label} / {kind}: {error}') from error
+     print('HTTP 404; opening a fresh portal session for '+label+' / '+kind,flush=True)
+     opener,action,base=district_form(source_url)
    if 'Work Code' not in page and 'Work_Code' not in page and not re.search(r'No\s+(?:Record|Data)',page,re.I):raise ValueError('Unrecognized report response')
    parser=ResultRows(label);parser.feed(page);parser.close()
    for r in parser.rows:
