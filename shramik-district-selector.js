@@ -261,8 +261,7 @@ const novemberBlocks={
  'मऊगंज':{totalGP:82,workingGP:77,mrIssued:387},'हनुमना':{totalGP:98,workingGP:56,mrIssued:439},
  'नईगढ़ी':{totalGP:76,workingGP:58,mrIssued:428}})
 };
-const localOfficial=Object.fromEntries((window.AUTO_REPORT?.meta?.sourceDates?.OfficialSummary===ongoingSnapshotDate?window.AUTO_REPORT.official:[]).map(r=>[r.janpad,r]));
-const localNames={'मझगवां':'MAJHGAWAN','नागौद':'NAGOD','रामपुर बघेलान':'RAMPUR BAGHELAN','सोहावल':'SATNA','उचेहरा':'UNCHAHARA','अमरपाटन':'AMARPATAN','मैहर':'MAIHAR','रामनगर':'RAMNAGAR'};
+const janpadOngoing={"अमरपाटन":1401,"मैहर":2445,"मझगवां":2155,"नागौद":2482,"रामनगर":1238,"रामपुर बघेलान":3261,"सोहावल":1085,"उचेहरा":1701,"गंगेव":1476,"हनुमना":2631,"जवा":1437,"मऊगंज":1822,"नईगढ़ी":2321,"रायपुर कर्चुलियान":2625,"रीवा":1259,"सिरमौर":2210,"त्योंथर":2202};
 function records(){
  const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===ongoingSnapshotDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
  const wrap=rows=>({rows});
@@ -271,9 +270,7 @@ function records(){
  ]));
  for(const [district,blocks] of Object.entries(novemberBlocks)){
   const rows=Object.entries(blocks).map(([name,row])=>{
-   const m=localOfficial[localNames[name]];
-   const merged={...row,...emuster[name]};
-   if(m)merged.ongoing=m.ongoingAll;
+   const merged={...row,...emuster[name],ongoing:janpadOngoing[name]};
    result[district+' / '+name]=wrap([merged]);
    return merged;
   });
