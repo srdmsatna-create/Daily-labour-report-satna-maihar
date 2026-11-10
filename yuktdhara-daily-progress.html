@@ -128,6 +128,26 @@ td:first-child,td:nth-child(2),td:nth-child(3){text-align:left}
   .engineer-progress-table td.metric b { font-size: 9pt; }
   .engineer-progress-table td.metric small { font-size: 8pt; }
 }
+
+@media print {
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .janpad-total-amarpatan, .janpad-total-amarpatan td { background-color: #e5f2df !important; color: #1d5b39 !important; }
+  .janpad-total-maihar, .janpad-total-maihar td { background-color: #e2effb !important; color: #174e7d !important; }
+  .janpad-total-ramnagar, .janpad-total-ramnagar td { background-color: #f4e9fa !important; color: #673985 !important; }
+  .janpad-total-majhgawan, .janpad-total-majhgawan td { background-color: #fff0df !important; color: #86501c !important; }
+  .janpad-total-nagod, .janpad-total-nagod td { background-color: #fce5e7 !important; color: #8f2632 !important; }
+  .janpad-total-rampurbaghelan, .janpad-total-rampurbaghelan td { background-color: #e2f4f1 !important; color: #17665b !important; }
+  .janpad-total-sohawal, .janpad-total-sohawal td { background-color: #f4f0d8 !important; color: #706019 !important; }
+  .janpad-total-unchahara, .janpad-total-unchahara td { background-color: #e9e8fb !important; color: #373d83 !important; }
+  .janpad-total-satna, .janpad-total-satna td { background-color: #e8eef4 !important; color: #324f69 !important; }
+  .district-total-maihar, .district-total-maihar td { background-color: #d8eafb !important; color: #123e68 !important; }
+  .district-total-satna, .district-total-satna td { background-color: #e3e8ed !important; color: #324f69 !important; }
+  .grand-total, .grand-total td { background-color: #075c39 !important; color: #fff !important; border-color: #064b30 !important; }
+  .grand-total .metric b, .grand-total .metric small { color: #fff !important; }
+}
 </style>
 </head>
 <body><main>
