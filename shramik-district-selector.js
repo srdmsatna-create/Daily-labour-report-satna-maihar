@@ -183,6 +183,8 @@ function parseNovember(text, labourByName, metrics={}) {
    achievement:vbgramJulyNovember,todayLabour:labour??labourByName[name]}];
  }));
 }
+// Official S5.8 Total Works Ongoing, FY 2026–27.
+const districtOngoing={"MORENA":7043,"BHIND":7621,"GWALIOR":6138,"DATIA":4099,"SHIVPURI":21244,"GUNA":13932,"TIKAMGARH":11772,"CHHATARPUR":12871,"PANNA":10345,"SAGAR":21478,"DAMOH":21189,"SATNA":15782,"REWA":17783,"SHAHDOL":4386,"SIDHI":16942,"MANDSAUR":24286,"RATLAM":13393,"UJJAIN":10397,"SHAJAPUR":8425,"DEWAS":10365,"JHABUA":19442,"DHAR":21629,"INDORE":3920,"KHARGONE":14355,"KHANDWA":12660,"RAJGARH":19768,"VIDISHA":18083,"BHOPAL":8729,"SEHORE":17804,"RAISEN":15119,"BETUL":13909,"NARMADAPURAM":13958,"JABALPUR":13366,"NARSINGHPUR":11890,"MANDLA":8975,"CHHINDWARA":12110,"SEONI":9238,"BALAGHAT":7337,"SHEOPUR":12013,"UMARIA":9123,"NEEMUCH":6832,"BARWANI":12766,"HARDA":4943,"KATNI":4015,"DINDORI":5938,"ANUPPUR":3566,"BURHANPUR":5297,"ASHOK NAGAR":21475,"ALIRAJPUR":6348,"SINGRAULI":9546,"AGAR-MALWA":18920,"NIWARI":3687};
 const novemberDistricts=parseNovember(`AGAR-MALWA|804021|500061
 ALIRAJPUR|1176343|310232
 ANUPPUR|336661|105292
@@ -265,7 +267,7 @@ function records(){
  const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===ongoingSnapshotDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
  const wrap=rows=>({rows});
  const result=Object.fromEntries(Object.entries(novemberDistricts).map(([name,row])=>[
-  name,wrap([{...(saved[name]?.rows[0]||{}),...row,...emuster[name]}])
+  name,wrap([{...(saved[name]?.rows[0]||{}),...row,...emuster[name],ongoing:districtOngoing[name]}])
  ]));
  for(const [district,blocks] of Object.entries(novemberBlocks)){
   const rows=Object.entries(blocks).map(([name,row])=>{
