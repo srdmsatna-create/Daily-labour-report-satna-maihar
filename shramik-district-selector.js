@@ -98,7 +98,82 @@ section.appendChild(localStyle);
 
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=v=>v==null?'—':Number(v).toLocaleString('en-IN');
-const novemberDate='09-11-2026';
+const ongoingSnapshotDate='09-11-2026';
+const novemberDate='10-11-2026';
+// Official R6.9 district and Janpad figures, dated 10-11-2026.
+const emuster=Object.fromEntries(`AGAR-MALWA|236|174|4753|3540
+ALIRAJPUR|288|254|4843|843
+ANUPPUR|277|3|10|6
+ASHOK NAGAR|328|145|2347|1801
+BALAGHAT|690|611|4274|1185
+BARWANI|409|404|16477|2061
+BETUL|554|323|2043|980
+BHIND|439|15|65|50
+BHOPAL|222|192|3245|2265
+BURHANPUR|167|83|904|613
+CHHATARPUR|559|348|3992|2333
+CHHINDWARA|790|660|10548|2136
+DAMOH|459|281|3430|1529
+DATIA|290|5|27|11
+DEWAS|496|298|3351|1288
+DHAR|763|359|2605|1549
+DINDORI|364|155|2659|347
+GUNA|421|169|1866|1540
+GWALIOR|263|0|0|0
+HARDA|220|159|885|596
+INDORE|334|145|701|341
+JABALPUR|527|335|3252|1925
+JHABUA|375|178|1949|804
+KATNI|407|163|1625|313
+KHANDWA|419|306|3263|1639
+KHARGONE|589|527|9704|3109
+MANDLA|490|327|3160|774
+MANDSAUR|468|345|6272|3835
+MORENA|478|0|0|0
+NARMADAPURAM|427|366|2534|1934
+NARSINGHPUR|450|375|3271|2534
+NEEMUCH|243|178|1631|1077
+NIWARI|136|125|1290|537
+PANNA|386|161|1858|863
+RAISEN|521|442|5573|3537
+RAJGARH|622|479|12692|8456
+RATLAM|419|352|7148|3579
+REWA|820|677|5253|3544
+SAGAR|766|521|3902|2858
+SATNA|695|644|4109|2410
+SEHORE|542|417|5261|3762
+SEONI|635|476|7391|948
+SHAHDOL|390|18|228|42
+SHAJAPUR|352|279|4246|2824
+SHEOPUR|236|0|0|0
+SHIVPURI|587|4|11|11
+SIDHI|400|386|6982|4305
+SINGRAULI|316|313|6165|2486
+TIKAMGARH|324|219|2916|1733
+UJJAIN|609|462|3594|2307
+UMARIA|236|13|74|16
+VIDISHA|577|546|8246|5679
+गंगेव|88|80|661|394
+हनुमना|98|68|637|482
+जवा|80|64|315|153
+मऊगंज|82|79|817|471
+नईगढ़ी|76|59|524|433
+रायपुर कर्चुलियान|104|100|745|535
+रीवा|92|85|560|382
+सिरमौर|103|77|686|452
+त्योंथर|97|65|308|242
+अमरपाटन|75|64|336|229
+मैहर|115|108|573|335
+मझगवां|96|95|654|233
+नागौद|94|85|756|438
+रामनगर|55|55|255|187
+रामपुर बघेलान|97|81|836|607
+सोहावल|93|93|490|265
+उचेहरा|70|63|209|116`.split('\n').map(line=>{
+ const [name,...values]=line.split('|');
+ const [totalGP,workingGP,todayLabour,mrIssued]=values.map(Number);
+ return [name,{totalGP,workingGP,todayLabour,mrIssued}];
+}));
 const districtLabour={"AGAR-MALWA":4613,"ALIRAJPUR":4894,"ANUPPUR":8,"ASHOK NAGAR":2611,"BALAGHAT":4467,"BARWANI":16083,"BETUL":2039,"BHIND":101,"BHOPAL":3237,"BURHANPUR":959,"CHHATARPUR":3581,"CHHINDWARA":11212,"DAMOH":2248,"DATIA":29,"DEWAS":3417,"DHAR":2560,"DINDORI":2679,"GUNA":1906,"GWALIOR":0,"HARDA":801,"INDORE":762,"JABALPUR":3228,"JHABUA":1721,"KATNI":1727,"KHANDWA":3004,"KHARGONE":8706,"MANDLA":3101,"MANDSAUR":7009,"MORENA":0,"NARMADAPURAM":2461,"NARSINGHPUR":3332,"NEEMUCH":1782,"NIWARI":1199,"PANNA":1886,"RAISEN":5483,"RAJGARH":12613,"RATLAM":7456,"REWA":4433,"SAGAR":3411,"SATNA":4111,"SEHORE":5133,"SEONI":8144,"SHAHDOL":120,"SHAJAPUR":4536,"SHEOPUR":0,"SHIVPURI":10,"SIDHI":6784,"SINGRAULI":5981,"TIKAMGARH":2830,"UJJAIN":4501,"UMARIA":94,"VIDISHA":8331};
 const blockLabour={"अमरपाटन":332,"मैहर":576,"रामनगर":326,"मझगवां":651,"नागौद":726,"रामपुर बघेलान":789,"सोहावल":490,"उचेहरा":221};
 function parseNovember(text, labourByName, metrics={}) {
@@ -184,18 +259,19 @@ const novemberBlocks={
  'मऊगंज':{totalGP:82,workingGP:77,mrIssued:387},'हनुमना':{totalGP:98,workingGP:56,mrIssued:439},
  'नईगढ़ी':{totalGP:76,workingGP:58,mrIssued:428}})
 };
-const localOfficial=Object.fromEntries((window.AUTO_REPORT?.meta?.sourceDates?.OfficialSummary===novemberDate?window.AUTO_REPORT.official:[]).map(r=>[r.janpad,r]));
+const localOfficial=Object.fromEntries((window.AUTO_REPORT?.meta?.sourceDates?.OfficialSummary===ongoingSnapshotDate?window.AUTO_REPORT.official:[]).map(r=>[r.janpad,r]));
 const localNames={'मझगवां':'MAJHGAWAN','नागौद':'NAGOD','रामपुर बघेलान':'RAMPUR BAGHELAN','सोहावल':'SATNA','उचेहरा':'UNCHAHARA','अमरपाटन':'AMARPATAN','मैहर':'MAIHAR','रामनगर':'RAMNAGAR'};
 function records(){
- const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===novemberDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
+ const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===ongoingSnapshotDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
  const wrap=rows=>({rows});
  const result=Object.fromEntries(Object.entries(novemberDistricts).map(([name,row])=>[
-  name,wrap([{...(saved[name]?.rows[0]||{}),...row}])
+  name,wrap([{...(saved[name]?.rows[0]||{}),...row,...emuster[name]}])
  ]));
  for(const [district,blocks] of Object.entries(novemberBlocks)){
   const rows=Object.entries(blocks).map(([name,row])=>{
    const m=localOfficial[localNames[name]];
-   const merged=m?{totalGP:m.totalGP,workingGP:m.musterGP,ongoing:m.ongoingAll,mrIssued:m.mrAll,...row}:row;
+   const merged={...row,...emuster[name]};
+   if(m)merged.ongoing=m.ongoingAll;
    result[district+' / '+name]=wrap([merged]);
    return merged;
   });
