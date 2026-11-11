@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Fetch SATNA MIS 6.12 work rows for three statuses without browser automation."""
+"""Fetch SATNA MIS 6.12 work rows for four statuses without browser automation."""
 import csv, html, json, re, subprocess, sys, tempfile
 import urllib.parse, urllib.request
 from datetime import datetime, timezone
@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT_CSV=ROOT/'data'/'Ongoing_Works_dynamic_work_details_latest.csv'
 URL='https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=YL7LCe001h9FHBoOuTtmr8ihF3GutuJlR4euhIYZiFTTmu6PMGDs2ujZ66S61WQDfKtYFzd8a7KKjiMPSn5GiFkZG3OckIaAvbsxdeh9P6CVed-X0QRKY8-APjlqWillfYqVUCkFRgnKQMEk7QjR7EV9FteCTnyMlAjrob7mf4Gf6B9S3Ld_-yhPIz9Rcd_r'
 STATUSES=[('03','Ongoing'),('05','Completed'),('06','Physically Completed')]
-FIELDS=['District Name','Janpad / Block Name','Panchayat Name','Work Start Fin Year','Work Status','Work Code','Work Name','Work Type','Original Work Category','Total Sanction (Rs)','Booked Since Inception Wages (Rs)','Booked Since Inception Material (Rs)','Total Mandays','Mandays Generated Current FY','Is Secure']
+FIELDS=['District Name','Janpad / Block Name','Panchayat Name','Work Start Fin Year','Work Status','Work Code','Work Name','Work Type','Original Work Category','Total Sanction (Rs)','Booked Since Inception Wages (Rs)','Booked Since Inception Material (Rs)','Total Mandays','Mandays Generated Current FY','Is Secure','Convergence']
 
 def clean(v): return re.sub(r'\s+',' ',html.unescape(str(v or ''))).strip()
 
@@ -39,7 +39,7 @@ class ResultRows(HTMLParser):
                 # current R-6.12 layout Is Secure is data-cell 28 (0-based), before convergence/date/JCN.
                 secure_index=28 if len(c)>=32 and c[28].upper() in ('YES','NO') else (self.secure_index if self.secure_index is not None else -1)
                 if secure_index<0 or secure_index>=len(c):raise RuntimeError('R-6.12 Is Secure column index could not be resolved')
-                self.rows.append({'District Name':c[1],'Janpad / Block Name':c[2],'Panchayat Name':c[3],'Work Start Fin Year':c[4],'Work Status':c[5] or self.status,'Work Code':c[6],'Work Name':c[7],'Original Work Category':c[9],'Work Type':c[11] or c[10],'Total Sanction (Rs)':c[15],'Booked Since Inception Wages (Rs)':c[20],'Booked Since Inception Material (Rs)':c[21],'Total Mandays':c[24],'Mandays Generated Current FY':c[25],'Is Secure':c[secure_index]})
+                self.rows.append({'District Name':c[1],'Janpad / Block Name':c[2],'Panchayat Name':c[3],'Work Start Fin Year':c[4],'Work Status':c[5] or self.status,'Work Code':c[6],'Work Name':c[7],'Original Work Category':c[9],'Work Type':c[11] or c[10],'Total Sanction (Rs)':c[15],'Booked Since Inception Wages (Rs)':c[20],'Booked Since Inception Material (Rs)':c[21],'Total Mandays':c[24],'Mandays Generated Current FY':c[25],'Is Secure':c[secure_index],'Convergence':c[29]})
 
 def hidden_fields(src):
     d={}
@@ -80,6 +80,18 @@ def block_options(src):
     if missing:raise RuntimeError('MIS 6.12 Janpad options incomplete: '+', '.join(missing))
     return [(name,found[name]) for name in ('AMARPATAN','MAIHAR','RAMNAGAR','MAJHGAWAN','NAGOD','RAMPURBAGHELAN','SOHAWAL','UNCHAHARA')]
 
+def approved_status_option(src):
+    selector = re.search(r'<select\b[^>]*name=["\'][^"\']*Ddlwork_status["\'][^>]*>(.*?)</select>', src, re.I | re.S)
+    if not selector:
+        raise RuntimeError('MIS 6.12 work status selector not found')
+    for attrs, label in re.findall(r'<option\b([^>]*)>(.*?)</option>', selector.group(1), re.I | re.S):
+        if clean(re.sub(r'<[^>]+>', ' ', label)).casefold() != 'approved':
+            continue
+        value = re.search(r"""\bvalue=["']([^"']+)["']""", attrs, re.I)
+        if value:
+            return html.unescape(value.group(1))
+    raise RuntimeError('MIS 6.12 Approved option not found')
+
 def fetch():
     opener=session_opener()
     home,home_url=open_text(opener,URL)
@@ -88,9 +100,10 @@ def fetch():
     janpads=block_options(district)
     base=hidden_fields(district);selected_values(district,base)
     base.update({'__EVENTTARGET':'','ctl00$ContentPlaceHolder1$ddl_state':'17','ctl00$ContentPlaceHolder1$ddl_dist':'1712','ctl00$ContentPlaceHolder1$ddl_pan':'ALL','ctl00$ContentPlaceHolder1$Ddlworkcategory':'ALL','ctl00$ContentPlaceHolder1$ddlprostatus':'ALL','ctl00$ContentPlaceHolder1$ddlexp':'ALL','ctl00$ContentPlaceHolder1$ddlexpnest':'ALL','ctl00$ContentPlaceHolder1$ddlFin_year':'ALL','ctl00$ContentPlaceHolder1$filter':'ALL','ctl00$ContentPlaceHolder1$Button1':'Submit'})
-    action=form_action(district,district_url);all_rows=[];counts={name:0 for _,name in STATUSES}
+    statuses=[(approved_status_option(district),'Approved'),*STATUSES]
+    action=form_action(district,district_url);all_rows=[];counts={name:0 for _,name in statuses}
     for janpad,block_code in janpads:
-        for code,name in STATUSES:
+        for code,name in statuses:
             payload=dict(base);payload['ctl00$ContentPlaceHolder1$ddl_blk']=block_code;payload['ctl00$ContentPlaceHolder1$Ddlwork_status']=code
             req=urllib.request.Request(action,data=urllib.parse.urlencode(payload).encode(),headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/128 Safari/537.36','Content-Type':'application/x-www-form-urlencoded','Cache-Control':'no-cache'})
             parser=ResultRows(name)
@@ -100,6 +113,8 @@ def fetch():
                     if not chunk:break
                     parser.feed(chunk.decode('utf-8','ignore'))
             parser.close();counts[name]+=len(parser.rows)
+            if any(clean(row['Work Status']).casefold() not in {name.casefold(), 'on going' if name=='Ongoing' else name.casefold()} for row in parser.rows):
+                raise RuntimeError(f'MIS 6.12 returned a different work status for {janpad}: {name}')
             if not parser.rows:raise RuntimeError(f'MIS 6.12 returned zero {name} rows for {janpad}')
             all_rows.extend(parser.rows);print(f'MIS 6.12 {janpad} {name}: {len(parser.rows)} rows')
     unique={(r['Work Code'],r['Work Status'].upper()):r for r in all_rows}
