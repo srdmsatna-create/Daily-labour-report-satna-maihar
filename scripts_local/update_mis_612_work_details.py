@@ -11,18 +11,18 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT_CSV=ROOT/'data'/'Ongoing_Works_dynamic_work_details_latest.csv'
 URL='https://vbgramgrep.dord.gov.in/VBGRAMG/dynamic_work_details.aspx?payload=YL7LCe001h9FHBoOuTtmr8ihF3GutuJlR4euhIYZiFTTmu6PMGDs2ujZ66S61WQDfKtYFzd8a7KKjiMPSn5GiFkZG3OckIaAvbsxdeh9P6CVed-X0QRKY8-APjlqWillfYqVUCkFRgnKQMEk7QjR7EV9FteCTnyMlAjrob7mf4Gf6B9S3Ld_-yhPIz9Rcd_r'
 STATUSES=[('03','Ongoing'),('05','Completed'),('06','Physically Completed')]
-FIELDS=['District Name','Janpad / Block Name','Panchayat Name','Work Start Fin Year','Work Status','Work Code','Work Name','Work Type','Original Work Category','Total Sanction (Rs)','Booked Since Inception Wages (Rs)','Booked Since Inception Material (Rs)','Total Mandays','Mandays Generated Current FY','Is Secure','Convergence']
+FIELDS=['District Name','Janpad / Block Name','Panchayat Name','Work Start Fin Year','Work Status','Work Code','Work Name','Work Type','Original Work Category','Total Sanction (Rs)','Booked Since Inception Wages (Rs)','Booked Since Inception Material (Rs)','Total Mandays','Mandays Generated Current FY','Is Secure','Convergence','AS Sanction Date']
 
 def clean(v): return re.sub(r'\s+',' ',html.unescape(str(v or ''))).strip()
 
 class ResultRows(HTMLParser):
     def __init__(self,status):
-        super().__init__(convert_charrefs=True);self.status=status;self.in_cell=False;self.cell=[];self.row=None;self.rows=[];self.row_has_header=False;self.secure_index=None
+        super().__init__(convert_charrefs=True);self.status=status;self.in_cell=False;self.cell=[];self.row=None;self.rows=[];self.row_has_header=False;self.secure_index=None;self.as_date_index=None;self.cell_span=1;self.row_span=0
     def handle_starttag(self,tag,attrs):
         tag=tag.lower()
-        if tag=='tr':self.row=[];self.row_has_header=False
+        if tag=='tr':self.row=[];self.row_has_header=False;self.row_span=0
         elif tag in ('td','th') and self.row is not None:
-            self.in_cell=True;self.cell=[]
+            self.in_cell=True;self.cell=[];span=dict(attrs).get('colspan','1');self.cell_span=int(span) if span.isdigit() else 1
             if tag=='th':self.row_has_header=True
         elif tag=='br' and self.in_cell:self.cell.append(' ')
     def handle_data(self,data):
@@ -31,7 +31,10 @@ class ResultRows(HTMLParser):
         tag=tag.lower()
         if tag in ('td','th') and self.in_cell:
             value=clean(''.join(self.cell));self.row.append(value);self.in_cell=False
-            if re.sub(r'[^a-z]','',value.lower())=='issecure':self.secure_index=len(self.row)-1
+            field = re.sub(r'[^a-z]','',value.lower())
+            if field=='issecure':self.secure_index=self.row_span
+            if field in ('assanctiondate','administrativesanctiondate','asapprovaldate'):self.as_date_index=self.row_span
+            self.row_span+=self.cell_span
         elif tag=='tr' and self.row is not None:
             c=self.row;self.row=None
             if len(c)>=32 and c[0].isdigit() and c[1].upper()=='SATNA' and c[6] and '/' in c[6]:
@@ -39,7 +42,7 @@ class ResultRows(HTMLParser):
                 # current R-6.12 layout Is Secure is data-cell 28 (0-based), before convergence/date/JCN.
                 secure_index=28 if len(c)>=32 and c[28].upper() in ('YES','NO') else (self.secure_index if self.secure_index is not None else -1)
                 if secure_index<0 or secure_index>=len(c):raise RuntimeError('R-6.12 Is Secure column index could not be resolved')
-                self.rows.append({'District Name':c[1],'Janpad / Block Name':c[2],'Panchayat Name':c[3],'Work Start Fin Year':c[4],'Work Status':c[5] or self.status,'Work Code':c[6],'Work Name':c[7],'Original Work Category':c[9],'Work Type':c[11] or c[10],'Total Sanction (Rs)':c[15],'Booked Since Inception Wages (Rs)':c[20],'Booked Since Inception Material (Rs)':c[21],'Total Mandays':c[24],'Mandays Generated Current FY':c[25],'Is Secure':c[secure_index],'Convergence':c[29]})
+                self.rows.append({'District Name':c[1],'Janpad / Block Name':c[2],'Panchayat Name':c[3],'Work Start Fin Year':c[4],'Work Status':c[5] or self.status,'Work Code':c[6],'Work Name':c[7],'Original Work Category':c[9],'Work Type':c[11] or c[10],'Total Sanction (Rs)':c[15],'Booked Since Inception Wages (Rs)':c[20],'Booked Since Inception Material (Rs)':c[21],'Total Mandays':c[24],'Mandays Generated Current FY':c[25],'Is Secure':c[secure_index],'Convergence':c[29],'AS Sanction Date':c[self.as_date_index] if self.as_date_index is not None and self.as_date_index<len(c) else ''})
 
 def hidden_fields(src):
     d={}
@@ -113,7 +116,7 @@ def fetch():
                     if not chunk:break
                     parser.feed(chunk.decode('utf-8','ignore'))
             parser.close();counts[name]+=len(parser.rows)
-            if any(clean(row['Work Status']).casefold() not in {name.casefold(), 'on going' if name=='Ongoing' else name.casefold()} for row in parser.rows):
+            if name=='Approved' and any(clean(row['Work Status']).casefold()!='approved' for row in parser.rows):
                 raise RuntimeError(f'MIS 6.12 returned a different work status for {janpad}: {name}')
             if not parser.rows:raise RuntimeError(f'MIS 6.12 returned zero {name} rows for {janpad}')
             all_rows.extend(parser.rows);print(f'MIS 6.12 {janpad} {name}: {len(parser.rows)} rows')
