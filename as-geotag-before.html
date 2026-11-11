@@ -65,7 +65,7 @@ main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:c
 <div class="scope">FY 2026–27 • SECURE TS और AS दोनों: 01-10-2026 से snapshot तक • केवल Work Code ID में /YD/ • Before Geo Tag</div><div class="print-actions"><button type="button" onclick="window.print()">PDF Print</button></div><div class="data-alert" id="dataQuality" hidden></div>
 <section class="panel" id="janpadPanel">
   <div class="section-title-row"><h2>जिला / जनपदवार योग</h2><button class="section-print" type="button" onclick="printReport('janpad')">जनपद PDF Print</button></div>
-  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p>
+  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें SECURE TS जारी</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">Approved की गिनती 01.10.2026 से उपलब्ध e‑Work File रिकॉर्ड की AS तारीख पर आधारित है। इनमें SECURE TS जारी की गिनती उसी अवधि के Register से Work Code मिलाकर की गई है।</p>
 </section>
 <section class="panel" id="gpPanel" style="margin-top:10px">
   <div class="section-title-row"><h2>ग्राम पंचायतवार योग</h2><button class="section-print" type="button" onclick="printReport('gp')">GP PDF Print</button></div>
@@ -145,10 +145,10 @@ async function loadConvergence(){
   if(counts){row.cells[4].textContent=fmt(counts.YES);row.cells[5].textContent=fmt(counts.NO);}
  }
 }
-const tsByBlock=new Map(),tsByGp=new Map();
+const tsByBlock=new Map(),tsByGp=new Map(),secureTsCodes=new Set();
 const hasCurrentTs=T?.success===true&&T.fy===D.financialYear&&T.startDate===D.dateFrom&&Array.isArray(T.works)&&Array.isArray(T.panchayats);
 if(hasCurrentTs){
- const seen=new Set();
+ const seen=secureTsCodes;
  for(const work of T.works){
   const code=String(work.code||'').trim().toUpperCase(),block=blockKey(work.janpad);
   if(!code.includes('/YD/')||!work.tsDate||work.tsDate<T.startDate||work.tsDate>T.endDate||seen.has(code))continue;
@@ -159,7 +159,28 @@ if(hasCurrentTs){
  }
  $('reportMeta').textContent+=' • वर्तमान SECURE TS Register: '+T.date;
 }
-function summary(){let html='',grand={as:0,ts:0,geo:0,notOngoing:0,ongoing:0,yd:0};for(const d of ['MAIHAR','SATNA']){const group=(D.janpadSummary||[]).filter(x=>x.district===d);let total={as:0,ts:0,geo:0,notOngoing:0,ongoing:0,yd:0};for(const x of group){const block=labelBlock(x.block),colorIndex=janpadColorIndex[x.block]??0,ts=hasCurrentTs?(tsByBlock.get(blockKey(x.block))||0):Number(x.tsCount||0),as=Number(x.asSecureCount??x.asAvailable??0),metrics=geoMetrics(rows.filter(r=>r.district===d&&blockKey(r.block)===blockKey(x.block)),x.block),yd=Number(x.ydWorksCreated||0),pending=Math.max(0,as-metrics.total);html+='<tr class="janpad-color-'+colorIndex+'"><td>'+x.district+'</td><td>'+block+'</td><td>'+fmt(yd)+'</td><td>'+fmt(ts)+'</td>'+convergenceCells(block)+'<td>'+fmt(as)+'</td><td>'+fmt(ts-as)+'</td><td>'+fmt(metrics.total)+'</td><td>'+fmt(metrics.notOngoing)+'</td><td>'+fmt(metrics.ongoing)+'</td><td>'+fmt(pending)+'</td></tr>';total.as+=as;total.ts+=ts;total.geo+=metrics.total;total.notOngoing+=metrics.notOngoing;total.ongoing+=metrics.ongoing;total.yd+=yd;}html+='<tr class="'+d.toLowerCase()+'"><td>'+d+'</td><td>जिला योग</td><td>'+fmt(total.yd)+'</td><td>'+fmt(total.ts)+'</td>'+convergenceCells('district:'+d)+'<td>'+fmt(total.as)+'</td><td>'+fmt(total.ts-total.as)+'</td><td>'+fmt(total.geo)+'</td><td>'+fmt(total.notOngoing)+'</td><td>'+fmt(total.ongoing)+'</td><td>'+fmt(Math.max(0,total.as-total.geo))+'</td></tr>';grand.as+=total.as;grand.ts+=total.ts;grand.geo+=total.geo;grand.notOngoing+=total.notOngoing;grand.ongoing+=total.ongoing;grand.yd+=total.yd;}html+='<tr class="total"><td>सतना + मैहर</td><td>कुल</td><td>'+fmt(grand.yd)+'</td><td>'+fmt(grand.ts)+'</td>'+convergenceCells('ALL')+'<td>'+fmt(grand.as)+'</td><td>'+fmt(grand.ts-grand.as)+'</td><td>'+fmt(grand.geo)+'</td><td>'+fmt(grand.notOngoing)+'</td><td>'+fmt(grand.ongoing)+'</td><td>'+fmt(Math.max(0,grand.as-grand.geo))+'</td></tr>';$('summaryRows').innerHTML=html}function gpRowsWithCurrentTs(){
+function approvedCounts(records,tsCodes){
+ const counts=new Map(),seen=new Set(),cutoff='2026-10-01';
+ const snapshotDay=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(D.fetchedAt));
+ for(const row of records){
+  const code=String(row.workCode||'').trim().toUpperCase(),date=row.asSanctionDate;
+  if(row.financialYear!=='2026-2027'||row.workStatus!=='Approved'||!code.includes('/YD/')||!date||date<cutoff||date>snapshotDay||seen.has(code))continue;
+  seen.add(code);
+  for(const key of [blockKey(row.block),'district:'+row.district,'ALL']){
+   if(!counts.has(key))counts.set(key,{approved:0,ts:0});
+   const count=counts.get(key);
+   count.approved++;
+   if(tsCodes.has(code))count.ts++;
+  }
+ }
+ return counts;
+}
+const approvedByArea=approvedCounts(rows,secureTsCodes);
+function approvedCells(key){
+ const count=approvedByArea.get(key);
+ return '<td>'+fmt(count?.approved||0)+'</td><td>'+(hasCurrentTs?fmt(count?.ts||0):'—')+'</td>';
+}
+function summary(){let html='',grand={as:0,ts:0,geo:0,notOngoing:0,ongoing:0,yd:0};for(const d of ['MAIHAR','SATNA']){const group=(D.janpadSummary||[]).filter(x=>x.district===d);let total={as:0,ts:0,geo:0,notOngoing:0,ongoing:0,yd:0};for(const x of group){const block=labelBlock(x.block),colorIndex=janpadColorIndex[x.block]??0,ts=hasCurrentTs?(tsByBlock.get(blockKey(x.block))||0):Number(x.tsCount||0),as=Number(x.asSecureCount??x.asAvailable??0),metrics=geoMetrics(rows.filter(r=>r.district===d&&blockKey(r.block)===blockKey(x.block)),x.block),yd=Number(x.ydWorksCreated||0),pending=Math.max(0,as-metrics.total);html+='<tr class="janpad-color-'+colorIndex+'"><td>'+x.district+'</td><td>'+block+'</td><td>'+fmt(yd)+'</td><td>'+fmt(ts)+'</td>'+convergenceCells(block)+approvedCells(block)+'<td>'+fmt(as)+'</td><td>'+fmt(ts-as)+'</td><td>'+fmt(metrics.total)+'</td><td>'+fmt(metrics.notOngoing)+'</td><td>'+fmt(metrics.ongoing)+'</td><td>'+fmt(pending)+'</td></tr>';total.as+=as;total.ts+=ts;total.geo+=metrics.total;total.notOngoing+=metrics.notOngoing;total.ongoing+=metrics.ongoing;total.yd+=yd;}html+='<tr class="'+d.toLowerCase()+'"><td>'+d+'</td><td>जिला योग</td><td>'+fmt(total.yd)+'</td><td>'+fmt(total.ts)+'</td>'+convergenceCells('district:'+d)+approvedCells('district:'+d)+'<td>'+fmt(total.as)+'</td><td>'+fmt(total.ts-total.as)+'</td><td>'+fmt(total.geo)+'</td><td>'+fmt(total.notOngoing)+'</td><td>'+fmt(total.ongoing)+'</td><td>'+fmt(Math.max(0,total.as-total.geo))+'</td></tr>';grand.as+=total.as;grand.ts+=total.ts;grand.geo+=total.geo;grand.notOngoing+=total.notOngoing;grand.ongoing+=total.ongoing;grand.yd+=total.yd;}html+='<tr class="total"><td>सतना + मैहर</td><td>कुल</td><td>'+fmt(grand.yd)+'</td><td>'+fmt(grand.ts)+'</td>'+convergenceCells('ALL')+approvedCells('ALL')+'<td>'+fmt(grand.as)+'</td><td>'+fmt(grand.ts-grand.as)+'</td><td>'+fmt(grand.geo)+'</td><td>'+fmt(grand.notOngoing)+'</td><td>'+fmt(grand.ongoing)+'</td><td>'+fmt(Math.max(0,grand.as-grand.geo))+'</td></tr>';$('summaryRows').innerHTML=html}function gpRowsWithCurrentTs(){
  const previous=D.gpSummary||[];
  if(!hasCurrentTs)return previous;
  const key=row=>blockKey(row.block)+'|'+gpKey(row.panchayat);
