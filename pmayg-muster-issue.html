@@ -6,7 +6,7 @@ main{max-width:100%}.summary-table{min-width:0;width:100%;table-layout:fixed}.su
   body{font-size:12px}
   .summary-table th,.summary-table td,.detail th,.detail td{font-size:12px!important;line-height:1.3}
   .summary-table .num{font-size:13px!important}
-  .sort-mark,.print-ongoing-only .print-other-status{display:none!important}
+  .sort-mark,.print-other-status{display:none!important}
 }
 </style><script src="gp-emuster-data.js?v=20261105-r74"></script><script src="gp-sector-mapping-overrides.js?v=20261029-motilal"></script></head><body>
 <header><h1>R-7.4 — Muster Roll Issue PMAYG</h1><p>PMAY-G प्रगतिरत / स्वीकृत लेकिन चालू नहीं / भौतिक पूर्ण • मस्टर रोल एवं मजदूरी स्थिति • सतना एवं मैहर</p></header><main><a class="back" href="index.html">← मुख्य मेनू</a><p class="meta" id="meta">डेटा लोड हो रहा है…</p>
@@ -43,10 +43,14 @@ const labels={district:'जिला',janpad:'जनपद',engineerCluster:'उ
 function aggregate(rr){const a={ongoing:0,approved:0,physical:0,total:rr.length,issued:0,sanction:0,booked:0};for(const r of rr){a.ongoing+=r.status==='Ongoing';a.approved+=r.status==='Approved';a.physical+=r.status==='Physically Completed';a.issued+=r.issued;a.sanction+=r.sanction;a.booked+=r.booked;}a.pending=a.total-a.issued;a.issuedPct=a.total?a.issued/a.total*100:0;a.pendingPct=a.total?a.pending/a.total*100:0;a.spentPct=a.sanction?a.booked/a.sanction*100:0;a.remaining=a.sanction-a.booked;a.mandays=a.remaining/300;return a;}
 const decimals=k=>k.endsWith('Pct')?1:0;
 const displayValue=(k,v)=>['sanction','booked','remaining'].includes(k)?v/100000:v;
-const printStatusClass=k=>k==='approved'||k==='physical'?' print-other-status':'';
+const statusColumns={Ongoing:'ongoing',Approved:'approved','Physically Completed':'physical'};
+const printStatusClass=k=>{
+ const selected=statusColumns[$('status').value];
+ return selected&&k!==selected&&Object.values(statusColumns).includes(k)?' print-other-status':'';
+};
 const cells=a=>measures.map(k=>'<td class="num '+(['sanction','booked','remaining'].includes(k)?'money':k==='pending'?'pending':'')+printStatusClass(k)+'">'+fmt(displayValue(k,a[k]),decimals(k))+(k.endsWith('Pct')?'%':'')+'</td>').join('');
 let current=[],exportRows=[],sortKey='',sortDir=1;
-function render(){document.body.classList.toggle('print-ongoing-only',$('status').value==='Ongoing');const q=$('query').value.toLowerCase().trim();current=rows.filter(r=>(!$('status').value||r.status===$('status').value)&&(!$('district').value||r.district===$('district').value)&&(!$('block').value||r.janpad===$('block').value)&&['engineer','cluster','gp'].every(k=>!$(k).value||r[k]===$(k).value)&&(!q||[r.code,r.name].join(' ').toLowerCase().includes(q)));
+function render(){const q=$('query').value.toLowerCase().trim();current=rows.filter(r=>(!$('status').value||r.status===$('status').value)&&(!$('district').value||r.district===$('district').value)&&(!$('block').value||r.janpad===$('block').value)&&['engineer','cluster','gp'].every(k=>!$(k).value||r[k]===$(k).value)&&(!q||[r.code,r.name].join(' ').toLowerCase().includes(q)));
 const total=aggregate(current);$('totalCount').textContent=fmt(total.total);$('pendingCount').textContent=fmt(total.pending);$('worksCount').textContent=fmt(total.issued);$('gpCount').textContent=fmt(new Set(current.map(r=>key(r.janpad,r.gp))).size);
 const cols=$('view').value==='janpad'?['district','janpad']:$('view').value==='cluster'?['district','janpad','cluster']:$('view').value==='gp'?['district','janpad','engineerCluster','gp']:['district','janpad','engineerCluster'];
 const widths={district:5,janpad:7,engineerCluster:15,cluster:12,gp:8},measureWidth=(100-cols.reduce((sum,k)=>sum+widths[k],0))/measures.length;
