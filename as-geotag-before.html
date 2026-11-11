@@ -66,7 +66,7 @@ main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:c
 <div class="scope">FY 2026–27 • SECURE TS और AS दोनों: 01-10-2026 से snapshot तक • केवल Work Code ID में /YD/ • Before Geo Tag</div><div class="print-actions"><button type="button" onclick="window.print()">PDF Print</button></div><div class="data-alert" id="dataQuality" hidden></div>
 <section class="panel" id="janpadPanel">
   <div class="section-title-row"><h2>जिला / जनपदवार योग</h2><button class="section-print" type="button" onclick="printReport('janpad')">जनपद PDF Print</button></div>
-  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में — का अर्थ सत्यापित संख्या उपलब्ध नहीं है। Ongoing संख्या R33.1 से है। SECURE AS और Before Geo Tag का पूरा मिलान उपलब्ध नहीं है।</p><p class="meta" id="approvedSourceNote">01.10.2026 से Approved /YD/ और उनका SECURE TS मिलान दिखाने के लिए R6.12 की Approved सूची और मूल कॉलम 29–30 का सत्यापित डेटा प्रतीक्षित है।</p>
+  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में — का अर्थ सत्यापित संख्या उपलब्ध नहीं है। SECURE AS का सत्यापित योग उपलब्ध नहीं है।</p><p class="meta" id="beforeCoverageNote"></p><p class="meta" id="approvedSourceNote">01.10.2026 से Approved /YD/ और उनका SECURE TS मिलान दिखाने के लिए R6.12 की Approved सूची और मूल कॉलम 29–30 का सत्यापित डेटा प्रतीक्षित है।</p>
 </section>
 <section class="panel" id="gpPanel" style="margin-top:10px">
   <div class="section-title-row"><h2>ग्राम पंचायतवार योग</h2><button class="section-print" type="button" onclick="printReport('gp')">GP PDF Print</button></div>
@@ -246,6 +246,10 @@ function summary(){
  }
  html+=rowHtml('सतना + मैहर','कुल','ALL',blocks,'total');
  $('summaryRows').innerHTML=html;
+ const ongoingTotal=sum(blocks,'ongoing');
+ $('beforeCoverageNote').textContent=ongoingTotal==null
+  ?'कुल Before Geo Tag और उसके बाद Ongoing हुए कार्यों का सत्यापित डेटा उपलब्ध नहीं है।'
+  :'R33.1 के '+fmt(ongoingTotal)+' कार्य Geo Tag के बाद Ongoing हुए हैं। Before Geo Tag की यह न्यूनतम सत्यापित संख्या है। Geo Tag के बाद भी शुरू न हुए कार्यों की पूरी पुष्टि बाकी है, इसलिए कुल Before Geo Tag में — है।';
 }
 function gpRowsWithCurrentTs(){
  const previous=D.gpSummary||[];
