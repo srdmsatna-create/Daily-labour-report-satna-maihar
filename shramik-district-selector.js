@@ -105,6 +105,18 @@ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const fmt=v=>v==null?'—':Number(v).toLocaleString('en-IN');
 const ongoingSnapshotDate='09-11-2026';
 const novemberDate='10-11-2026';
+const satnaMaiharNovemberDate='11-11-2026';
+// July–November VB-G RAM G persondays from 695 GP rows, and official R6.9 ALL metrics.
+const satnaMaiharNovemberSnapshot={
+ "अमरपाटन":[22869,75,56,320,227],
+ "मैहर":[36281,115,98,521,313],
+ "रामनगर":[21658,55,53,218,161],
+ "मझगवां":[14671,96,81,596,210],
+ "नागौद":[30627,94,80,723,427],
+ "रामपुर बघेलान":[33212,97,67,731,553],
+ "सोहावल":[16048,93,89,457,246],
+ "उचेहरा":[15953,70,63,199,110]
+};
 // Official R6.9 district and Janpad figures, dated 10-11-2026.
 const emuster=Object.fromEntries(`AGAR-MALWA|236|174|4753|3540
 ALIRAJPUR|288|254|4843|843
@@ -267,7 +279,7 @@ const novemberBlocks={
  'नईगढ़ी':{totalGP:76,workingGP:58,mrIssued:428}})
 };
 const janpadOngoing={"अमरपाटन":1401,"मैहर":2445,"मझगवां":2155,"नागौद":2482,"रामनगर":1238,"रामपुर बघेलान":3261,"सोहावल":1085,"उचेहरा":1701,"गंगेव":1476,"हनुमना":2631,"जवा":1437,"मऊगंज":1822,"नईगढ़ी":2321,"रायपुर कर्चुलियान":2625,"रीवा":1259,"सिरमौर":2210,"त्योंथर":2202};
-function records(){
+function records(useSatnaMaiharSnapshot=false){
  const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===ongoingSnapshotDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
  const wrap=rows=>({rows});
  const result=Object.fromEntries(Object.entries(novemberDistricts).map(([name,row])=>[
@@ -276,6 +288,11 @@ function records(){
  for(const [district,blocks] of Object.entries(novemberBlocks)){
   const rows=Object.entries(blocks).map(([name,row])=>{
    const merged={...row,...emuster[name],ongoing:janpadOngoing[name]};
+   const latest=useSatnaMaiharSnapshot&&(district==='सतना'||district==='मैहर')&&satnaMaiharNovemberSnapshot[name];
+   if(latest){
+    const [achievement,totalGP,workingGP,todayLabour,mrIssued]=latest;
+    Object.assign(merged,{achievement,vbgramJulyNovember:achievement,totalGP,workingGP,todayLabour,mrIssued});
+   }
    result[district+' / '+name]=wrap([merged]);
    return merged;
   });
@@ -306,17 +323,20 @@ function render(){
  originalWrap.hidden=external;originalKpis.hidden=false;state.hidden=!external;
  document.getElementById('snWarnings').hidden=external;
  section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से नवंबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 जुलाई से नवंबर की VB-G RAM G उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
- if(external)document.getElementById('snDate').textContent='दिनांक '+novemberDate;
+ const reportDate=grouped?satnaMaiharNovemberDate:novemberDate;
+ if(external)document.getElementById('snDate').textContent='दिनांक '+reportDate;
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el){const field=el.closest('label')||el;field.hidden=external;field.style.display=external?'none':'';}}
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el)el.disabled=external;}
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
- const all=records();
+ const all=records(grouped);
  const chosen=[...(selected==='__ALL__'?sourceNames:selected==='__REWA__'?region:selected==='__BLOCK__'?Object.keys(all).filter(n=>n.includes(' / ')):selected==='__SATNA_MAIHAR_NOV__'?Object.keys(all).filter(n=>/^(सतना|मैहर) \/ /.test(n)):[selected])];
- const [day, month, year]=novemberDate.split('-').map(Number);
+ const [day, month, year]=reportDate.split('-').map(Number);
  const days=Math.max(0,(Date.UTC(2026,10,30)-Date.UTC(year,month-1,day))/86400000);
  if(sortColumn!=null)chosen.sort((a,b)=>{const av=sortValue(all[a],a,sortColumn,days),bv=sortValue(all[b],b,sortColumn,days);if(av==null||bv==null)return av==null?(bv==null?a.localeCompare(b):1):-1;const diff=typeof av==='string'?av.localeCompare(bv):av-bv;return (sortDirection==='asc'?diff:-diff)||a.localeCompare(b);});
  sortHeaders.forEach((th,i)=>{th.setAttribute('aria-sort',i===sortColumn?(sortDirection==='asc'?'ascending':'descending'):'none');const arrow=th.querySelector('.sn-sort-arrow');if(arrow)arrow.textContent=i===sortColumn?(sortDirection==='asc'?'↑':'↓'):'↕';});
- document.getElementById('snStateDate').textContent='दिनांक '+novemberDate;document.getElementById('snStateDate').hidden=true;
+ const dateNote=document.getElementById('snStateDate');
+ dateNote.textContent=grouped?'प्रगतिरत कार्य (S5.8) का डेटा '+ongoingSnapshotDate+' का है।':'दिनांक '+reportDate;
+ dateNote.hidden=!grouped;
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
  const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
  const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
@@ -347,7 +367,7 @@ function render(){
  tb.innerHTML=grouped?['सतना','मैहर'].map(district=>renderRows(chosen.filter(name=>name.startsWith(district+' / ')),district+' कुल योग')).join('')+renderRows(chosen,'सतना + मैहर संयुक्त योग',false):renderRows(chosen,'योग');
  ranks();
 }
-document.getElementById('snExcel').addEventListener('click',e=>{if(!select.value)return;e.preventDefault();e.stopImmediatePropagation();const table=state.querySelector('table'),lines=[...table.rows].map(r=>[...r.cells].map(c=>'"'+c.innerText.replace(/"/g,'""')+'"').join(',')).join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines],{type:'text/csv;charset=utf-8'}));a.download=(select.value==='__SATNA_MAIHAR_NOV__'?'Shramik_Satna_Maihar_November_':'Shramik_Report_')+novemberDate+'.csv';a.click();URL.revokeObjectURL(a.href)},true);
+document.getElementById('snExcel').addEventListener('click',e=>{if(!select.value)return;e.preventDefault();e.stopImmediatePropagation();const table=state.querySelector('table'),lines=[...table.rows].map(r=>[...r.cells].map(c=>'"'+c.innerText.replace(/"/g,'""')+'"').join(',')).join('\r\n'),a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+lines],{type:'text/csv;charset=utf-8'}));a.download=(select.value==='__SATNA_MAIHAR_NOV__'?'Shramik_Satna_Maihar_November_':'Shramik_Report_')+(select.value==='__SATNA_MAIHAR_NOV__'?satnaMaiharNovemberDate:novemberDate)+'.csv';a.click();URL.revokeObjectURL(a.href)},true);
 
 const singlePrint=document.createElement('button');
 singlePrint.type='button';singlePrint.textContent='एक पेज Print / PDF';singlePrint.style.cssText='padding:8px 12px;background:#075d46;color:white;border:0;border-radius:6px;font-weight:800';
