@@ -66,7 +66,7 @@ main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:c
 <div class="scope">FY 2026–27 • SECURE TS और AS दोनों: 01-10-2026 से snapshot तक • केवल Work Code ID में /YD/ • Before Geo Tag</div><div class="print-actions"><button type="button" onclick="window.print()">PDF Print</button></div><div class="data-alert" id="dataQuality" hidden></div>
 <section class="panel" id="janpadPanel">
   <div class="section-title-row"><h2>जिला / जनपदवार योग</h2><button class="section-print" type="button" onclick="printReport('janpad')">जनपद PDF Print</button></div>
-  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में — का अर्थ सत्यापित संख्या उपलब्ध नहीं है। Ongoing संख्या R33.1 से है। SECURE AS और Before Geo Tag का पूरा मिलान उपलब्ध नहीं है। 01.10.2026 से Approved /YD/ और उनका SECURE TS मिलान दिखाने के लिए R6.12 की Approved सूची और मूल कॉलम 29–30 का सत्यापित डेटा प्रतीक्षित है।</p>
+  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में — का अर्थ सत्यापित संख्या उपलब्ध नहीं है। Ongoing संख्या R33.1 से है। SECURE AS और Before Geo Tag का पूरा मिलान उपलब्ध नहीं है।</p><p class="meta" id="approvedSourceNote">01.10.2026 से Approved /YD/ और उनका SECURE TS मिलान दिखाने के लिए R6.12 की Approved सूची और मूल कॉलम 29–30 का सत्यापित डेटा प्रतीक्षित है।</p>
 </section>
 <section class="panel" id="gpPanel" style="margin-top:10px">
   <div class="section-title-row"><h2>ग्राम पंचायतवार योग</h2><button class="section-print" type="button" onclick="printReport('gp')">GP PDF Print</button></div>
@@ -104,7 +104,13 @@ function convergenceCells(key){
  const counts=convergenceTotals.get(key);
  return '<td>'+(counts?fmt(counts.YES):'—')+'</td><td>'+(counts?fmt(counts.NO):'—')+'</td>';
 }
-function parseConvergence(csv){
+function r612Date(value){
+ const raw=String(value||'').trim();
+ if(/^\d{4}-\d{2}-\d{2}$/.test(raw))return raw;
+ const parts=/^(\d{1,2})[./-](\d{1,2})[./-](\d{4})$/.exec(raw);
+ return parts?parts[3]+'-'+parts[2].padStart(2,'0')+'-'+parts[1].padStart(2,'0'):null;
+}
+function parseConvergence(csv,snapshot){
  const records=csv.replace(/^\uFEFF/,'').trimEnd().match(/(?:[^"\r\n]|"(?:[^"]|"")*")+/g)||[];
  const fields=record=>Array.from(record.matchAll(/(?:^|,)(?:"((?:[^"]|"")*)"|([^,]*))/g),m=>m[1]?.replace(/""/g,'"')??m[2]);
  const headers=fields(records.shift()||'');
@@ -112,18 +118,60 @@ function parseConvergence(csv){
  if([blockCol,fyCol,statusCol,codeCol,secureCol].includes(-1))throw Error('Missing R6.12 columns');
  const districts=new Map(D.janpadSummary.map(row=>[blockKey(row.block),row.district]));
  const counts=new Map([...districts.keys(),'district:SATNA','district:MAIHAR','ALL'].map(key=>[key,{YES:0,NO:0}]));
- const seen=new Set();
+ const approved=new Map([...counts.keys()].map(key=>[key,{total:0,ts:0,YES:0,NO:0}]));
+ const approvedDateCol=headers.indexOf('AS Sanction Date'),convergenceCol=headers.indexOf('Convergence');
+ const seen=new Set(),seenApproved=new Set(),cutoff='2026-10-01';
+ const snapshotDay=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(snapshot.updatedAt));
+ let approvedComplete=Number.isInteger(snapshot.statusCounts?.Approved)&&approvedDateCol>=0;
+ let flagsComplete=convergenceCol>=0;
+ const datedOngoing=new Map([...counts.keys()].map(key=>[key,{YES:0,NO:0}]));
+ let approvedSourceRows=0;
  for(const record of records){
   const row=fields(record),code=(row[codeCol]||'').trim().toUpperCase(),block=blockKey(row[blockCol]),district=districts.get(block),secure=(row[secureCol]||'').trim().toUpperCase();
-  if(!district||!['2026-2027','2026-27'].includes(row[fyCol]?.trim())||row[statusCol]?.trim()!=='Ongoing'||!code.includes('/YD/')||seen.has(code))continue;
+  const status=(row[statusCol]||'').trim().toUpperCase().replace(/\s+/g,'');
+  if(status==='APPROVED')approvedSourceRows++;
+  if(!district||!['2026-2027','2026-27'].includes(row[fyCol]?.trim())||!code.includes('/YD/'))continue;
+  if(status==='APPROVED'){
+   if(seenApproved.has(code))continue;
+   seenApproved.add(code);
+   const asDate=r612Date(row[approvedDateCol]),flag=(row[convergenceCol]||'').trim().toUpperCase();
+   if(!asDate){approvedComplete=false;continue;}
+   if(asDate<cutoff||asDate>snapshotDay)continue;
+   if(!['YES','NO'].includes(flag))flagsComplete=false;
+   for(const key of [block,'district:'+district,'ALL']){
+    const value=approved.get(key);
+    value.total++;
+    if(secure==='YES'&&secureTsCodes.has(code))value.ts++;
+    if(flag==='YES')value.NO++;
+    if(flag==='NO'&&secure==='YES')value.YES++;
+    if(flag==='NO'&&secure!=='YES')flagsComplete=false;
+   }
+   continue;
+  }
+  if(status!=='ONGOING'||seen.has(code))continue;
   if(secure!=='YES'&&secure!=='NO')throw Error('Missing Is Secure value');
   seen.add(code);
-  for(const key of [block,'district:'+district,'ALL'])counts.get(key)[secure]++;
+  const asDate=r612Date(row[approvedDateCol]),flag=(row[convergenceCol]||'').trim().toUpperCase();
+  if(!asDate)flagsComplete=false;
+  const eligible=asDate&&asDate>=cutoff&&asDate<=snapshotDay;
+  if(eligible&&flag!=='YES'&&(flag!=='NO'||secure!=='YES'))flagsComplete=false;
+  for(const key of [block,'district:'+district,'ALL']){
+   counts.get(key)[secure]++;
+   if(eligible&&flag==='YES')datedOngoing.get(key).NO++;
+   if(eligible&&flag==='NO'&&secure==='YES')datedOngoing.get(key).YES++;
+  }
  }
- return counts;
+ approvedComplete=approvedComplete&&approvedSourceRows===snapshot.statusCounts?.Approved&&![...seenApproved].some(code=>seen.has(code));
+ const combined=approvedComplete&&flagsComplete;
+ if(combined)for(const [key,value] of counts){
+  value.YES=datedOngoing.get(key).YES+approved.get(key).YES;
+  value.NO=datedOngoing.get(key).NO+approved.get(key).NO;
+ }
+ return {counts,approved,approvedComplete,combined};
 }
 async function loadConvergence(){
  const note=$('convergenceNote');
+ let result;
  try{
   const [csv,status]=await Promise.all([
    fetch('data/Ongoing_Works_dynamic_work_details_latest.csv',{cache:'no-store'}),
@@ -133,8 +181,16 @@ async function loadConvergence(){
   const snapshot=await status.json();
   const date=new Date(snapshot.updatedAt);
   if(!Number.isFinite(date.getTime()))throw Error('Missing R6.12 date');
-  for(const [key,counts] of parseConvergence(await csv.text()))convergenceTotals.set(key,counts);
+  result=parseConvergence(await csv.text(),snapshot);
+  for(const [key,counts] of result.counts)convergenceTotals.set(key,counts);
   note.textContent='R6.12 • '+date.toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' • FY 2026–27 के प्रगतिरत /YD/ कार्य • अभिसरण से नहीं = Is Secure YES, अभिसरण = Is Secure NO। ये दोनों कॉलम केवल R6.12 में प्रगतिरत कार्यों की गिनती हैं।';
+  if(result.combined){
+   const headings=$('janpadPanel').querySelector('thead tr').cells;
+   headings[4].textContent='अभिसरण से नहीं (Ongoing + Approved)';
+   headings[5].textContent='अभिसरण (Ongoing + Approved)';
+   note.textContent='R6.12 • '+date.toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' • FY 2026–27 के /YD/ कार्य • 01.10.2026 से AS तारीख • Is Secure और Convergence कॉलम 29–30।';
+  }
+  if(result.approvedComplete) $('approvedSourceNote').textContent='Approved की गिनती R6.12 की AS तारीख से 01.10.2026 से है। SECURE TS का मिलान Work Code से है।';
  }catch{
   note.textContent='R6.12 का अभिसरण डेटा उपलब्ध नहीं है।';
  }
@@ -144,6 +200,11 @@ async function loadConvergence(){
   const key=row.classList.contains('total')?'ALL':block==='जिला योग'?'district:'+district:blockKey(block);
   const counts=convergenceTotals.get(key);
   if(counts){row.cells[4].textContent=fmt(counts.YES);row.cells[5].textContent=fmt(counts.NO);}
+  if(result?.approvedComplete){
+   const values=result.approved.get(key);
+   row.cells[6].textContent=fmt(values.total);
+   row.cells[7].textContent=hasCurrentTs?fmt(values.ts):'—';
+  }
  }
 }
 const tsByBlock=new Map(),tsByGp=new Map(),secureTsCodes=new Set();
