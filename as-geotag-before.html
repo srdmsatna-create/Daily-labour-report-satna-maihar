@@ -53,7 +53,10 @@ main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block
 }
 main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:center!important;font-size:20px;font-weight:900}#engineerPanel td:nth-child(3){text-align:left!important}#engineerPanel table{min-width:1350px}
 @media print{main{max-width:none;padding:0}.summary,#engineerPanel table{min-width:0;width:100%;table-layout:fixed}.summary th,.summary th:nth-child(n+3){font-size:7px!important}.summary td,.yd-num{font-size:8px!important;overflow-wrap:anywhere}#engineerPanel{break-before:page}body[data-print-section="janpad"] #engineerPanel,body[data-print-section="gp"] #engineerPanel,body[data-print-section="engineer"] #janpadPanel,body[data-print-section="engineer"] #gpPanel,body[data-print-section="engineer"] #workPanel{display:none!important}}
- .summary th:nth-child(3){background:#0b7180}.summary th:nth-child(4){background:#6041a6}.summary th:nth-child(5){background:#bd6a12}.summary th:nth-child(6){background:#b43c34}.summary th:nth-child(7){background:#16804b}.summary th:nth-child(8){background:#087d89}</style>
+ .summary th:nth-child(3){background:#0b7180}.summary th:nth-child(4){background:#6041a6}.summary th:nth-child(5){background:#bd6a12}.summary th:nth-child(6){background:#b43c34}.summary th:nth-child(7){background:#16804b}.summary th:nth-child(8){background:#087d89}
+#summaryRows td.verification-pending{font-size:13px!important;font-weight:700}
+@media print{#summaryRows td.verification-pending{font-size:8px!important}}
+</style>
 <script src="secure-ts-data.js?v=20261105-refresh"></script>
 <script src="as-geotag-before-data.js?v=202611110324337261550000"></script>
 <script src="r33-ongoing-gp-data.js?v=20261109-r331-61"></script>
@@ -66,7 +69,7 @@ main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:c
 <div class="scope">FY 2026–27 • SECURE TS और AS दोनों: 01-10-2026 से snapshot तक • केवल Work Code ID में /YD/ • Before Geo Tag</div><div class="print-actions"><button type="button" onclick="window.print()">PDF Print</button></div><div class="data-alert" id="dataQuality" hidden></div>
 <section class="panel" id="janpadPanel">
   <div class="section-title-row"><h2>जिला / जनपदवार योग</h2><button class="section-print" type="button" onclick="printReport('janpad')">जनपद PDF Print</button></div>
-  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में — का अर्थ सत्यापित संख्या उपलब्ध नहीं है। SECURE AS का सत्यापित योग उपलब्ध नहीं है।</p><p class="meta" id="beforeCoverageNote"></p><p class="meta" id="approvedSourceNote">01.10.2026 से Approved /YD/ और उनका SECURE TS मिलान दिखाने के लिए R6.12 की Approved सूची और मूल कॉलम 29–30 का सत्यापित डेटा प्रतीक्षित है।</p>
+  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में ‘पुष्टि बाकी’ का अर्थ है कि संबंधित स्रोत से संख्या सत्यापित नहीं हुई है। SECURE AS का सत्यापित योग उपलब्ध नहीं है।</p><p class="meta" id="beforeCoverageNote"></p><p class="meta" id="approvedSourceNote">01.10.2026 से Approved /YD/ और उनका SECURE TS मिलान दिखाने के लिए R6.12 की Approved सूची और मूल कॉलम 29–30 का सत्यापित डेटा प्रतीक्षित है।</p>
 </section>
 <section class="panel" id="gpPanel" style="margin-top:10px">
   <div class="section-title-row"><h2>ग्राम पंचायतवार योग</h2><button class="section-print" type="button" onclick="printReport('gp')">GP PDF Print</button></div>
@@ -231,12 +234,13 @@ function summary(){
   return {district:row.district,block,yd:r33Block?.worksCreated??null,ts,as,
    ongoing:r33Block?.ongoing??null,color:janpadColorIndex[row.block]??0};
  });
- const fmtCell=value=>'<td>'+(value==null?'—':fmt(value))+'</td>';
+ const fmtCell=value=>value==null?'<td class="verification-pending">पुष्टि बाकी</td>':'<td>'+fmt(value)+'</td>';
  const sum=(group,key)=>group.length&&group.every(row=>Number.isFinite(row[key]))?group.reduce((total,row)=>total+row[key],0):null;
  const rowHtml=(label,block,key,group,cls)=>{
-  const ts=sum(group,'ts'),as=sum(group,'as');
+  const ts=sum(group,'ts'),as=sum(group,'as'),ongoing=sum(group,'ongoing');
+  const minimumBefore=ongoing==null?fmtCell(null):'<td>≥ '+fmt(ongoing)+'</td>';
   return '<tr class="'+cls+'"><td>'+label+'</td><td>'+block+'</td>'+fmtCell(sum(group,'yd'))+fmtCell(ts)+
-   convergenceCells(key)+'<td>—</td><td>—</td>'+[as,ts!=null&&as!=null?ts-as:null,null,null,sum(group,'ongoing'),null].map(fmtCell).join('')+'</tr>';
+   convergenceCells(key)+fmtCell(null)+fmtCell(null)+fmtCell(as)+fmtCell(ts!=null&&as!=null?ts-as:null)+minimumBefore+fmtCell(null)+fmtCell(ongoing)+fmtCell(null)+'</tr>';
  };
  let html='';
  for(const district of ['MAIHAR','SATNA']){
@@ -249,7 +253,7 @@ function summary(){
  const ongoingTotal=sum(blocks,'ongoing');
  $('beforeCoverageNote').textContent=ongoingTotal==null
   ?'कुल Before Geo Tag और उसके बाद Ongoing हुए कार्यों का सत्यापित डेटा उपलब्ध नहीं है।'
-  :'R33.1 के '+fmt(ongoingTotal)+' कार्य Geo Tag के बाद Ongoing हुए हैं। Before Geo Tag की यह न्यूनतम सत्यापित संख्या है। Geo Tag के बाद भी शुरू न हुए कार्यों की पूरी पुष्टि बाकी है, इसलिए कुल Before Geo Tag में — है।';
+  :'R33.1 के '+fmt(ongoingTotal)+' कार्य Geo Tag के बाद Ongoing हुए हैं। Before Geo Tag की यह न्यूनतम सत्यापित संख्या है। Geo Tag के बाद भी शुरू न हुए कार्यों की पूरी पुष्टि बाकी है, इसलिए कुल Before Geo Tag में ≥ का निशान न्यूनतम संख्या बताता है।';
 }
 function gpRowsWithCurrentTs(){
  const previous=D.gpSummary||[];
