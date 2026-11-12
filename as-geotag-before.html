@@ -69,7 +69,7 @@ main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:c
 <div class="scope">FY 2026–27 • SECURE TS और AS दोनों: 01-10-2026 से snapshot तक • केवल Work Code ID में /YD/ • Before Geo Tag</div><div class="print-actions"><button type="button" onclick="window.print()">PDF Print</button></div><div class="data-alert" id="dataQuality" hidden></div>
 <section class="panel" id="janpadPanel">
   <div class="section-title-row"><h2>जिला / जनपदवार योग</h2><button class="section-print" type="button" onclick="printReport('janpad')">जनपद PDF Print</button></div>
-  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में ‘पुष्टि बाकी’ का अर्थ है कि संबंधित स्रोत से संख्या सत्यापित नहीं हुई है। SECURE AS का सत्यापित योग उपलब्ध नहीं है।</p><p class="meta" id="beforeCoverageNote"></p><p class="meta" id="approvedSourceNote">01.10.2026 से Approved /YD/ और उनका SECURE TS मिलान दिखाने के लिए R6.12 की Approved सूची और मूल कॉलम 29–30 का सत्यापित डेटा प्रतीक्षित है।</p>
+  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE से जारी TS संख्या</th><th>अभिसरण से नहीं<br>(R6.12 प्रगतिरत)</th><th>अभिसरण<br>(R6.12 प्रगतिरत)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>इनमें तकनीकी स्वीकृति प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में ‘पुष्टि बाकी’ का अर्थ है कि संबंधित स्रोत से संख्या सत्यापित नहीं हुई है। अमरपाटन के SECURE AS Register में 12.11.2026 तक पाँच /YD/ कार्य सत्यापित हैं।</p><p class="meta" id="beforeCoverageNote"></p><p class="meta" id="approvedSourceNote">अमरपाटन (12.11.2026): R6.12 में 01.10.2026 से दर्ज कार्य प्रारंभ तिथि वाले 2 Approved /YD/ कार्य (पाल और पपरा)। दोनों का SECURE TS Register में मिलान 0 है। बाकी जनपदों में Approved की पुष्टि बाकी है।</p>
 </section>
 <section class="panel" id="gpPanel" style="margin-top:10px">
   <div class="section-title-row"><h2>ग्राम पंचायतवार योग</h2><button class="section-print" type="button" onclick="printReport('gp')">GP PDF Print</button></div>
@@ -224,13 +224,15 @@ if(hasCurrentTs){
  }
  $('reportMeta').textContent+=' • वर्तमान SECURE TS Register: '+T.date;
 }
+// R6.12 Approved work-start dates and SECURE register checks on 12 November 2026.
+const amarpatanVerification={approved:2,approvedTs:0,secureAs:5};
 function summary(){
  const r33=window.YUKTDHARA_RECEIVED;
  const r33Blocks=new Map((r33?.blocks||[]).map(row=>[blockKey(row.block),row]));
  const blocks=(D.janpadSummary||[]).map(row=>{
   const block=blockKey(row.block),r33Block=r33Blocks.get(block);
   const ts=hasCurrentTs?(tsByBlock.get(block)||0):row.tsCount;
-  const as=row.asSecureCount??null;
+  const as=row.asSecureCount??(block==='AMARPATAN'?amarpatanVerification.secureAs:null);
   return {district:row.district,block,yd:r33Block?.worksCreated??null,ts,as,
    ongoing:r33Block?.ongoing??null,color:janpadColorIndex[row.block]??0};
  });
@@ -240,7 +242,7 @@ function summary(){
   const ts=sum(group,'ts'),as=sum(group,'as'),ongoing=sum(group,'ongoing');
   const minimumBefore=ongoing==null?fmtCell(null):'<td>≥ '+fmt(ongoing)+'</td>';
   return '<tr class="'+cls+'"><td>'+label+'</td><td>'+block+'</td>'+fmtCell(sum(group,'yd'))+fmtCell(ts)+
-   convergenceCells(key)+fmtCell(null)+fmtCell(null)+fmtCell(as)+fmtCell(ts!=null&&as!=null?ts-as:null)+minimumBefore+fmtCell(null)+fmtCell(ongoing)+fmtCell(null)+'</tr>';
+   convergenceCells(key)+fmtCell(key==='AMARPATAN'?amarpatanVerification.approved:null)+fmtCell(key==='AMARPATAN'?amarpatanVerification.approvedTs:null)+fmtCell(as)+fmtCell(ts!=null&&as!=null?ts-as:null)+minimumBefore+fmtCell(null)+fmtCell(ongoing)+fmtCell(null)+'</tr>';
  };
  let html='';
  for(const district of ['MAIHAR','SATNA']){
