@@ -97,12 +97,43 @@ function printReport(section){document.body.dataset.printSection=section;window.
 const D=window.AS_GEOTAG_BEFORE,T=window.SECURE_TS_DATA;
 const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
 if(!D){$('reportMeta').textContent='Report data load नहीं हुआ।';return}
-const rows=Array.isArray(D.rows)?D.rows:[],districts=['SATNA','MAIHAR'];
+const districts=['SATNA','MAIHAR'];
 const labelBlock=b=>b;
 $('reportMeta').textContent=`${D.financialYear} • SECURE AS और TS: 01-10-2026 से snapshot तक • Before Geo Tag detail fetched: ${new Date(D.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})} • SECURE AS/TS snapshot: ${new Date(D.secureAs?.snapshotAt||D.secureTs?.snapshotAt||D.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}`;
 
 const janpadColorIndex={AMARPATAN:0,MAIHAR:1,RAMNAGAR:2,MAJHGAWAN:3,NAGOD:4,'RAMPUR BAGHELAN':5,SATNA:6,UNCHAHARA:7};
-function blockKey(v){const n=String(v||'').trim().toUpperCase();return n==='SATNA'?'SOHAWAL':n}function gpKey(v){return String(v||'').trim().toUpperCase()}function r33Ongoing(b,p){const block=(window.R33_ONGOING_GP||{})[blockKey(b)]||{};return p?Number(block[gpKey(p)]||0):Object.values(block).reduce((a,n)=>a+Number(n||0),0)}function geoMetrics(rs,b,p){const works=[...new Map(rs.map(r=>[r.workCode,r])).values()],ongoing=r33Ongoing(b,p),beforeOnly=works.filter(r=>r.beforePhotoStatus==='Available'&&r.workStatus!=='On Going'),total=ongoing+beforeOnly.length;return{total,notOngoing:beforeOnly.length,ongoing}}const convergenceTotals=new Map();
+function blockKey(v){const n=String(v||'').trim().toUpperCase();return n==='SATNA'?'SOHAWAL':n}function gpKey(v){return String(v||'').trim().toUpperCase()}const verifiedGeoStatus={"1712001003/IC/VB/YD/22012034893493":"ongoing","1712001003/IF/VB/YD/22012035666308":"pending","1712001012/IC/VB/YD/22012034893671":"pending","1712001012/WC/VB/YD/22012035339837":"pending","1712001014/RS/VB/YD/22012035140346":"ongoing","1712001017/IC/VB/YD/22012034894396":"pending","1712001018/RS/VB/YD/22012035141041":"pending","1712001018/WC/VB/YD/22012035337485":"pending","1712001041/RS/VB/YD/22012035141485":"ongoing","1712001050/RS/VB/YD/22012035141054":"pending","1712001051/WC/VB/YD/22012035338468":"pending","1712001051/WC/VB/YD/22012035340837":"pending","1712001051/WC/VB/YD/22012035340838":"pending","1712001051/WC/VB/YD/22012035340839":"pending","1712001069/IF/VB/YD/22012035667490":"pending","1712001080/RS/VB/YD/22012035140833":"ongoing","1712001092/IF/VB/YD/22012035665231":"ongoing","1712001092/IF/VB/YD/22012035665314":"pending","1712001093/WC/VB/YD/22012035337268":"pending","1712001095/WC/VB/YD/22012035341969":"pending","1712002001/RS/VB/YD/22012035141513":"pending","1712002001/RS/VB/YD/22012035141602":"pending","1712002002/RS/VB/YD/22012035141494":"ongoing","1712002009/WC/VB/YD/22012035339618":"ongoing","1712002014/RS/VB/YD/22012035140714":"ongoing","1712002015/RS/VB/YD/22012035141628":"pending","1712002015/WC/VB/YD/22012035339343":"pending","1712002021/AV/VB/YD/22012034669936":"ongoing","1712002021/RS/VB/YD/22012035140717":"ongoing","1712002024/IF/VB/YD/22012035666554":"ongoing","1712002024/IF/VB/YD/22012035666559":"pending","1712002024/RS/VB/YD/22012035141875":"pending","1712002031/WC/VB/YD/22012035336760":"pending","1712002034/RS/VB/YD/22012035141509":"pending","1712002038/WC/VB/YD/22012035336122":"ongoing","1712002050/WC/VB/YD/22012035336949":"ongoing","1712002053/WC/VB/YD/22012035336952":"pending","1712002055/RS/VB/YD/22012035141611":"ongoing","1712002056/RS/VB/YD/22012035141028":"ongoing","1712002056/RS/VB/YD/22012035141030":"ongoing","1712002057/RS/VB/YD/22012035141601":"pending","1712002059/RS/VB/YD/22012035141809":"pending","1712002063/RS/VB/YD/22012035141492":"pending","1712002068/RS/VB/YD/22012035142602":"pending","1712002069/RS/VB/YD/22012035140629":"ongoing","1712002069/WC/VB/YD/22012035339665":"pending","1712002070/WC/VB/YD/22012035337739":"ongoing","1712002071/RS/VB/YD/22012035140799":"ongoing","1712002073/RS/VB/YD/22012035142205":"pending","1712002073/WC/VB/YD/22012035342015":"pending","1712002077/WC/VB/YD/22012035336748":"ongoing","1712002078/WC/VB/YD/22012035338932":"pending","1712002079/RS/VB/YD/22012035140342":"pending","1712002084/WC/VB/YD/22012035336994":"ongoing","1712002088/WC/VB/YD/22012035336958":"ongoing","1712002090/WC/VB/YD/22012035336120":"ongoing","1712002091/RS/VB/YD/22012035142223":"pending","1712002091/WC/VB/YD/22012035336812":"ongoing","1712002092/RS/VB/YD/22012035141734":"pending","1712003021/WC/VB/YD/22012035336177":"ongoing","1712003025/WC/VB/YD/22012035336282":"ongoing","1712003025/WC/VB/YD/22012035337752":"ongoing","1712003030/RS/VB/YD/22012035140460":"ongoing","1712003038/RS/VB/YD/22012035141728":"ongoing","1712003041/RS/VB/YD/22012035141794":"pending","1712003045/AV/VB/YD/22012034670761":"ongoing","1712003045/WC/VB/YD/22012035337727":"pending","1712003054/RS/VB/YD/22012035141490":"pending","1712003070/AV/VB/YD/22012034670142":"ongoing","1712003070/WC/VB/YD/22012035336872":"ongoing","1712003071/AV/VB/YD/22012034670265":"ongoing","1712004001/RS/VB/YD/22012035140804":"pending","1712004006/DP/VB/YD/22012034630952":"pending","1712004015/WC/VB/YD/22012035336544":"ongoing","1712005004/WC/VB/YD/22012035337080":"pending","1712005004/WC/VB/YD/22012035340588":"pending","1712005028/RS/VB/YD/22012035142231":"pending","1712005035/WC/VB/YD/22012035339660":"pending","1712005043/WC/VB/YD/22012035340587":"ongoing","1712005047/RS/VB/YD/22012035141942":"pending","1712005047/WC/VB/YD/22012035340972":"pending","1712005052/WC/VB/YD/22012035337081":"ongoing","1712005053/RS/VB/YD/22012035141941":"pending","1712005058/WC/VB/YD/22012035337117":"pending","1712005061/WC/VB/YD/22012035339668":"pending","1712005066/WC/VB/YD/22012035340586":"pending","1712005068/WC/VB/YD/22012035336603":"ongoing","1712005071/WC/VB/YD/22012035337069":"ongoing","1712005075/WC/VB/YD/22012035337071":"pending","1712005077/RS/VB/YD/22012035140760":"ongoing","1712005083/RS/VB/YD/22012035142232":"pending","1712005086/RS/VB/YD/22012035141497":"pending","1712005088/RS/VB/YD/22012035140340":"ongoing","1712005090/WC/VB/YD/22012035341116":"pending","1712006001/WC/VB/YD/22012035336256":"ongoing","1712006001/WC/VB/YD/22012035336257":"ongoing","1712006001/WC/VB/YD/22012035336259":"ongoing","1712006046/WC/VB/YD/22012035336949":"ongoing","1712006058/WC/VB/YD/22012035336858":"ongoing","1712007002/WC/VB/YD/22012035336787":"ongoing","1712007011/WC/VB/YD/22012035336823":"ongoing","1712007012/RS/VB/YD/22012035140661":"ongoing","1712007018/WC/VB/YD/22012035336831":"ongoing","1712007021/WC/VB/YD/22012035336743":"ongoing","1712007027/WC/VB/YD/22012035336802":"ongoing","1712007027/WC/VB/YD/22012035336807":"ongoing","1712007039/RS/VB/YD/22012035140668":"ongoing","1712007041/RS/VB/YD/22012035140626":"ongoing","1712007041/WC/VB/YD/22012035336198":"ongoing","1712007052/RS/VB/YD/22012035140630":"ongoing","1712007053/RS/VB/YD/22012035140670":"ongoing","1712007055/WC/VB/YD/22012035336788":"ongoing","1712008001/RC/VB/YD/22012034856177":"ongoing","1712008003/RS/VB/YD/22012035142677":"pending","1712008003/RS/VB/YD/22012035142679":"pending","1712008004/WC/VB/YD/22012035344190":"pending","1712008004/WC/VB/YD/22012035344545":"pending","1712008006/WC/VB/YD/22012035343478":"pending","1712008006/WC/VB/YD/22012035343490":"pending","1712008009/WC/VB/YD/22012035343294":"pending","1712008010/RS/VB/YD/22012035142570":"pending","1712008030/AV/VB/YD/22012034671070":"unknown","1712008042/WC/VB/YD/22012035339347":"pending","1712008042/WC/VB/YD/22012035339359":"pending","1712008046/WC/VB/YD/22012035343296":"pending","1712008046/WC/VB/YD/22012035343298":"pending","1712008058/WC/VB/YD/22012035342176":"ongoing","1712008058/WC/VB/YD/22012035345329":"pending","1712008059/WC/VB/YD/22012035341608":"ongoing","1712008059/WC/VB/YD/22012035344921":"pending","1712008059/WC/VB/YD/22012035344923":"pending","1712008059/WC/VB/YD/22012035344925":"pending","1712008083/WC/VB/YD/22012035343282":"pending","1712008083/WC/VB/YD/22012035343284":"pending","1712008090/RS/VB/YD/22012035142470":"pending","1712008090/WC/VB/YD/22012035343281":"pending","1712008091/WC/VB/YD/22012035345218":"pending","1712008091/WC/VB/YD/22012035345221":"pending","1712008091/WC/VB/YD/22012035345225":"pending","1712008097/RS/VB/YD/22012035141753":"pending","1712008097/WC/VB/YD/22012035339749":"pending","1712008099/WC/VB/YD/22012035343126":"pending","1712008099/WC/VB/YD/22012035343130":"pending","1712008104/WC/VB/YD/22012035344169":"pending","1712008104/WC/VB/YD/22012035344172":"pending","1712008106/WC/VB/YD/22012035345188":"pending","1712008106/WC/VB/YD/22012035345189":"pending","1712008106/WC/VB/YD/22012035345192":"pending","1712008107/AV/VB/YD/22012034671247":"pending","1712008107/WC/VB/YD/22012035341668":"pending","1712008107/WC/VB/YD/22012035341678":"pending","1712008107/WC/VB/YD/22012035341945":"ongoing","1712008113/RS/VB/YD/22012035142495":"pending","1712008113/RS/VB/YD/22012035142496":"pending","1712008113/WC/VB/YD/22012035343426":"pending","1712008119/WC/VB/YD/22012035344366":"pending"};
+const geoFields=['as','before','beforeOnly','ongoing','pending','unknown'];
+const emptyGeo=()=>Object.fromEntries(geoFields.map(key=>[key,0]));
+const geoByGp=new Map(),geoByBlock=new Map();
+for(const [code,status] of Object.entries(verifiedGeoStatus)){
+ const gp=code.split('/')[0],block=gp.slice(0,7);
+ for(const [map,key] of [[geoByGp,gp],[geoByBlock,block]]){
+  if(!map.has(key))map.set(key,emptyGeo());
+  const values=map.get(key);
+  values.as++;
+  values[status]++;
+  if(status==='beforeOnly'||status==='ongoing')values.before++;
+ }
+}
+function sumGeo(group){
+ return group.reduce((total,row)=>{
+  for(const key of geoFields)total[key]+=row.geo[key];
+  return total;
+ },emptyGeo());
+}
+function geoCell(value,unknown){
+ return '<td>'+(unknown?'≥ ':'')+fmt(value)+'</td>';
+}
+function geoCells(geo){
+ return geoCell(geo.before,geo.unknown)+geoCell(geo.beforeOnly,geo.unknown)+
+  geoCell(geo.ongoing,geo.unknown)+geoCell(geo.pending,geo.unknown);
+}
+const rows=(D.rows||[]).map(row=>{
+ const status=verifiedGeoStatus[row.workCode];
+ return status&&status!=='unknown'?{...row,beforePhotoStatus:status==='pending'?'Not Available':'Available'}:row;
+});
+const convergenceTotals=new Map();
 function convergenceCells(key){
  const counts=convergenceTotals.get(key);
  return '<td>'+(counts?fmt(counts.YES):'—')+'</td><td>'+(counts?fmt(counts.NO):'—')+'</td>';
@@ -220,14 +251,14 @@ if(hasCurrentTs){
 }
 // R6.12 Approved work-start dates and SECURE register checks on 12 November 2026.
 const janpadVerification={
- "AMARPATAN":{"approved":2,"approvedTs":0,"secureAs":5},
- "MAIHAR":{"approved":90,"approvedTs":44,"secureAs":44},
- "RAMNAGAR":{"approved":3,"approvedTs":0,"secureAs":13},
- "MAJHGAWAN":{"approved":62,"approvedTs":22,"secureAs":20},
- "NAGOD":{"approved":9,"approvedTs":0,"secureAs":12},
- "RAMPUR BAGHELAN":{"approved":5,"approvedTs":4,"secureAs":20},
- "SOHAWAL":{"approved":43,"approvedTs":28,"secureAs":39},
- "UNCHAHARA":{"approved":18,"approvedTs":0,"secureAs":3}
+ "AMARPATAN":{"approved":2,"approvedTs":0},
+ "MAIHAR":{"approved":90,"approvedTs":44},
+ "RAMNAGAR":{"approved":3,"approvedTs":0},
+ "MAJHGAWAN":{"approved":62,"approvedTs":22},
+ "NAGOD":{"approved":9,"approvedTs":0},
+ "RAMPUR BAGHELAN":{"approved":5,"approvedTs":4},
+ "SOHAWAL":{"approved":43,"approvedTs":28},
+ "UNCHAHARA":{"approved":18,"approvedTs":0}
 };
 function summary(){
  const r33=window.YUKTDHARA_RECEIVED;
@@ -236,18 +267,18 @@ function summary(){
   const block=blockKey(row.block),r33Block=r33Blocks.get(block);
   const ts=hasCurrentTs?(tsByBlock.get(block)||0):row.tsCount;
   const verified=janpadVerification[block];
-  const as=verified?.secureAs??row.asSecureCount??null;
+  const geo=geoByBlock.get(String(row.blockCode))||emptyGeo();
+  const as=geo.as;
   return {district:row.district,block,yd:r33Block?.worksCreated??null,ts,as,
    approved:verified?.approved,approvedTs:verified?.approvedTs,
-   ongoing:r33Block?.ongoing??null,color:janpadColorIndex[row.block]??0};
+   geo,color:janpadColorIndex[row.block]??0};
  });
  const fmtCell=value=>value==null?'<td class="verification-pending">पुष्टि बाकी</td>':'<td>'+fmt(value)+'</td>';
  const sum=(group,key)=>group.length&&group.every(row=>Number.isFinite(row[key]))?group.reduce((total,row)=>total+row[key],0):null;
  const rowHtml=(label,block,key,group,cls)=>{
-  const ts=sum(group,'ts'),as=sum(group,'as'),ongoing=sum(group,'ongoing');
-  const minimumBefore=ongoing==null?fmtCell(null):'<td>≥ '+fmt(ongoing)+'</td>';
+  const ts=sum(group,'ts'),as=sum(group,'as'),geo=sumGeo(group);
   return '<tr class="'+cls+'"><td>'+label+'</td><td>'+block+'</td>'+fmtCell(sum(group,'yd'))+fmtCell(ts)+
-   convergenceCells(key)+fmtCell(sum(group,'approved'))+fmtCell(sum(group,'approvedTs'))+fmtCell(as)+fmtCell(ts!=null&&as!=null?ts-as:null)+minimumBefore+fmtCell(null)+fmtCell(ongoing)+fmtCell(null)+'</tr>';
+   convergenceCells(key)+fmtCell(sum(group,'approved'))+fmtCell(sum(group,'approvedTs'))+fmtCell(as)+fmtCell(ts!=null&&as!=null?ts-as:null)+geoCells(geo)+'</tr>';
  };
  let html='';
  for(const district of ['MAIHAR','SATNA']){
@@ -257,24 +288,48 @@ function summary(){
  }
  html+=rowHtml('सतना + मैहर','कुल','ALL',blocks,'total');
  $('summaryRows').innerHTML=html;
- const ongoingTotal=sum(blocks,'ongoing');
- $('beforeCoverageNote').textContent=ongoingTotal==null
-  ?'कुल Before Geo Tag और उसके बाद Ongoing हुए कार्यों का सत्यापित डेटा उपलब्ध नहीं है।'
-  :'R33.1 के '+fmt(ongoingTotal)+' कार्य Geo Tag के बाद Ongoing हुए हैं। Before Geo Tag की यह न्यूनतम सत्यापित संख्या है। Geo Tag के बाद भी शुरू न हुए कार्यों की पूरी पुष्टि बाकी है, इसलिए कुल Before Geo Tag में ≥ का निशान न्यूनतम संख्या बताता है।';
+ const geo=sumGeo(blocks);
+ $('beforeCoverageNote').textContent='Before Geo Tag की गिनती 01.10.2026 से 12.11.2026 के '+fmt(geo.as)+' SECURE AS /YD/ कार्यों की e‑Work File गैलरी से है। Ongoing और अभी Ongoing नहीं, दोनों की स्थिति उसी गैलरी से ली गई है।'+
+  (geo.unknown?' '+fmt(geo.unknown)+(geo.unknown===1?' कार्य की गैलरी सत्यापित नहीं हुई।':' कार्यों की गैलरी सत्यापित नहीं हुई।')+' ≥ उपलब्ध रिकॉर्ड का न्यूनतम योग है।':'');
 }
 function gpRowsWithCurrentTs(){
- const previous=D.gpSummary||[];
- if(!hasCurrentTs)return previous;
- const key=row=>blockKey(row.block)+'|'+gpKey(row.panchayat);
- const merged=new Map(previous.map(row=>[key(row),{...row,tsCount:tsByGp.get(key(row))||0}]));
- for(const gp of T.panchayats){
-  const row={district:String(gp.district).toUpperCase(),block:blockKey(gp.janpad),panchayat:gp.panchayat};
-  const id=key(row);
-  if(tsByGp.has(id)&&!merged.has(id))merged.set(id,{...row,tsCount:tsByGp.get(id)});
+ const known=new Map((D.gpSummary||[]).map(row=>[String(row.panchayatCode),row]));
+ for(const gp of T?.panchayats||[]){
+  const code=String(gp.pcode);
+  if(known.has(code)||tsByGp.has(blockKey(gp.janpad)+'|'+gpKey(gp.panchayat))||geoByGp.has(code)){
+   known.set(code,{district:gp.district.toUpperCase(),block:blockKey(gp.janpad),panchayat:gp.panchayat,panchayatCode:code});
+  }
  }
- return [...merged.values()];
+ return [...known.values()].map(row=>{
+  const ts=hasCurrentTs?tsByGp.get(blockKey(row.block)+'|'+gpKey(row.panchayat))||0:row.tsCount||0;
+  return {...row,ts,geo:geoByGp.get(String(row.panchayatCode))||emptyGeo()};
+ });
 }
-function renderGps(){const q=$('gpFilter').value.trim().toLowerCase(),all=gpRowsWithCurrentTs(),found=all.filter(x=>!q||[x.district,labelBlock(x.block),x.panchayat].join(' ').toLowerCase().includes(q));if(q&&!found.length){$('gpRows').innerHTML='<tr><td colspan="10" class="empty">इस खोज में कोई GP नहीं मिला।</td></tr>';$('gpMeta').textContent='0 / '+fmt(all.length)+' GP';return}let html='',grand={as:0,ts:0,geo:0,notOngoing:0,ongoing:0};for(const d of ['MAIHAR','SATNA']){const blocks=(D.janpadSummary||[]).filter(x=>x.district===d);let district={as:0,ts:0,geo:0,notOngoing:0,ongoing:0};for(const b of blocks){const colorIndex=janpadColorIndex[b.block]??0,colorClass='janpad-color-'+colorIndex,rowsInBlock=all.filter(x=>x.district===d&&x.block===b.block),visible=found.filter(x=>x.district===d&&x.block===b.block);for(const x of visible){const ts=Number(x.tsCount||0),as=Number(x.asSecureCount??x.asAvailable??0),metrics=geoMetrics(rows.filter(r=>r.district===d&&blockKey(r.block)===blockKey(b.block)&&r.panchayat===x.panchayat),b.block,x.panchayat);html+='<tr class="'+colorClass+'"><td>'+x.district+'</td><td>'+labelBlock(x.block)+'</td><td>'+x.panchayat+'</td><td>'+fmt(ts)+'</td><td>'+fmt(as)+'</td><td>'+fmt(ts-as)+'</td><td>'+fmt(metrics.total)+'</td><td>'+fmt(metrics.notOngoing)+'</td><td>'+fmt(metrics.ongoing)+'</td><td>'+fmt(Math.max(0,as-metrics.total))+'</td></tr>'}const subtotal=rowsInBlock.reduce((a,x)=>({as:a.as+Number(x.asSecureCount??x.asAvailable??0),ts:a.ts+Number(x.tsCount||0)}),{as:0,ts:0}),metrics=geoMetrics(rows.filter(r=>r.district===d&&blockKey(r.block)===blockKey(b.block)),b.block);district.as+=subtotal.as;district.ts+=subtotal.ts;district.geo+=metrics.total;district.notOngoing+=metrics.notOngoing;district.ongoing+=metrics.ongoing;html+='<tr class="janpad-total '+colorClass+'"><td>'+d+'</td><td>'+labelBlock(b.block)+'</td><td>जनपद कुल</td><td>'+fmt(subtotal.ts)+'</td><td>'+fmt(subtotal.as)+'</td><td>'+fmt(subtotal.ts-subtotal.as)+'</td><td>'+fmt(metrics.total)+'</td><td>'+fmt(metrics.notOngoing)+'</td><td>'+fmt(metrics.ongoing)+'</td><td>'+fmt(Math.max(0,subtotal.as-metrics.total))+'</td></tr>'}html+='<tr class="'+d.toLowerCase()+'"><td>'+d+'</td><td>जिला योग</td><td>सभी जनपद</td><td>'+fmt(district.ts)+'</td><td>'+fmt(district.as)+'</td><td>'+fmt(district.ts-district.as)+'</td><td>'+fmt(district.geo)+'</td><td>'+fmt(district.notOngoing)+'</td><td>'+fmt(district.ongoing)+'</td><td>'+fmt(Math.max(0,district.as-district.geo))+'</td></tr>';grand.as+=district.as;grand.ts+=district.ts;grand.geo+=district.geo;grand.notOngoing+=district.notOngoing;grand.ongoing+=district.ongoing}html+='<tr class="total"><td>सतना + मैहर</td><td>कुल योग</td><td>सभी जनपद</td><td>'+fmt(grand.ts)+'</td><td>'+fmt(grand.as)+'</td><td>'+fmt(grand.ts-grand.as)+'</td><td>'+fmt(grand.geo)+'</td><td>'+fmt(grand.notOngoing)+'</td><td>'+fmt(grand.ongoing)+'</td><td>'+fmt(Math.max(0,grand.as-grand.geo))+'</td></tr>';$('gpRows').innerHTML=html;$('gpMeta').textContent=fmt(found.length)+' / '+fmt(all.length)+' GP • Ongoing कार्य संख्या R33.1 की GP-wise सूची से';}function fillBlocks(){const d=$('district').value, blocks=[...new Set(rows.filter(r=>d==='ALL'||r.district===d).map(r=>labelBlock(r.block)))].sort((a,b)=>a.localeCompare(b,'hi'));$('block').innerHTML='<option value="ALL">सभी जनपद</option>'+blocks.map(b=>`<option>${b}</option>`).join('')}
+function renderGps(){
+ const q=$('gpFilter').value.trim().toLowerCase();
+ const all=gpRowsWithCurrentTs();
+ const found=all.filter(row=>!q||[row.district,labelBlock(row.block),row.panchayat].join(' ').toLowerCase().includes(q));
+ const cells=(group)=>{
+  const geo=sumGeo(group),ts=group.reduce((sum,row)=>sum+row.ts,0);
+  return '<td>'+fmt(ts)+'</td><td>'+fmt(geo.as)+'</td><td>'+fmt(ts-geo.as)+'</td>'+geoCells(geo);
+ };
+ let html='';
+ for(const district of ['MAIHAR','SATNA']){
+  const districtRows=all.filter(row=>row.district===district);
+  for(const block of (D.janpadSummary||[]).filter(row=>row.district===district)){
+   const key=blockKey(block.block),cls='janpad-color-'+(janpadColorIndex[block.block]??0);
+   for(const row of found.filter(row=>row.district===district&&blockKey(row.block)===key)){
+    html+='<tr class="'+cls+'"><td>'+district+'</td><td>'+labelBlock(key)+'</td><td>'+row.panchayat+'</td>'+cells([row])+'</tr>';
+   }
+   html+='<tr class="janpad-total '+cls+'"><td>'+district+'</td><td>'+labelBlock(key)+'</td><td>जनपद कुल</td>'+cells(districtRows.filter(row=>blockKey(row.block)===key))+'</tr>';
+  }
+  html+='<tr class="'+district.toLowerCase()+'"><td>'+district+'</td><td>जिला योग</td><td>सभी जनपद</td>'+cells(districtRows)+'</tr>';
+ }
+ html+='<tr class="total"><td>सतना + मैहर</td><td>कुल योग</td><td>सभी जनपद</td>'+cells(all)+'</tr>';
+ $('gpRows').innerHTML=found.length?html:'<tr><td colspan="10" class="empty">इस खोज में कोई GP नहीं मिला।</td></tr>';
+ $('gpMeta').textContent=fmt(found.length)+' / '+fmt(all.length)+' GP • SECURE AS कार्यों की Before Geo Tag स्थिति e‑Work File से';
+}
+function fillBlocks(){const d=$('district').value, blocks=[...new Set(rows.filter(r=>d==='ALL'||r.district===d).map(r=>labelBlock(r.block)))].sort((a,b)=>a.localeCompare(b,'hi'));$('block').innerHTML='<option value="ALL">सभी जनपद</option>'+blocks.map(b=>`<option>${b}</option>`).join('')}
 function render(){const d=$('district').value,b=$('block').value,s=$('status').value,q=$('query').value.trim().toLowerCase();const found=rows.filter(r=>(d==='ALL'||r.district===d)&&(b==='ALL'||r.block===b)&&(s==='ALL'||r.beforePhotoStatus===s)&&(!q||[r.workCode,r.workName,r.panchayat].join(' ').toLowerCase().includes(q)));$('workRows').innerHTML=found.map(r=>{const status=r.beforePhotoStatus||'Unknown',cl=status==='Available'?'available':status==='Not Available'?'not-available':'unknown';return `<tr><td>${r.district}</td><td>${r.block}</td><td>${r.panchayat||'—'}</td><td>${r.asSanctionDate||'—'}</td><td>${r.workCode}</td><td>${r.workName||'—'}</td><td class="status ${cl}">${status}</td><td><a href="${r.source}" target="_blank" rel="noopener">e-Work File</a></td></tr>`}).join('')||'<tr><td colspan="8" class="empty">इन filters में कोई कार्य नहीं मिला।</td></tr>';$('rowMeta').textContent=`${fmt(found.length)} / ${fmt(rows.length)} कार्य • Before फोटो status VB-G RAM G e-Work File से लिया गया है`}
 if(!rows.length)$('workPanel').hidden=true;summary();loadConvergence();renderGps();fillBlocks();render();$('gpFilter').addEventListener('input',renderGps);$('district').addEventListener('change',()=>{fillBlocks();render()});['block','status','query'].forEach(id=>$(id).addEventListener(id==='query'?'input':'change',render));$('sourceMeta').textContent=`स्रोत: SECURE AS Register — 01-10-2026 से snapshot तक, Work Code /YD/; SECURE TS Register — 01-10-2026 से snapshot तक, Work Code /YD/; Before Geo Tag detail — VB-G RAM G; R33.1 created works — VB-G RAM G (${D.yuktdhara?.officialDate||'—'}); SECURE AS/TS snapshot: ${D.secureAs?.snapshotAt||D.secureTs?.snapshotAt||'—'}; AS / Before snapshot: ${new Date(D.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}`;
 })();
