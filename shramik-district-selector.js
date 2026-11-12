@@ -14,7 +14,7 @@ const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssTex
 rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • मऊगंज • सतना • मैहर • सीधी • सिंगरौली</small></div>';
 section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);
 const state=document.createElement('div');state.id='snStateDistrictReport';state.hidden=true;
-state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से नवंबर तक<br>NREGA लक्ष्य<br>दिवस (लाख)","कुल सृजित मानव दिवस<br>(लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
+state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से अक्टूबर तक<br>NREGA लक्ष्य<br>दिवस (लाख)","कुल सृजित मानव दिवस<br>(लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
 originalWrap.insertAdjacentElement('afterend',state);
 let sortColumn=null,sortDirection='desc';
 const janpadHeader=document.createElement('th');
@@ -202,79 +202,79 @@ function parseNovember(text, labourByName, metrics={}) {
 }
 // Official S5.8 Total Works Ongoing, FY 2026–27.
 const districtOngoing={"MORENA":7043,"BHIND":7621,"GWALIOR":6138,"DATIA":4099,"SHIVPURI":21244,"GUNA":13932,"TIKAMGARH":11772,"CHHATARPUR":12871,"PANNA":10345,"SAGAR":21478,"DAMOH":21189,"SATNA":15782,"REWA":17783,"SHAHDOL":4386,"SIDHI":16942,"MANDSAUR":24286,"RATLAM":13393,"UJJAIN":10397,"SHAJAPUR":8425,"DEWAS":10365,"JHABUA":19442,"DHAR":21629,"INDORE":3920,"KHARGONE":14355,"KHANDWA":12660,"RAJGARH":19768,"VIDISHA":18083,"BHOPAL":8729,"SEHORE":17804,"RAISEN":15119,"BETUL":13909,"NARMADAPURAM":13958,"JABALPUR":13366,"NARSINGHPUR":11890,"MANDLA":8975,"CHHINDWARA":12110,"SEONI":9238,"BALAGHAT":7337,"SHEOPUR":12013,"UMARIA":9123,"NEEMUCH":6832,"BARWANI":12766,"HARDA":4943,"KATNI":4015,"DINDORI":5938,"ANUPPUR":3566,"BURHANPUR":5297,"ASHOK NAGAR":21475,"ALIRAJPUR":6348,"SINGRAULI":9546,"AGAR-MALWA":18920,"NIWARI":3687};
-const novemberDistricts=parseNovember(`AGAR-MALWA|804021|500061
-ALIRAJPUR|1176343|310232
-ANUPPUR|336661|105292
-ASHOK NAGAR|1019851|399231
-BALAGHAT|440465|204267
-BARWANI|1298138|429448
-BETUL|870866|262389
-BHIND|193639|36993
-BHOPAL|352583|192736
-BURHANPUR|331842|153696
-CHHATARPUR|1089599|330434
-CHHINDWARA|1211574|786147
-DAMOH|1504447|444546
-DATIA|212223|49479
-DEWAS|1350229|249113
-DHAR|2516273|646919
-DINDORI|1034295|1566060
-GUNA|1070779|317578
-GWALIOR|324748|56455
-HARDA|290483|95650
-INDORE|324021|110141
-JABALPUR|810742|329131
-JHABUA|928588|261146
-KATNI|682126|319451
-KHANDWA|1269827|330805
-KHARGONE|2279680|530898
-MANDLA|975995|408573
-MANDSAUR|1312689|529657
-MORENA|4728121|34790
-NARMADAPURAM|630655|223265
-NARSINGHPUR|554714|318472
-NEEMUCH|477806|258117
-NIWARI|136097|63121
-PANNA|598360|129011
-RAISEN|760298|419820
-RAJGARH|1079319|689059
-RATLAM|1274948|596484
-REWA|775315|298916
-SAGAR|966818|449799
-SATNA|763652|189704
-SEHORE|1010208|442411
-SEONI|856160|243053
-SHAHDOL|626178|198075
-SHAJAPUR|828892|276332
-SHEOPUR|1276795|184414
-SHIVPURI|1739272|413552
-SIDHI|941331|352884
-SINGRAULI|1070426|201685
-TIKAMGARH|389993|204198
-UJJAIN|1371847|317430
-UMARIA|453002|103684
-VIDISHA|798604|689225`,districtLabour);
+const novemberDistricts=parseNovember(`AGAR-MALWA|694090|500061
+ALIRAJPUR|1016710|310232
+ANUPPUR|274245|105292
+ASHOK NAGAR|808475|399231
+BALAGHAT|301263|204267
+BARWANI|1075353|429448
+BETUL|773092|262389
+BHIND|179108|36993
+BHOPAL|252577|192736
+BURHANPUR|287862|153696
+CHHATARPUR|831262|330434
+CHHINDWARA|1045397|786147
+DAMOH|1168683|444546
+DATIA|179007|49479
+DEWAS|1206276|249113
+DHAR|2248061|646919
+DINDORI|789722|1566060
+GUNA|871944|317578
+GWALIOR|242184|56455
+HARDA|259846|95650
+INDORE|287892|110141
+JABALPUR|728634|329131
+JHABUA|793009|261146
+KATNI|574163|319451
+KHANDWA|1055369|330805
+KHARGONE|1881773|530898
+MANDLA|707922|408573
+MANDSAUR|1110419|529657
+MORENA|3820652|34790
+NARMADAPURAM|559787|223265
+NARSINGHPUR|492033|318472
+NEEMUCH|422821|258117
+NIWARI|85574|63121
+PANNA|503083|129011
+RAISEN|633473|419820
+RAJGARH|869376|689059
+RATLAM|1140084|596484
+REWA|658189|298916
+SAGAR|758658|449799
+SATNA|621552|189704
+SEHORE|868650|442411
+SEONI|645700|243053
+SHAHDOL|502470|198075
+SHAJAPUR|731900|276332
+SHEOPUR|1068119|184414
+SHIVPURI|1463223|413552
+SIDHI|763054|352884
+SINGRAULI|835380|201685
+TIKAMGARH|317663|204198
+UJJAIN|1267242|317430
+UMARIA|397828|103684
+VIDISHA|727756|689225`,districtLabour);
 const novemberBlocks={
- सतना:parseNovember(`मझगवां|62985|14619
-नागौद|93742|30502
-रामपुर बघेलान|175416|32911
-सोहावल|110216|16041
-उचेहरा|60684|15481`,blockLabour),
- मैहर:parseNovember(`अमरपाटन|78203|22445
-मैहर|94107|36066
-रामनगर|88299|21639`,blockLabour),
- रीवा:parseNovember(`गंगेव|92802|40015|470
-जवा|90617|19352|281
-रायपुर कर्चुलियान|83366|41397|696
-रीवा|66699|21786|527
-सिरमौर|136879|23938|605
-त्योंथर|54409|25651|292`,{},{
+ सतना:parseNovember(`मझगवां|43096|14619
+नागौद|72817|30502
+रामपुर बघेलान|138970|32911
+सोहावल|84825|16041
+उचेहरा|52545|15481`,blockLabour),
+ मैहर:parseNovember(`अमरपाटन|71072|22445
+मैहर|82541|36066
+रामनगर|75686|21639`,blockLabour),
+ रीवा:parseNovember(`गंगेव|79517|40015|470
+जवा|64415|19352|281
+रायपुर कर्चुलियान|73207|41397|696
+रीवा|59036|21786|527
+सिरमौर|127573|23938|605
+त्योंथर|42326|25651|292`,{},{
  'गंगेव':{totalGP:88,workingGP:64,mrIssued:328},'जवा':{totalGP:80,workingGP:56,mrIssued:136},
  'रायपुर कर्चुलियान':{totalGP:104,workingGP:99,mrIssued:503},'रीवा':{totalGP:92,workingGP:83,mrIssued:388},
  'सिरमौर':{totalGP:103,workingGP:70,mrIssued:405},'त्योंथर':{totalGP:97,workingGP:59,mrIssued:226}}),
- मऊगंज:parseNovember(`मऊगंज|68040|39591|597
-हनुमना|108246|48353|564
-नईगढ़ी|74257|41496|514`,{},{
+ मऊगंज:parseNovember(`मऊगंज|55335|39591|597
+हनुमना|92905|48353|564
+नईगढ़ी|63875|41496|514`,{},{
  'मऊगंज':{totalGP:82,workingGP:77,mrIssued:387},'हनुमना':{totalGP:98,workingGP:56,mrIssued:439},
  'नईगढ़ी':{totalGP:76,workingGP:58,mrIssued:428}})
 };
@@ -322,7 +322,7 @@ function render(){
  if(!grouped&&janpadHeader.parentNode)janpadHeader.remove();
  originalWrap.hidden=external;originalKpis.hidden=false;state.hidden=!external;
  document.getElementById('snWarnings').hidden=external;
- section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से नवंबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 जुलाई से नवंबर की VB-G RAM G उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
+ section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 जुलाई से नवंबर की VB-G RAM G उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
  const reportDate=grouped?satnaMaiharNovemberDate:novemberDate;
  if(external)document.getElementById('snDate').textContent='दिनांक '+reportDate;
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el){const field=el.closest('label')||el;field.hidden=external;field.style.display=external?'none':'';}}
