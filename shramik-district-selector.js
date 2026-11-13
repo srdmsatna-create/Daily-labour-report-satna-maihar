@@ -3,18 +3,19 @@
 const section=document.getElementById('shramikNiyojanReport');
 if(!section)return;
 const sourceNames=["AGAR-MALWA","ALIRAJPUR","ANUPPUR","ASHOK NAGAR","BALAGHAT","BARWANI","BETUL","BHIND","BHOPAL","BURHANPUR","CHHATARPUR","CHHINDWARA","DAMOH","DATIA","DEWAS","DHAR","DINDORI","GUNA","GWALIOR","HARDA","INDORE","JABALPUR","JHABUA","KATNI","KHANDWA","KHARGONE","MANDLA","MANDSAUR","MORENA","NARMADAPURAM","NARSINGHPUR","NEEMUCH","NIWARI","PANNA","RAISEN","RAJGARH","RATLAM","REWA","SAGAR","SATNA","SEHORE","SEONI","SHAHDOL","SHAJAPUR","SHEOPUR","SHIVPURI","SIDHI","SINGRAULI","TIKAMGARH","UJJAIN","UMARIA","VIDISHA"], region=['रीवा','मऊगंज','सतना','मैहर','SIDHI','SINGRAULI'];
+const districtLabel=name=>({SIDHI:'सीधी',SINGRAULI:'सिंगरौली'})[name]??name;
 const names=sourceNames.flatMap(name=>name==='REWA'?['रीवा','मऊगंज']:name==='सतना'?['सतना','मैहर']:[name]);
 const tools=section.querySelector('.sn-tools'), originalWrap=section.querySelector('.sn-wrap'), originalKpis=section.querySelector('.sn-kpis');
 const label=document.createElement('label');label.style.cssText='display:grid;gap:3px;font-weight:850;color:#075d46';
 label.textContent='प्रदेश के 52 स्रोत जिले';
-const select=document.createElement('select');select.id='snStateDistrict';select.innerHTML='<option value="__ALL__">सभी 52 जिले — जिलावार रिपोर्ट</option><option value="__REWA__">रीवा संभाग — 6 जिले</option><option value="__BLOCK__">जनपदवार — सतना, मैहर, रीवा, मऊगंज</option><option value="__SATNA_MAIHAR_NOV__">नवंबर रिपोर्ट — सतना + मैहर</option>'+names.map(n=>'<option value="'+n+'">'+n+'</option>').join('');
+const select=document.createElement('select');select.id='snStateDistrict';select.innerHTML='<option value="__ALL__">सभी 52 जिले — जिलावार रिपोर्ट</option><option value="__REWA__">रीवा संभाग — 6 जिले</option><option value="__BLOCK__">जनपदवार — सतना, मैहर, रीवा, मऊगंज</option><option value="__SATNA_MAIHAR_NOV__">नवंबर रिपोर्ट — सतना + मैहर</option>'+names.map(n=>'<option value="'+n+'">'+districtLabel(n)+'</option>').join('');
 label.appendChild(select);tools.insertBefore(label,tools.firstChild);
 const metricLabel=document.createElement('label');metricLabel.style.cssText=label.style.cssText;metricLabel.textContent='रैंकिंग पैरामीटर';const metricSelect=document.createElement('select');metricSelect.id='snRankParameter';metricSelect.innerHTML='<option value="achievement">उपलब्धि %</option><option value="labour">आज संलग्न श्रमिक</option><option value="mr">मस्टर रोल जारी %</option>';metricLabel.appendChild(metricSelect);label.insertAdjacentElement('afterend',metricLabel);
 const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0';
 rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • मऊगंज • सतना • मैहर • सीधी • सिंगरौली</small></div>';
 section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);
 const state=document.createElement('div');state.id='snStateDistrictReport';state.hidden=true;
-state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से अक्टूबर तक<br>NREGA लक्ष्य<br>दिवस (लाख)","कुल सृजित मानव दिवस<br>(लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","उपलब्धि %","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
+state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से अक्टूबर तक<br>NREGA लक्ष्य<br>दिवस (लाख)","कुल सृजित मानव दिवस<br>(लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","% सृजित मानव दिवस की उपलब्धि","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
 originalWrap.insertAdjacentElement('afterend',state);
 let sortColumn=null,sortDirection='desc';
 const janpadHeader=document.createElement('th');
@@ -360,7 +361,7 @@ function render(){
  dateNote.textContent=grouped?'प्रगतिरत कार्य (S5.8) का डेटा '+ongoingSnapshotDate+' का है।':'दिनांक '+reportDate;
  dateNote.hidden=!grouped;
  state.classList.toggle('sn-rewa-districts', selected==='__REWA__');
- document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
+ document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':districtLabel(selected)+' — जिलावार श्रमिक नियोजन रिपोर्ट';
  const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
  const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
  const kpiTarget=kpiSum('target'),kpiAchievement=kpiSum('achievement'),kpiGap=Math.max(0,kpiTarget-kpiAchievement),kpiDaily=Math.ceil(kpiGap/days);
@@ -370,7 +371,7 @@ function render(){
   const totals={totalGP:0,workingGP:0,inactiveGP:0,target:0,achievement:0,gap:0,daily:0,labour:0,ongoing:0,mr:0}, complete={totalGP:true,workingGP:true,inactiveGP:true,labour:true,ongoing:true,mr:true};
   function cells(values,janpad=''){if(grouped)values.splice(2,0,janpad);return values.map((v,index)=>{const j=grouped&&index>=2?index-1:index;return '<td style="'+((j===1||grouped&&index===2)?'text-align:left;font-weight:850;':j===12?'text-align:right;font-weight:950;color:#06452b;background:#e6f2eb;':j===13?'text-align:right;font-weight:950;color:#7f1010;background:#fbeaea;':'text-align:right;font-weight:800;')+'">'+(v==null?'<span class="sn-missing">—</span>':typeof v==='string'?(j===12?'<span class="sn-achievement-pill">'+esc(v)+'</span>':esc(v)):(j>=6&&j<=8?Number(v/100000).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}):fmt(v)))+'</td>';}).join('');}
   const detail=names.map((name,i)=>{
-   const d=all[name];if(!valid(d))return '<tr><td>'+ (i+1) +'</td><td>'+esc(name)+'</td><td colspan="'+(grouped?16:15)+'">समान अवधि के आँकड़े उपलब्ध नहीं हैं</td></tr>';
+   const d=all[name];if(!valid(d))return '<tr><td>'+ (i+1) +'</td><td>'+esc(districtLabel(name))+'</td><td colspan="'+(grouped?16:15)+'">समान अवधि के आँकड़े उपलब्ध नहीं हैं</td></tr>';
    const sum=k=>d.rows.reduce((a,r)=>a+Number(r[k]||0),0);
    const target=sum('target'),achievement=sum('vbgramJulyNovember'),gap=Math.max(0,target-achievement),daily=days?Math.ceil(gap/days):0;
    const known=k=>d.rows.every(r=>r[k]!=null)?sum(k):null;
@@ -380,7 +381,7 @@ function render(){
    const gp=gpStats(d);
    for(const [j,k] of ['totalGP','workingGP','inactiveGP'].entries()){if(gp[j]==null)complete[k]=false;else totals[k]+=gp[j];}
    const [district,janpad]=grouped?name.split(' / '):[name,''];
-   const values=[i+1,district,...gp.slice(0,3),gp[3]==null?null:gp[3].toFixed(2)+'%',target,achievement,gap,days,daily,labour,(achievement*100/target).toFixed(1)+'%',labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?(mr*100/ongoing).toFixed(1)+'%':'0.0%'];
+   const values=[i+1,districtLabel(district),...gp.slice(0,3),gp[3]==null?null:gp[3].toFixed(2)+'%',target,achievement,gap,days,daily,labour,(achievement*100/target).toFixed(1)+'%',labour==null?null:Math.max(0,daily-labour),ongoing,mr,ongoing==null||mr==null?null:ongoing?(mr*100/ongoing).toFixed(1)+'%':'0.0%'];
    return '<tr'+(name==='SATNA'?' style="background:#d8f3df;"':'')+'>'+cells(values,janpad)+'</tr>';
   }).join('');
   let total='';
