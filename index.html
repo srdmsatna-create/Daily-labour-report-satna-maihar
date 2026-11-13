@@ -4699,7 +4699,15 @@ function printEkAllWorksList(){
  const doc=frame.contentDocument;
  doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>'+
  '@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box}body{margin:0;color:#111;font-family:Arial,"Noto Sans Devanagari",sans-serif}h1{font-size:14pt;text-align:center;margin:0 0 4mm}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #6281a1;padding:1mm .6mm;font-size:6.5pt;line-height:1.25;vertical-align:top;overflow-wrap:anywhere;white-space:normal}th{background:#dce9fb;color:#123f72;font-weight:700;text-align:center}thead{display:table-header-group}tr{break-inside:avoid;page-break-inside:avoid}th:nth-child(1){width:2.8%}th:nth-child(4){width:5%}th:nth-child(5){width:5%}th:nth-child(9){width:10%}th:nth-child(10){width:14%}td:nth-child(n+11){text-align:right}tbody tr:nth-child(even){background:#f3f7fc}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
- '</style></head><body><h1>'+title+'</h1>'+table.outerHTML+'</body></html>');doc.close();
+ '</style><style>
+@media print {
+  body[data-report-view="official"] .clean-report-card > .report-head,
+  body[data-report-view="official"] #reportTable .recovery-work-col {
+    display: none !important;
+  }
+}
+</style>
+</head><body><h1>'+title+'</h1>'+table.outerHTML+'</body></html>');doc.close();
  const clean=()=>{if(frame.isConnected)frame.remove();};
  frame.contentWindow.addEventListener('afterprint',clean,{once:true});
  Promise.resolve(doc.fonts?doc.fonts.ready:null).then(()=>{setTimeout(()=>{frame.contentWindow.focus();frame.contentWindow.print();},150);});
