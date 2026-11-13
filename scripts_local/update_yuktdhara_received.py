@@ -40,6 +40,8 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_
             ci=created[0] if len(created)==1 else None
             pending=[i for i,s in enumerate(names) if "works yet to start" in s]
             yi=pending[0] if len(pending)==1 else None
+            ongoing=[i for i,s in enumerate(names) if 'works ongoing' in s]
+            oi=ongoing[0] if len(ongoing)==1 else None
             for row in table[hi+1:]:
                 # Official tables have a second header row numbered 1,2,3,... .
                 # It is column numbering, not a GP named "2" with three works.
@@ -60,6 +62,9 @@ def gp_counts(tables, expected_gp, expected_works, expected_created=None, total_
                     out[key]['worksCreated']=value
                     out[key]['createdDetailLinks']=row[ci].get('links',[])
                 if yi is not None:out[key]['yetToStart']=number(row[yi]['text'])
+                if oi is not None:
+                    out[key]['ongoing']=number(row[oi]['text'])
+                    out[key]['ongoingLinks']=row[oi].get('links',[])
             actual_works=sum(x['worksReceived'] for x in out.values())
             actual_gp=sum(x['worksReceived']>0 for x in out.values())
             actual_created=sum(x.get('worksCreated',0) for x in out.values())
@@ -210,10 +215,22 @@ def collect():
                 rr=details[jan(block['block'])]
                 block['summaryGpReceived']=block['gpReceived'];block['summaryWorksReceived']=block['worksReceived']
                 if not all('yetToStart' in r for r in rr):raise RuntimeError('GP yet-to-start column missing: '+block['block'])
+                if not all('ongoing' in r for r in rr) or sum(r['ongoing'] for r in rr)!=block['ongoing']:raise RuntimeError('Ongoing GP/block totals mismatch: '+block['block'])
                 block['summaryYetToStart']=block['yetToStart']
                 block['yetToStart']=sum(r['yetToStart'] for r in rr)
                 block['gpReceived']=sum(r['worksReceived']>0 for r in rr)
                 block['worksReceived']=sum(r['worksReceived'] for r in rr)
+            for rr in details.values():
+                for gp in rr:
+                    if not gp['ongoing']:continue
+                    gp['ongoingCodes']=[]
+                    for url in gp['ongoingLinks']:
+                        try:
+                            tables=fetch(url, timeout=25000)
+                            gp['ongoingCodes']=sorted(set(re.findall(r'\b\d{10}/[A-Z0-9/]+/\d+\b', ' '.join(c['text'] for table in tables for row in table for c in row).upper())))
+                            if gp['ongoingCodes']:break
+                        except Exception as exc:
+                            print('Ongoing detail unavailable: '+gp['gp']+' '+str(exc),flush=True)
             work_debug=[]
             pending=sum(gp['worksReceived']>0 for gp_rows in details.values() for gp in gp_rows)
             done=0
@@ -245,7 +262,7 @@ def collect():
             rows=aggregate(blocks,details,mapping)
         finally:browser.close()
     (ROOT/'yuktdhara-official-data.js').write_text('window.YUKTDHARA_REPORT='+json.dumps(summary,ensure_ascii=False,separators=(',',':'))+';\n',encoding='utf-8')
-    return {'success':True,'updatedAt':datetime.now(timezone.utc).isoformat(),'officialDate':summary.get('officialDate'),'blocks':blocks,'rows':rows,'source':summary['source']}
+    return {'success':True,'updatedAt':datetime.now(timezone.utc).isoformat(),'officialDate':summary.get('officialDate'),'blocks':blocks,'rows':rows,'gpProgress':{b:[{k:r.get(k,[]) for k in ('gp','worksReceived','worksCreated','ongoing','ongoingCodes')} for r in rr] for b,rr in details.items()},'source':summary['source']}
 
 def main():
     output=ROOT/OUTPUT

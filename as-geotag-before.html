@@ -1,293 +1,129 @@
 <!doctype html>
 <html lang="hi">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AS, SECURE TS और Before जियो टैग स्थिति</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R-3.7 | युक्तधारा कार्य प्रगति</title>
 <style>
-:root{--navy:#123f72;--blue:#176da7;--ink:#18334b;--muted:#5b7187;--line:#c8d8e8;--bg:#f3f7fb;--green:#167443;--red:#aa3928;--amber:#946200}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans Devanagari",sans-serif}
-header{background:linear-gradient(125deg,#103e68,#1976ae);color:#fff;padding:18px max(14px,calc((100vw - 1250px)/2));box-shadow:0 4px 15px #12365b26}
-h1{font-size:24px;margin:0}header p{margin:5px 0 0;font-size:13px}
-main{max-width:1250px;margin:16px auto;padding:0 14px}.back{display:inline-block;margin:0 0 10px;color:#12558a;font-weight:800}
-.scope,.panel,.card{background:#fff;border:1px solid var(--line);border-radius:11px;box-shadow:0 3px 12px #1a35520d}
-.scope{padding:10px 13px;margin:0 0 10px;color:#415c75;font-size:13px}.cards{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:9px;margin:10px 0}
-.card{padding:12px}.card small{font-weight:800;color:var(--muted)}.card strong{display:block;margin-top:4px;font-size:24px;color:var(--navy)}.card.yes strong{color:var(--green)}.card.no strong{color:var(--red)}.card.unknown strong{color:var(--amber)}
-.panel{padding:12px}.panel h2{margin:0 0 9px;color:var(--navy);font-size:17px}.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}.filters select,.filters input,button{border:1px solid var(--line);border-radius:8px;padding:9px 10px;background:#fff;color:var(--ink);font-weight:650}.filters input{flex:1;min-width:180px}button{cursor:pointer;color:#fff;background:var(--blue);border-color:var(--blue)}
-.wrap{overflow:auto;border:1px solid var(--line);border-radius:8px}table{width:100%;border-collapse:collapse;min-width:850px;font-size:14px}th,td{border:1.5px solid #9ab1cc;padding:9px 10px;text-align:left;vertical-align:top}th{background:var(--navy);color:white;position:sticky;top:0}tbody tr:nth-child(even){background:#f7faff}.num{text-align:right;font-variant-numeric:tabular-nums}.status{font-weight:850}.available{color:var(--green)}.not-available{color:var(--red)}.unknown{color:var(--amber)}.summary th:not(:first-child),.summary td:not(:first-child){text-align:right}.summary{margin-bottom:13px;min-width:1050px;font-size:14px}.summary th{font-size:13px;border-width:2px}.summary td{border-width:1.5px}.summary th:nth-child(1){background:#24476b}.summary th:nth-child(2){background:#176da7}.summary th:nth-child(3){background:#6041a6}.summary th:nth-child(4){background:#bd6a12}.summary th:nth-child(5){background:#16804b}.summary th:nth-child(6){background:#087d89}.summary th:nth-child(7){background:#b43c34}.summary th:nth-child(8){background:#946200}.summary td:nth-child(2){border-left-color:#176da7;border-right-color:#176da7}.summary td:nth-child(3){border-left-color:#6041a6;border-right-color:#6041a6}.summary td:nth-child(4){border-left-color:#bd6a12;border-right-color:#bd6a12}.summary td:nth-child(5){border-left-color:#16804b;border-right-color:#16804b}.summary td:nth-child(6){border-left-color:#087d89;border-right-color:#087d89}.summary td:nth-child(7){border-left-color:#b43c34;border-right-color:#b43c34}.summary td:nth-child(8){border-left-color:#946200;border-right-color:#946200}.summary tr.satna td{background:#e8f2ff;font-weight:850}.summary tr.maihar td{background:#e5f4e9;font-weight:850}.summary tr.total td{background:#ffedc9;font-weight:900}
-.data-alert{margin:10px 0;padding:10px 13px;border:1.5px solid #b43c34;border-radius:9px;background:#fff0ed;color:#8f241b;font-weight:850}.summary tr.mismatch td{background:#fff0ed;color:#8f241b;font-weight:850}.meta{font-size:11px;color:var(--muted);margin:8px 0}.empty{text-align:center;color:var(--muted);padding:20px}
-.summary{font-size:16px}.summary th:nth-child(n+3){text-align:center;font-size:14px}#summaryRows td:nth-child(n+3),#gpRows td:nth-child(n+4){text-align:center!important;font-size:21px!important;font-weight:900;vertical-align:middle}.summary tr.janpad-total td{background:#e9f1fb!important;color:#163e67;font-weight:900;border-top:3px solid #176da7}.summary tr.maihar td,.summary tr.satna td{font-size:17px}.summary tr.total td{font-size:18px}@media(max-width:700px){h1{font-size:20px}.cards{grid-template-columns:repeat(2,1fr)}.card strong{font-size:21px}table{font-size:13px}th,td{padding:8px}}
-.print-actions{display:flex;justify-content:flex-end;margin:8px 0}.print-actions button{font-size:15px;padding:10px 16px}
-.summary td:nth-child(2),#gpRows td:nth-child(3){text-align:left!important}
-#summaryRows tr.janpad-color-0 td,#gpRows tr.janpad-color-0 td{background:#f1eaff!important}
-#summaryRows tr.janpad-color-1 td,#gpRows tr.janpad-color-1 td{background:#e8f2ff!important}
-#summaryRows tr.janpad-color-2 td,#gpRows tr.janpad-color-2 td{background:#e8f6ee!important}
-#summaryRows tr.janpad-color-3 td,#gpRows tr.janpad-color-3 td{background:#fff4db!important}
-#summaryRows tr.janpad-color-4 td,#gpRows tr.janpad-color-4 td{background:#ffe9ec!important}
-#summaryRows tr.janpad-color-5 td,#gpRows tr.janpad-color-5 td{background:#e4f7f8!important}
-#summaryRows tr.janpad-color-6 td,#gpRows tr.janpad-color-6 td{background:#efe9ff!important}
-#summaryRows tr.janpad-color-7 td,#gpRows tr.janpad-color-7 td{background:#fff0e3!important}
-.section-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.section-title-row h2{margin:0}
-.section-print{white-space:nowrap;padding:7px 12px;font-size:13px}
-@media print{
-  @page{size:A4 landscape;margin:9mm}
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-  body{background:#fff}
-  header{padding:8px;background:var(--navy)!important}
-  main{margin:8px auto}
-  .back,.filters,.print-actions,.section-print{display:none!important}
-  .panel,.card,.scope{box-shadow:none}
-  .wrap{overflow:visible}
-  table{min-width:0;font-size:9px}
-  th,td{padding:4px}
-  th{position:static}
-  a{color:inherit;text-decoration:none}
-  #gpPanel{break-before:page;page-break-before:always;margin-top:0!important}
-  body[data-print-section="janpad"] #gpPanel,body[data-print-section="janpad"] #workPanel,body[data-print-section="gp"] #janpadPanel,body[data-print-section="gp"] #workPanel{display:none!important}
-  body[data-print-section="janpad"] .cards,body[data-print-section="janpad"] .scope,body[data-print-section="janpad"] .data-alert,body[data-print-section="gp"] .cards,body[data-print-section="gp"] .scope,body[data-print-section="gp"] .data-alert{display:none!important}
-  #summaryRows tr,#gpRows tr{break-inside:avoid;page-break-inside:avoid}
-  .summary{font-size:9px}
-  .summary th{font-size:8px}
-  .summary td{font-size:9px!important}
-  #summaryRows td:nth-child(n+3),#gpRows td:nth-child(n+4){font-size:9px!important}
-}
-main{max-width:1600px}.yd-head{background:#125c69!important}.yd-num{text-align:center!important;font-size:20px;font-weight:900}#engineerPanel td:nth-child(3){text-align:left!important}#engineerPanel table{min-width:1350px}
-@media print{main{max-width:none;padding:0}.summary,#engineerPanel table{min-width:0;width:100%;table-layout:fixed}.summary th,.summary th:nth-child(n+3){font-size:7px!important}.summary td,.yd-num{font-size:8px!important;overflow-wrap:anywhere}#engineerPanel{break-before:page}body[data-print-section="janpad"] #engineerPanel,body[data-print-section="gp"] #engineerPanel,body[data-print-section="engineer"] #janpadPanel,body[data-print-section="engineer"] #gpPanel,body[data-print-section="engineer"] #workPanel{display:none!important}}
- .summary th:nth-child(3){background:#0b7180}.summary th:nth-child(4){background:#6041a6}.summary th:nth-child(5){background:#bd6a12}.summary th:nth-child(6){background:#b43c34}.summary th:nth-child(7){background:#16804b}.summary th:nth-child(8){background:#087d89}
-#summaryRows td.verification-pending{font-size:13px!important;font-weight:700}
-@media print{#summaryRows td.verification-pending{font-size:8px!important}}
+*{box-sizing:border-box}body{margin:0;background:#eff4f8;color:#19334c;font:15px Arial,"Noto Sans Devanagari",sans-serif}
+header{background:#123d65;color:white;padding:18px 24px}h1{margin:0 0 4px;font-size:25px}header a{color:white}main{max-width:1680px;margin:auto;padding:16px}
+section{background:white;border:1px solid #bacbd8;border-radius:9px;padding:12px;margin-bottom:14px}
+h2{font-size:19px;margin:0 0 10px}.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}button,select{font:inherit;padding:6px 10px;border:1px solid #7d9ab2;border-radius:5px}button{background:#123d65;color:white;cursor:pointer}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:1160px;table-layout:fixed}th,td{border:1px solid #9eb5c7;padding:6px 4px;text-align:center;overflow-wrap:anywhere;line-height:1.18}
+th{background:#214f76;color:white;font-size:14px}th:nth-last-child(-n+3){background:#096675}td{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
+td:nth-child(-n+3){text-align:left;font-size:13px}td:nth-child(2),th:nth-child(2){white-space:nowrap}tbody tr:nth-child(even){background:#edf5fa}.total{background:#d7e8f4!important}.grand{background:#bdd9eb!important}p{margin:6px 0;line-height:1.4}.note{font-size:13px}
+@media print{@page{size:A4 landscape;margin:7mm}body,section{background:white}header{padding:0;color:#19334c;background:white}h1{font-size:15pt}header a,.tools{display:none}main{padding:0}section{border:0;padding:0;margin:0 0 6mm}h2{font-size:10pt}.wrap{overflow:visible}table{min-width:0}thead{display:table-header-group}tr{break-inside:avoid}th,td,td:nth-child(-n+3){font-size:8pt;padding:3px 2px}td:nth-child(2),th:nth-child(2){font-size:7pt}.note{font-size:8pt}*{print-color-adjust:exact}body[data-print="summary"] #sector,body[data-print="sector"] #summary{display:none}}
+tbody td{height:33px;vertical-align:middle}
+thead th{background:var(--head,#133e69);vertical-align:middle}
+thead th:nth-last-child(-n+3){background:var(--head,#133e69)}
+@media print{tbody td{height:0;min-height:0}th,td{line-height:1.12}}
 </style>
-<script src="secure-ts-data.js?v=20261105-refresh"></script>
-<script src="as-geotag-before-data.js?v=202611130229513511050000"></script>
-<script src="r33-ongoing-gp-data.js?v=20261109-r331-61"></script>
-<script src="yuktdhara-received-data.js?v=20261109-r331-61-refresh"></script>
 </head>
 <body>
-<header><h1>AS, SECURE TS और Before जियो टैग स्थिति</h1><p id="reportMeta">रिपोर्ट data load हो रहा है…</p></header>
+<header><h1>R-3.7 · युक्तधारा कार्य प्रगति</h1><p>सतना एवं मैहर · वित्तीय वर्ष 2026–27</p><a href="./">मुख्य पृष्ठ</a></header>
 <main>
-<a class="back" href="index.html">← मुख्य मेनू</a>
-<div class="scope">FY 2026–27 • SECURE TS और AS दोनों: 01-10-2026 से snapshot तक • केवल Work Code ID में /YD/ • Before Geo Tag</div><div class="print-actions"><button type="button" onclick="window.print()">PDF Print</button></div><div class="data-alert" id="dataQuality" hidden></div>
-<section class="panel" id="janpadPanel">
-  <div class="section-title-row"><h2>जिला / जनपदवार योग</h2><button class="section-print" type="button" onclick="printReport('janpad')">जनपद PDF Print</button></div>
-  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>VBGRAMG R33.1 में बने Work Code</th><th>SECURE TS रजिस्टर<br>कुल /YD/ कार्य</th><th>अभिसरण से नहीं<br>(SECURE TS में से)</th><th>अभिसरण<br>(SECURE TS में से)</th><th>Approved, अभी Ongoing नहीं<br>(01.10.2026 से)</th><th>Approved कार्यों में<br>SECURE TS प्राप्त</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="summaryRows"></tbody></table></div><p class="meta" id="convergenceNote">R6.12 डेटा लोड हो रहा है…</p><p class="meta">जनपद सारांश में ‘पुष्टि बाकी’ का अर्थ है कि संबंधित स्रोत से संख्या सत्यापित नहीं हुई है। SECURE AS की गिनती 01.10.2026 से 12.11.2026 तक AS Register की जारी तारीख से है।</p><p class="meta" id="beforeCoverageNote"></p><p class="meta" id="approvedSourceNote">Approved में FY 2026–27 के /YD/ कार्य हैं जिनकी R6.12 में दर्ज कार्य प्रारंभ तिथि 01.10.2026 से 12.11.2026 तक है। Approved कार्यों में SECURE TS की गिनती कार्य कोड के मिलान से है। SECURE TS रजिस्टर का कुल अलग कॉलम में है।</p>
-</section>
-<section class="panel" id="gpPanel" style="margin-top:10px">
-  <div class="section-title-row"><h2>ग्राम पंचायतवार योग</h2><button class="section-print" type="button" onclick="printReport('gp')">GP PDF Print</button></div>
-  <div class="filters"><input id="gpFilter" type="search" placeholder="जिला / जनपद / GP खोजें"></div>
-  <div class="wrap"><table class="summary"><thead><tr><th>जिला</th><th>जनपद</th><th>ग्राम पंचायत</th><th>SECURE TS रजिस्टर<br>पंचायतवार /YD/ कार्य</th><th>SECURE AS से जारी संख्या</th><th>अंतर TS − AS</th><th>Before Geo Tag किए गए कार्य</th><th>Geo Tag हुए पर Ongoing नहीं हुए</th><th>Geo Tag के बाद Ongoing हुए Work</th><th>लंबित Geo Tag कार्य (APO / GRS / सचिव)</th></tr></thead><tbody id="gpRows"></tbody></table></div>
-  <p class="meta" id="gpMeta"></p>
-</section>
-<section class="panel" id="workPanel" style="margin-top:10px">
-  <h2>कार्यवार सूची</h2>
-  <div class="filters">
-    <select id="district"><option value="ALL">सभी जिले</option><option value="SATNA">सतना</option><option value="MAIHAR">मैहर</option></select>
-    <select id="block"><option value="ALL">सभी जनपद</option></select>
-    <select id="status"><option value="ALL">सभी status</option><option>Available</option><option>Not Available</option><option>Unknown</option></select>
-    <input id="query" type="search" placeholder="Work Code / कार्य / पंचायत खोजें">
-    <button type="button" onclick="window.print()">Print / PDF</button>
-  </div>
-  <div class="wrap"><table><thead><tr><th>जिला</th><th>जनपद</th><th>ग्राम पंचायत</th><th>AS Sanction Date</th><th>Work Code</th><th>कार्य</th><th>Before फोटो status</th><th>स्रोत</th></tr></thead><tbody id="workRows"></tbody></table></div>
-  <p class="meta" id="rowMeta"></p>
-</section>
-<p class="meta" id="sourceMeta"></p>
+<section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable"></div></section>
+<section id="sector"><h2>उपयंत्री / सेक्टरवार प्रगति</h2><div class="tools"><label>जनपद <select id="block"><option value="">सभी जनपद</option></select></label><button data-print="sector">उपयंत्री / सेक्टर PDF</button></div><div class="wrap" id="sectorTable"></div></section>
+<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। शेष Geo Tag = AS − Geo Tag। Geo Tag के बाद अप्रगतिरत = Geo Tag − प्रगतिरत।</p><p>Geo Tag का संयुक्त कुल 142 (13.11.2026) दिया गया है। जिला, जनपद और सेक्टरवार Geo Tag की पुष्टि बाकी है। ‘—’ का अर्थ पुष्टि बाकी है।</p></section>
 </main>
+<script src="yuktdhara-received-data.js"></script>
+<script src="yuktdhara-data.js"></script>
 <script>
-function printReport(section){document.body.dataset.printSection=section;window.print();setTimeout(()=>delete document.body.dataset.printSection,1000)}
-(()=>{
-const D=window.AS_GEOTAG_BEFORE,T=window.SECURE_TS_DATA;
-const $=id=>document.getElementById(id),fmt=n=>Number(n||0).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
-if(!D){$('reportMeta').textContent='Report data load नहीं हुआ।';return}
-const districts=['SATNA','MAIHAR'];
-const labelBlock=b=>b;
-$('reportMeta').textContent=`${D.financialYear} • SECURE AS और TS: 01-10-2026 से snapshot तक • Before Geo Tag detail fetched: ${new Date(D.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})} • SECURE AS/TS snapshot: ${new Date(D.secureAs?.snapshotAt||D.secureTs?.snapshotAt||D.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}`;
-
-const janpadColorIndex={AMARPATAN:0,MAIHAR:1,RAMNAGAR:2,MAJHGAWAN:3,NAGOD:4,'RAMPUR BAGHELAN':5,SATNA:6,UNCHAHARA:7};
-function blockKey(v){const n=String(v||'').trim().toUpperCase();return n==='SATNA'?'SOHAWAL':n}function gpKey(v){return String(v||'').trim().toUpperCase()}const verifiedGeoStatus={"1712001003/IC/VB/YD/22012034893493":"ongoing","1712001003/IF/VB/YD/22012035666308":"pending","1712001012/IC/VB/YD/22012034893671":"pending","1712001012/WC/VB/YD/22012035339837":"pending","1712001014/RS/VB/YD/22012035140346":"ongoing","1712001017/IC/VB/YD/22012034894396":"pending","1712001018/RS/VB/YD/22012035141041":"pending","1712001018/WC/VB/YD/22012035337485":"pending","1712001041/RS/VB/YD/22012035141485":"ongoing","1712001050/RS/VB/YD/22012035141054":"pending","1712001051/WC/VB/YD/22012035338468":"pending","1712001051/WC/VB/YD/22012035340837":"pending","1712001051/WC/VB/YD/22012035340838":"pending","1712001051/WC/VB/YD/22012035340839":"pending","1712001069/IF/VB/YD/22012035667490":"pending","1712001080/RS/VB/YD/22012035140833":"ongoing","1712001092/IF/VB/YD/22012035665231":"ongoing","1712001092/IF/VB/YD/22012035665314":"pending","1712001093/WC/VB/YD/22012035337268":"pending","1712001095/WC/VB/YD/22012035341969":"pending","1712002001/RS/VB/YD/22012035141513":"pending","1712002001/RS/VB/YD/22012035141602":"pending","1712002002/RS/VB/YD/22012035141494":"ongoing","1712002009/WC/VB/YD/22012035339618":"ongoing","1712002014/RS/VB/YD/22012035140714":"ongoing","1712002015/RS/VB/YD/22012035141628":"pending","1712002015/WC/VB/YD/22012035339343":"pending","1712002021/AV/VB/YD/22012034669936":"ongoing","1712002021/RS/VB/YD/22012035140717":"ongoing","1712002024/IF/VB/YD/22012035666554":"ongoing","1712002024/IF/VB/YD/22012035666559":"pending","1712002024/RS/VB/YD/22012035141875":"pending","1712002031/WC/VB/YD/22012035336760":"pending","1712002034/RS/VB/YD/22012035141509":"pending","1712002038/WC/VB/YD/22012035336122":"ongoing","1712002050/WC/VB/YD/22012035336949":"ongoing","1712002053/WC/VB/YD/22012035336952":"pending","1712002055/RS/VB/YD/22012035141611":"ongoing","1712002056/RS/VB/YD/22012035141028":"ongoing","1712002056/RS/VB/YD/22012035141030":"ongoing","1712002057/RS/VB/YD/22012035141601":"pending","1712002059/RS/VB/YD/22012035141809":"pending","1712002063/RS/VB/YD/22012035141492":"pending","1712002068/RS/VB/YD/22012035142602":"pending","1712002069/RS/VB/YD/22012035140629":"ongoing","1712002069/WC/VB/YD/22012035339665":"pending","1712002070/WC/VB/YD/22012035337739":"ongoing","1712002071/RS/VB/YD/22012035140799":"ongoing","1712002073/RS/VB/YD/22012035142205":"pending","1712002073/WC/VB/YD/22012035342015":"pending","1712002077/WC/VB/YD/22012035336748":"ongoing","1712002078/WC/VB/YD/22012035338932":"pending","1712002079/RS/VB/YD/22012035140342":"pending","1712002084/WC/VB/YD/22012035336994":"ongoing","1712002088/WC/VB/YD/22012035336958":"ongoing","1712002090/WC/VB/YD/22012035336120":"ongoing","1712002091/RS/VB/YD/22012035142223":"pending","1712002091/WC/VB/YD/22012035336812":"ongoing","1712002092/RS/VB/YD/22012035141734":"pending","1712003021/WC/VB/YD/22012035336177":"ongoing","1712003025/WC/VB/YD/22012035336282":"ongoing","1712003025/WC/VB/YD/22012035337752":"ongoing","1712003030/RS/VB/YD/22012035140460":"ongoing","1712003038/RS/VB/YD/22012035141728":"ongoing","1712003041/RS/VB/YD/22012035141794":"pending","1712003045/AV/VB/YD/22012034670761":"ongoing","1712003045/WC/VB/YD/22012035337727":"pending","1712003054/RS/VB/YD/22012035141490":"pending","1712003070/AV/VB/YD/22012034670142":"ongoing","1712003070/WC/VB/YD/22012035336872":"ongoing","1712003071/AV/VB/YD/22012034670265":"ongoing","1712004001/RS/VB/YD/22012035140804":"pending","1712004006/DP/VB/YD/22012034630952":"pending","1712004015/WC/VB/YD/22012035336544":"ongoing","1712005004/WC/VB/YD/22012035337080":"pending","1712005004/WC/VB/YD/22012035340588":"pending","1712005028/RS/VB/YD/22012035142231":"pending","1712005035/WC/VB/YD/22012035339660":"pending","1712005043/WC/VB/YD/22012035340587":"ongoing","1712005047/RS/VB/YD/22012035141942":"pending","1712005047/WC/VB/YD/22012035340972":"pending","1712005052/WC/VB/YD/22012035337081":"ongoing","1712005053/RS/VB/YD/22012035141941":"pending","1712005058/WC/VB/YD/22012035337117":"pending","1712005061/WC/VB/YD/22012035339668":"pending","1712005066/WC/VB/YD/22012035340586":"pending","1712005068/WC/VB/YD/22012035336603":"ongoing","1712005071/WC/VB/YD/22012035337069":"ongoing","1712005075/WC/VB/YD/22012035337071":"pending","1712005077/RS/VB/YD/22012035140760":"ongoing","1712005083/RS/VB/YD/22012035142232":"pending","1712005086/RS/VB/YD/22012035141497":"pending","1712005088/RS/VB/YD/22012035140340":"ongoing","1712005090/WC/VB/YD/22012035341116":"pending","1712006001/WC/VB/YD/22012035336256":"ongoing","1712006001/WC/VB/YD/22012035336257":"ongoing","1712006001/WC/VB/YD/22012035336259":"ongoing","1712006046/WC/VB/YD/22012035336949":"ongoing","1712006058/WC/VB/YD/22012035336858":"ongoing","1712007002/WC/VB/YD/22012035336787":"ongoing","1712007011/WC/VB/YD/22012035336823":"ongoing","1712007012/RS/VB/YD/22012035140661":"ongoing","1712007018/WC/VB/YD/22012035336831":"ongoing","1712007021/WC/VB/YD/22012035336743":"ongoing","1712007027/WC/VB/YD/22012035336802":"ongoing","1712007027/WC/VB/YD/22012035336807":"ongoing","1712007039/RS/VB/YD/22012035140668":"ongoing","1712007041/RS/VB/YD/22012035140626":"ongoing","1712007041/WC/VB/YD/22012035336198":"ongoing","1712007052/RS/VB/YD/22012035140630":"ongoing","1712007053/RS/VB/YD/22012035140670":"ongoing","1712007055/WC/VB/YD/22012035336788":"ongoing","1712008001/RC/VB/YD/22012034856177":"ongoing","1712008003/RS/VB/YD/22012035142677":"pending","1712008003/RS/VB/YD/22012035142679":"pending","1712008004/WC/VB/YD/22012035344190":"pending","1712008004/WC/VB/YD/22012035344545":"pending","1712008006/WC/VB/YD/22012035343478":"pending","1712008006/WC/VB/YD/22012035343490":"pending","1712008009/WC/VB/YD/22012035343294":"pending","1712008010/RS/VB/YD/22012035142570":"pending","1712008030/AV/VB/YD/22012034671070":"unknown","1712008042/WC/VB/YD/22012035339347":"pending","1712008042/WC/VB/YD/22012035339359":"pending","1712008046/WC/VB/YD/22012035343296":"pending","1712008046/WC/VB/YD/22012035343298":"pending","1712008058/WC/VB/YD/22012035342176":"ongoing","1712008058/WC/VB/YD/22012035345329":"pending","1712008059/WC/VB/YD/22012035341608":"ongoing","1712008059/WC/VB/YD/22012035344921":"pending","1712008059/WC/VB/YD/22012035344923":"pending","1712008059/WC/VB/YD/22012035344925":"pending","1712008083/WC/VB/YD/22012035343282":"pending","1712008083/WC/VB/YD/22012035343284":"pending","1712008090/RS/VB/YD/22012035142470":"pending","1712008090/WC/VB/YD/22012035343281":"pending","1712008091/WC/VB/YD/22012035345218":"pending","1712008091/WC/VB/YD/22012035345221":"pending","1712008091/WC/VB/YD/22012035345225":"pending","1712008097/RS/VB/YD/22012035141753":"pending","1712008097/WC/VB/YD/22012035339749":"pending","1712008099/WC/VB/YD/22012035343126":"pending","1712008099/WC/VB/YD/22012035343130":"pending","1712008104/WC/VB/YD/22012035344169":"pending","1712008104/WC/VB/YD/22012035344172":"pending","1712008106/WC/VB/YD/22012035345188":"pending","1712008106/WC/VB/YD/22012035345189":"pending","1712008106/WC/VB/YD/22012035345192":"pending","1712008107/AV/VB/YD/22012034671247":"pending","1712008107/WC/VB/YD/22012035341668":"pending","1712008107/WC/VB/YD/22012035341678":"pending","1712008107/WC/VB/YD/22012035341945":"ongoing","1712008113/RS/VB/YD/22012035142495":"pending","1712008113/RS/VB/YD/22012035142496":"pending","1712008113/WC/VB/YD/22012035343426":"pending","1712008119/WC/VB/YD/22012035344366":"pending"};
-const geoFields=['as','before','beforeOnly','ongoing','pending','unknown'];
-const emptyGeo=()=>Object.fromEntries(geoFields.map(key=>[key,0]));
-const geoByGp=new Map(),geoByBlock=new Map();
-for(const [code,status] of Object.entries(verifiedGeoStatus)){
- const gp=code.split('/')[0],block=gp.slice(0,7);
- for(const [map,key] of [[geoByGp,gp],[geoByBlock,block]]){
-  if(!map.has(key))map.set(key,emptyGeo());
-  const values=map.get(key);
-  values.as++;
-  values[status]++;
-  if(status==='beforeOnly'||status==='ongoing')values.before++;
+'use strict';
+const Y=window.YUKTDHARA_RECEIVED,M=window.YUKTDHARA_DATA;
+const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const key=x=>String(x??'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097f]/g,'');
+const block=x=>({SATNA:'SOHAWAL',RAMPORBAGHELAN:'RAMPURBAGHELAN'}[key(x)]||key(x));
+const gpKey=(b,g)=>block(b)+'|'+key(g);
+const fields=['received','created','ts','as','ongoing','non','conv','pending','geo'];
+const totals=(rows)=>Object.fromEntries(fields.map(k=>[k,rows.length&&rows.every(r=>Number.isInteger(r[k]))?rows.reduce((s,r)=>s+r[k],0):null]));
+const sub=(a,b)=>a==null||b==null?null:a-b;
+const labels=['युक्तधारा से कुल प्राप्त','कुल वर्क कोड','वर्क कोड बनाना शेष','कुल TS','TS हेतु शेष','कुल AS','AS हेतु शेष','प्रगतिरत कार्य','बिना अभिसरण','अभिसरण','कुल Geo Tag','शेष Geo Tag','Geo Tag के बाद अप्रगतिरत'];
+const fmt=x=>x==null?'—':Number(x).toLocaleString('en-IN');
+function row(d,b,e,r,cls='',withSector=false){
+ const values=[r.received,r.created,sub(r.received,r.created),r.ts,sub(r.created,r.ts),r.as,sub(r.ts,r.as),r.ongoing,r.non,r.conv,r.geo,sub(r.as,r.geo),sub(r.geo,r.ongoing)];
+ const names=[d,b,...(withSector?[e]:[])];
+ return '<tr class="'+cls+'">'+names.map(v=>'<td>'+esc(v)+'</td>').join('')+values.map((v,i)=>'<td>'+fmt(v)+(i===9&&r.pending?'<br><small>पुष्टि बाकी '+fmt(r.pending)+'</small>':'')+'</td>').join('')+'</tr>';
+}
+function table(body,sector){
+ const widths=sector?[5,11,12]:[6,12];
+ const colors=['#214263','#17699a',...(sector?['#0b7180']:[]),'#0b7180','#6041a6','#bd6a12','#6041a6','#bd6a12','#bd6a12','#b43c34','#133e69','#16804b','#087d89','#16804b','#b43c34','#087d89'];
+ const titles=['जिला','जनपद',...(sector?['उपयंत्री / सेक्टर']:[]),...labels];
+ return '<table><colgroup>'+widths.map(w=>'<col style="width:'+w+'%">').join('')+labels.map(()=>'<col>').join('')+'</colgroup><thead><tr>'+titles.map((l,i)=>'<th scope="col" style="--head:'+colors[i]+'">'+l+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody></table>';
+}
+function flags(csv){
+ const lines=csv.replace(/^\uFEFF/,'').trimEnd().match(/(?:[^"\r\n]|"(?:[^"]|"")*")+/g)||[];
+ const cells=line=>Array.from(line.matchAll(/(?:^|,)(?:"((?:[^"]|"")*)"|([^,]*))/g),m=>m[1]?.replace(/""/g,'"')??m[2]);
+ const head=cells(lines.shift()||'');
+ const [code,status,conv]=['Work Code','Work Status','Convergence'].map(k=>head.indexOf(k));
+ if([code,status,conv].includes(-1))return new Map();
+ const out=new Map();
+ for(const line of lines){
+  const r=cells(line),value=r[conv]?.trim().toUpperCase(),id=r[code]?.trim().toUpperCase();
+  if(id&&r[status]?.trim().toUpperCase()==='ONGOING'&&['YES','NO'].includes(value))out.set(id,out.has(id)&&out.get(id)!==value?null:value);
  }
+ return out;
 }
-function sumGeo(group){
- return group.reduce((total,row)=>{
-  for(const key of geoFields)total[key]+=row.geo[key];
-  return total;
- },emptyGeo());
-}
-function geoCell(value,unknown){
- return '<td>'+(unknown?'≥ ':'')+fmt(value)+'</td>';
-}
-function geoCells(geo){
- return geoCell(geo.before,geo.unknown)+geoCell(geo.beforeOnly,geo.unknown)+
-  geoCell(geo.ongoing,geo.unknown)+geoCell(geo.pending,geo.unknown);
-}
-const rows=(D.rows||[]).map(row=>{
- const status=verifiedGeoStatus[row.workCode];
- return status&&status!=='unknown'?{...row,beforePhotoStatus:status==='pending'?'Not Available':'Available'}:row;
-});
-function convergenceCells(){
- return '<td>—</td><td>—</td>';
-}
-function parseConvergence(csv){
- const records=csv.replace(/^\uFEFF/,'').trimEnd().match(/(?:[^"\r\n]|"(?:[^"]|"")*")+/g)||[];
- const fields=record=>Array.from(record.matchAll(/(?:^|,)(?:"((?:[^"]|"")*)"|([^,]*))/g),m=>m[1]?.replace(/""/g,'"')??m[2]);
- const headers=fields(records.shift()||'');
- const codeCol=headers.indexOf('Work Code'),convergenceCol=headers.indexOf('Convergence');
- if(codeCol<0||convergenceCol<0)throw Error('Missing R6.12 columns');
- const flagsByCode=new Map();
- for(const record of records){
-  const row=fields(record),code=(row[codeCol]||'').trim().toUpperCase();
-  if(!secureTsCodes.has(code))continue;
-  const flag=(row[convergenceCol]||'').trim().toUpperCase();
-  if(flag!=='YES'&&flag!=='NO')continue;
-  if(!flagsByCode.has(code))flagsByCode.set(code,new Set());
-  flagsByCode.get(code).add(flag);
+async function start(){
+ const json=async path=>{const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error(path);return r.json()};
+ const csv=async()=>{const r=await fetch('data/Ongoing_Works_dynamic_work_details_latest.csv',{cache:'no-store'});return r.ok?flags(await r.text()):new Map()};
+ const [S,F]=await Promise.all([json('data/r37-secure-register.json'),csv().catch(()=>new Map())]);
+ const mapping=new Map(M.mapping.map(r=>[gpKey(r.janpad,r.gp),r.engineer]));
+ const yd=new Map(Object.entries(Y.gpProgress).flatMap(([b,rs])=>rs.map(r=>[gpKey(b,r.gp),r])));
+ const official=new Map(Y.blocks.map(r=>[block(r.block),r]));
+ const blockNames={'1712001':'MAJHGAWAN','1712002':'SOHAWAL','1712003':'NAGOD','1712004':'UNCHAHARA','1712005':'RAMPUR BAGHELAN','1712006':'AMARPATAN','1712007':'RAMNAGAR','1712008':'MAIHAR'};
+ const blocks=new Map(Object.values(blockNames).map(b=>[b,[]]));
+ const matched=new Set();
+ for(const g of S.gps){
+  const b=blockNames[g.code.slice(0,7)],k=gpKey(b,g.gp),r=yd.get(k);
+  if(r)matched.add(k);
+  const found=[...new Set(r?.ongoingCodes||[])].map(c=>F.get(c)).filter(Boolean);
+  const ongoing=r?.ongoing??null, verified=ongoing!=null&&found.length<=ongoing?found:[];
+  blocks.get(b).push({engineer:mapping.get(k)||'मैपिंग की पुष्टि बाकी',received:r?.worksReceived,created:r?.worksCreated,ts:g.ts,as:g.as,ongoing,non:verified.filter(v=>v==='NO').length,conv:verified.filter(v=>v==='YES').length,pending:ongoing==null?null:ongoing-verified.length});
  }
- const districts=new Map(D.janpadSummary.map(row=>[blockKey(row.block),row.district]));
- const counts=new Map([...districts.keys(),'district:SATNA','district:MAIHAR','ALL'].map(key=>[key,{YES:0,NO:0,pending:0}]));
- for(const [code,block] of secureTsCodes){
-  const flags=flagsByCode.get(code);
-  const key=flags?.size===1?(flags.has('YES')?'NO':'YES'):'pending';
-  for(const area of [block,'district:'+districts.get(block),'ALL']){
-   const count=counts.get(area);
-   if(count)count[key]++;
-  }
+ // Preserve unmatched official GP activity in the Janpad total.
+ for(const [b,rr] of Object.entries(Y.gpProgress)){
+  const name=Object.keys(blockNames).map(k=>blockNames[k]).find(n=>block(n)===block(b));
+  for(const r of rr)if(!matched.has(gpKey(b,r.gp)))blocks.get(name).push({engineer:mapping.get(gpKey(b,r.gp))||'मैपिंग की पुष्टि बाकी',received:r.worksReceived,created:r.worksCreated,ongoing:r.ongoing,pending:r.ongoing});
  }
- return counts;
-}
-async function loadConvergence(){
- const note=$('convergenceNote');
- try{
-  if(!hasCurrentTs)throw Error('SECURE TS work codes unavailable');
-  const csv=await fetch('data/Ongoing_Works_dynamic_work_details_latest.csv',{cache:'no-store'});
-  if(!csv.ok)throw Error('R6.12 unavailable');
-  const counts=parseConvergence(await csv.text());
-  const total=counts.get('ALL');
-  note.textContent='SECURE TS के /YD/ कार्यों का R6.12 से कार्य-कोडवार मिलान • अभिसरण से नहीं: '+fmt(total.YES)+' • अभिसरण: '+fmt(total.NO)+' • वर्गीकरण की पुष्टि बाकी: '+fmt(total.pending)+' • कुल: '+fmt(secureTsCodes.size)+'।';
-  for(const row of $('summaryRows').rows){
-   const district=row.cells[0].textContent,block=row.cells[1].textContent;
-   const key=row.classList.contains('total')?'ALL':block==='जिला योग'?'district:'+district:blockKey(block);
-   const values=counts.get(key);
-   if(!values)continue;
-   row.cells[4].textContent=fmt(values.YES);
-   row.cells[5].textContent=fmt(values.NO);
-   if(values.pending){
-    row.cells[5].append(document.createElement('br'),'पुष्टि बाकी: '+fmt(values.pending));
-   }
-  }
- }catch{
-  note.textContent='SECURE TS कार्यों का R6.12 अभिसरण वर्गीकरण उपलब्ध नहीं है।';
+ const groups=[['मैहर',['AMARPATAN','MAIHAR','RAMNAGAR']],['सतना',['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SOHAWAL','UNCHAHARA']]];
+ const summary=new Map();
+ const sectors=new Map();
+ for(const [b,rs] of blocks){
+  const teams=new Map();
+  for(const r of rs){if(!teams.has(r.engineer))teams.set(r.engineer,[]);teams.get(r.engineer).push(r)}
+  sectors.set(b,teams);
+  const r=totals(rs),o=official.get(block(b));
+  summary.set(b,{...r,ts:rs.reduce((n,x)=>n+(x.ts||0),0),as:rs.reduce((n,x)=>n+(x.as||0),0),received:o.worksReceived,created:o.worksCreated,ongoing:o.ongoing});
  }
-}
-const tsByBlock=new Map(),tsByGp=new Map(),secureTsCodes=new Map();
-const hasCurrentTs=T?.success===true&&T.fy===D.financialYear&&T.startDate===D.dateFrom&&Array.isArray(T.works)&&Array.isArray(T.panchayats);
-if(hasCurrentTs){
- const seen=secureTsCodes;
- for(const work of T.works){
-  const code=String(work.code||'').trim().toUpperCase(),block=blockKey(work.janpad);
-  if(!code.includes('/YD/')||!work.tsDate||work.tsDate<T.startDate||work.tsDate>T.endDate||seen.has(code))continue;
-  seen.set(code,block);
-  tsByBlock.set(block,(tsByBlock.get(block)||0)+1);
-  const key=block+'|'+gpKey(work.panchayat);
-  tsByGp.set(key,(tsByGp.get(key)||0)+1);
- }
- $('reportMeta').textContent+=' • वर्तमान SECURE TS Register: '+T.date;
-}
-// R6.12 Approved work-start dates and SECURE register checks on 12 November 2026.
-const janpadVerification={
- "AMARPATAN":{"approved":2,"approvedTs":0},
- "MAIHAR":{"approved":90,"approvedTs":44},
- "RAMNAGAR":{"approved":3,"approvedTs":0},
- "MAJHGAWAN":{"approved":62,"approvedTs":22},
- "NAGOD":{"approved":9,"approvedTs":0},
- "RAMPUR BAGHELAN":{"approved":5,"approvedTs":4},
- "SOHAWAL":{"approved":43,"approvedTs":28},
- "UNCHAHARA":{"approved":18,"approvedTs":0}
-};
-function summary(){
- const r33=window.YUKTDHARA_RECEIVED;
- const r33Blocks=new Map((r33?.blocks||[]).map(row=>[blockKey(row.block),row]));
- const blocks=(D.janpadSummary||[]).map(row=>{
-  const block=blockKey(row.block),r33Block=r33Blocks.get(block);
-  const ts=hasCurrentTs?(tsByBlock.get(block)||0):row.tsCount;
-  const verified=janpadVerification[block];
-  const geo=geoByBlock.get(String(row.blockCode))||emptyGeo();
-  const as=geo.as;
-  return {district:row.district,block,yd:r33Block?.worksCreated??null,ts,as,
-   approved:verified?.approved,approvedTs:verified?.approvedTs,
-   geo,color:janpadColorIndex[row.block]??0};
- });
- const fmtCell=value=>value==null?'<td class="verification-pending">पुष्टि बाकी</td>':'<td>'+fmt(value)+'</td>';
- const sum=(group,key)=>group.length&&group.every(row=>Number.isFinite(row[key]))?group.reduce((total,row)=>total+row[key],0):null;
- const rowHtml=(label,block,key,group,cls)=>{
-  const ts=sum(group,'ts'),as=sum(group,'as'),geo=sumGeo(group);
-  return '<tr class="'+cls+'"><td>'+label+'</td><td>'+block+'</td>'+fmtCell(sum(group,'yd'))+fmtCell(ts)+
-   convergenceCells()+fmtCell(sum(group,'approved'))+fmtCell(sum(group,'approvedTs'))+fmtCell(as)+fmtCell(ts!=null&&as!=null?ts-as:null)+geoCells(geo)+'</tr>';
- };
+ const all=totals([...summary.values()]);
+ const sameSnapshot=Y.officialDate==='13/11/2026'&&all.as===245&&all.ongoing===73;
+ if(sameSnapshot)all.geo=142;
  let html='';
- for(const district of ['MAIHAR','SATNA']){
-  const group=blocks.filter(row=>row.district===district);
-  for(const row of group)html+=rowHtml(district,row.block,row.block,[row],'janpad-color-'+row.color);
-  html+=rowHtml(district,'जिला योग','district:'+district,group,district.toLowerCase());
+ for(const [d,bs] of groups){
+  for(const b of bs)html+=row(d,b,'',summary.get(b));
+  html+=row(d,'जिला योग','',totals(bs.map(b=>summary.get(b))),'total');
  }
- html+=rowHtml('सतना + मैहर','कुल','ALL',blocks,'total');
- $('summaryRows').innerHTML=html;
- const geo=sumGeo(blocks);
- $('beforeCoverageNote').textContent='Before Geo Tag की गिनती 01.10.2026 से 12.11.2026 के '+fmt(geo.as)+' SECURE AS /YD/ कार्यों की e‑Work File गैलरी से है। Ongoing और अभी Ongoing नहीं, दोनों की स्थिति उसी गैलरी से ली गई है।'+
-  (geo.unknown?' '+fmt(geo.unknown)+(geo.unknown===1?' कार्य की गैलरी सत्यापित नहीं हुई।':' कार्यों की गैलरी सत्यापित नहीं हुई।')+' ≥ उपलब्ध रिकॉर्ड का न्यूनतम योग है।':'');
-}
-function gpRowsWithCurrentTs(){
- const known=new Map((D.gpSummary||[]).map(row=>[String(row.panchayatCode),row]));
- for(const gp of T?.panchayats||[]){
-  const code=String(gp.pcode);
-  if(known.has(code)||tsByGp.has(blockKey(gp.janpad)+'|'+gpKey(gp.panchayat))||geoByGp.has(code)){
-   known.set(code,{district:gp.district.toUpperCase(),block:blockKey(gp.janpad),panchayat:gp.panchayat,panchayatCode:code});
+ html+=row('संयुक्त','कुल','',all,'grand');
+ document.querySelector('#summaryTable').innerHTML=table(html,false);
+ const select=document.querySelector('#block');
+ select.insertAdjacentHTML('beforeend',[...blocks.keys()].sort().map(b=>'<option>'+esc(b)+'</option>').join(''));
+ function render(){
+  let rows='';
+  for(const [d,bs] of groups)for(const b of bs){
+   if(select.value&&select.value!==b)continue;
+   for(const [e,rs] of [...sectors.get(b)].sort(([a],[b])=>a.localeCompare(b,'hi')))rows+=row(d,b,e,totals(rs),'',true);
+   rows+=row(d,b,'जनपद योग',summary.get(b),'total',true);
   }
+  if(!select.value)rows+=row('संयुक्त','कुल','',all,'grand',true);
+  document.querySelector('#sectorTable').innerHTML=table(rows,true);
  }
- return [...known.values()].map(row=>{
-  const ts=hasCurrentTs?tsByGp.get(blockKey(row.block)+'|'+gpKey(row.panchayat))||0:row.tsCount||0;
-  return {...row,ts,geo:geoByGp.get(String(row.panchayatCode))||emptyGeo()};
- });
+ select.addEventListener('change',render);render();
+ document.querySelector('#status').textContent='R33.1: '+Y.officialDate+' · SECURE TS/AS: '+new Date(S.updatedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' · अभिसरण: R6.12 के प्रगतिरत कार्य-कोड से मिलान।';
 }
-function renderGps(){
- const q=$('gpFilter').value.trim().toLowerCase();
- const all=gpRowsWithCurrentTs();
- const found=all.filter(row=>!q||[row.district,labelBlock(row.block),row.panchayat].join(' ').toLowerCase().includes(q));
- const cells=(group)=>{
-  const geo=sumGeo(group),ts=group.reduce((sum,row)=>sum+row.ts,0);
-  return '<td>'+fmt(ts)+'</td><td>'+fmt(geo.as)+'</td><td>'+fmt(ts-geo.as)+'</td>'+geoCells(geo);
- };
- let html='';
- for(const district of ['MAIHAR','SATNA']){
-  const districtRows=all.filter(row=>row.district===district);
-  for(const block of (D.janpadSummary||[]).filter(row=>row.district===district)){
-   const key=blockKey(block.block),cls='janpad-color-'+(janpadColorIndex[block.block]??0);
-   for(const row of found.filter(row=>row.district===district&&blockKey(row.block)===key)){
-    html+='<tr class="'+cls+'"><td>'+district+'</td><td>'+labelBlock(key)+'</td><td>'+row.panchayat+'</td>'+cells([row])+'</tr>';
-   }
-   html+='<tr class="janpad-total '+cls+'"><td>'+district+'</td><td>'+labelBlock(key)+'</td><td>जनपद कुल</td>'+cells(districtRows.filter(row=>blockKey(row.block)===key))+'</tr>';
-  }
-  html+='<tr class="'+district.toLowerCase()+'"><td>'+district+'</td><td>जिला योग</td><td>सभी जनपद</td>'+cells(districtRows)+'</tr>';
- }
- html+='<tr class="total"><td>सतना + मैहर</td><td>कुल योग</td><td>सभी जनपद</td>'+cells(all)+'</tr>';
- $('gpRows').innerHTML=found.length?html:'<tr><td colspan="10" class="empty">इस खोज में कोई GP नहीं मिला।</td></tr>';
- $('gpMeta').textContent=fmt(found.length)+' / '+fmt(all.length)+' GP • SECURE AS कार्यों की Before Geo Tag स्थिति e‑Work File से';
-}
-function fillBlocks(){const d=$('district').value, blocks=[...new Set(rows.filter(r=>d==='ALL'||r.district===d).map(r=>labelBlock(r.block)))].sort((a,b)=>a.localeCompare(b,'hi'));$('block').innerHTML='<option value="ALL">सभी जनपद</option>'+blocks.map(b=>`<option>${b}</option>`).join('')}
-function render(){const d=$('district').value,b=$('block').value,s=$('status').value,q=$('query').value.trim().toLowerCase();const found=rows.filter(r=>(d==='ALL'||r.district===d)&&(b==='ALL'||r.block===b)&&(s==='ALL'||r.beforePhotoStatus===s)&&(!q||[r.workCode,r.workName,r.panchayat].join(' ').toLowerCase().includes(q)));$('workRows').innerHTML=found.map(r=>{const status=r.beforePhotoStatus||'Unknown',cl=status==='Available'?'available':status==='Not Available'?'not-available':'unknown';return `<tr><td>${r.district}</td><td>${r.block}</td><td>${r.panchayat||'—'}</td><td>${r.asSanctionDate||'—'}</td><td>${r.workCode}</td><td>${r.workName||'—'}</td><td class="status ${cl}">${status}</td><td><a href="${r.source}" target="_blank" rel="noopener">e-Work File</a></td></tr>`}).join('')||'<tr><td colspan="8" class="empty">इन filters में कोई कार्य नहीं मिला।</td></tr>';$('rowMeta').textContent=`${fmt(found.length)} / ${fmt(rows.length)} कार्य • Before फोटो status VB-G RAM G e-Work File से लिया गया है`}
-if(!rows.length)$('workPanel').hidden=true;summary();loadConvergence();renderGps();fillBlocks();render();$('gpFilter').addEventListener('input',renderGps);$('district').addEventListener('change',()=>{fillBlocks();render()});['block','status','query'].forEach(id=>$(id).addEventListener(id==='query'?'input':'change',render));$('sourceMeta').textContent=`स्रोत: SECURE AS Register — 01-10-2026 से snapshot तक, Work Code /YD/; SECURE TS Register — 01-10-2026 से snapshot तक, Work Code /YD/; Before Geo Tag detail — VB-G RAM G; R33.1 created works — VB-G RAM G (${D.yuktdhara?.officialDate||'—'}); SECURE AS/TS snapshot: ${D.secureAs?.snapshotAt||D.secureTs?.snapshotAt||'—'}; AS / Before snapshot: ${new Date(D.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})}`;
-})();
+document.querySelectorAll('button[data-print]').forEach(b=>b.addEventListener('click',()=>{document.body.dataset.print=b.dataset.print;window.print()}));
+window.addEventListener('afterprint',()=>delete document.body.dataset.print);
+start().catch(e=>{document.querySelector('#status').textContent='डेटा लोड नहीं हुआ। पेज फिर से खोलें।';console.error(e)});
 </script>
-
-<script src="yuktdhara-data.js?v=20261105-r331"></script>
-<script src="as-geotag-yuktdhara.js?v=20261105-r331"></script>
 </body>
 </html>

@@ -30,7 +30,8 @@ GROUPS=[
  ('above75',[['scripts_local/update_above75.py']],['data/above75-latest.json']),
  ('planner',[['scripts/fetch_planner_portal_summary.py']],['planner-portal-data.js']),
  ('secure_ts',[['scripts_local/update_secure_ts.py']],['secure-ts-data.js','secure-ts-yuktadhara-data.js','data/secure-ts-yuktadhara-fy2026-27.json']),
- ('as_geotag_before',[['scripts_local/update_as_geotag_before.py'],['scripts_local/apply_secure_ts_counts.py']],['data/as-geotag-before-latest.json','as-geotag-before-data.js','as-geotag-before.html']),
+ ('r37_secure_register',[['scripts_local/update_r37_secure_register.py']],['data/r37-secure-register.json']),
+ ('as_geotag_before',[['scripts_local/update_as_geotag_before.py'],['scripts_local/apply_secure_ts_counts.py']],['data/as-geotag-before-latest.json','as-geotag-before-data.js']),
  ('ek_bagiya_payment',[['scripts_local/update_ek_bagiya_payment.py']],['data/ek-bagiya-payment-latest.json']),
  ('rejected_wage',[['scripts/update_rejected_wage.py']],['data/rejected-wage-latest.json'])
 ]
@@ -39,7 +40,10 @@ def data(path):
  s=path.read_text(encoding='utf-8-sig').strip()
  return json.loads(s.split('=',1)[1].strip().rstrip(';') if path.suffix=='.js' else s)
 def validate(group,root):
- if group=='secure_ts':
+ if group=='r37_secure_register':
+  d=data(root/'data/r37-secure-register.json'); gps=d['gps']
+  if len(gps)!=695 or len({r['code'] for r in gps})!=695:raise ValueError('R-3.7 SECURE GP register incomplete')
+ elif group=='secure_ts':
   runpy.run_path(str(root/'scripts_local/update_secure_ts.py'))['validate'](data(root/'secure-ts-data.js'))
  elif group=='shramik_complete':
   validate_shramik(root)
