@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parent.parent
 GP_URL=os.environ.get('VBGRAM_DAILY_REPORT_URL','').strip() or runpy.run_path(str(ROOT/'scripts_local/local_auto_update.py'),run_name='source_config')['REPORT_URL']
 GROUPS=[
+ ('shramik_r511_persondays',[['scripts_local/update_shramik_persondays.py']],['shramik-r511-persondays.js']),
  ('shramik_complete',[
   ['scripts_local/local_auto_update.py'],['scripts/merge_official_summary.py'],
   ['scripts_local/update_gp_emuster.py','--url',GP_URL],

@@ -15,7 +15,7 @@ const rank=document.createElement('div');rank.id='snSatnaRank';rank.style.cssTex
 rank.innerHTML='<div class="sn-kpi"><small>सतना — प्रदेश में स्थान (52 स्रोत जिले)</small><strong id="snStateRank">तुलना डेटा उपलब्ध नहीं</strong></div><div class="sn-kpi"><small>सतना — रीवा संभाग में स्थान</small><strong id="snDivisionRank">तुलना डेटा उपलब्ध नहीं</strong><small>रीवा • मऊगंज • सतना • मैहर • सीधी • सिंगरौली</small></div>';
 section.querySelector('.sn-head').insertAdjacentElement('afterend',rank);
 const state=document.createElement('div');state.id='snStateDistrictReport';state.hidden=true;
-state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से अक्टूबर तक<br>NREGA लक्ष्य<br>दिवस (लाख)","कुल सृजित मानव दिवस<br>(लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","% सृजित मानव दिवस की उपलब्धि","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
+state.innerHTML='<h3 id="snStateTitle" style="color:#075d46"></h3><p id="snStateDate" class="sn-warning"></p><div class="sn-wrap"><table class="sn-table"><thead>'+'<tr>'+ ["S.No","जिला नाम","कुल GPs","कार्य प्रगतिरत GPs","बिना प्रगतिरत कार्य GPs","बिना प्रगतिरत कार्य GPs %","वित्तीय वर्ष<br>2025–26 जुलाई<br>से अक्टूबर तक<br>NREGA लक्ष्य<br>दिवस (लाख)","कुल सृजित मानव दिवस<br>R5.1.1 (लाख)","अंतर<br>(लाख)","शेष दिन","प्रतिदिन श्रमिक का लक्ष्य","आज संलग्न श्रमिक","% सृजित मानव दिवस की उपलब्धि","कमी","कुल प्रगतिरत कार्य","आज कार्यों पर जारी मस्टर रोल","मस्टर रोल जारी %"].map(h=>'<th>'+h+'</th>').join('')+'</tr>'+'</thead><tbody id="snStateRows"></tbody></table></div>';
 originalWrap.insertAdjacentElement('afterend',state);
 let sortColumn=null,sortDirection='desc';
 const janpadHeader=document.createElement('th');
@@ -302,11 +302,18 @@ const novemberBlocks={
  'नईगढ़ी':{totalGP:76,workingGP:58,mrIssued:428}})
 };
 const janpadOngoing={"अमरपाटन":1401,"मैहर":2445,"मझगवां":2155,"नागौद":2482,"रामनगर":1238,"रामपुर बघेलान":3261,"सोहावल":1085,"उचेहरा":1701,"गंगेव":1476,"हनुमना":2631,"जवा":1437,"मऊगंज":1822,"नईगढ़ी":2321,"रायपुर कर्चुलियान":2625,"रीवा":1259,"सिरमौर":2210,"त्योंथर":2202};
+const r511=window.SHRAMIK_R511;
+const r511BlockNames={'अमरपाटन':'AMARPATAN','मैहर':'MAIHAR','मझगवां':'MAJHGAWAN','नागौद':'NAGOD','रामनगर':'RAMNAGAR','रामपुर बघेलान':'RAMPUR BAGHELAN','सोहावल':'SATNA','उचेहरा':'UNCHAHARA','गंगेव':'GANGEV','हनुमना':'HANUMANA','जवा':'JAWA','मऊगंज':'MAUGANJ','नईगढ़ी':'NAIGARHI','रायपुर कर्चुलियान':'RAIPUR KARCHULIYAN','रीवा':'REWA','सिरमौर':'SIRMOUR','त्योंथर':'TEONTHAR'};
+function reportPersondays(name,district,janpad){
+ if(janpad)return (['रीवा','मऊगंज'].includes(district)?r511?.rewa:r511?.satna)?.[r511BlockNames[janpad]]??null;
+ const lookup=name==='सतना'?'SATNA':name==='रीवा'?'REWA':name;
+ return r511?.districts?.[lookup==='NARMADAPURAM'?'HOSHANGABAD':lookup]??r511?.districts?.[lookup]??null;
+}
 function records(useSatnaMaiharSnapshot=false){
  const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===ongoingSnapshotDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
  const wrap=rows=>({rows});
  const result=Object.fromEntries(Object.entries(novemberDistricts).map(([name,row])=>[
-  name,wrap([{...(saved[name]?.rows[0]||{}),...row,...emuster[name],ongoing:districtOngoing[name]}])
+  name,wrap([{...(saved[name]?.rows[0]||{}),...row,...emuster[name],ongoing:districtOngoing[name],achievement:reportPersondays(name)??row.achievement,vbgramJulyNovember:reportPersondays(name)??row.vbgramJulyNovember}])
  ]));
  for(const [district,blocks] of Object.entries(novemberBlocks)){
   const rows=Object.entries(blocks).map(([name,row])=>{
@@ -316,6 +323,8 @@ function records(useSatnaMaiharSnapshot=false){
     const [achievement,totalGP,workingGP,todayLabour,mrIssued]=latest;
     Object.assign(merged,{achievement,vbgramJulyNovember:achievement,totalGP,workingGP,todayLabour,mrIssued});
    }
+   const generated=reportPersondays(name,district,name);
+   if(generated!=null)Object.assign(merged,{achievement:generated,vbgramJulyNovember:generated});
    result[district+' / '+name]=wrap([merged]);
    return merged;
   });
@@ -345,7 +354,7 @@ function render(){
  if(!grouped&&janpadHeader.parentNode)janpadHeader.remove();
  originalWrap.hidden=external;originalKpis.hidden=false;state.hidden=!external;
  document.getElementById('snWarnings').hidden=external;
- section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 जुलाई से नवंबर की VB-G RAM G उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
+ section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 की R5.1.1 VB-G RAM G उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
  const reportDate=grouped?satnaMaiharNovemberDate:novemberDate;
  if(external)document.getElementById('snDate').textContent='दिनांक '+reportDate;
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el){const field=el.closest('label')||el;field.hidden=external;field.style.display=external?'none':'';}}
@@ -362,6 +371,7 @@ function render(){
  dateNote.hidden=!grouped;
  state.classList.toggle('sn-rewa-districts', selected==='__REWA__');
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':districtLabel(selected)+' — जिलावार श्रमिक नियोजन रिपोर्ट';
+ if(r511?.fetchedAt)dateNote.textContent+=' · सृजित मानव दिवस: R5.1.1 (FY 2026–27)';
  const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
  const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
  const kpiTarget=kpiSum('target'),kpiAchievement=kpiSum('achievement'),kpiGap=Math.max(0,kpiTarget-kpiAchievement),kpiDaily=Math.ceil(kpiGap/days);
