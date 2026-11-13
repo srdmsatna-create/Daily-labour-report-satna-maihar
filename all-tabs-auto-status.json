@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-12T09:23:15.267778+00:00",
+  "checkedAt": "2026-11-13T02:36:10.446224+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_complete": {
@@ -166,7 +166,7 @@
       "files": [
         "data/rejected-wage-latest.json"
       ],
-      "attempts": 2
+      "attempts": 1
     }
   },
   "success": true
