@@ -9,9 +9,9 @@
 header{background:#123d65;color:white;padding:18px 24px}h1{margin:0 0 4px;font-size:25px}header a{color:white}main{max-width:1680px;margin:auto;padding:16px}
 section{background:white;border:1px solid #bacbd8;border-radius:9px;padding:12px;margin-bottom:14px}
 h2{font-size:19px;margin:0 0 10px}.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}button,select{font:inherit;padding:6px 10px;border:1px solid #7d9ab2;border-radius:5px}button{background:#123d65;color:white;cursor:pointer}
-.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:1160px;table-layout:fixed}th,td{border:1px solid #9eb5c7;padding:6px 4px;text-align:center;overflow-wrap:anywhere;line-height:1.18}
+.wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:1160px;table-layout:fixed}th,td{border:1px solid #607e96;padding:6px 4px;text-align:center;overflow-wrap:anywhere;line-height:1.18}
 th{background:#214f76;color:white;font-size:14px}th:nth-last-child(-n+3){background:#096675}td{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
-td:nth-child(-n+3){text-align:left;font-size:13px}td:nth-child(2),th:nth-child(2){white-space:nowrap}tbody tr:nth-child(even){background:#edf5fa}.total{background:#d7e8f4!important}.grand{background:#bdd9eb!important}p{margin:6px 0;line-height:1.4}.note{font-size:13px}
+td:nth-child(-n+3){text-align:left;font-size:13px}td:nth-child(2),th:nth-child(2){overflow-wrap:normal;word-break:normal}tbody tr:nth-child(even){background:#edf5fa}.total{background:#d7e8f4!important}.grand{background:#bdd9eb!important}p{margin:6px 0;line-height:1.4}.note{font-size:13px}
 @media print{@page{size:A4 landscape;margin:7mm}body,section{background:white}header{padding:0;color:#19334c;background:white}h1{font-size:15pt}header a,.tools{display:none}main{padding:0}section{border:0;padding:0;margin:0 0 6mm}h2{font-size:10pt}.wrap{overflow:visible}table{min-width:0}thead{display:table-header-group}tr{break-inside:avoid}th,td,td:nth-child(-n+3){font-size:8pt;padding:3px 2px}td:nth-child(2),th:nth-child(2){font-size:7pt}.note{font-size:8pt}*{print-color-adjust:exact}body[data-print="summary"] #sector,body[data-print="sector"] #summary{display:none}}
 tbody td{height:33px;vertical-align:middle}
 thead th{background:var(--head,#133e69);vertical-align:middle}
@@ -27,7 +27,7 @@ td.remaining{color:var(--metric-color);font-weight:900}
 <main>
 <section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable"></div></section>
 <section id="sector"><h2>उपयंत्री / सेक्टरवार प्रगति</h2><div class="tools"><label>जनपद <select id="block"><option value="">सभी जनपद</option></select></label><button data-print="sector">उपयंत्री / सेक्टर PDF</button></div><div class="wrap" id="sectorTable"></div></section>
-<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। शेष Geo Tag = AS − Geo Tag। Geo Tag के बाद अप्रगतिरत = Geo Tag − प्रगतिरत।</p><p>Geo Tag का संयुक्त कुल 142 (13.11.2026) दिया गया है। जिला, जनपद और सेक्टरवार Geo Tag की पुष्टि बाकी है। ‘—’ का अर्थ पुष्टि बाकी है।</p></section>
+<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। शेष Geo Tag = AS − Geo Tag। Geo Tag के बाद अप्रगतिरत = Geo Tag − प्रगतिरत।</p><p>Geo Tag का संयुक्त कुल 142 (13.11.2026) दिया गया है। ‘≥’ से दिखाए गए आँकड़े e‑Work File में सत्यापित Before Geo Tag की न्यूनतम संख्या हैं। ‘—’ का अर्थ उस पंक्ति का पूरा आँकड़ा पुष्टि के लिए बाकी है।</p></section>
 </main>
 <script src="yuktdhara-received-data.js"></script>
 <script src="yuktdhara-data.js"></script>
@@ -38,7 +38,7 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const key=x=>String(x??'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097f]/g,'');
 const block=x=>({SATNA:'SOHAWAL',RAMPORBAGHELAN:'RAMPURBAGHELAN'}[key(x)]||key(x));
 const gpKey=(b,g)=>block(b)+'|'+key(g);
-const fields=['received','created','ts','as','ongoing','non','conv','pending','geo'];
+const fields=['received','created','ts','as','ongoing','non','conv','pending','geo','verifiedGeo'];
 const totals=(rows)=>Object.fromEntries(fields.map(k=>[k,rows.length&&rows.every(r=>Number.isInteger(r[k]))?rows.reduce((s,r)=>s+r[k],0):null]));
 const sub=(a,b)=>a==null||b==null?null:a-b;
 const labels=['युक्तधारा से कुल प्राप्त','कुल वर्क कोड','वर्क कोड बनाना शेष','कुल TS','TS हेतु शेष','कुल AS','AS हेतु शेष','प्रगतिरत कार्य','बिना अभिसरण','अभिसरण','कुल Geo Tag','शेष Geo Tag','Geo Tag के बाद अप्रगतिरत'];
@@ -56,10 +56,10 @@ function row(d,b,e,r,cls='',withSector=false){
  const colorStyle=palette?' style="--janpad-fill:'+palette[0]+';--janpad-accent:'+palette[1]+'"':'';
  const values=[r.received,r.created,sub(r.received,r.created),r.ts,sub(r.created,r.ts),r.as,sub(r.ts,r.as),r.ongoing,r.non,r.conv,r.geo,sub(r.as,r.geo),sub(r.geo,r.ongoing)];
  const names=[d,b,...(withSector?[e]:[])];
- return '<tr class="'+cls+'"'+colorStyle+'>'+names.map(v=>'<td>'+esc(v)+'</td>').join('')+values.map((v,i)=>'<td'+(remainingColumns.has(i)&&v!=null?' class="remaining" style="--metric-color:'+metricColors[i]+'"':'')+'>'+fmt(v)+(i===9&&r.pending?'<br><small>पुष्टि बाकी '+fmt(r.pending)+'</small>':'')+'</td>').join('')+'</tr>';
+ return '<tr class="'+cls+'"'+colorStyle+'>'+names.map(v=>'<td>'+esc(v)+'</td>').join('')+values.map((v,i)=>'<td'+(remainingColumns.has(i)&&v!=null?' class="remaining" style="--metric-color:'+metricColors[i]+'"':'')+'>'+(i===10&&v==null&&r.verifiedGeo?'≥ '+fmt(r.verifiedGeo):fmt(v))+(i===9&&r.pending?'<br><small>पुष्टि बाकी '+fmt(r.pending)+'</small>':'')+'</td>').join('')+'</tr>';
 }
 function table(body,sector){
- const widths=sector?[5,11,12]:[6,12];
+ const widths=sector?[5,9,12]:[6,9];
  const colors=['#214263','#17699a',...(sector?['#0b7180']:[]),...metricColors];
  const titles=['जिला','जनपद',...(sector?['उपयंत्री / सेक्टर']:[]),...labels];
  return '<table><colgroup>'+widths.map(w=>'<col style="width:'+w+'%">').join('')+labels.map(()=>'<col>').join('')+'</colgroup><thead><tr>'+titles.map((l,i)=>'<th scope="col" style="--head:'+colors[i]+'">'+l+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody></table>';
@@ -80,7 +80,19 @@ function flags(csv){
 async function start(){
  const json=async path=>{const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error(path);return r.json()};
  const csv=async()=>{const r=await fetch('data/Ongoing_Works_dynamic_work_details_latest.csv',{cache:'no-store'});return r.ok?flags(await r.text()):new Map()};
- const [S,F]=await Promise.all([json('data/r37-secure-register.json'),csv().catch(()=>new Map())]);
+ const [S,F,G]=await Promise.all([
+  json('data/r37-secure-register.json'),csv().catch(()=>new Map()),
+  json('data/as-geotag-before-latest.json').catch(()=>null)
+ ]);
+ const verifiedGeo=new Map();
+ for(const work of G?.rows||[]){
+  const code=String(work.workCode||'').trim().toUpperCase();
+  if(code.includes('/YD/')&&work.beforePhotoStatus==='Available')verifiedGeo.set(code,code.split('/')[0]);
+ }
+ // Previously verified e-Work File Before records (12 November 2026).
+ for(const code of ["1712001003/IC/VB/YD/22012034893493","1712001014/RS/VB/YD/22012035140346","1712001041/RS/VB/YD/22012035141485","1712001080/RS/VB/YD/22012035140833","1712001092/IF/VB/YD/22012035665231","1712002002/RS/VB/YD/22012035141494","1712002009/WC/VB/YD/22012035339618","1712002014/RS/VB/YD/22012035140714","1712002021/AV/VB/YD/22012034669936","1712002021/RS/VB/YD/22012035140717","1712002024/IF/VB/YD/22012035666554","1712002038/WC/VB/YD/22012035336122","1712002050/WC/VB/YD/22012035336949","1712002055/RS/VB/YD/22012035141611","1712002056/RS/VB/YD/22012035141028","1712002056/RS/VB/YD/22012035141030","1712002069/RS/VB/YD/22012035140629","1712002070/WC/VB/YD/22012035337739","1712002071/RS/VB/YD/22012035140799","1712002077/WC/VB/YD/22012035336748","1712002084/WC/VB/YD/22012035336994","1712002088/WC/VB/YD/22012035336958","1712002090/WC/VB/YD/22012035336120","1712002091/WC/VB/YD/22012035336812","1712003021/WC/VB/YD/22012035336177","1712003025/WC/VB/YD/22012035336282","1712003025/WC/VB/YD/22012035337752","1712003030/RS/VB/YD/22012035140460","1712003038/RS/VB/YD/22012035141728","1712003045/AV/VB/YD/22012034670761","1712003070/AV/VB/YD/22012034670142","1712003070/WC/VB/YD/22012035336872","1712003071/AV/VB/YD/22012034670265","1712004015/WC/VB/YD/22012035336544","1712005043/WC/VB/YD/22012035340587","1712005052/WC/VB/YD/22012035337081","1712005068/WC/VB/YD/22012035336603","1712005071/WC/VB/YD/22012035337069","1712005077/RS/VB/YD/22012035140760","1712005088/RS/VB/YD/22012035140340","1712006001/WC/VB/YD/22012035336256","1712006001/WC/VB/YD/22012035336257","1712006001/WC/VB/YD/22012035336259","1712006046/WC/VB/YD/22012035336949","1712006058/WC/VB/YD/22012035336858","1712007002/WC/VB/YD/22012035336787","1712007011/WC/VB/YD/22012035336823","1712007012/RS/VB/YD/22012035140661","1712007018/WC/VB/YD/22012035336831","1712007021/WC/VB/YD/22012035336743","1712007027/WC/VB/YD/22012035336802","1712007027/WC/VB/YD/22012035336807","1712007039/RS/VB/YD/22012035140668","1712007041/RS/VB/YD/22012035140626","1712007041/WC/VB/YD/22012035336198","1712007052/RS/VB/YD/22012035140630","1712007053/RS/VB/YD/22012035140670","1712007055/WC/VB/YD/22012035336788","1712008001/RC/VB/YD/22012034856177","1712008058/WC/VB/YD/22012035342176","1712008059/WC/VB/YD/22012035341608","1712008107/WC/VB/YD/22012035341945"])verifiedGeo.set(code,code.split('/')[0]);
+ const geoByGP=new Map();
+ for(const gp of verifiedGeo.values())geoByGP.set(gp,(geoByGP.get(gp)||0)+1);
  const mapping=new Map(M.mapping.map(r=>[gpKey(r.janpad,r.gp),r.engineer]));
  const yd=new Map(Object.entries(Y.gpProgress).flatMap(([b,rs])=>rs.map(r=>[gpKey(b,r.gp),r])));
  const official=new Map(Y.blocks.map(r=>[block(r.block),r]));
@@ -92,7 +104,7 @@ async function start(){
   if(r)matched.add(k);
   const found=[...new Set(r?.ongoingCodes||[])].map(c=>F.get(c)).filter(Boolean);
   const ongoing=r?.ongoing??null, verified=ongoing!=null&&found.length<=ongoing?found:[];
-  blocks.get(b).push({engineer:mapping.get(k)||'मैपिंग की पुष्टि बाकी',received:r?.worksReceived,created:r?.worksCreated,ts:g.ts,as:g.as,ongoing,non:verified.filter(v=>v==='NO').length,conv:verified.filter(v=>v==='YES').length,pending:ongoing==null?null:ongoing-verified.length});
+  blocks.get(b).push({engineer:mapping.get(k)||'मैपिंग की पुष्टि बाकी',verifiedGeo:geoByGP.get(g.code)||0,received:r?.worksReceived,created:r?.worksCreated,ts:g.ts,as:g.as,ongoing,non:verified.filter(v=>v==='NO').length,conv:verified.filter(v=>v==='YES').length,pending:ongoing==null?null:ongoing-verified.length});
  }
  // Preserve unmatched official GP activity in the Janpad total.
  for(const [b,rr] of Object.entries(Y.gpProgress)){
