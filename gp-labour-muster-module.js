@@ -182,20 +182,39 @@ function draw(){
  document.getElementById('gpLabourMusterPrint').onclick=()=>{
  const original=box.querySelector('table');
  if(!original){alert('प्रिंट के लिए तालिका उपलब्ध नहीं है।');return;}
- const copy=original.cloneNode(true);
- const cols=Array.from(copy.querySelectorAll('colgroup col'));
- const fixedWidths=[8.5,11,3.5,3.5];
- const categoryWidth=(100-fixedWidths.reduce((sum,width)=>sum+width,0))/(cols.length-fixedWidths.length);
- cols.forEach((col,index)=>{col.style.width=(fixedWidths[index]??categoryWidth)+'%';});
- copy.tHead.querySelectorAll('th').forEach(header=>{
-  for(const property of ['width','min-width','max-width'])header.style.removeProperty(property);
- });
-
+ const columns=Array.from(original.tHead.rows[0].cells);
+ const labourEnd=18+(hasMissing?1:0);
+ const printTables=[];
+ for(let start=2;start<columns.length;){
+  const end=Math.min(start+(start<labourEnd?8:9),start<labourEnd?labourEnd:columns.length);
+  const copy=original.cloneNode(true);
+  const keep=index=>index<2||(index>=start&&index<end);
+  Array.from(copy.querySelectorAll('colgroup col')).forEach((col,index)=>{
+   if(!keep(index)){col.remove();return;}
+   col.style.width=(index===0?9:index===1?13:78/(end-start))+'%';
+  });
+  for(const row of copy.rows){
+   let index=0;
+   for(const cell of Array.from(row.cells)){
+    const span=cell.colSpan;
+    const visible=Array.from({length:span},(_,offset)=>index+offset).filter(keep).length;
+    if(!visible)cell.remove();
+    else if(visible!==span)cell.colSpan=visible;
+    index+=span;
+   }
+  }
+  copy.tHead.querySelectorAll('th').forEach(header=>{
+   for(const property of ['width','min-width','max-width'])header.style.removeProperty(property);
+  });
+  const section=start<labourEnd?'ग्राम पंचायत एवं श्रमिक विवरण':'कार्य-श्रेणीवार मस्टर रोल जारी / प्रगतिरत कार्य';
+  printTables.push('<section class="print-section"><h3>'+section+' · '+(printTables.length+1)+'</h3>'+copy.outerHTML+'</section>');
+  start=end;
+ }
  const w=window.open('','_blank');
  if(!w){alert('प्रिंट के लिए popup अनुमति दें।');return;}
  w.document.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+title+'</title><style>'+
- '@page{size:A4 landscape;margin:5mm}*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#142c43}h2{font-size:13pt;line-height:1.1;margin:0 0 2mm;text-align:center}p{font-size:8pt;line-height:1.1;margin:0 0 2mm;text-align:right}table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:7pt!important}th,td{border:.25mm solid #34495e!important;padding:.45mm .55mm!important;line-height:1.18!important;vertical-align:middle!important;overflow-wrap:anywhere!important;white-space:normal!important}th{font-size:6.5pt!important;font-weight:800!important;text-align:center!important;background:#14588c!important;color:#fff!important}td{font-size:7pt!important;font-weight:700!important;text-align:center!important}tbody td:first-child:not([colspan]){white-space:nowrap!important;overflow-wrap:normal!important;font-size:6.5pt!important}td:nth-child(2){text-align:left!important}th .gp-mr-sort{display:block;width:100%;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}thead{display:table-header-group}tr{break-inside:avoid!important;page-break-inside:avoid!important}tbody tr:nth-child(even){background:#edf4fa!important}.gp-mr-sort{font:inherit!important;font-weight:800!important;line-height:inherit!important;padding:0!important;border:0!important;background:transparent!important;color:inherit!important}.gp-mr-sort-arrow{display:none!important}.mr-none{display:inline-block;background:#fee2e2!important;color:#b91c1c!important;font-weight:900!important;padding:0 .5mm!important;border:.2mm solid #ef4444!important}.mr-gap{background:#fff7ed!important;color:#9a3412!important;font-weight:800!important;padding:0 .5mm!important}.mr-ok{color:#15803d!important;font-weight:800!important}.low-labour{background:#f3e8ff!important;color:#6b21a8!important;font-weight:900!important}.pmay-column{background:#6d28d9!important;color:#fff!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
- '</style></head><body><h2>'+title+'</h2><p><strong>दिनांक: '+esc(date)+'</strong></p>'+copy.outerHTML+'</body></html>');
+ '@page{size:A4 landscape;margin:5mm}*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:Arial,"Noto Sans Devanagari",sans-serif;color:#142c43}h3{margin:0 0 2mm;font-size:10pt}.print-section+.print-section{break-before:page}h2{font-size:13pt;line-height:1.1;margin:0 0 2mm;text-align:center}p{font-size:8pt;line-height:1.1;margin:0 0 2mm;text-align:right}table{width:100%!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;font-size:7pt!important}th,td{border:.25mm solid #34495e!important;padding:.45mm .55mm!important;line-height:1.18!important;vertical-align:middle!important;overflow-wrap:anywhere!important;white-space:normal!important}th{font-size:8pt!important;font-weight:800!important;text-align:center!important;background:#14588c!important;color:#fff!important}td{font-size:8pt!important;font-weight:700!important;text-align:center!important}tbody td:first-child:not([colspan]){white-space:nowrap!important;overflow-wrap:normal!important;font-size:7pt!important}td:nth-child(2){text-align:left!important}th .gp-mr-sort{display:block;width:100%;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}thead{display:table-header-group}tr{break-inside:avoid!important;page-break-inside:avoid!important}tbody tr:nth-child(even){background:#edf4fa!important}.gp-mr-sort{font:inherit!important;font-weight:800!important;line-height:inherit!important;padding:0!important;border:0!important;background:transparent!important;color:inherit!important}.gp-mr-sort-arrow{display:none!important}.mr-none{display:inline-block;background:#fee2e2!important;color:#b91c1c!important;font-weight:900!important;padding:0 .5mm!important;border:.2mm solid #ef4444!important}.mr-gap{background:#fff7ed!important;color:#9a3412!important;font-weight:800!important;padding:0 .5mm!important}.mr-ok{color:#15803d!important;font-weight:800!important}.low-labour{background:#f3e8ff!important;color:#6b21a8!important;font-weight:900!important}.pmay-column{background:#6d28d9!important;color:#fff!important}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+
+ '</style></head><body><h2>'+title+'</h2><p><strong>दिनांक: '+esc(date)+'</strong></p>'+printTables.join('')+'</body></html>');
  w.document.close();
  Promise.resolve(w.document.fonts?.ready).then(()=>{
   w.requestAnimationFrame(()=>w.requestAnimationFrame(()=>{
