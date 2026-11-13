@@ -56,6 +56,28 @@ boxStyle.textContent+="@media print{@page{size:A4 portrait;margin:5mm}#shramikNi
 boxStyle.textContent+='@media screen{#shramikNiyojanReport #snStateDistrictReport .sn-table th:nth-child(12),#shramikNiyojanReport #snStateDistrictReport .sn-table td:nth-child(12){width:130px!important;min-width:130px!important;max-width:130px!important}}';
 boxStyle.textContent+='@media screen{#shramikNiyojanReport #snStateDistrictReport.sn-district-janpad .sn-table :is(th,td):nth-child(3){width:140px!important;min-width:140px!important;max-width:140px!important}#shramikNiyojanReport #snStateDistrictReport.sn-district-janpad .sn-table :is(th,td):nth-child(13){width:130px!important;min-width:130px!important;max-width:130px!important}}';
 boxStyle.textContent+='@media screen{#shramikNiyojanReport #snStateDistrictReport.sn-district-janpad .sn-table :is(th,td):nth-child(2){width:95px!important;min-width:95px!important;max-width:95px!important;white-space:normal!important}#shramikNiyojanReport #snStateDistrictReport.sn-district-janpad .sn-table td:nth-child(n+4){font-size:18px!important;font-variant-numeric:tabular-nums}}';
+
+boxStyle.textContent+=`@media screen {
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table{width:1412px!important;min-width:1412px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table tbody td:nth-child(2){font-size:17px!important;font-weight:850!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(1){width:36px!important;min-width:36px!important;max-width:36px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(2){width:120px!important;min-width:120px!important;max-width:120px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(3){width:64px!important;min-width:64px!important;max-width:64px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(4){width:82px!important;min-width:82px!important;max-width:82px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(5){width:90px!important;min-width:90px!important;max-width:90px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(6){width:94px!important;min-width:94px!important;max-width:94px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(7){width:108px!important;min-width:108px!important;max-width:108px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(8){width:96px!important;min-width:96px!important;max-width:96px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(9){width:62px!important;min-width:62px!important;max-width:62px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(10){width:58px!important;min-width:58px!important;max-width:58px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(11){width:86px!important;min-width:86px!important;max-width:86px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(12){width:94px!important;min-width:94px!important;max-width:94px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(13){width:84px!important;min-width:84px!important;max-width:84px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(14){width:70px!important;min-width:70px!important;max-width:70px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(15){width:84px!important;min-width:84px!important;max-width:84px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(16){width:98px!important;min-width:98px!important;max-width:98px!important}
+  #shramikNiyojanReport #snStateDistrictReport.sn-rewa-districts .sn-table :is(th,td):nth-child(17){width:84px!important;min-width:84px!important;max-width:84px!important}
+}`;
 section.appendChild(boxStyle);
 // Reuse the district-table design for the local Janpad table.
 originalWrap.id='snLocalDistrictReport';
@@ -337,6 +359,7 @@ function render(){
  const dateNote=document.getElementById('snStateDate');
  dateNote.textContent=grouped?'प्रगतिरत कार्य (S5.8) का डेटा '+ongoingSnapshotDate+' का है।':'दिनांक '+reportDate;
  dateNote.hidden=!grouped;
+ state.classList.toggle('sn-rewa-districts', selected==='__REWA__');
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':selected+' — जिलावार श्रमिक नियोजन रिपोर्ट';
  const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
  const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
