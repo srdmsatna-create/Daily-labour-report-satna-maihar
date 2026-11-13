@@ -17,6 +17,9 @@ tbody td{height:33px;vertical-align:middle}
 thead th{background:var(--head,#133e69);vertical-align:middle}
 thead th:nth-last-child(-n+3){background:var(--head,#133e69)}
 @media print{tbody td{height:0;min-height:0}th,td{line-height:1.12}}
+tbody tr.janpad-total{background:var(--janpad-fill)!important}
+tbody tr.janpad-total td{font-weight:900;border-top:2px solid var(--janpad-accent)}
+td.remaining{color:var(--metric-color);font-weight:900}
 </style>
 </head>
 <body>
@@ -40,14 +43,24 @@ const totals=(rows)=>Object.fromEntries(fields.map(k=>[k,rows.length&&rows.every
 const sub=(a,b)=>a==null||b==null?null:a-b;
 const labels=['युक्तधारा से कुल प्राप्त','कुल वर्क कोड','वर्क कोड बनाना शेष','कुल TS','TS हेतु शेष','कुल AS','AS हेतु शेष','प्रगतिरत कार्य','बिना अभिसरण','अभिसरण','कुल Geo Tag','शेष Geo Tag','Geo Tag के बाद अप्रगतिरत'];
 const fmt=x=>x==null?'—':Number(x).toLocaleString('en-IN');
+const metricColors=['#0b7180','#6041a6','#bd6a12','#6041a6','#bd6a12','#bd6a12','#b43c34','#133e69','#16804b','#087d89','#16804b','#b43c34','#087d89'];
+const remainingColumns=new Set([2,4,6,11]);
+const janpadColors={
+ AMARPATAN:['#eee6fa','#6041a6'],MAIHAR:['#dceefd','#17699a'],
+ RAMNAGAR:['#e2f4e8','#16804b'],MAJHGAWAN:['#fff0d5','#a45b0d'],
+ NAGOD:['#fbe4e4','#b43c34'],'RAMPUR BAGHELAN':['#ddf2f4','#087d89'],
+ SOHAWAL:['#f9e4ef','#a34071'],UNCHAHARA:['#f2edd9','#806515']
+};
 function row(d,b,e,r,cls='',withSector=false){
+ const palette=cls==='janpad-total'?janpadColors[b]:null;
+ const colorStyle=palette?' style="--janpad-fill:'+palette[0]+';--janpad-accent:'+palette[1]+'"':'';
  const values=[r.received,r.created,sub(r.received,r.created),r.ts,sub(r.created,r.ts),r.as,sub(r.ts,r.as),r.ongoing,r.non,r.conv,r.geo,sub(r.as,r.geo),sub(r.geo,r.ongoing)];
  const names=[d,b,...(withSector?[e]:[])];
- return '<tr class="'+cls+'">'+names.map(v=>'<td>'+esc(v)+'</td>').join('')+values.map((v,i)=>'<td>'+fmt(v)+(i===9&&r.pending?'<br><small>पुष्टि बाकी '+fmt(r.pending)+'</small>':'')+'</td>').join('')+'</tr>';
+ return '<tr class="'+cls+'"'+colorStyle+'>'+names.map(v=>'<td>'+esc(v)+'</td>').join('')+values.map((v,i)=>'<td'+(remainingColumns.has(i)&&v!=null?' class="remaining" style="--metric-color:'+metricColors[i]+'"':'')+'>'+fmt(v)+(i===9&&r.pending?'<br><small>पुष्टि बाकी '+fmt(r.pending)+'</small>':'')+'</td>').join('')+'</tr>';
 }
 function table(body,sector){
  const widths=sector?[5,11,12]:[6,12];
- const colors=['#214263','#17699a',...(sector?['#0b7180']:[]),'#0b7180','#6041a6','#bd6a12','#6041a6','#bd6a12','#bd6a12','#b43c34','#133e69','#16804b','#087d89','#16804b','#b43c34','#087d89'];
+ const colors=['#214263','#17699a',...(sector?['#0b7180']:[]),...metricColors];
  const titles=['जिला','जनपद',...(sector?['उपयंत्री / सेक्टर']:[]),...labels];
  return '<table><colgroup>'+widths.map(w=>'<col style="width:'+w+'%">').join('')+labels.map(()=>'<col>').join('')+'</colgroup><thead><tr>'+titles.map((l,i)=>'<th scope="col" style="--head:'+colors[i]+'">'+l+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody></table>';
 }
@@ -101,7 +114,7 @@ async function start(){
  if(sameSnapshot)all.geo=142;
  let html='';
  for(const [d,bs] of groups){
-  for(const b of bs)html+=row(d,b,'',summary.get(b));
+  for(const b of bs)html+=row(d,b,'',summary.get(b),'janpad-total');
   html+=row(d,'जिला योग','',totals(bs.map(b=>summary.get(b))),'total');
  }
  html+=row('संयुक्त','कुल','',all,'grand');
@@ -113,7 +126,7 @@ async function start(){
   for(const [d,bs] of groups)for(const b of bs){
    if(select.value&&select.value!==b)continue;
    for(const [e,rs] of [...sectors.get(b)].sort(([a],[b])=>a.localeCompare(b,'hi')))rows+=row(d,b,e,totals(rs),'',true);
-   rows+=row(d,b,'जनपद योग',summary.get(b),'total',true);
+   rows+=row(d,b,'जनपद योग',summary.get(b),'janpad-total',true);
   }
   if(!select.value)rows+=row('संयुक्त','कुल','',all,'grand',true);
   document.querySelector('#sectorTable').innerHTML=table(rows,true);
