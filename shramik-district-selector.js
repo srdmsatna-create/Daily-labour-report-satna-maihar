@@ -416,7 +416,19 @@ singlePrint.addEventListener('click',()=>{
  const doc=frame.contentDocument;
  const title=document.getElementById('snStateTitle').textContent;
  const date=document.getElementById('snStateDate').textContent;
- doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:A4 portrait;margin:5mm}*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;color:#102e3b}h2{font-size:10pt;margin:0 0 2mm}p{font-size:6pt;margin:0 0 2mm}table{border-collapse:collapse;table-layout:fixed;width:100%;font-variant-numeric:tabular-nums}thead{display:table-header-group}tr{break-inside:avoid;height:3.7mm}th,td{border:.15mm solid #66877c!important;font-size:5pt!important;line-height:1.08!important;padding:.4mm .2mm!important;min-width:0!important;width:auto!important;height:auto!important;max-width:none!important;white-space:normal!important;overflow-wrap:anywhere}th{background:#075d46!important;color:white!important;font-weight:bold}th:first-child,td:first-child{width:3%!important}th:nth-child(2),td:nth-child(2){width:10%!important}td:nth-child(n+3){white-space:nowrap!important}span,button{font:inherit!important;padding:0!important;border:0!important;background:transparent!important;color:inherit!important;min-width:0!important}button{display:block;width:100%}.sn-sort-arrow{display:none}tbody tr:last-child td{background:#dcece5!important;color:#102e3b!important;font-weight:bold}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}</style></head><body><h2>'+esc(title)+'</h2><p>'+esc(date)+'</p>'+state.querySelector('table').outerHTML+'</body></html>');doc.close();
+ // The division table has 17 columns. Give long headings more room on A4 landscape.
+ const divisionPrintStyle=select.value==='__REWA__'? `
+ @page{size:A4 landscape;margin:6mm}
+ h2{font-size:14pt}p{font-size:9pt}
+ th,td{line-height:1.2!important;padding:1.2mm .5mm!important}
+ th{font-size:9pt!important}
+ td{font-size:10pt!important}
+ th:nth-child(2),td:nth-child(2){width:8%!important}
+ td:nth-child(2){font-size:11pt!important;font-weight:800}
+ th:nth-child(7),th:nth-child(13){width:8%!important}
+ th:nth-child(9),th:nth-child(10),th:nth-child(14){width:4.5%!important}
+ `:'';
+ doc.open();doc.write('<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title)+'</title><style>@page{size:A4 portrait;margin:5mm}*{box-sizing:border-box}body{margin:0;font-family:"Nirmala UI",Mangal,Arial,sans-serif;color:#102e3b}h2{font-size:10pt;margin:0 0 2mm}p{font-size:6pt;margin:0 0 2mm}table{border-collapse:collapse;table-layout:fixed;width:100%;font-variant-numeric:tabular-nums}thead{display:table-header-group}tr{break-inside:avoid;height:3.7mm}th,td{border:.15mm solid #66877c!important;font-size:5pt!important;line-height:1.08!important;padding:.4mm .2mm!important;min-width:0!important;width:auto!important;height:auto!important;max-width:none!important;white-space:normal!important;overflow-wrap:anywhere}th{background:#075d46!important;color:white!important;font-weight:bold}th:first-child,td:first-child{width:3%!important}th:nth-child(2),td:nth-child(2){width:10%!important}td:nth-child(n+3){white-space:nowrap!important}span,button{font:inherit!important;padding:0!important;border:0!important;background:transparent!important;color:inherit!important;min-width:0!important}button{display:block;width:100%}.sn-sort-arrow{display:none}tbody tr:last-child td{background:#dcece5!important;color:#102e3b!important;font-weight:bold}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}'+divisionPrintStyle+'</style></head><body><h2>'+esc(title)+'</h2><p>'+esc(date)+'</p>'+state.querySelector('table').outerHTML+'</body></html>');doc.close();
  frame.contentWindow.focus();setTimeout(()=>frame.contentWindow.print(),300);
  frame.contentWindow.onafterprint=()=>setTimeout(()=>frame.remove(),1000);
 });
