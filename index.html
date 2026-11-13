@@ -4705,6 +4705,27 @@ function printEkAllWorksList(){
   body[data-report-view="official"] #reportTable .recovery-work-col {
     display: none !important;
   }
+  body[data-report-view="official"] #reportTable thead tr:nth-child(2) th:nth-child(13),
+  body[data-report-view="official"] #reportTable tbody td:nth-child(15) {
+    background: #dcecff !important;
+    color: #102e3b !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  body[data-report-view="official"] #reportTable thead tr:nth-child(2) th:nth-child(14),
+  body[data-report-view="official"] #reportTable tbody td:nth-child(16) {
+    background: #dff3e5 !important;
+    color: #102e3b !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  body[data-report-view="official"] #reportTable thead tr:nth-child(2) th:nth-child(15),
+  body[data-report-view="official"] #reportTable tbody td:nth-child(17) {
+    background: #fff0cc !important;
+    color: #102e3b !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 }
 </style>
 </head><body><h1>'+title+'</h1>'+table.outerHTML+'</body></html>');doc.close();
