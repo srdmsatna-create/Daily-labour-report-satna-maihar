@@ -4746,6 +4746,14 @@ function printEkAllWorksList(){
 </script>
 <style id="official-janpad-print-style">
 @media print {
+  body[data-report-view="official"] #reportTable thead tr:first-child th:nth-child(2) {
+    width: 29mm !important;
+  }
+  body[data-report-view="official"] #reportTable tbody td:nth-child(2) {
+    white-space: nowrap !important;
+    overflow-wrap: normal !important;
+    word-break: normal !important;
+  }
   body[data-report-view="official"] .clean-report-card > .report-head,
   body[data-report-view="official"] #reportTable .recovery-work-col {
     display: none !important;
