@@ -313,11 +313,17 @@ function reportPersondays(name,district,janpad){
  const lookup=name==='सतना'?'SATNA':name==='रीवा'?'REWA':name;
  return r511?.districts?.[lookup==='NARMADAPURAM'?'HOSHANGABAD':lookup]??r511?.districts?.[lookup]??null;
 }
+const r69DistrictFeed=window.SHRAMIK_DISTRICT_REPORTS;
+const r69BlockFeed=window.SHRAMIK_GP_PROGRESS;
+const r69Blocks=new Map((r69BlockFeed?.gpProgressVerified?r69BlockFeed.blocks:[]).map(row=>[row.janpad,row]));
+function r69Metrics(labour,works){
+ return {todayLabour:Number.isFinite(labour)?labour:null,mrIssued:Number.isFinite(works)?works:null};
+}
 function records(useSatnaMaiharSnapshot=false){
  const saved=window.SHRAMIK_DISTRICT_REPORTS?.labourDate===ongoingSnapshotDate?window.SHRAMIK_DISTRICT_REPORTS.districts:{};
  const wrap=rows=>({rows});
  const result=Object.fromEntries(Object.entries(novemberDistricts).map(([name,row])=>[
-  name,wrap([{...(saved[name]?.rows[0]||{}),...row,...emuster[name],ongoing:districtOngoing[name],achievement:reportPersondays(name)??row.achievement,vbgramJulyNovember:reportPersondays(name)??row.vbgramJulyNovember}])
+  name,wrap([{...(saved[name]?.rows[0]||{}),...row,...emuster[name],ongoing:districtOngoing[name],achievement:reportPersondays(name)??row.achievement,vbgramJulyNovember:reportPersondays(name)??row.vbgramJulyNovember,...r69Metrics(r69DistrictFeed?.districts?.[name]?.rows?.[0]?.todayLabour,r69DistrictFeed?.districts?.[name]?.rows?.[0]?.mrIssued)}])
  ]));
  for(const [district,blocks] of Object.entries(novemberBlocks)){
   const rows=Object.entries(blocks).map(([name,row])=>{
@@ -327,6 +333,8 @@ function records(useSatnaMaiharSnapshot=false){
     const [achievement,totalGP,workingGP,todayLabour,mrIssued]=latest;
     Object.assign(merged,{achievement,vbgramJulyNovember:achievement,totalGP,workingGP,todayLabour,mrIssued});
    }
+   const block=r69Blocks.get(r511BlockNames[name]);
+   Object.assign(merged,r69Metrics(block?.labour,block?.works));
    const generated=reportPersondays(name,district,name);
    if(generated!=null)Object.assign(merged,{achievement:generated,vbgramJulyNovember:generated});
    result[district+' / '+name]=wrap([merged]);
@@ -373,6 +381,9 @@ function render(){
  sortHeaders.forEach((th,i)=>{th.setAttribute('aria-sort',i===sortColumn?(sortDirection==='asc'?'ascending':'descending'):'none');const arrow=th.querySelector('.sn-sort-arrow');if(arrow)arrow.textContent=i===sortColumn?(sortDirection==='asc'?'↑':'↓'):'↕';});
  const dateNote=document.getElementById('snStateDate');
  dateNote.textContent='श्रमिक नियोजन स्नैपशॉट '+snapshotDate+' · प्रगतिरत कार्य (S5.8) '+ongoingSnapshotDate;
+ const districtDate=r69DistrictFeed?.labourDate??'उपलब्ध नहीं';
+ const blockDate=r69BlockFeed?.sourceLastUpdated??r69BlockFeed?.date??'उपलब्ध नहीं';
+ dateNote.textContent+=' · R6.9 श्रमिक / MR वाले कार्य — जिला प्राप्ति '+districtDate+' · जनपद स्रोत '+blockDate;
  dateNote.hidden=false;
  state.classList.toggle('sn-rewa-districts', selected==='__REWA__');
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':districtLabel(selected)+' — जिलावार श्रमिक नियोजन रिपोर्ट';
@@ -380,7 +391,7 @@ function render(){
  const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
  const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
  const kpiTarget=kpiSum('target'),kpiAchievement=kpiSum('achievement'),kpiGap=Math.max(0,kpiTarget-kpiAchievement),kpiDaily=Math.ceil(kpiGap/days);
- [fmt(kpiTarget),fmt(kpiAchievement),fmt(kpiGap),fmt(kpiDaily),(kpiAchievement*100/kpiTarget).toFixed(1)+'%',fmt(Math.max(0,kpiDaily-kpiSum('todayLabour')))].forEach((v,i)=>{const kpi=originalKpis.querySelectorAll('strong')[i];if(kpi)kpi.textContent=v;});
+ [fmt(kpiTarget),fmt(kpiAchievement),fmt(kpiGap),fmt(kpiDaily),(kpiAchievement*100/kpiTarget).toFixed(1)+'%',(kpiRows.every(row=>row.todayLabour!=null)?fmt(Math.max(0,kpiDaily-kpiSum('todayLabour'))):'—')].forEach((v,i)=>{const kpi=originalKpis.querySelectorAll('strong')[i];if(kpi)kpi.textContent=v;});
  const tb=document.getElementById('snStateRows');
  function renderRows(names,totalLabel,includeRows=true){
   const totals={totalGP:0,workingGP:0,inactiveGP:0,target:0,achievement:0,gap:0,daily:0,labour:0,ongoing:0,mr:0}, complete={totalGP:true,workingGP:true,inactiveGP:true,labour:true,ongoing:true,mr:true};
