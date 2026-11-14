@@ -127,7 +127,7 @@ function pendingNames(group){
  const gps=group.gps.filter(gp=>gp.notStarted).map(gp=>gp.gp).sort((a,b)=>a.localeCompare(b,'hi'));
  if(!gps.length)return '—';
  const engineer=group.engineer==='UNMAPPED'?'उपयंत्री नाम उपलब्ध नहीं':group.engineer;
- return '<strong>'+e(engineer)+'</strong><div class="yse-pending-gps">'+gps.map(e).join(', ')+'</div>';
+ return '<strong>'+e(engineer)+'</strong>, <span class="yse-pending-gps">'+gps.map(e).join(', ')+'</span>';
 }
 const detailWidths=[7,12,15,13,6,7,8,8,9,15];
 const detailColumns='<colgroup>'+detailWidths.map(w=>'<col style="width:'+w+'%">').join('')+'</colgroup>';
