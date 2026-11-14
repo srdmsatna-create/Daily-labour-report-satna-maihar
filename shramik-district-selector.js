@@ -303,6 +303,10 @@ const novemberBlocks={
 };
 const janpadOngoing={"अमरपाटन":1401,"मैहर":2445,"मझगवां":2155,"नागौद":2482,"रामनगर":1238,"रामपुर बघेलान":3261,"सोहावल":1085,"उचेहरा":1701,"गंगेव":1476,"हनुमना":2631,"जवा":1437,"मऊगंज":1822,"नईगढ़ी":2321,"रायपुर कर्चुलियान":2625,"रीवा":1259,"सिरमौर":2210,"त्योंथर":2202};
 const r511=window.SHRAMIK_R511;
+const r511FetchedAt=new Date(r511?.fetchedAt??NaN);
+const r511FetchDate=Number.isFinite(r511FetchedAt.getTime())
+ ? new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',day:'2-digit',month:'2-digit',year:'numeric'}).format(r511FetchedAt).replaceAll('/','-')
+ : null;
 const r511BlockNames={'अमरपाटन':'AMARPATAN','मैहर':'MAIHAR','मझगवां':'MAJHGAWAN','नागौद':'NAGOD','रामनगर':'RAMNAGAR','रामपुर बघेलान':'RAMPUR BAGHELAN','सोहावल':'SATNA','उचेहरा':'UNCHAHARA','गंगेव':'GANGEV','हनुमना':'HANUMANA','जवा':'JAWA','मऊगंज':'MAUGANJ','नईगढ़ी':'NAIGARHI','रायपुर कर्चुलियान':'RAIPUR KARCHULIYAN','रीवा':'REWA','सिरमौर':'SIRMOUR','त्योंथर':'TEONTHAR'};
 function reportPersondays(name,district,janpad){
  if(janpad)return (['रीवा','मऊगंज'].includes(district)?r511?.rewa:r511?.satna)?.[r511BlockNames[janpad]]??null;
@@ -355,8 +359,9 @@ function render(){
  originalWrap.hidden=external;originalKpis.hidden=false;state.hidden=!external;
  document.getElementById('snWarnings').hidden=external;
  section.querySelector('.sn-head h2').nextElementSibling.textContent=external?'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर के NREGA लक्ष्य के विरुद्ध वित्तीय वर्ष 2026–27 की R5.1.1 VB-G RAM G उपलब्धि':'वित्तीय वर्ष 2025–26 जुलाई से अक्टूबर में सृजित मानव दिवस के विरुद्ध वित्तीय वर्ष 2026–27 की उपलब्धि';
- const reportDate=grouped?satnaMaiharNovemberDate:novemberDate;
- if(external)document.getElementById('snDate').textContent='दिनांक '+reportDate;
+ const snapshotDate=grouped?satnaMaiharNovemberDate:novemberDate;
+ const reportDate=r511FetchDate??snapshotDate;
+ if(external)document.getElementById('snDate').textContent=r511FetchDate?'R5.1.1 प्राप्ति '+r511FetchDate:'दिनांक '+snapshotDate;
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el){const field=el.closest('label')||el;field.hidden=external;field.style.display=external?'none':'';}}
  for(const id of ['snLevel','snDistrict','snJanpad','snEngineer','snCluster','snSort']){const el=document.getElementById(id);if(el)el.disabled=external;}
  if(!external){const el=document.getElementById('snDistrict');el.value='ALL';el.dispatchEvent(new Event('change'));ranks();return;}
@@ -367,11 +372,11 @@ function render(){
  if(sortColumn!=null)chosen.sort((a,b)=>{const av=sortValue(all[a],a,sortColumn,days),bv=sortValue(all[b],b,sortColumn,days);if(av==null||bv==null)return av==null?(bv==null?a.localeCompare(b):1):-1;const diff=typeof av==='string'?av.localeCompare(bv):av-bv;return (sortDirection==='asc'?diff:-diff)||a.localeCompare(b);});
  sortHeaders.forEach((th,i)=>{th.setAttribute('aria-sort',i===sortColumn?(sortDirection==='asc'?'ascending':'descending'):'none');const arrow=th.querySelector('.sn-sort-arrow');if(arrow)arrow.textContent=i===sortColumn?(sortDirection==='asc'?'↑':'↓'):'↕';});
  const dateNote=document.getElementById('snStateDate');
- dateNote.textContent=grouped?'प्रगतिरत कार्य (S5.8) का डेटा '+ongoingSnapshotDate+' का है।':'दिनांक '+reportDate;
- dateNote.hidden=!grouped;
+ dateNote.textContent='श्रमिक नियोजन स्नैपशॉट '+snapshotDate+' · प्रगतिरत कार्य (S5.8) '+ongoingSnapshotDate;
+ dateNote.hidden=false;
  state.classList.toggle('sn-rewa-districts', selected==='__REWA__');
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':districtLabel(selected)+' — जिलावार श्रमिक नियोजन रिपोर्ट';
- if(r511?.fetchedAt)dateNote.textContent+=' · सृजित मानव दिवस: R5.1.1 (FY 2026–27)';
+ if(r511FetchDate)dateNote.textContent+=' · सृजित मानव दिवस (R5.1.1, FY 2026–27) प्राप्ति '+r511FetchDate;
  const kpiRows=all['सतना'].rows.concat(all['मैहर'].rows);
  const kpiSum=k=>kpiRows.reduce((sum,row)=>sum+row[k],0);
  const kpiTarget=kpiSum('target'),kpiAchievement=kpiSum('achievement'),kpiGap=Math.max(0,kpiTarget-kpiAchievement),kpiDaily=Math.ceil(kpiGap/days);
