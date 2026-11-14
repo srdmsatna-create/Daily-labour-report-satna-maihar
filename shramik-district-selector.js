@@ -334,7 +334,7 @@ function records(useSatnaMaiharSnapshot=false){
     Object.assign(merged,{achievement,vbgramJulyNovember:achievement,totalGP,workingGP,todayLabour,mrIssued});
    }
    const block=r69Blocks.get(r511BlockNames[name]);
-   Object.assign(merged,r69Metrics(block?.labour,block?.works));
+   Object.assign(merged,r69Metrics(block?.labour??merged.todayLabour,block?.works??merged.mrIssued));
    const generated=reportPersondays(name,district,name);
    if(generated!=null)Object.assign(merged,{achievement:generated,vbgramJulyNovember:generated});
    result[district+' / '+name]=wrap([merged]);
@@ -383,7 +383,7 @@ function render(){
  dateNote.textContent='श्रमिक नियोजन स्नैपशॉट '+snapshotDate+' · प्रगतिरत कार्य (S5.8) '+ongoingSnapshotDate;
  const districtDate=r69DistrictFeed?.labourDate??'उपलब्ध नहीं';
  const blockDate=r69BlockFeed?.sourceLastUpdated??r69BlockFeed?.date??'उपलब्ध नहीं';
- dateNote.textContent+=' · R6.9 श्रमिक / MR वाले कार्य — जिला प्राप्ति '+districtDate+' · जनपद स्रोत '+blockDate;
+ dateNote.textContent+=' · R6.9 श्रमिक / MR वाले कार्य — जिला प्राप्ति '+districtDate+' · सतना–मैहर जनपद स्रोत '+blockDate+' · रीवा–मऊगंज जनपद स्नैपशॉट '+novemberDate;
  dateNote.hidden=false;
  state.classList.toggle('sn-rewa-districts', selected==='__REWA__');
  document.getElementById('snStateTitle').textContent=selected==='__ALL__'?'प्रदेश के 52 जिले — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__REWA__'?'रीवा संभाग — जिलावार श्रमिक नियोजन रिपोर्ट':selected==='__BLOCK__'?'जनपदवार श्रमिक नियोजन रिपोर्ट':selected==='__SATNA_MAIHAR_NOV__'?'सतना + मैहर — नवंबर की जनपदवार श्रमिक नियोजन रिपोर्ट':districtLabel(selected)+' — जिलावार श्रमिक नियोजन रिपोर्ट';
