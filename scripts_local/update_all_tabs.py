@@ -19,7 +19,8 @@ GROUPS=[
  ('pending_mr_fto',[['scripts_local/update_pending_mr_fto.py']],['data/pending-mr-fto.json','data/pending-mr-fto-details.json.gz']),
  ('emb_pending',[['scripts_local/update_emb_pending.py']],['data/emb-pending-latest.json']),
  ('yuktdhara_state',[['scripts_local/update_yuktdhara_state.py']],['data/yuktdhara-state-latest.json']),
- ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--update-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-data.js','yuktdhara-official-data.js','yuktdhara-received-data.js']),
+ ('yuktdhara_bhuvan',[['scripts_local/update_yuktdhara_monitoring.py','--bhuvan-only']],['yuktdhara-data.js']),
+ ('yuktdhara',[['scripts_local/update_yuktdhara_monitoring.py','--official-only'],['scripts_local/update_yuktdhara_received.py']],['yuktdhara-official-data.js','yuktdhara-received-data.js']),
  ('pending_wage_payment',[['scripts_local/update_pending_wage_payment.py']],['data/pending-wage-payment-latest.json']),
  ('timely_payment',[['scripts_local/update_timely_payment.py']],['data/timely-payment-latest.json']),
  ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
@@ -89,7 +90,10 @@ def validate(group,root):
   s=snapshots[-1] if snapshots else {}
   if s.get('snapshotDate')!=today.isoformat() or len(s.get('rows',[]))!=8:raise ValueError('Current R33.1/MR work-code history snapshot required')
   if datetime.fromisoformat(s.get('mis612UpdatedAt','')).astimezone(ZoneInfo('Asia/Kolkata')).date()!=today:raise ValueError('Current-day MIS 6.12 source required')
-  if s.get('yuktdharaDataDate')!=today.strftime('%d/%m/%Y') or s.get('emusterDataDate')!=today.strftime('%d-%m-%Y') or s.get('workersDataDate')!=today.strftime('%d-%m-%Y'):raise ValueError('R33.1, e-Muster and worker sources must all be current-day')
+  expected=today.strftime('%d-%m-%Y')
+  source_dates={'R33.1':s.get('yuktdharaDataDate'),'e-Muster':s.get('emusterDataDate'),'workers':s.get('workersDataDate')}
+  stale=[f'{name}={value or "missing"}' for name,value in source_dates.items() if str(value or '').replace('/','-')!=expected]
+  if stale:raise ValueError(f'Current source date {expected} required; '+', '.join(stale))
   codes=[w.get('code') for r in s['rows'] for w in r.get('matchedWorks',[]) if w.get('code')]
   if len(codes)!=len(set(codes)) or len(codes)!=int(s.get('totalOngoingWorksWithIssuedMR',-1)):raise ValueError('Matched MR work-code list does not reconcile')
   for r in s['rows']:
@@ -135,6 +139,10 @@ def validate(group,root):
   if len(rr)!=52 or len({r['district'] for r in rr})!=52:raise ValueError('52 unique Yuktdhara districts required')
   if any(sum(r[k] for r in rr)!=v for k,v in d['totals'].items()):raise ValueError('Yuktdhara state totals mismatch')
   if datetime.fromisoformat(d['fetchedAt']).astimezone(ZoneInfo('Asia/Kolkata')).date()!=datetime.now(ZoneInfo('Asia/Kolkata')).date():raise ValueError('Today verified state snapshot required')
+ elif group=='yuktdhara_bhuvan':
+  d=data(root/'yuktdhara-data.js');master=d.get('lists',{}).get('master',[])
+  if len(master)!=695 or len({(r['janpad'],r['gp']) for r in master})!=695 or len({r['janpad'] for r in master})!=8:
+   raise ValueError('Expected 8 Janpads and 695 unique Bhuvan GPs')
  elif group=='yuktdhara':
   if len(data(root/'yuktdhara-official-data.js').get('rows',[]))!=8:raise ValueError('Yuktdhara Janpads incomplete')
   received=data(root/'yuktdhara-received-data.js')

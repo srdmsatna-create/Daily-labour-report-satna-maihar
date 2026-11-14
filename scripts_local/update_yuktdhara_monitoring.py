@@ -166,7 +166,8 @@ def fetch():
     # own file; otherwise the detailed Yuktdhara dashboard becomes blank.
     (ROOT/"yuktdhara-official-data.js").write_text("window.YUKTDHARA_REPORT="+json.dumps(payload,ensure_ascii=False,separators=(",",":"))+";\n",encoding="utf-8")
     print("Yuktdhara official data updated: 8 blocks")
-    fetch_bhuvan_detail()
+    if '--official-only' not in sys.argv:
+        fetch_bhuvan_detail()
 
 STYLE='''<!-- SRDM_YUKTDHARA_STYLE_START --><style>
 #yuktdharaLauncher{--app-accent:#6f42c1!important;--app-soft:#f3edff!important;--app-shadow:#6f42c155!important;border-color:#6f42c1!important;background:linear-gradient(135deg,#f2ebff,#fff 75%)!important}
@@ -219,5 +220,9 @@ def install():
     print("Yuktdhara dashboard module installed")
 
 if __name__=="__main__":
-    fetch()
-    if "--update-only" not in sys.argv: install()
+    if "--bhuvan-only" in sys.argv:
+        fetch_bhuvan_detail()
+    else:
+        fetch()
+        if not {"--update-only", "--official-only"}.intersection(sys.argv):
+            install()
