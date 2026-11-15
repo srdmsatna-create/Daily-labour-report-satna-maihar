@@ -30,9 +30,9 @@ th .sort-heading:focus-visible{outline:2px solid white;outline-offset:2px}
 <body>
 <header><h1>AS, SECURE TS और Before जियो टैग स्थिति</h1><p>सतना एवं मैहर · वित्तीय वर्ष 2026–27</p><a href="./">मुख्य पृष्ठ</a></header>
 <main>
-<section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><p class="note" id="ongoingGeoBasis"></p><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable"></div></section>
-<section id="sector"><h2>उपयंत्री / सेक्टरवार प्रगति</h2><div class="tools"><label>जनपद <select id="block"><option value="">सभी जनपद</option></select></label><button data-print="sector">उपयंत्री / सेक्टर PDF</button></div><div class="wrap" id="sectorTable"></div></section>
-<section id="r617"><h2>R6.17 / R6.22 — जनपद, GP और कार्यवार विवरण</h2><div id="r617Detail"></div></section>
+<section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><p class="note" id="ongoingGeoBasis"></p><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable" aria-live="polite">जनपदवार आँकड़े लोड हो रहे हैं…</div></section>
+<section id="sector"><h2>उपयंत्री / सेक्टरवार प्रगति</h2><div class="tools"><label>जनपद <select id="block"><option value="">सभी जनपद</option></select></label><button data-print="sector">उपयंत्री / सेक्टर PDF</button></div><div class="wrap" id="sectorTable" aria-live="polite">उपयंत्रीवार आँकड़े लोड हो रहे हैं…</div></section>
+<section id="r617"><h2>R6.17 / R6.22 — जनपद, GP और कार्यवार विवरण</h2><div id="r617Detail" aria-live="polite">GP और कार्यवार विवरण लोड हो रहा है…</div></section>
 <section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। मुख्य तालिका के BHUVAN कॉलम केवल /YD/ कार्यों के हैं। BHUVAN प्राप्ति शेष = भेजे गए /YD/ कोड − प्राप्त /YD/ कोड। अंतिम BHUVAN कॉलम में प्राप्त /YD/ कोड हैं जो R33.1 की प्रगतिरत सूची में नहीं मिले। नीचे R6.17 / R6.22 का पूरा सरकारी विवरण है। BHUVAN में प्राप्ति और Before फोटो की पुष्टि अलग स्थितियाँ हैं।</p></section>
 </main>
 <script src="yuktdhara-received-data.js"></script>
@@ -148,13 +148,28 @@ function renderR617(data){
  target.innerHTML='<p>सरकारी स्रोत '+esc(data.officialDate)+' · स्रोत में '+fmt(data.gps.length)+' GP · <a href="'+esc(data.source)+'">R6.17</a></p><div class="wrap"><table>'+head+'<tbody>'+blocks+'<tr class="total"><td>कुल</td>'+numeric(data.totals)+'</tr></tbody></table></div>'+tables;
 }
 async function start(){
- const json=async path=>{const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error(path);return r.json()};
- const csv=async()=>{const r=await fetch('data/Ongoing_Works_dynamic_work_details_latest.csv',{cache:'no-store'});return r.ok?flags(await r.text()):new Map()};
- const [master,S,F,G,A,B]=await Promise.all([
-  json('data/r37-secure-register.json'),json('data/secure-ts-yuktadhara-fy2026-27.json'),
-  csv().catch(()=>new Map()),json('data/as-geotag-before-latest.json').catch(()=>null),
-  json('data/secure-as-yuktdhara.json').catch(()=>null),json('data/r617-secure-bhuvan.json').catch(()=>null)
+ const read=async (path,type)=>{
+  const controller=new AbortController();
+  const timeout=setTimeout(()=>controller.abort(),25000);
+  try{
+   const response=await fetch(path,{cache:'no-cache',signal:controller.signal});
+   if(!response.ok)throw Error(path+' HTTP '+response.status);
+   return await response[type]();
+  }finally{clearTimeout(timeout);}
+ };
+ const optional=path=>read(path,'json').catch(()=>null);
+ const r617=optional('data/r617-secure-bhuvan.json').then(data=>{renderR617(data);return data;});
+ const [master,S,A,B]=await Promise.all([
+  read('data/r37-secure-register.json','json'),read('data/secure-ts-yuktadhara-fy2026-27.json','json'),
+  optional('data/secure-as-yuktdhara.json'),r617
  ]);
+ if(!Y?.gpProgress||!M?.mapping)throw Error('युक्तधारा की स्रोत फ़ाइल उपलब्ध नहीं है।');
+ const completeAS=A?.fy===S.fy&&A.startDate===S.startDate&&A.gpCount===master.gps.length&&A.snapshotAt?.slice(0,10)===S.snapshotAt?.slice(0,10);
+ let F=null;
+ let fallbackAS=null;
+ const select=document.querySelector('#block');
+ const defaultOption=select.options[0].outerHTML;
+ function draw(){
  const byGP=works=>{
   const result=new Map();
   for(const code of new Set(works.map(w=>String(w.workCode).trim().toUpperCase()))){
@@ -165,9 +180,8 @@ async function start(){
   return result;
  };
  const tsByGP=byGP(S.works);
- const completeAS=A?.fy===S.fy&&A.startDate===S.startDate&&A.gpCount===master.gps.length&&A.snapshotAt?.slice(0,10)===S.snapshotAt?.slice(0,10);
  const asByGP=byGP(completeAS?A.works:[]);
- const verifiedAsByGP=byGP((G?.rows||[]).filter(w=>w.asStatus==='Available'&&w.asSanctionDate>=S.startDate));
+ const verifiedAsByGP=byGP((fallbackAS?.rows||[]).filter(w=>w.asStatus==='Available'&&w.asSanctionDate>=S.startDate));
  const mapping=new Map(M.mapping.map(r=>[gpKey(r.janpad,r.gp),r.engineer]));
  const yd=new Map(Object.entries(Y.gpProgress).flatMap(([b,rs])=>rs.map(r=>[gpKey(b,r.gp),r])));
  const ongoingCodes=new Set([...yd.values()].flatMap(r=>r.ongoingCodes||[]).map(c=>String(c).trim().toUpperCase()));
@@ -191,7 +205,6 @@ async function start(){
    +(matchesAS?'भेजे गए सभी कोड SECURE AS सूची से मिले। ':'')
    +'प्राप्त कोडों में '+fmt(linked)+' R33.1 की प्रगतिरत सूची में मिले।';
  }
- renderR617(B);
  const official=new Map(Y.blocks.map(r=>[block(r.block),r]));
  const blockNames={'1712001':'MAJHGAWAN','1712002':'SOHAWAL','1712003':'NAGOD','1712004':'UNCHAHARA','1712005':'RAMPUR BAGHELAN','1712006':'AMARPATAN','1712007':'RAMNAGAR','1712008':'MAIHAR'};
  const blocks=new Map(Object.values(blockNames).map(b=>[b,[]]));
@@ -199,9 +212,9 @@ async function start(){
  for(const g of master.gps){
   const b=blockNames[g.code.slice(0,7)],k=gpKey(b,g.gp),r=yd.get(k);
   if(r)matched.add(k);
-  const found=[...new Set(r?.ongoingCodes||[])].map(c=>F.get(c)).filter(Boolean);
+  const found=[...new Set(r?.ongoingCodes||[])].map(c=>F?.get(c)).filter(Boolean);
   const ongoing=r?.ongoing??null, verified=ongoing!=null&&found.length<=ongoing?found:[];
-  blocks.get(b).push({engineer:mapping.get(k)||'मैपिंग की पुष्टि बाकी',...(B?(bhuvanByGP.get(g.code)||emptyBhuvan()):{}),received:r?.worksReceived,created:r?.worksCreated,ts:tsByGP.get(g.code)||0,as:completeAS?(asByGP.get(g.code)||0):null,verifiedAs:verifiedAsByGP.get(g.code)||0,ongoing,non:verified.filter(v=>v==='NO').length,conv:verified.filter(v=>v==='YES').length,pending:ongoing==null?null:ongoing-verified.length});
+  blocks.get(b).push({engineer:mapping.get(k)||'मैपिंग की पुष्टि बाकी',...(B?(bhuvanByGP.get(g.code)||emptyBhuvan()):{}),received:r?.worksReceived,created:r?.worksCreated,ts:tsByGP.get(g.code)||0,as:completeAS?(asByGP.get(g.code)||0):null,verifiedAs:verifiedAsByGP.get(g.code)||0,ongoing,non:F?verified.filter(v=>v==='NO').length:null,conv:F?verified.filter(v=>v==='YES').length:null,pending:ongoing==null?null:ongoing-verified.length});
  }
  // Preserve unmatched official GP activity in the Janpad total.
  for(const [b,rr] of Object.entries(Y.gpProgress)){
@@ -226,8 +239,9 @@ async function start(){
  }
  html+=row('संयुक्त','कुल','',all,'grand');
  document.querySelector('#summaryTable').innerHTML=table(html,false);
- const select=document.querySelector('#block');
- select.insertAdjacentHTML('beforeend',[...blocks.keys()].sort().map(b=>'<option>'+esc(b)+'</option>').join(''));
+ const chosen=select.value;
+ select.innerHTML=defaultOption+[...blocks.keys()].sort().map(b=>'<option>'+esc(b)+'</option>').join('');
+ select.value=chosen;
  function render(){
   let rows='';
   for(const [d,bs] of groups)for(const b of bs){
@@ -238,12 +252,25 @@ async function start(){
   if(!select.value)rows+=row('संयुक्त','कुल','',all,'grand',true);
   document.querySelector('#sectorTable').innerHTML=table(rows,true);
  }
- select.addEventListener('change',render);render();
- document.querySelector('#status').textContent='R33.1: '+Y.officialDate+' · SECURE /YD/ TS (01-10-2026 से): '+new Date(S.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' · AS: '+(completeAS?new Date(A.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'e-Work File में सत्यापित न्यूनतम')+' · अभिसरण: R6.12 के प्रगतिरत कार्य-कोड से मिलान।';
+ select.onchange=render;render();
+ document.querySelector('#status').textContent='R33.1: '+Y.officialDate+' · SECURE /YD/ TS (01-10-2026 से): '+new Date(S.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' · AS: '+(completeAS?new Date(A.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'e-Work File में सत्यापित न्यूनतम')+' · अभिसरण: '+(F?'R6.12 के प्रगतिरत कार्य-कोड से मिलान।':'R6.12 का मिलान अभी उपलब्ध नहीं।');
+ }
+ draw();
+ const [flagData,asEvidence]=await Promise.all([
+  read('data/Ongoing_Works_dynamic_work_details_latest.csv','text').then(flags).catch(()=>null),
+  completeAS?Promise.resolve(null):optional('data/as-geotag-before-latest.json')
+ ]);
+ F=flagData;
+ fallbackAS=asEvidence;
+ if(F||fallbackAS)draw();
 }
 document.querySelectorAll('button[data-print]').forEach(b=>b.addEventListener('click',()=>{document.body.dataset.print=b.dataset.print;window.print()}));
 window.addEventListener('afterprint',()=>delete document.body.dataset.print);
-start().catch(e=>{document.querySelector('#status').textContent='डेटा लोड नहीं हुआ। पेज फिर से खोलें।';console.error(e)});
+start().catch(e=>{
+ const message='मुख्य तालिका के स्रोत लोड नहीं हुए। पेज दोबारा खोलें।';
+ for(const id of ['#summaryTable','#sectorTable','#status'])document.querySelector(id).textContent=message;
+ console.error(e);
+});
 </script>
 </body>
 </html>
