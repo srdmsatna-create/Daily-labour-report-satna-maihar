@@ -6,6 +6,7 @@ from zoneinfo import ZoneInfo
 ROOT=Path(__file__).resolve().parent.parent
 GP_URL=os.environ.get('VBGRAM_DAILY_REPORT_URL','').strip() or runpy.run_path(str(ROOT/'scripts_local/local_auto_update.py'),run_name='source_config')['REPORT_URL']
 GROUPS=[
+ ('shramik_s58_ongoing',[['scripts_local/update_shramik_s58.py']],['shramik-s58-ongoing.js']),
  ('shramik_r511_persondays',[['scripts_local/update_shramik_persondays.py']],['shramik-r511-persondays.js']),
  ('shramik_complete',[
   ['scripts_local/local_auto_update.py'],['scripts/merge_official_summary.py'],
@@ -47,6 +48,9 @@ def validate(group,root):
   if len(gps)!=695 or len({r['code'] for r in gps})!=695:raise ValueError('R-3.7 SECURE GP register incomplete')
  elif group=='secure_ts':
   runpy.run_path(str(root/'scripts_local/update_secure_ts.py'))['validate'](data(root/'secure-ts-data.js'))
+ elif group=='shramik_s58_ongoing':
+  from update_shramik_s58 import validate as validate_s58
+  validate_s58(data(root/'shramik-s58-ongoing.js'),root)
  elif group=='shramik_complete':
   validate_shramik(root)
  elif group=='shramik_59':
@@ -268,7 +272,16 @@ def refresh_group(group,commands,files,root=ROOT,executor=None,validator=validat
    else:run_logged(command,root,group,timeout=7200 if command[0] in ('scripts_local/update_gp_emuster.py','scripts_local/update_secure_ts.py','scripts_local/update_pending_mr_fto.py','scripts_local/update_ek_bagiya_payment.py','scripts_local/update_emb_pending.py') else 1800 if command[0] in ('scripts_local/update_yuktdhara_received.py','scripts_local/update_mis_612_work_details.py','scripts_local/update_pmayg_physical.py','scripts_local/update_pmayg.py','scripts_local/update_above75.py') else 900)
   runpy.run_path(str(root/'scripts_local/apply_sector_allocations.py'))['apply'](root,files)
   validator(group,root)
-  return {'success':True,'files':files}
+  result={'success':True,'files':files}
+  if group=='shramik_complete':
+   gp=data(root/'shramik-gp-progress-data.js')
+   source_date=gp.get('sourceLastUpdated')
+   result['r69GpSourceDate']=source_date
+   result['r69GpRetrievedDate']=gp['date']
+   result['r69GpCurrent']=source_date==gp['date']
+   if not result['r69GpCurrent']:
+    print(f"R6.9 GP source as of {source_date or 'unknown'}; retrieved {gp['date']}. Today's GP figures are unconfirmed.",flush=True)
+  return result
  except Exception as e:
   restore(root,saved)
   print(group + ': validation/fetch failed: ' + str(e), flush=True)
