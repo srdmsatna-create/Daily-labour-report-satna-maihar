@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- Fresh GitHub Pages deployment after prior deployment timeouts -->
 <html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>R-10.3 • VB G RAM G Work Demand Details</title>
+<title>R-10.4 • VB G RAM G Work Demand Details</title>
 <style>
 :root{--navy:#123f72;--blue:#176da7;--ink:#18334b;--muted:#5b7187;--line:#c8d8e8;--bg:#f3f7fb;--green:#167443;--amber:#946200}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,"Noto Sans Devanagari",sans-serif}
@@ -197,7 +197,7 @@ thead th{padding-top:4px!important;padding-bottom:4px!important}tbody td{padding
 }
 </style>
 <script src="work-demand-details-data-20261108-3436.js"></script></head>
-<body><header><h1>R-10.3 • VB G RAM G Work Demand Details</h1><p id="meta">Report data load हो रहा है…</p></header>
+<body><header><h1>R-10.4 • VB G RAM G Work Demand Details</h1><p id="meta">Report data load हो रहा है…</p></header>
 <main><div class="print-only-title">VB G RAM G Work Demand Details <span id="printDate"></span></div><a class="back" href="index.html">← मुख्य मेनू</a>
 <div class="scope" id="scope"></div>
 <section class="cards">
@@ -308,7 +308,7 @@ function render(){
  if(kind==='engineer')document.querySelectorAll('#body tr.janpad-total-row,#body tr.district-total-row,#body tr.grand-total-row').forEach(tr=>{if(tr.cells.length>3){tr.cells[0].colSpan=3;tr.deleteCell(1);tr.deleteCell(1)}});
  $('rowMeta').textContent=fmt(agg.length)+' पंक्तियाँ • '+(kind==='janpad'?'जनपदवार + जिला योग':kind==='gp'?'GPवार + उपयंत्री / जनपद / जिला योग':'उपयंत्रीवार + जनपद / जिला योग')+' • GP: '+fmt(rows.length)
 }
-function csv(){const lines=[...$('head').querySelectorAll('th')].map(x=>x.innerText);const vals=current.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(','));const blob=new Blob(['\ufeff'+[lines.join(','),...vals].join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='R-10.3_Work_Demand_Details.csv';a.click();URL.revokeObjectURL(a.href)}
+function csv(){const lines=[...$('head').querySelectorAll('th')].map(x=>x.innerText);const vals=current.map(r=>r.map(x=>'"'+String(x).replace(/"/g,'""')+'"').join(','));const blob=new Blob(['\ufeff'+[lines.join(','),...vals].join('\r\n')],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='R-10.4_Work_Demand_Details.csv';a.click();URL.revokeObjectURL(a.href)}
 fillFilters();render();$('district').addEventListener('change',()=>{fillFilters();render()});$('janpad').addEventListener('change',()=>{fillFilters();render()});$('engineer').addEventListener('change',render);$('query').addEventListener('input',render);$('group').addEventListener('change',()=>{sortIndex=null;sortDir=1;render()});$('csv').addEventListener('click',csv);
 })();
 </script></body></html>
