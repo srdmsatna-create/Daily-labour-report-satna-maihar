@@ -73,7 +73,7 @@ font-size:13px!important;line-height:1.2!important;
 #yuktdharaSubEngineerApp .yukt-se-actions{flex-wrap:wrap}
 #yuktdharaSubEngineerApp .yse-summary{margin:16px 0}
 #yuktdharaSubEngineerApp .yse-summary h4,#yuktdharaSubEngineerApp .yse-pending h4{margin:0 0 8px;font-size:18px}
-#yuktdharaSubEngineerApp #yseSummaryTable{width:100%;min-width:960px;border-collapse:collapse;font-size:14px}
+#yuktdharaSubEngineerApp #yseSummaryTable{width:100%;min-width:960px;table-layout:fixed;border-collapse:collapse;font-size:14px}
 #yuktdharaSubEngineerApp #yseSummaryTable th,#yuktdharaSubEngineerApp #yseSummaryTable td{border:1px solid #57406f;padding:8px 10px}
 #yuktdharaSubEngineerApp #yseSummaryTable th{background:#54299b;color:white}
 #yuktdharaSubEngineerApp #yseSummaryTable th:last-child{font-size:12px;line-height:1.25}
