@@ -1,6 +1,7 @@
 {
   "financialYear": "2026-2027",
-  "fetchedAt": "2026-11-15T22:54:59.375752+05:30",
+  "ekycWorkerScope": "active-workers",
+  "fetchedAt": "2026-11-15T23:02:32.965226+05:30",
   "sources": {
     "eKyc": "https://vbgramgrep.dord.gov.in/VBGRAMG/AdhaarStatus.aspx?page=D&short_name=&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&Digest=xJ6WAz2l1aMieSCmXXx%2fsQ",
     "material": "https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/executive_agency_report_new.aspx?payload=dOLei81_Q1_tjQsOFP2ejyCqE1cc-AIh-1fl4-BQbHdK0UpcBE8mCTi-wimyVibBi_OLK251H51DjQmOg9EZY8ycJz9rXKJSY6OtF0y2GuWFzQKYGTtcwrzbME3jMxfpw7G-wdocdJbHHj0pT75B1sRr3g_V03nEfE5FDGrFqStlAkEM2BfKCJKSa3s_afuhXWp6oYDMrdQGaEvyx9qdSHMSR0uYn2r9HTKmIKweCDA"
@@ -8,8 +9,9 @@
   "rows": [
     {
       "block": "AMARPATAN",
-      "aadhaarSeeded": 24863,
-      "eKycDone": 17441,
+      "activeWorkers": 10866,
+      "aadhaarSeeded": 10762,
+      "eKycDone": 10498,
       "pendingWageAmount": 4251000,
       "pendingMaterialAmount": 894000,
       "mgnregaWageAmount": 2881000,
@@ -17,8 +19,9 @@
     },
     {
       "block": "MAIHAR",
-      "aadhaarSeeded": 58518,
-      "eKycDone": 37682,
+      "activeWorkers": 23851,
+      "aadhaarSeeded": 23845,
+      "eKycDone": 23149,
       "pendingWageAmount": 1519000,
       "pendingMaterialAmount": 227000,
       "mgnregaWageAmount": 343000,
@@ -26,8 +29,9 @@
     },
     {
       "block": "MAJHGAWAN",
-      "aadhaarSeeded": 59198,
-      "eKycDone": 44809,
+      "activeWorkers": 34616,
+      "aadhaarSeeded": 34575,
+      "eKycDone": 33227,
       "pendingWageAmount": 2793000,
       "pendingMaterialAmount": 466000,
       "mgnregaWageAmount": 3478000,
@@ -35,8 +39,9 @@
     },
     {
       "block": "NAGOD",
-      "aadhaarSeeded": 36759,
-      "eKycDone": 29453,
+      "activeWorkers": 21212,
+      "aadhaarSeeded": 21185,
+      "eKycDone": 20822,
       "pendingWageAmount": 6089000,
       "pendingMaterialAmount": 0,
       "mgnregaWageAmount": 387000,
@@ -44,8 +49,9 @@
     },
     {
       "block": "RAMNAGAR",
-      "aadhaarSeeded": 24486,
-      "eKycDone": 18068,
+      "activeWorkers": 13402,
+      "aadhaarSeeded": 13401,
+      "eKycDone": 13122,
       "pendingWageAmount": 2905000,
       "pendingMaterialAmount": 0,
       "mgnregaWageAmount": 4000,
@@ -53,8 +59,9 @@
     },
     {
       "block": "RAMPUR BAGHELAN",
-      "aadhaarSeeded": 37179,
-      "eKycDone": 28593,
+      "activeWorkers": 20199,
+      "aadhaarSeeded": 20142,
+      "eKycDone": 19476,
       "pendingWageAmount": 4656000,
       "pendingMaterialAmount": 1509000,
       "mgnregaWageAmount": 1914000,
@@ -62,8 +69,9 @@
     },
     {
       "block": "SATNA",
-      "aadhaarSeeded": 31575,
-      "eKycDone": 23475,
+      "activeWorkers": 16197,
+      "aadhaarSeeded": 16159,
+      "eKycDone": 15685,
       "pendingWageAmount": 1194000,
       "pendingMaterialAmount": 141000,
       "mgnregaWageAmount": 869000,
@@ -71,8 +79,9 @@
     },
     {
       "block": "UNCHAHARA",
-      "aadhaarSeeded": 27592,
-      "eKycDone": 23059,
+      "activeWorkers": 16734,
+      "aadhaarSeeded": 16717,
+      "eKycDone": 16061,
       "pendingWageAmount": 768000,
       "pendingMaterialAmount": 0,
       "mgnregaWageAmount": 724000,

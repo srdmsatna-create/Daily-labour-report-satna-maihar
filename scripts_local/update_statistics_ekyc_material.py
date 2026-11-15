@@ -4,16 +4,33 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 import json
+import re
+from urllib.parse import urlencode
 from pathlib import Path
 from zoneinfo import ZoneInfo
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 from update_pending_wage_payment import BLOCKS, amount, fetch, table
+from update_mis_612_work_details import form_action, hidden_fields, open_text, session_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 EKYC_SOURCE = "https://vbgramgrep.dord.gov.in/VBGRAMG/AdhaarStatus.aspx?page=D&short_name=&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&Digest=xJ6WAz2l1aMieSCmXXx%2fsQ"
 MATERIAL_SOURCE = "https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/executive_agency_report_new.aspx?payload=dOLei81_Q1_tjQsOFP2ejyCqE1cc-AIh-1fl4-BQbHdK0UpcBE8mCTi-wimyVibBi_OLK251H51DjQmOg9EZY8ycJz9rXKJSY6OtF0y2GuWFzQKYGTtcwrzbME3jMxfpw7G-wdocdJbHHj0pT75B1sRr3g_V03nEfE5FDGrFqStlAkEM2BfKCJKSa3s_afuhXWp6oYDMrdQGaEvyx9qdSHMSR0uYn2r9HTKmIKweCDA"
+
+
+def fetch_active_ekyc():
+    opener = session_opener()
+    source, url = open_text(opener, EKYC_SOURCE, timeout=45)
+    fields = hidden_fields(source)
+    worker_filter = "ctl00$ContentPlaceHolder1$rbtworker"
+    fields.update({
+        "__EVENTTARGET": worker_filter + "$1",
+        "__EVENTARGUMENT": "",
+        worker_filter: "2",
+    })
+    source, _ = open_text(opener, form_action(source, url), urlencode(fields).encode(), timeout=45)
+    return source
 
 
 def parse(source, kind):
@@ -21,10 +38,13 @@ def parse(source, kind):
         raise ValueError(f"Unexpected district or financial year: {kind}")
     rows = [[cell["text"] for cell in row] for row in table(source)]
     if kind == "ekyc":
-        expected_header = ["Aadhaar Seeded", "e-KYC Done", "% of e-KYC"]
-        if not any(row[3:6] == expected_header for row in rows):
+        selected = re.search(r'<input\b[^>]*id="ContentPlaceHolder1_rbtworker_1"[^>]*>', source, re.I)
+        if not selected or 'checked="checked"' not in selected.group().lower():
+            raise ValueError("Active Workers filter was not applied")
+        expected_header = ["Total No. of Workers", "Aadhaar Seeded", "e-KYC Done", "% of e-KYC"]
+        if not any(row[2:6] == expected_header for row in rows):
             raise ValueError("Official e-KYC columns not found")
-        columns = (3, 4)
+        columns = (2, 3, 4)
     else:
         if not any(row[2:4] == ["Labour Expenditure", "Material Expenditure"] for row in rows) or not any(
             row[:6] == ["Paid", "Unpaid", "Total", "Paid", "Unpaid", "Total"] for row in rows
@@ -43,8 +63,8 @@ def parse(source, kind):
             raise ValueError(f"Duplicate {kind} row: {name}")
         values[name] = tuple(amount(row[index]) for index in columns)
         if kind == "ekyc":
-            seeded, done = values[name]
-            if seeded != seeded.to_integral_value() or done != done.to_integral_value() or done > seeded:
+            active, seeded, done = values[name]
+            if any(value != value.to_integral_value() for value in values[name]) or not done <= seeded <= active:
                 raise ValueError(f"Invalid e-KYC counts: {name}")
             if seeded and (done * 100 / seeded).quantize(Decimal(".01"), rounding=ROUND_HALF_UP) != amount(row[5]):
                 raise ValueError(f"Official e-KYC percentage mismatch: {name}")
@@ -123,12 +143,12 @@ def main():
     parser.add_argument("--legacy-html-dir", type=Path)
     args = parser.parse_args()
 
-    def read(file, url, kind):
-        return parse(file.read_text(encoding="utf-8-sig") if file else fetch(url), kind)
+    def read(file, request, kind):
+        return parse(file.read_text(encoding="utf-8-sig") if file else request(), kind)
 
     with ThreadPoolExecutor(max_workers=6) as pool:
-        ekyc = pool.submit(read, args.ekyc_html, EKYC_SOURCE, "ekyc")
-        material = pool.submit(read, args.material_html, MATERIAL_SOURCE, "material")
+        ekyc = pool.submit(read, args.ekyc_html, fetch_active_ekyc, "ekyc")
+        material = pool.submit(read, args.material_html, lambda: fetch(MATERIAL_SOURCE), "material")
         legacy_futures = {year: pool.submit(fetch_legacy, year, args.legacy_html_dir) for year in LEGACY_YEARS}
         ekyc, material = ekyc.result(), material.result()
         legacy = {year: future.result() for year, future in legacy_futures.items()}
@@ -142,10 +162,11 @@ def main():
 
     rows = []
     for block in sorted(BLOCKS):
-        seeded, done = ekyc[block]
+        active, seeded, done = ekyc[block]
         wage_lakh, material_lakh = material[block]
         rows.append({
             "block": block,
+            "activeWorkers": int(active),
             "aadhaarSeeded": int(seeded),
             "eKycDone": int(done),
             "pendingWageAmount": int(wage_lakh * 100_000),
@@ -155,6 +176,7 @@ def main():
         })
     payload = {
         "financialYear": "2026-2027",
+        "ekycWorkerScope": "active-workers",
         "fetchedAt": datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(),
         "sources": {"eKyc": EKYC_SOURCE, "material": MATERIAL_SOURCE},
         "rows": rows,
