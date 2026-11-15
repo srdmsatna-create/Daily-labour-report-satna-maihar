@@ -27,6 +27,7 @@ GROUPS=[
  ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js','ongoing-details.json.gz']),
+ ('pmay_janpad_summary',[['scripts_local/update_pmay_janpad_summary.py']],['pmay-janpad-summary-data.js']),
  ('yuktdhara_mr_labour_history', [['scripts_local/update_yuktdhara_mr_labour_history.py']], ['data/yuktdhara-mr-labour-history.json']),
  ('pmayg_physical',[['scripts_local/update_pmayg_physical.py']],['data/pmayg-physical-latest.json']),
  ('pmayg',[['scripts_local/update_pmayg.py']],['data/pmayg-latest.json']),

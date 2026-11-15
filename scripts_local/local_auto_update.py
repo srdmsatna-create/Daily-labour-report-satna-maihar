@@ -331,8 +331,7 @@ def combine_reports(all_html, individual_html, pmay_html, ek_html):
 
         if j in pmay:
             d["pmayLabour"] = pmay[j]["labour"]
-            d["pmayOngoing"] = pmay[j]["ongoingMRWorks"]
-            d["pmayMR"] = pmay[j]["mrs"]
+            d["pmayMR"] = pmay[j]["ongoingMRWorks"]
 
         if j in ek:
             d["ekLabour"] = ek[j]["labour"]
@@ -380,7 +379,7 @@ def update_csv(new_data):
     print(f"Updated {CSV_PATH} for {len(new_data)} janpads")
 
 
-def update_status(ok, note):
+def update_status(ok, note, pmay_date=None):
     today = datetime.now().strftime("%d-%m-%Y")
     status = {
         "startedAt": datetime.now(timezone.utc).isoformat(),
@@ -391,6 +390,8 @@ def update_status(ok, note):
         "note": note,
         "finishedAt": datetime.now(timezone.utc).isoformat(),
     }
+    if pmay_date:
+        status["pmayLabourDate"] = pmay_date
     STATUS_JSON.parent.mkdir(parents=True, exist_ok=True)
     STATUS_JSON.write_text(
         json.dumps(status, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -440,7 +441,9 @@ def main():
                 "were unavailable; category-specific figures were retained "
                 "from the previous validated snapshot."
             )
-        update_status(True, note)
+        pmay_date = re.search(r"Report last Updated on:\s*(\d{2}/\d{2}/\d{4})", pmay_html, re.I)
+        update_status(True, note, pmay_date.group(1).replace("/", "-")
+                      if pmay_date and all("pmayLabour" in row for row in data.values()) else None)
         print("SUCCESS:", note)
         print("Next: python scripts\\merge_official_summary.py")
 
