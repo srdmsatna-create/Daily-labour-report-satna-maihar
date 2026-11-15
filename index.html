@@ -1927,7 +1927,6 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
 <link rel="preload" as="script" href="muster-emb-cluster-cards.js?v=2">
 <link rel="preload" as="script" href="ek-bagiya-cluster-cards.js?v=20261011-fy-portal-paid-mandays">
 <link rel="preload" as="script" href="gp-labour-muster-module.js?v=e29fed0">
-<link rel="preload" as="script" href="vbg-block-stats.js?v=20261018">
 <link rel="preload" as="script" href="pmay-janpad-summary-data.js">
 <link rel="preload" as="script" href="shramik-r511-persondays.js">
 <link rel="preload" as="script" href="shramik-gp-progress-data.js">
@@ -4445,7 +4444,6 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
 </script>
 
 <!-- R12 district/block statistics from the daily updated official data file. -->
-<script src="vbg-block-stats.js?v=20261018"></script>
 <style>
 #vbgStatistics .r12-table-wrap{overflow:auto}
 #vbgStatistics table{border-collapse:collapse;width:100%;font-size:13px}
@@ -4457,50 +4455,59 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
 #vbgStatistics .r12-grand{background:#163f6d;color:white;font-weight:900}
 </style>
 <script>
-(async function(){
- const panel=document.getElementById('vbgStatistics'),data=window.VBG_BLOCK_STATS;
- if(!panel)return;
- panel.replaceChildren();
- const title=document.createElement('h2');title.textContent='VB-GRAM G Statistics — सतना एवं मैहर • सभी 8 जनपद';panel.appendChild(title);
- const note=document.createElement('p');note.textContent='वित्तीय वर्ष '+(data?.financialYear||'2026-2027')+' • स्रोत दिनांक: '+(data?.officialDate||'उपलब्ध नहीं');panel.appendChild(note);
- if(!Array.isArray(data?.rows)||data.rows.length!==8){note.textContent+=' • सभी 8 जनपदों की डेटा फाइल नहीं पढ़ी जा सकी।';return}
+(function(){
+ const panel=document.getElementById('vbgStatistics'),launcher=document.getElementById('vbgStatisticsLauncher');
+ if(!panel||!launcher)return;
+ let loading=false;
+ const loadBlockStats=()=>new Promise((resolve,reject)=>{
+  const script=document.createElement('script');
+  script.src='vbg-block-stats.js';
+  script.onload=()=>resolve(window.VBG_BLOCK_STATS);
+  script.onerror=()=>{script.remove();reject(Error('Block statistics unavailable'))};
+  document.head.appendChild(script);
+ });
+ const loadFeed=async path=>{
+  try{
+   const response=await fetch(path,{cache:'no-cache'});
+   if(!response.ok)throw Error('Feed unavailable');
+   return await response.json();
+  }catch(error){console.warn(path+' unavailable');return null}
+ };
+ launcher.addEventListener('click',async()=>{
+  if(loading||panel.querySelector('.r12-table-wrap'))return;
+  loading=true;
+  try{await renderStatistics()}
+  catch(error){
+   console.warn('Statistics report unavailable',error);
+   panel.querySelector('.r12-status').textContent='रिपोर्ट नहीं खुली। दोबारा खोलने के लिए Statistics पर क्लिक करें।';
+  }finally{loading=false}
+ });
+ async function renderStatistics(){
+ const title=document.createElement('h2');title.textContent='VB-GRAM G Statistics — सतना एवं मैहर • सभी 8 जनपद';
+ const note=document.createElement('p');note.className='r12-status';note.setAttribute('role','status');note.textContent='रिपोर्ट लोड हो रही है…';
+ panel.replaceChildren(title,note);
+ const [data,compensation,timely,statistics]=await Promise.all([
+  loadBlockStats(),
+  loadFeed('data/delayed-compensation-latest.json'),
+  loadFeed('data/timely-payment-latest.json'),
+  loadFeed('data/statistics-ekyc-material-latest.json')
+ ]);
+ if(!Array.isArray(data?.rows)||data.rows.length!==8)throw Error('Eight block statistics rows required');
+ note.textContent='वित्तीय वर्ष '+data.financialYear+' • स्रोत दिनांक: '+(data.officialDate||'उपलब्ध नहीं');
  const names={AMARPATAN:'अमरपाटन',MAIHAR:'मैहर',RAMNAGAR:'रामनगर',MAJHGAWAN:'मझगवां',NAGOD:'नागौद','RAMPUR BAGHELAN':'रामपुर बघेलान',SATNA:'सोहावल',UNCHAHARA:'उचेहरा'};
  const maihar=new Set(['AMARPATAN','MAIHAR','RAMNAGAR']);
- let compensationFeed=null;
- try{
-  const response=await fetch('data/delayed-compensation-latest.json?t='+Date.now(),{cache:'no-store'});
-  if(!response.ok)throw Error('Compensation source unavailable');
-  const feed=await response.json();
-  if(feed.schemaVersion!==1||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete compensation coverage');
-  compensationFeed=feed;
- }catch(error){console.warn('Delayed compensation feed unavailable');}
+ const hasCoverage=feed=>Array.isArray(feed?.rows)&&feed.rows.length===8&&new Set(feed.rows.map(row=>row.block)).size===8&&data.rows.every(row=>feed.rows.some(item=>item.block===row.block));
+ const compensationFeed=compensation?.schemaVersion===1&&hasCoverage(compensation)?compensation:null;
+ const timelyFeed=timely?.schemaVersion===1&&hasCoverage(timely)?timely:null;
+ const statisticsFeed=statistics?.financialYear===data.financialYear&&hasCoverage(statistics)?statistics:null;
  data.rows.forEach(row=>{
   const values=compensationFeed?.rows.find(item=>item.block===row.block);
   for(const key of ['compPayableDays','compPayableAmount','compNotDueDays'])row[key]=values?.[key]??null;
+  row.timelyFtoPct=timelyFeed?.rows.find(item=>item.block===row.block)?.timelyFtoPct??null;
  });
- let timelyFeed=null;
- try{
-  const response=await fetch('data/timely-payment-latest.json?t='+Date.now(),{cache:'no-store'});
-  if(!response.ok)throw Error('Timely payment unavailable');
-  const feed=await response.json();
-  if(feed.schemaVersion!==1||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete timely payment coverage');
-  timelyFeed=feed;
- }catch(error){console.warn('Timely payment feed unavailable');}
- data.rows.forEach(row=>{
-  const payment=timelyFeed?.rows.find(item=>item.block===row.block);
-  row.timelyFtoPct=payment?.timelyFtoPct??null;
- });
- let statisticsFeed=null;
- try{
-  const response=await fetch('data/statistics-ekyc-material-latest.json',{cache:'no-cache'});
-  if(!response.ok)throw Error('Statistics e-KYC/material feed unavailable');
-  const feed=await response.json();
-  if(feed.financialYear!==data.financialYear||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete e-KYC/material coverage');
-  statisticsFeed=feed;
- }catch(error){console.warn('Statistics e-KYC/material feed unavailable');}
  const mgnregaYears=statisticsFeed?.mgnrega?.years||[];
  const paymentLabel=mgnregaYears.length?statisticsFeed.mgnrega.missingYears.length?' (आंशिक)':'':' • VB-GRAM G';
- const amountKeys=['pendingWageAmount','pendingMaterialAmount','totalPendingAmount'];
+ const amountKeys=['mgnregaWageAmount','mgnregaMaterialAmount','vbgWageAmount','vbgMaterialAmount','pendingWageAmount','pendingMaterialAmount','totalPendingAmount'];
  const decimals=new Set(['eKycPct','womenPct','totalExpenditureLakh','timelyFtoPct',...amountKeys]);
  const eKycPercent=(done,seeded)=>Number.isInteger(done)&&done>=0&&seeded>0&&done<=seeded?100*done/seeded:null;
  data.rows.forEach(row=>{
@@ -4510,13 +4517,18 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
   row.aadhaarSeeded=activeEkyc?official.aadhaarSeeded:null;
   row.eKycDone=activeEkyc?official.eKycDone:null;
   row.eKycPct=eKycPercent(row.eKycDone,row.aadhaarSeeded);
-  const combinedAmount=(vbg,legacy)=>Number.isFinite(vbg)&&vbg>=0&&(!mgnregaYears.length||Number.isFinite(legacy)&&legacy>=0)?vbg+(mgnregaYears.length?legacy:0):null;
-  row.pendingWageAmount=combinedAmount(official?.pendingWageAmount,official?.mgnregaWageAmount);
-  row.pendingMaterialAmount=combinedAmount(official?.pendingMaterialAmount,official?.mgnregaMaterialAmount);
+  const amount=value=>Number.isFinite(value)&&value>=0?value:null;
+  row.mgnregaWageAmount=mgnregaYears.length?amount(official?.mgnregaWageAmount):null;
+  row.mgnregaMaterialAmount=mgnregaYears.length?amount(official?.mgnregaMaterialAmount):null;
+  row.vbgWageAmount=amount(official?.pendingWageAmount);
+  row.vbgMaterialAmount=amount(official?.pendingMaterialAmount);
+  const combinedAmount=(vbg,legacy)=>vbg!==null&&(!mgnregaYears.length||legacy!==null)?vbg+(legacy??0):null;
+  row.pendingWageAmount=combinedAmount(row.vbgWageAmount,row.mgnregaWageAmount);
+  row.pendingMaterialAmount=combinedAmount(row.vbgMaterialAmount,row.mgnregaMaterialAmount);
   row.totalPendingAmount=Number.isFinite(row.pendingWageAmount)&&Number.isFinite(row.pendingMaterialAmount)?row.pendingWageAmount+row.pendingMaterialAmount:null;
  });
  const keys=['activeWorkers','eKycDone','eKycPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct',...amountKeys];
- const labels=['जिला / जनपद','सक्रिय श्रमिक','E-KYC Done','% E-KYC','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','लंबित मजदूरी भुगतान ₹ लाख'+paymentLabel,'लंबित सामग्री भुगतान ₹ लाख'+paymentLabel,'कुल लंबित भुगतान ₹ लाख'+paymentLabel];
+ const labels=['जिला / जनपद','सक्रिय श्रमिक','E-KYC Done','% E-KYC','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','MGNREGA मजदूरी शेष ₹ लाख','MGNREGA सामग्री शेष ₹ लाख','VB-GRAM G मजदूरी शेष ₹ लाख','VB-GRAM G सामग्री शेष ₹ लाख','संयुक्त मजदूरी शेष ₹ लाख'+paymentLabel,'संयुक्त सामग्री शेष ₹ लाख'+paymentLabel,'कुल लंबित भुगतान ₹ लाख'+paymentLabel];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
  const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
  let r12Sort={key:null,direction:1};
@@ -4604,6 +4616,7 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
   }
   panel.appendChild(sources);
  }
+ }
 })();
 </script>
 
@@ -4614,7 +4627,7 @@ body #vbgStatistics{box-sizing:border-box;max-width:100%;padding:16px;margin:18p
 body #vbgStatistics h2{font-size:18px!important;line-height:1.4!important;margin:0 0 8px!important;color:#164a7b}
 body #vbgStatistics>p,body #vbgStatistics>a{font-size:12px!important;line-height:1.5!important}
 body #vbgStatistics .r12-table-wrap{width:100%;overflow:auto!important;border:2px solid #244866;border-radius:0;margin:12px 0}
-body #vbgStatistics table{width:100%!important;min-width:1300px;table-layout:fixed!important;border-collapse:collapse!important}
+body #vbgStatistics table{width:100%!important;min-width:1600px;table-layout:fixed!important;border-collapse:collapse!important}
 body #vbgStatistics table th,body #vbgStatistics table td{border:1px solid #355873!important;vertical-align:middle!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;padding:7px 4px!important}
 body #vbgStatistics table th{font-size:11px!important;line-height:1.35!important;background:#164a7b!important;color:#fff!important;text-align:center!important}
 body #vbgStatistics table td{font-size:12px!important;line-height:1.3!important;font-weight:600;text-align:right!important;font-variant-numeric:tabular-nums}
