@@ -684,12 +684,12 @@ td b{color:#56329a}
 
 /* Readable print typography and bounded identity columns. */
 th,td{border:.4mm solid #263746!important;padding:1.6mm .8mm!important;line-height:1.4!important}
-td.num{font-size:13pt!important;font-weight:900!important}
+td.num,.progress-cell .progress-badge,.weekly-progress-cell .weekly-badge,.pending-name-cell b{font-size:14pt!important;font-weight:900!important;font-variant-numeric:tabular-nums}
 th{font-size:9.5pt!important}
 #workCategorySummaryTable th:first-child,#workCategorySummaryTable td:first-child{width:34%!important}
 #workCategorySummaryTable th:nth-child(2),#workCategorySummaryTable td:nth-child(2){width:12%!important}
 #workCategorySummaryTable th,#workCategorySummaryTable td{font-size:10pt!important;padding:1.5mm .8mm!important;line-height:1.4!important}
-#workCategorySummaryTable td.num{font-size:14pt!important;font-weight:900!important;white-space:nowrap!important}
+#workCategorySummaryTable td.num{font-size:15pt!important;font-weight:900!important;white-space:nowrap!important}
 #workCategoryDetailTable col:nth-child(1){width:8%!important}
 #workCategoryDetailTable col:nth-child(2){width:13%!important}
 #workCategoryDetailTable col:nth-child(3){width:22%!important}
@@ -764,7 +764,12 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
   }
 }
 @media screen {
-  #officialSection table.official-merged tbody > tr {height:80px}
+  #officialSection table.official-merged tbody > tr {height:52px}
+  #officialSection table.official-merged .pending-name-cell small {
+    max-height:22px;
+    overflow-y:auto;
+    line-height:11px!important;
+  }
 }
 #officialSection table.official-merged tbody > tr td {
   padding-top:3px!important;
@@ -774,6 +779,19 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
 #officialSection table.official-merged tbody > tr .pending-name-cell small {
   font-size:10px!important;
   line-height:1.1!important;
+}
+@media print {
+  #officialSection table.official-merged tbody td.num,
+  #officialSection table.official-merged tbody .progress-badge,
+  #officialSection table.official-merged tbody .pending-name-cell b,
+  #engineerSection table.engineer-summary tbody td.num,
+  #engineerSection table.engineer-summary tbody .progress-badge,
+  #workCategoryDetailTable tbody td.num {
+    font-size:14pt!important;
+    font-weight:900!important;
+    font-variant-numeric:tabular-nums;
+  }
+  #workCategorySummaryTable tbody td.num {font-size:15pt!important}
 }
 </style>
 </body></html>
