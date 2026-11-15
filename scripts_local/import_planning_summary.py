@@ -11,6 +11,8 @@ import xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
 NS={'x':'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
 BLOCKS=['Amarpatan','Maihar','Majhgawan','Nagod','Ramnagar','Rampur baghelan','Sohawal','Unchahara']
+# Alternate GP spellings in the official Planning Summary exports.
+GP_ALIASES={('SOHAWAL','KHADOURA'):'KHADAURA',('RAMNAGAR','NEWDEVRAJNAGAR'):'NEWDEORAJNAGAR'}
 def key(value):return re.sub('[^A-Z0-9]','',str(value).upper())
 def district(block):return 'Maihar' if block in ('Amarpatan','Maihar','Ramnagar') else 'Satna'
 def xlsx_rows(path):
@@ -47,11 +49,13 @@ def build(paths,source_date,root=ROOT):
   for r in rows:
    source_rows+=1;b=canonical[key(r['B'])]
    if r['A'].strip().lower()!=district(b).lower():district_corrections+=1 # canonical Satna/Maihar split is Janpad-based
-   identity=(b,key(r['C']),r['D'],r['E'])
+   gp=(key(b),key(r['C']))
+   gp=(gp[0],GP_ALIASES.get(gp,gp[1]))
+   m=mapping.get(gp)
+   if not m:raise ValueError('GP mapping missing: '+b+'/'+r['C'])
+   identity=(b,m['GP_LGD_Code'],r['D'],r['E'])
    if identity in seen:raise ValueError('Duplicate Planning Summary record: '+str(identity))
    seen.add(identity)
-   m=mapping.get((key(b),key(r['C'])))
-   if not m:raise ValueError('GP mapping missing: '+b+'/'+r['C'])
    counts=[integer(r.get(c)) for c in ('G','H','N','S')]
    if counts[1]>counts[0]:source_exceptions.append({'block':b,'panchayat':r['C'],'structure':r['F'],'planner':counts[0],'sipri':counts[1]})
    for i,n in enumerate(counts):blocks[b][i]+=n

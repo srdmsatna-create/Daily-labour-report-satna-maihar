@@ -1,37 +1,37 @@
 {
-  "date": "2026-11-07",
+  "date": "2026-11-15",
   "source": {
-    "uploadedDate": "07-11-2026",
+    "uploadedDate": "15-11-2026",
     "files": [
-      "Planning_Summary_Report (21).xlsx",
-      "Planning_Summary_Report (22).xlsx"
+      "Planning_Summary_Report (25).xlsx",
+      "Planning_Summary_Report (26).xlsx"
     ],
     "sourceRows": 8569,
     "mappingSource": "gp-sector-engineer-master-25-09-2026.csv",
     "sourceFiles": [
       {
-        "file": "Planning_Summary_Report (21).xlsx",
-        "sha256": "dc55d0990a4c7fe1ea2026069fff8329bb610f8958722ef1f93e6a2d6e4074bb",
-        "rows": 3466
+        "file": "Planning_Summary_Report (25).xlsx",
+        "sha256": "adc438d3c7562f6910bb5d63e7ab7dad36fdae8b22b946417a8adec54ed1a9ce",
+        "rows": 5103
       },
       {
-        "file": "Planning_Summary_Report (22).xlsx",
-        "sha256": "3a68cc50fe5fa231b063d2c31f13d757ae2488ae9a2f12e8e049004df5449ba3",
-        "rows": 5103
+        "file": "Planning_Summary_Report (26).xlsx",
+        "sha256": "7446c80a6c824139636517e2edd5e97ad7f27480f24d73e65256776af698499f",
+        "rows": 3466
       }
     ],
     "mappedRows": 8569,
     "unmappedRows": 0,
     "districtLabelsNormalized": 423,
-    "sipriAbovePlannerRows": 120
+    "sipriAbovePlannerRows": 133
   },
   "totals": {
     "plannerDetail": 30404,
-    "sipri": 2278,
-    "aeApproved": 1239,
-    "aePending": 1039,
+    "sipri": 2458,
+    "aeApproved": 1382,
+    "aePending": 1076,
     "stateReviewed": 411,
-    "statePending": 858
+    "statePending": 1001
   },
   "blocks": [
     [
@@ -61,66 +61,66 @@
       "Majhgawan",
       "Assistant Engineer - Majhgawan",
       2466,
-      420,
-      239,
-      181,
+      428,
+      246,
+      182,
       38,
-      201
+      208
     ],
     [
       "Satna",
       "Nagod",
       "Assistant Engineer - Nagod",
       2639,
-      363,
-      246,
-      117,
+      448,
+      307,
+      141,
       35,
-      211
+      272
     ],
     [
       "Maihar",
       "Ramnagar",
       "Assistant Engineer - Ramnagar",
       5578,
-      388,
-      178,
+      426,
       210,
+      216,
       78,
-      100
+      132
     ],
     [
       "Satna",
       "Rampur baghelan",
       "Assistant Engineer - Rampur baghelan",
       3186,
-      195,
-      94,
+      209,
+      108,
       101,
       90,
-      4
+      18
     ],
     [
       "Satna",
       "Sohawal",
       "Assistant Engineer - Sohawal",
       3221,
-      464,
-      296,
+      483,
+      315,
       168,
       79,
-      217
+      236
     ],
     [
       "Satna",
       "Unchahara",
       "Assistant Engineer - Unchahara",
       1087,
-      225,
-      134,
-      91,
+      241,
+      144,
+      97,
       9,
-      125
+      135
     ]
   ],
   "categoryRows": 1666,
@@ -128,230 +128,6 @@
   "officialPlannerTotal": 32994,
   "detailGap": 2590,
   "sourceExceptions": [
-    {
-      "block": "Ramnagar",
-      "panchayat": "Jattha Tola",
-      "structure": "Kitchen shed",
-      "planner": 2,
-      "sipri": 4
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Ghunwara",
-      "structure": "Compost pit",
-      "planner": 1,
-      "sipri": 2
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Dewdaha",
-      "structure": "Nadep",
-      "planner": 3,
-      "sipri": 5
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Devra",
-      "structure": "Nadep",
-      "planner": 2,
-      "sipri": 4
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Mankahari",
-      "structure": "Nadep",
-      "planner": 2,
-      "sipri": 6
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Khara",
-      "structure": "Nadep",
-      "planner": 5,
-      "sipri": 7
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Chapana",
-      "structure": "Nadep",
-      "planner": 1,
-      "sipri": 4
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Chhirhai",
-      "structure": "Nadep",
-      "planner": 4,
-      "sipri": 6
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Dewara",
-      "structure": "Nadep",
-      "planner": 1,
-      "sipri": 2
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Mankahari",
-      "structure": "Percolation tank",
-      "planner": 3,
-      "sipri": 6
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Bada Itama",
-      "structure": "Percolation tank",
-      "planner": 4,
-      "sipri": 7
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Tegana",
-      "structure": "Percolation tank",
-      "planner": 2,
-      "sipri": 4
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Joba",
-      "structure": "Percolation tank",
-      "planner": 1,
-      "sipri": 3
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Khara",
-      "structure": "Recharge pit",
-      "planner": 3,
-      "sipri": 5
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Mankahari",
-      "structure": "Recharge pit",
-      "planner": 2,
-      "sipri": 4
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Kutai",
-      "structure": "Gravel road",
-      "planner": 1,
-      "sipri": 3
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Mankahari",
-      "structure": "Gravel road",
-      "planner": 2,
-      "sipri": 4
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Ajwain",
-      "structure": "CC road",
-      "planner": 2,
-      "sipri": 3
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Sulkhama",
-      "structure": "CC road",
-      "planner": 6,
-      "sipri": 11
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Khara",
-      "structure": "CC road",
-      "planner": 6,
-      "sipri": 8
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Karaundi",
-      "structure": "Soak pit",
-      "planner": 4,
-      "sipri": 6
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Jhanjhwari",
-      "structure": "Playground",
-      "planner": 1,
-      "sipri": 2
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Sulkhama",
-      "structure": "Playground",
-      "planner": 1,
-      "sipri": 2
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Majhtolwa",
-      "structure": "Boundary wall",
-      "planner": 1,
-      "sipri": 2
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Khara",
-      "structure": "Bolder check",
-      "planner": 5,
-      "sipri": 7
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Joba",
-      "structure": "Bolder check",
-      "planner": 2,
-      "sipri": 5
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Sulkhama",
-      "structure": "Renovation of traditional bodies",
-      "planner": 2,
-      "sipri": 3
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Beldara",
-      "structure": "Roof water harvesting",
-      "planner": 1,
-      "sipri": 2
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Karaundi",
-      "structure": "Roof water harvesting",
-      "planner": 2,
-      "sipri": 3
-    },
-    {
-      "block": "Maihar",
-      "panchayat": "Karuwa",
-      "structure": "Roof water harvesting",
-      "planner": 2,
-      "sipri": 3
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Sulkhama",
-      "structure": "Culvert",
-      "planner": 6,
-      "sipri": 7
-    },
-    {
-      "block": "Ramnagar",
-      "panchayat": "Khara",
-      "structure": "Culvert",
-      "planner": 3,
-      "sipri": 4
-    },
     {
       "block": "Majhgawan",
       "panchayat": "Bathawa",
@@ -416,6 +192,13 @@
       "sipri": 2
     },
     {
+      "block": "Nagod",
+      "panchayat": "Dhourahara",
+      "structure": "Compost pit",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
       "block": "Unchahara",
       "panchayat": "Bihata",
       "structure": "Nadep",
@@ -473,6 +256,13 @@
     },
     {
       "block": "Nagod",
+      "panchayat": "Nonagara",
+      "structure": "Pond",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Nagod",
       "panchayat": "Dewari",
       "structure": "Recharge pit",
       "planner": 2,
@@ -525,7 +315,7 @@
       "panchayat": "Bhaihai",
       "structure": "Recharge pit",
       "planner": 1,
-      "sipri": 3
+      "sipri": 4
     },
     {
       "block": "Unchahara",
@@ -633,6 +423,13 @@
       "sipri": 9
     },
     {
+      "block": "Unchahara",
+      "panchayat": "Pipariya",
+      "structure": "CC road",
+      "planner": 3,
+      "sipri": 4
+    },
+    {
       "block": "Majhgawan",
       "panchayat": "Nayagaon",
       "structure": "CC road",
@@ -652,6 +449,13 @@
       "structure": "CC road",
       "planner": 3,
       "sipri": 4
+    },
+    {
+      "block": "Unchahara",
+      "panchayat": "Lalpur",
+      "structure": "CC road",
+      "planner": 3,
+      "sipri": 5
     },
     {
       "block": "Rampur baghelan",
@@ -689,6 +493,13 @@
       "sipri": 3
     },
     {
+      "block": "Nagod",
+      "panchayat": "Nonagara",
+      "structure": "Soak pit",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
       "block": "Unchahara",
       "panchayat": "Mahrajpur",
       "structure": "Soak pit",
@@ -705,6 +516,20 @@
     {
       "block": "Sohawal",
       "panchayat": "Bhawar",
+      "structure": "Soak pit",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Sohawal",
+      "panchayat": "Kuan",
+      "structure": "Soak pit",
+      "planner": 2,
+      "sipri": 4
+    },
+    {
+      "block": "Sohawal",
+      "panchayat": "Sejahata",
       "structure": "Soak pit",
       "planner": 2,
       "sipri": 3
@@ -850,6 +675,13 @@
       "sipri": 3
     },
     {
+      "block": "Rampur baghelan",
+      "panchayat": "Bathiya",
+      "structure": "Roof water harvesting",
+      "planner": 2,
+      "sipri": 4
+    },
+    {
       "block": "Majhgawan",
       "panchayat": "Beerpur",
       "structure": "Roof water harvesting",
@@ -883,6 +715,13 @@
       "structure": "Roof water harvesting",
       "planner": 1,
       "sipri": 2
+    },
+    {
+      "block": "Nagod",
+      "panchayat": "Bhaihai",
+      "structure": "Roof water harvesting",
+      "planner": 2,
+      "sipri": 4
     },
     {
       "block": "Majhgawan",
@@ -955,6 +794,20 @@
       "sipri": 2
     },
     {
+      "block": "Unchahara",
+      "panchayat": "Pipariya",
+      "structure": "Culvert",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Nagod",
+      "panchayat": "Khakhroundha",
+      "structure": "Culvert",
+      "planner": 6,
+      "sipri": 7
+    },
+    {
       "block": "Nagod",
       "panchayat": "Itoura Kala",
       "structure": "Culvert",
@@ -967,6 +820,244 @@
       "structure": "Culvert",
       "planner": 2,
       "sipri": 3
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Jattha Tola",
+      "structure": "Kitchen shed",
+      "planner": 2,
+      "sipri": 4
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Ghunwara",
+      "structure": "Compost pit",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Dewdaha",
+      "structure": "Nadep",
+      "planner": 3,
+      "sipri": 5
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Devra",
+      "structure": "Nadep",
+      "planner": 2,
+      "sipri": 4
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Mankahari",
+      "structure": "Nadep",
+      "planner": 2,
+      "sipri": 6
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Jigana",
+      "structure": "Nadep",
+      "planner": 5,
+      "sipri": 6
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Khara",
+      "structure": "Nadep",
+      "planner": 5,
+      "sipri": 7
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Chapana",
+      "structure": "Nadep",
+      "planner": 1,
+      "sipri": 4
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Chhirhai",
+      "structure": "Nadep",
+      "planner": 4,
+      "sipri": 6
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Dewara",
+      "structure": "Nadep",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Mankahari",
+      "structure": "Percolation tank",
+      "planner": 3,
+      "sipri": 6
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Bada Itama",
+      "structure": "Percolation tank",
+      "planner": 4,
+      "sipri": 7
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Tegana",
+      "structure": "Percolation tank",
+      "planner": 2,
+      "sipri": 4
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Joba",
+      "structure": "Percolation tank",
+      "planner": 1,
+      "sipri": 3
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Khara",
+      "structure": "Recharge pit",
+      "planner": 3,
+      "sipri": 5
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Mankahari",
+      "structure": "Recharge pit",
+      "planner": 2,
+      "sipri": 4
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Sunadi",
+      "structure": "Recharge pit",
+      "planner": 5,
+      "sipri": 10
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Kutai",
+      "structure": "Gravel road",
+      "planner": 1,
+      "sipri": 3
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Mankahari",
+      "structure": "Gravel road",
+      "planner": 2,
+      "sipri": 4
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Ajwain",
+      "structure": "CC road",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Sulkhama",
+      "structure": "CC road",
+      "planner": 6,
+      "sipri": 11
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Khara",
+      "structure": "CC road",
+      "planner": 6,
+      "sipri": 8
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Karaundi",
+      "structure": "Soak pit",
+      "planner": 4,
+      "sipri": 6
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Jhanjhwari",
+      "structure": "Playground",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Sulkhama",
+      "structure": "Playground",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Majhtolwa",
+      "structure": "Boundary wall",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Khara",
+      "structure": "Bolder check",
+      "planner": 5,
+      "sipri": 7
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Joba",
+      "structure": "Bolder check",
+      "planner": 2,
+      "sipri": 5
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Sulkhama",
+      "structure": "Renovation of traditional bodies",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Beldara",
+      "structure": "Roof water harvesting",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Karaundi",
+      "structure": "Roof water harvesting",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Maihar",
+      "panchayat": "Karuwa",
+      "structure": "Roof water harvesting",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Sulkhama",
+      "structure": "Culvert",
+      "planner": 6,
+      "sipri": 7
+    },
+    {
+      "block": "Ramnagar",
+      "panchayat": "Khara",
+      "structure": "Culvert",
+      "planner": 3,
+      "sipri": 4
     }
   ]
 }
