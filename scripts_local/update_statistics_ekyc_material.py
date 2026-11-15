@@ -6,6 +6,8 @@ from decimal import Decimal, ROUND_HALF_UP
 import json
 from pathlib import Path
 from zoneinfo import ZoneInfo
+from urllib.error import HTTPError
+from urllib.request import Request, urlopen
 
 from update_pending_wage_payment import BLOCKS, amount, fetch, table
 
@@ -56,19 +58,87 @@ def parse(source, kind):
     return values
 
 
+LEGACY_YEARS = tuple(f"{year}-{year + 1}" for year in range(2021, 2027))
+LEGACY_BASE = "https://mnregaweb4.dord.gov.in/netnrega/writereaddata/citizen_out/"
+
+
+def legacy_url(financial_year):
+    start, end = financial_year.split("-")
+    return f"{LEGACY_BASE}funddisreport_1712_eng_{start[-2:]}{end[-2:]}_.html"
+
+
+def parse_legacy(source, financial_year):
+    if f"Financial Year {financial_year}" not in source or "District:SATNA" not in source:
+        raise ValueError(f"Unexpected MGNREGA district or year: {financial_year}")
+    rows = [[cell["text"] for cell in row] for row in table(source)]
+    pending_headers = ["On Unskilled Wage", "On Semi-skilled and Skilled Wage", "On Material", "Tax", "Total"]
+    if not any("Payment due*" in row for row in rows) or not any(row[-5:] == pending_headers for row in rows):
+        raise ValueError(f"Missing MGNREGA payment due columns: {financial_year}")
+
+    data = {}
+    for row in rows:
+        if len(row) != 23:
+            continue
+        block = row[1].upper()
+        if block not in BLOCKS and block != "TOTAL":
+            continue
+        if block in data:
+            raise ValueError(f"Duplicate MGNREGA block: {block}, {financial_year}")
+        data[block] = tuple(amount(row[index]) for index in (18, 19, 20))
+    total = data.pop("TOTAL", None)
+    if set(data) != BLOCKS or total is None:
+        raise ValueError(f"Incomplete MGNREGA block coverage: {financial_year}")
+    for i, report_total in enumerate(total):
+        if abs(sum(row[i] for row in data.values()) - report_total) > Decimal(".05"):
+            raise ValueError(f"MGNREGA payment due total mismatch: {financial_year}")
+    return {
+        block: (int(wage * 100_000), int((skilled + material) * 100_000))
+        for block, (wage, skilled, material) in data.items()
+    }
+
+
+def fetch_legacy(financial_year, download_dir):
+    if download_dir:
+        start, end = financial_year.split("-")
+        path = download_dir / f"srdm-fund-{start[-2:]}{end[-2:]}_.html"
+        if not path.exists():
+            return None
+        source = path.read_text(encoding="utf-8-sig")
+    else:
+        request = Request(legacy_url(financial_year), headers={"User-Agent": "Mozilla/5.0"})
+        try:
+            with urlopen(request, timeout=35) as response:
+                source = response.read().decode("utf-8-sig")
+        except HTTPError as error:
+            if error.code == 404:
+                return None
+            raise
+    return parse_legacy(source, financial_year)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ekyc-html", type=Path)
     parser.add_argument("--material-html", type=Path)
+    parser.add_argument("--legacy-html-dir", type=Path)
     args = parser.parse_args()
 
     def read(file, url, kind):
         return parse(file.read_text(encoding="utf-8-sig") if file else fetch(url), kind)
 
-    with ThreadPoolExecutor(max_workers=2) as pool:
+    with ThreadPoolExecutor(max_workers=6) as pool:
         ekyc = pool.submit(read, args.ekyc_html, EKYC_SOURCE, "ekyc")
         material = pool.submit(read, args.material_html, MATERIAL_SOURCE, "material")
+        legacy_futures = {year: pool.submit(fetch_legacy, year, args.legacy_html_dir) for year in LEGACY_YEARS}
         ekyc, material = ekyc.result(), material.result()
+        legacy = {year: future.result() for year, future in legacy_futures.items()}
+    target = ROOT / "data/statistics-ekyc-material-latest.json"
+    previous = json.loads(target.read_text(encoding="utf-8")) if target.exists() else {}
+    previous_years = set(previous.get("mgnrega", {}).get("years", []))
+    available_years = [year for year, data in legacy.items() if data is not None]
+    required_years = previous_years | {"2024-2025", "2025-2026", "2026-2027"}
+    if not required_years.issubset(available_years):
+        raise ValueError("Previously verified MGNREGA financial reports missing")
 
     rows = []
     for block in sorted(BLOCKS):
@@ -80,14 +150,21 @@ def main():
             "eKycDone": int(done),
             "pendingWageAmount": int(wage_lakh * 100_000),
             "pendingMaterialAmount": int(material_lakh * 100_000),
+            "mgnregaWageAmount": sum(legacy[year][block][0] for year in available_years),
+            "mgnregaMaterialAmount": sum(legacy[year][block][1] for year in available_years),
         })
     payload = {
         "financialYear": "2026-2027",
         "fetchedAt": datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(),
         "sources": {"eKyc": EKYC_SOURCE, "material": MATERIAL_SOURCE},
         "rows": rows,
+        "mgnrega": {
+            "years": available_years,
+            "missingYears": [year for year in LEGACY_YEARS if year not in available_years],
+            "sources": {year: legacy_url(year) for year in available_years},
+            "basis": "Financial Statement payment due: wage column 19; material columns 20 + 21",
+        },
     }
-    target = ROOT / "data/statistics-ekyc-material-latest.json"
     temporary = target.with_suffix(".tmp")
     temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     temporary.replace(target)

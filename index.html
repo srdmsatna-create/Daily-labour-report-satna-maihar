@@ -4498,6 +4498,8 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
   if(feed.financialYear!==data.financialYear||feed.rows.length!==8||new Set(feed.rows.map(row=>row.block)).size!==8||!data.rows.every(row=>feed.rows.some(item=>item.block===row.block)))throw Error('Incomplete e-KYC/material coverage');
   statisticsFeed=feed;
  }catch(error){console.warn('Statistics e-KYC/material feed unavailable');}
+ const mgnregaYears=statisticsFeed?.mgnrega?.years||[];
+ const paymentLabel=mgnregaYears.length?statisticsFeed.mgnrega.missingYears.length?' (आंशिक)':'':' • VB-GRAM G';
  const amountKeys=['pendingWageAmount','pendingMaterialAmount','totalPendingAmount'];
  const decimals=new Set(['eKycPct','womenPct','totalExpenditureLakh','timelyFtoPct',...amountKeys]);
  const eKycPercent=(done,seeded)=>Number.isInteger(done)&&done>=0&&seeded>0&&done<=seeded?100*done/seeded:null;
@@ -4506,13 +4508,13 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
   row.aadhaarSeeded=official?.aadhaarSeeded??null;
   row.eKycDone=official?.eKycDone??null;
   row.eKycPct=eKycPercent(row.eKycDone,row.aadhaarSeeded);
-  for(const key of ['pendingWageAmount','pendingMaterialAmount']){
-   row[key]=Number.isFinite(official?.[key])&&official[key]>=0?official[key]:null;
-  }
+  const combinedAmount=(vbg,legacy)=>Number.isFinite(vbg)&&vbg>=0&&(!mgnregaYears.length||Number.isFinite(legacy)&&legacy>=0)?vbg+(mgnregaYears.length?legacy:0):null;
+  row.pendingWageAmount=combinedAmount(official?.pendingWageAmount,official?.mgnregaWageAmount);
+  row.pendingMaterialAmount=combinedAmount(official?.pendingMaterialAmount,official?.mgnregaMaterialAmount);
   row.totalPendingAmount=Number.isFinite(row.pendingWageAmount)&&Number.isFinite(row.pendingMaterialAmount)?row.pendingWageAmount+row.pendingMaterialAmount:null;
  });
  const keys=['activeWorkers','eKycDone','eKycPct','hhBenefitted','personDays','womenPct','assetsCreated','totalExpenditureLakh','compPayableDays','compPayableAmount','compNotDueDays','timelyFtoPct',...amountKeys];
- const labels=['जिला / जनपद','सक्रिय श्रमिक','E-KYC Done','% E-KYC','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','लंबित मजदूरी भुगतान ₹ लाख • VB-GRAM G','लंबित सामग्री भुगतान ₹ लाख • VB-GRAM G','कुल लंबित भुगतान ₹ लाख • VB-GRAM G'];
+ const labels=['जिला / जनपद','सक्रिय श्रमिक','E-KYC Done','% E-KYC','लाभान्वित परिवार','सृजित मानव दिवस','महिला सहभागिता %','निर्मित परिसंपत्तियाँ','कुल व्यय ₹ लाख','विलंब क्षतिपूर्ति: देय दिन','विलंब क्षतिपूर्ति: देय राशि ₹','क्षतिपूर्ति देय नहीं: अस्वीकृत दिन','समय पर मजदूरी भुगतान — FTO T+8 %','लंबित मजदूरी भुगतान ₹ लाख'+paymentLabel,'लंबित सामग्री भुगतान ₹ लाख'+paymentLabel,'कुल लंबित भुगतान ₹ लाख'+paymentLabel];
  const wrap=document.createElement('div');wrap.className='r12-table-wrap';
  const table=document.createElement('table'),head=table.createTHead().insertRow(),body=table.createTBody();
  let r12Sort={key:null,direction:1};
@@ -4580,7 +4582,7 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
  renderR12Body();
  wrap.appendChild(table);panel.appendChild(wrap);
  const source=document.createElement('a');source.href=data.source;source.target='_blank';source.rel='noopener noreferrer';source.textContent='आधिकारिक स्रोत खोलें';panel.appendChild(source);
- const help=document.createElement('p');help.className='r12-data-note';help.style.fontSize='12px';help.textContent='% E-KYC = E-KYC Done ÷ Aadhaar Seeded × 100। लंबित भुगतान के कॉलम अभी केवल VB-GRAM G के Labour Unpaid और Material Unpaid दिखाते हैं। MGNREGA FY 2021–22 से जून 2026 तक की देनदारी इसमें शामिल करने के लिए सत्यापित आँकड़े लंबित हैं। — का अर्थ सत्यापित आँकड़े उपलब्ध नहीं हैं। संयुक्त महिला सहभागिता मानव दिवस के भार से और विलंब क्षतिपूर्ति आधिकारिक R14.1 से ली गई है।';panel.appendChild(help);
+ const help=document.createElement('p');help.className='r12-data-note';help.style.fontSize='12px';help.textContent='% E-KYC = E-KYC Done ÷ Aadhaar Seeded × 100। '+(mgnregaYears.length?'भुगतान = VB-GRAM G Unpaid + MGNREGA Financial Statement (मजदूरी कॉलम 19, सामग्री कॉलम 20 + 21)। MGNREGA शामिल वित्तीय वर्ष: '+mgnregaYears.join(', ')+'। FY 2026–27 के लिए दिए गए MGNREGA स्रोत में माहवार कटऑफ नहीं है। '+(statisticsFeed.mgnrega.missingYears.length?'स्रोत अनुपलब्ध: '+statisticsFeed.mgnrega.missingYears.join(', ')+'। ':''):'भुगतान के कॉलम में VB-GRAM G Unpaid की राशि है। ')+ ' — का अर्थ सत्यापित आँकड़े उपलब्ध नहीं हैं। संयुक्त महिला सहभागिता मानव दिवस के भार से और विलंब क्षतिपूर्ति आधिकारिक R14.1 से ली गई है।';panel.appendChild(help);
  const compSource=document.createElement('p');compSource.style.fontSize='12px';
  compSource.textContent=compensationFeed?'विलंब क्षतिपूर्ति स्रोत प्राप्ति: '+new Date(compensationFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'विलंब क्षतिपूर्ति डेटा उपलब्ध नहीं; इसे शून्य नहीं माना गया है।';
  if(compensationFeed){const link=document.createElement('a');link.href=compensationFeed.source;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • R14.1 आधिकारिक रिपोर्ट';compSource.appendChild(link)}
@@ -4594,6 +4596,9 @@ toggle.addEventListener('click',()=>{const visible=[...sections.values()].filter
   sources.textContent='E-KYC और सामग्री स्रोत प्राप्ति: '+new Date(statisticsFeed.fetchedAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'});
   for(const [key,label] of [['eKyc','आधिकारिक e-KYC रिपोर्ट'],['material','आधिकारिक मजदूरी और सामग्री व्यय रिपोर्ट']]){
    const link=document.createElement('a');link.href=statisticsFeed.sources[key];link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • '+label;sources.appendChild(link);
+  }
+  for(const [year,url] of Object.entries(statisticsFeed.mgnrega?.sources||{})){
+   const link=document.createElement('a');link.href=url;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' • MGNREGA '+year;sources.appendChild(link);
   }
   panel.appendChild(sources);
  }

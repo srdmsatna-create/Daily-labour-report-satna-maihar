@@ -1,6 +1,6 @@
 {
   "financialYear": "2026-2027",
-  "fetchedAt": "2026-11-15T22:34:05.898269+05:30",
+  "fetchedAt": "2026-11-15T22:54:59.375752+05:30",
   "sources": {
     "eKyc": "https://vbgramgrep.dord.gov.in/VBGRAMG/AdhaarStatus.aspx?page=D&short_name=&state_name=MADHYA+PRADESH&state_code=17&district_name=SATNA&district_code=1712&fin_year=2026-2027&source=national&Digest=xJ6WAz2l1aMieSCmXXx%2fsQ",
     "material": "https://vbgramgrep.dord.gov.in/VBGRAMG/state_html/executive_agency_report_new.aspx?payload=dOLei81_Q1_tjQsOFP2ejyCqE1cc-AIh-1fl4-BQbHdK0UpcBE8mCTi-wimyVibBi_OLK251H51DjQmOg9EZY8ycJz9rXKJSY6OtF0y2GuWFzQKYGTtcwrzbME3jMxfpw7G-wdocdJbHHj0pT75B1sRr3g_V03nEfE5FDGrFqStlAkEM2BfKCJKSa3s_afuhXWp6oYDMrdQGaEvyx9qdSHMSR0uYn2r9HTKmIKweCDA"
@@ -11,56 +11,90 @@
       "aadhaarSeeded": 24863,
       "eKycDone": 17441,
       "pendingWageAmount": 4251000,
-      "pendingMaterialAmount": 894000
+      "pendingMaterialAmount": 894000,
+      "mgnregaWageAmount": 2881000,
+      "mgnregaMaterialAmount": 4075000
     },
     {
       "block": "MAIHAR",
       "aadhaarSeeded": 58518,
       "eKycDone": 37682,
       "pendingWageAmount": 1519000,
-      "pendingMaterialAmount": 227000
+      "pendingMaterialAmount": 227000,
+      "mgnregaWageAmount": 343000,
+      "mgnregaMaterialAmount": 16291000
     },
     {
       "block": "MAJHGAWAN",
       "aadhaarSeeded": 59198,
       "eKycDone": 44809,
       "pendingWageAmount": 2793000,
-      "pendingMaterialAmount": 466000
+      "pendingMaterialAmount": 466000,
+      "mgnregaWageAmount": 3478000,
+      "mgnregaMaterialAmount": 30435000
     },
     {
       "block": "NAGOD",
       "aadhaarSeeded": 36759,
       "eKycDone": 29453,
       "pendingWageAmount": 6089000,
-      "pendingMaterialAmount": 0
+      "pendingMaterialAmount": 0,
+      "mgnregaWageAmount": 387000,
+      "mgnregaMaterialAmount": 24313000
     },
     {
       "block": "RAMNAGAR",
       "aadhaarSeeded": 24486,
       "eKycDone": 18068,
       "pendingWageAmount": 2905000,
-      "pendingMaterialAmount": 0
+      "pendingMaterialAmount": 0,
+      "mgnregaWageAmount": 4000,
+      "mgnregaMaterialAmount": 8310000
     },
     {
       "block": "RAMPUR BAGHELAN",
       "aadhaarSeeded": 37179,
       "eKycDone": 28593,
       "pendingWageAmount": 4656000,
-      "pendingMaterialAmount": 1509000
+      "pendingMaterialAmount": 1509000,
+      "mgnregaWageAmount": 1914000,
+      "mgnregaMaterialAmount": 23888000
     },
     {
       "block": "SATNA",
       "aadhaarSeeded": 31575,
       "eKycDone": 23475,
       "pendingWageAmount": 1194000,
-      "pendingMaterialAmount": 141000
+      "pendingMaterialAmount": 141000,
+      "mgnregaWageAmount": 869000,
+      "mgnregaMaterialAmount": 13258000
     },
     {
       "block": "UNCHAHARA",
       "aadhaarSeeded": 27592,
       "eKycDone": 23059,
       "pendingWageAmount": 768000,
-      "pendingMaterialAmount": 0
+      "pendingMaterialAmount": 0,
+      "mgnregaWageAmount": 724000,
+      "mgnregaMaterialAmount": 14934000
     }
-  ]
+  ],
+  "mgnrega": {
+    "years": [
+      "2024-2025",
+      "2025-2026",
+      "2026-2027"
+    ],
+    "missingYears": [
+      "2021-2022",
+      "2022-2023",
+      "2023-2024"
+    ],
+    "sources": {
+      "2024-2025": "https://mnregaweb4.dord.gov.in/netnrega/writereaddata/citizen_out/funddisreport_1712_eng_2425_.html",
+      "2025-2026": "https://mnregaweb4.dord.gov.in/netnrega/writereaddata/citizen_out/funddisreport_1712_eng_2526_.html",
+      "2026-2027": "https://mnregaweb4.dord.gov.in/netnrega/writereaddata/citizen_out/funddisreport_1712_eng_2627_.html"
+    },
+    "basis": "Financial Statement payment due: wage column 19; material columns 20 + 21"
+  }
 }
