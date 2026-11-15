@@ -33,7 +33,7 @@ th .sort-heading:focus-visible{outline:2px solid white;outline-offset:2px}
 <section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><p class="note" id="ongoingGeoBasis"></p><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable"></div></section>
 <section id="sector"><h2>उपयंत्री / सेक्टरवार प्रगति</h2><div class="tools"><label>जनपद <select id="block"><option value="">सभी जनपद</option></select></label><button data-print="sector">उपयंत्री / सेक्टर PDF</button></div><div class="wrap" id="sectorTable"></div></section>
 <section id="r617"><h2>R6.17 / R6.22 — जनपद, GP और कार्यवार विवरण</h2><div id="r617Detail"></div></section>
-<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। BHUVAN प्राप्ति शेष = R6.17 में भेजे गए − प्राप्त वर्क-कोड। अंतिम BHUVAN कॉलम में वे प्राप्त कोड हैं जो R33.1 की प्रगतिरत सूची में नहीं मिले। BHUVAN में प्राप्ति और Before फोटो की पुष्टि अलग स्थितियाँ हैं।</p></section>
+<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। मुख्य तालिका के BHUVAN कॉलम केवल /YD/ कार्यों के हैं। BHUVAN प्राप्ति शेष = भेजे गए /YD/ कोड − प्राप्त /YD/ कोड। अंतिम BHUVAN कॉलम में प्राप्त /YD/ कोड हैं जो R33.1 की प्रगतिरत सूची में नहीं मिले। नीचे R6.17 / R6.22 का पूरा सरकारी विवरण है। BHUVAN में प्राप्ति और Before फोटो की पुष्टि अलग स्थितियाँ हैं।</p></section>
 </main>
 <script src="yuktdhara-received-data.js"></script>
 <script src="yuktdhara-data.js"></script>
@@ -172,8 +172,8 @@ async function start(){
  const yd=new Map(Object.entries(Y.gpProgress).flatMap(([b,rs])=>rs.map(r=>[gpKey(b,r.gp),r])));
  const ongoingCodes=new Set([...yd.values()].flatMap(r=>r.ongoingCodes||[]).map(c=>String(c).trim().toUpperCase()));
  const ongoingComplete=ongoingCodes.size===Y.blocks.reduce((sum,b)=>sum+b.ongoing,0);
- const sent=new Set((B?.gps||[]).flatMap(g=>Object.keys(g.sentBhuvanWorks||{})));
- const received=new Set((B?.gps||[]).flatMap(g=>Object.keys(g.receivedBhuvanWorks||{})));
+ const sent=new Set((B?.gps||[]).flatMap(g=>Object.keys(g.sentBhuvanWorks||{})).filter(code=>code.includes('/YD/')));
+ const received=new Set((B?.gps||[]).flatMap(g=>Object.keys(g.receivedBhuvanWorks||{})).filter(code=>code.includes('/YD/')));
  const bhuvanByGP=new Map();
  const emptyBhuvan=()=>({bhuvanReceived:0,bhuvanPending:0,bhuvanOutsideOngoing:ongoingComplete?0:null});
  for(const code of sent){
@@ -185,10 +185,11 @@ async function start(){
   if(ongoingComplete&&!ongoingCodes.has(code))counts.bhuvanOutsideOngoing++;
  }
  if(B){
-  const receivedCodes=[...received];
-  const linked=receivedCodes.filter(code=>ongoingCodes.has(code)).length;
-  const receivedYD=receivedCodes.filter(code=>code.includes('/YD/')).length;
-  document.querySelector('#ongoingGeoBasis').textContent='R6.17 ('+B.officialDate+'): '+fmt(sent.size)+' BHUVAN को भेजे, '+fmt(received.size)+' प्राप्त ('+fmt(receivedYD)+' /YD/)। इनमें '+fmt(linked)+' वर्क-कोड R33.1 की प्रगतिरत सूची में भी मिले।';
+  const linked=[...received].filter(code=>ongoingCodes.has(code)).length;
+  const matchesAS=completeAS&&A.works.length===sent.size&&A.works.every(w=>sent.has(w.workCode));
+  document.querySelector('#ongoingGeoBasis').textContent='R6.17 ('+B.officialDate+') /YD/: '+fmt(sent.size)+' BHUVAN को भेजे, '+fmt(received.size)+' प्राप्त। '
+   +(matchesAS?'भेजे गए सभी कोड SECURE AS सूची से मिले। ':'')
+   +'प्राप्त कोडों में '+fmt(linked)+' R33.1 की प्रगतिरत सूची में मिले।';
  }
  renderR617(B);
  const official=new Map(Y.blocks.map(r=>[block(r.block),r]));
