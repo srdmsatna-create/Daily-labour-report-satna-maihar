@@ -545,7 +545,7 @@ function renderOfficial(){
       if(ts===null){dt.tsComplete=false;gt.tsComplete=false}else{dt.ts+=ts;gt.ts+=ts}
       if(ongoing===null){dt.ongoingComplete=false;gt.ongoingComplete=false}else{dt.ongoing+=ongoing;gt.ongoing+=ongoing}
       y.forEach((v,i)=>{dt.y[i]+=v;gt.y[i]+=v});
-      h+=`<tr${x.b === 'Majhgawan' ? ' class="majhgawan-row"' : ''}><td class="district-col">${g.name}</td><td><b>${esc(x.b)}</b></td><td class="num good">${x.p.toLocaleString('en-IN')}</td><td class="num">${x.s.toLocaleString('en-IN')}</td><td class="num bad">${x.pd.toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${x.pc.toFixed(1)}%</span></td><td class="num good">${x.ae.toLocaleString('en-IN')}</td><td class="num bad">${x.aep.toLocaleString('en-IN')}</td><td class="num good">${x.sr.toLocaleString('en-IN')}</td><td class="num bad">${x.sp.toLocaleString('en-IN')}</td>${y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(ts)}</td><td class="num good">${secureTSCell(ongoing)}</td>${astPendingCell([x.b])}</tr>`;
+      h+=`<tr class="janpad-row"><td class="district-col">${g.name}</td><td><b>${esc(x.b)}</b></td><td class="num good">${x.p.toLocaleString('en-IN')}</td><td class="num">${x.s.toLocaleString('en-IN')}</td><td class="num bad">${x.pd.toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${x.pc.toFixed(1)}%</span></td><td class="num good">${x.ae.toLocaleString('en-IN')}</td><td class="num bad">${x.aep.toLocaleString('en-IN')}</td><td class="num good">${x.sr.toLocaleString('en-IN')}</td><td class="num bad">${x.sp.toLocaleString('en-IN')}</td>${y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(ts)}</td><td class="num good">${secureTSCell(ongoing)}</td>${astPendingCell([x.b])}</tr>`;
     }
     h+=`<tr class="district-total district-${g.name.toLowerCase()}"><td colspan="2">${g.name.toUpperCase()} DISTRICT TOTAL</td><td class="num">${dt.p.toLocaleString('en-IN')}</td><td class="num">${dt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,dt.p-dt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${dt.p?(100*dt.s/dt.p).toFixed(1):'0.0'}%</span></td><td class="num">${dt.ae.toLocaleString('en-IN')}</td><td class="num">${dt.aep.toLocaleString('en-IN')}</td><td class="num">${dt.sr.toLocaleString('en-IN')}</td><td class="num">${dt.sp.toLocaleString('en-IN')}</td>${dt.y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(dt.tsComplete?dt.ts:null)}</td><td class="num good">${secureTSCell(dt.ongoingComplete?dt.ongoing:null)}</td>${astPendingCell(blocks.map(x=>x.b),true)}</tr>`;
   }
@@ -798,14 +798,17 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
     max-width:84px!important;
   }
 }
-#officialSection table.official-merged tbody .majhgawan-row td {
+@media screen {
+  #officialSection table.official-merged tbody .janpad-row {height:64px}
+}
+#officialSection table.official-merged tbody .janpad-row td {
   padding-top:3px!important;
   padding-bottom:3px!important;
   line-height:1.15!important;
 }
-#officialSection table.official-merged tbody .majhgawan-row .pending-name-cell small {
-  font-size:.72em!important;
-  line-height:1.12!important;
+#officialSection table.official-merged tbody .janpad-row .pending-name-cell small {
+  font-size:10px!important;
+  line-height:1.1!important;
 }
 </style>
 </body></html>
