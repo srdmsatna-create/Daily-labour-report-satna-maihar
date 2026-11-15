@@ -505,7 +505,7 @@ const AS_TS_PENDING_DATA={
   'Satna':[['Pramod Kumar Shukla','AE',3]],
   'Unchahara':[['Bhupendra Singh','AE',1],['Raj Kumar Pandey','JE',3]]
 };
-function astPendingCell(blocks){
+function astPendingCell(blocks, isTotal=false){
   const people={AE:new Map(),SE:new Map()};
   for(const b of blocks)for(const [name,designation,count] of (AS_TS_PENDING_DATA[b]||[])){
     const role=String(designation).toUpperCase()==='AE'?'AE':'SE';
@@ -515,7 +515,7 @@ function astPendingCell(blocks){
   const render=(role)=>{
     const entries=[...people[role].values()],total=entries.reduce((n,p)=>n+p.count,0);
     const details=entries.length?entries.map(p=>`${esc(p.name)}: ${p.count}`).join(', '):'कोई लंबित नहीं';
-    return `<td class="pending-name-cell pending-col"><a href="https://secure.dord.gov.in/reportv2/astspending?mvsl=161" target="_blank" rel="noopener noreferrer" title="SECURE रिपोर्ट में AS/TS pending; डेटा 29-10-2026 को देखा गया"><b>${total.toLocaleString('en-IN')}</b><small>${details}</small></a></td>`;
+    return `<td class="pending-name-cell pending-col"><a href="https://secure.dord.gov.in/reportv2/astspending?mvsl=161" target="_blank" rel="noopener noreferrer" title="SECURE रिपोर्ट में AS/TS pending; डेटा 29-10-2026 को देखा गया"><b>${total.toLocaleString('en-IN')}</b>${isTotal && role === 'AE' ? '' : `<small>${details}</small>`}</a></td>`;
   };
   return render('AE')+render('SE');
 }
@@ -545,12 +545,12 @@ function renderOfficial(){
       if(ts===null){dt.tsComplete=false;gt.tsComplete=false}else{dt.ts+=ts;gt.ts+=ts}
       if(ongoing===null){dt.ongoingComplete=false;gt.ongoingComplete=false}else{dt.ongoing+=ongoing;gt.ongoing+=ongoing}
       y.forEach((v,i)=>{dt.y[i]+=v;gt.y[i]+=v});
-      h+=`<tr><td class="district-col">${g.name}</td><td><b>${esc(x.b)}</b></td><td class="num good">${x.p.toLocaleString('en-IN')}</td><td class="num">${x.s.toLocaleString('en-IN')}</td><td class="num bad">${x.pd.toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${x.pc.toFixed(1)}%</span></td><td class="num good">${x.ae.toLocaleString('en-IN')}</td><td class="num bad">${x.aep.toLocaleString('en-IN')}</td><td class="num good">${x.sr.toLocaleString('en-IN')}</td><td class="num bad">${x.sp.toLocaleString('en-IN')}</td>${y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(ts)}</td><td class="num good">${secureTSCell(ongoing)}</td>${astPendingCell([x.b])}</tr>`;
+      h+=`<tr${x.b === 'Majhgawan' ? ' class="majhgawan-row"' : ''}><td class="district-col">${g.name}</td><td><b>${esc(x.b)}</b></td><td class="num good">${x.p.toLocaleString('en-IN')}</td><td class="num">${x.s.toLocaleString('en-IN')}</td><td class="num bad">${x.pd.toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${x.pc.toFixed(1)}%</span></td><td class="num good">${x.ae.toLocaleString('en-IN')}</td><td class="num bad">${x.aep.toLocaleString('en-IN')}</td><td class="num good">${x.sr.toLocaleString('en-IN')}</td><td class="num bad">${x.sp.toLocaleString('en-IN')}</td>${y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(ts)}</td><td class="num good">${secureTSCell(ongoing)}</td>${astPendingCell([x.b])}</tr>`;
     }
-    h+=`<tr class="district-total district-${g.name.toLowerCase()}"><td colspan="2">${g.name.toUpperCase()} DISTRICT TOTAL</td><td class="num">${dt.p.toLocaleString('en-IN')}</td><td class="num">${dt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,dt.p-dt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${dt.p?(100*dt.s/dt.p).toFixed(1):'0.0'}%</span></td><td class="num">${dt.ae.toLocaleString('en-IN')}</td><td class="num">${dt.aep.toLocaleString('en-IN')}</td><td class="num">${dt.sr.toLocaleString('en-IN')}</td><td class="num">${dt.sp.toLocaleString('en-IN')}</td>${dt.y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(dt.tsComplete?dt.ts:null)}</td><td class="num good">${secureTSCell(dt.ongoingComplete?dt.ongoing:null)}</td>${astPendingCell(blocks.map(x=>x.b))}</tr>`;
+    h+=`<tr class="district-total district-${g.name.toLowerCase()}"><td colspan="2">${g.name.toUpperCase()} DISTRICT TOTAL</td><td class="num">${dt.p.toLocaleString('en-IN')}</td><td class="num">${dt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,dt.p-dt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${dt.p?(100*dt.s/dt.p).toFixed(1):'0.0'}%</span></td><td class="num">${dt.ae.toLocaleString('en-IN')}</td><td class="num">${dt.aep.toLocaleString('en-IN')}</td><td class="num">${dt.sr.toLocaleString('en-IN')}</td><td class="num">${dt.sp.toLocaleString('en-IN')}</td>${dt.y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(dt.tsComplete?dt.ts:null)}</td><td class="num good">${secureTSCell(dt.ongoingComplete?dt.ongoing:null)}</td>${astPendingCell(blocks.map(x=>x.b),true)}</tr>`;
   }
   const grandLabel=(d==='ALL'&&j==='ALL')?'कुल (MAIHAR + SATNA)':'कुल';
-  h+=`<tr class="grand-total"><td colspan="2">${grandLabel}</td><td class="num">${gt.p.toLocaleString('en-IN')}</td><td class="num">${gt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,gt.p-gt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${gt.p?(100*gt.s/gt.p).toFixed(1):'0.0'}%</span></td><td class="num">${gt.ae.toLocaleString('en-IN')}</td><td class="num">${gt.aep.toLocaleString('en-IN')}</td><td class="num">${gt.sr.toLocaleString('en-IN')}</td><td class="num">${gt.sp.toLocaleString('en-IN')}</td>${gt.y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(gt.tsComplete?gt.ts:null)}</td><td class="num good">${secureTSCell(gt.ongoingComplete?gt.ongoing:null)}</td>${astPendingCell(districtGroups.filter(g=>d==='ALL'||d===g.name).flatMap(g=>g.blocks.filter(b=>j==='ALL'||b===j)))}</tr>`;
+  h+=`<tr class="grand-total"><td colspan="2">${grandLabel}</td><td class="num">${gt.p.toLocaleString('en-IN')}</td><td class="num">${gt.s.toLocaleString('en-IN')}</td><td class="num">${Math.max(0,gt.p-gt.s).toLocaleString('en-IN')}</td><td class="progress-cell"><span class="progress-badge">${gt.p?(100*gt.s/gt.p).toFixed(1):'0.0'}%</span></td><td class="num">${gt.ae.toLocaleString('en-IN')}</td><td class="num">${gt.aep.toLocaleString('en-IN')}</td><td class="num">${gt.sr.toLocaleString('en-IN')}</td><td class="num">${gt.sp.toLocaleString('en-IN')}</td>${gt.y.slice(1).map(v=>`<td class="num">${v.toLocaleString('en-IN')}</td>`).join('')}<td class="num good">${secureTSCell(gt.tsComplete?gt.ts:null)}</td><td class="num good">${secureTSCell(gt.ongoingComplete?gt.ongoing:null)}</td>${astPendingCell(districtGroups.filter(g=>d==='ALL'||d===g.name).flatMap(g=>g.blocks.filter(b=>j==='ALL'||b===j)),true)}</tr>`;
   $('officialBody').innerHTML=h;
   const sd=window.SECURE_TS_DATA;
   $('secureTSStatus').textContent=sd?.success?'SECURE TS: 01-10-2026 से '+sd.endDate+' तक स्वीकृत; FY 2026–27। डेटा प्राप्ति: '+sd.date+'।'+(sd.date!==new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata'}).format(new Date())?' आज का डेटा उपलब्ध नहीं; संख्या — दिखाई गई है।':''):'SECURE TS डेटा उपलब्ध नहीं; — का अर्थ शून्य नहीं है।';
@@ -797,6 +797,15 @@ function init(){const pd=document.getElementById('planningSummaryDate');if(pd)pd
     min-width:84px!important;
     max-width:84px!important;
   }
+}
+#officialSection table.official-merged tbody .majhgawan-row td {
+  padding-top:3px!important;
+  padding-bottom:3px!important;
+  line-height:1.15!important;
+}
+#officialSection table.official-merged tbody .majhgawan-row .pending-name-cell small {
+  font-size:.72em!important;
+  line-height:1.12!important;
 }
 </style>
 </body></html>
