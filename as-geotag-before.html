@@ -29,9 +29,9 @@ th .sort-heading:focus-visible{outline:2px solid white;outline-offset:2px}
 <body>
 <header><h1>AS, SECURE TS और Before जियो टैग स्थिति</h1><p>सतना एवं मैहर · वित्तीय वर्ष 2026–27</p><a href="./">मुख्य पृष्ठ</a></header>
 <main>
-<section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable"></div></section>
+<section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><p class="note" id="ongoingGeoBasis"></p><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable"></div></section>
 <section id="sector"><h2>उपयंत्री / सेक्टरवार प्रगति</h2><div class="tools"><label>जनपद <select id="block"><option value="">सभी जनपद</option></select></label><button data-print="sector">उपयंत्री / सेक्टर PDF</button></div><div class="wrap" id="sectorTable"></div></section>
-<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। शेष Geo Tag = AS − Geo Tag। Geo Tag के बाद अप्रगतिरत = Geo Tag − प्रगतिरत।</p><p>Before Geo Tag की गिनती SECURE से सत्यापित AS वाले /YD/ कार्यों पर है। जहाँ फोटो की पुष्टि अधूरी है, वहाँ न्यूनतम–अधिकतम सीमा दी गई है। ‘—’ का अर्थ है कि सीमा निकालने के लिए भी पर्याप्त डेटा उपलब्ध नहीं है।</p></section>
+<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। शेष Geo Tag = AS − Geo Tag। Geo Tag के बाद अप्रगतिरत = Geo Tag − प्रगतिरत।</p><p>Before Geo Tag की गिनती SECURE से सत्यापित AS वाले /YD/ कार्यों पर है। R33.1 में प्रगतिरत मिले वर्क-कोड का Before चरण कार्य-स्थिति के आधार पर पूरा माना गया है। अन्य कार्यों पर फोटो रिकॉर्ड का उपयोग किया गया है। जहाँ पुष्टि अधूरी है, वहाँ न्यूनतम–अधिकतम सीमा दी गई है। ‘—’ का अर्थ है कि सीमा निकालने के लिए भी पर्याप्त डेटा उपलब्ध नहीं है।</p></section>
 </main>
 <script src="yuktdhara-received-data.js"></script>
 <script src="yuktdhara-data.js"></script>
@@ -49,9 +49,9 @@ const labels=['युक्तधारा से कुल प्राप्�
 const fmt=x=>x==null?'—':Number(x).toLocaleString('en-IN');
 const range=(min,max)=>min==null||max==null?'—':min===max?fmt(min):fmt(min)+'–'+fmt(max);
 function geoBounds(codes,beforeYes,beforeNo,progress){
- const yes=codes.filter(c=>beforeYes.has(c));
- const possible=codes.filter(c=>!beforeNo.has(c)||beforeYes.has(c));
  const ids=new Set((progress?.ongoingCodes||[]).map(c=>String(c).trim().toUpperCase()));
+ const yes=codes.filter(c=>beforeYes.has(c)||ids.has(c));
+ const possible=codes.filter(c=>!beforeNo.has(c)||beforeYes.has(c)||ids.has(c));
  const ongoing=progress?.ongoing;
  const complete=Number.isInteger(ongoing)&&ids.size===ongoing;
  return {
@@ -206,6 +206,12 @@ async function start(){
   summary.set(b,{...r,ts:rs.reduce((n,x)=>n+(x.ts||0),0),as:completeAS?rs.reduce((n,x)=>n+(x.as||0),0):null,verifiedAs:rs.reduce((n,x)=>n+(x.verifiedAs||0),0),received:o.worksReceived,created:o.worksCreated,ongoing:o.ongoing});
  }
  const all=totals([...summary.values()]);
+ const ongoingCodes=new Set([...yd.values()].flatMap(r=>r.ongoingCodes||[]).map(c=>String(c).trim().toUpperCase()));
+ const recordedPhotos=[...ongoingCodes].filter(c=>verifiedGeo.has(c)).length;
+ const scopedOngoing=completeAS?A.works.filter(w=>ongoingCodes.has(w.workCode)).length:null;
+ document.querySelector('#ongoingGeoBasis').textContent='R33.1 में '+fmt(all.ongoing)+' प्रगतिरत कार्य। '
+  +(scopedOngoing==null?'':fmt(scopedOngoing)+' कार्य SECURE AS सूची में भी मिले और Before Geo Tag की न्यूनतम गिनती में शामिल हैं। ')
+  +'प्रगतिरत कार्यों में '+fmt(recordedPhotos)+' के फोटो रिकॉर्ड का अलग से मिलान हुआ है।';
  let html='';
  for(const [d,bs] of groups){
   for(const b of bs)html+=row(d,b,'',summary.get(b),'janpad-total');
