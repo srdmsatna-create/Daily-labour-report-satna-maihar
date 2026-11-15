@@ -36,6 +36,7 @@ GROUPS=[
  ('secure_ts',[['scripts_local/update_secure_ts.py']],['secure-ts-data.js','secure-ts-yuktadhara-data.js','data/secure-ts-yuktadhara-fy2026-27.json']),
  ('r37_secure_register',[['scripts_local/update_r37_secure_register.py']],['data/r37-secure-register.json']),
  ('secure_yd_as',[['scripts_local/update_secure_yd_as.py']],['data/secure-as-yuktdhara.json']),
+ ('r617_secure_bhuvan',[['scripts_local/update_r617_secure_bhuvan.py']],['data/r617-secure-bhuvan.json']),
  ('as_geotag_before',[['scripts_local/update_as_geotag_before.py'],['scripts_local/apply_secure_ts_counts.py']],['data/as-geotag-before-latest.json','as-geotag-before-data.js']),
  ('ek_bagiya_payment',[['scripts_local/update_ek_bagiya_payment.py']],['data/ek-bagiya-payment-latest.json']),
  ('rejected_wage',[['scripts/update_rejected_wage.py']],['data/rejected-wage-latest.json'])
