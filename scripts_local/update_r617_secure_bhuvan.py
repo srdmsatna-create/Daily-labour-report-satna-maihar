@@ -5,14 +5,17 @@ import json
 from pathlib import Path
 import re
 from urllib.parse import urljoin, urlparse
-from urllib.request import urlopen
+from urllib.error import HTTPError
+from urllib.request import Request
+from time import sleep
 
-from lxml import html
+from official_report_tables import ReportTables
+from vbgram_access import session_opener
 
 from update_secure_ts import EXPECTED, IST
 
 ROOT = Path(__file__).resolve().parents[1]
-URL = 'https://vbgramgrep.dord.gov.in/VBGRAMG/Secure_work.aspx?payload=yCTvB1IhaU1MeqF7lLAAd6r7vwrFXKzqyfRveH5HZ_TZ4IGSukPDkdJQJEND6RUQgSynniDR-ejTIqesN8s0eGlbuZ7pu54e_V7eALFE5UXKam5lEWizO5unc-EdSn1yXWUhmZpWl6y8xhkeZsyWmW3_6tQ6cMWpcKMRAxPPX1QU9M2Rrz72WiSBdjzM7zjSZPEEWBd0N8bJ9O30CubnRYn8ipRrh6QYSaKAK5bQXkHIquLnWi7Jl_fayfoTvVni'
+URL = 'https://vbgramgrep.dord.gov.in/VBGRAMG/Secure_work.aspx?payload=YQL26U5Cur1To85X_ocjWXCXQLMXsSv9vpIIc7xmJMlIoHwNL91rGCgC1Ke_ie9b-a9DYoKRg3vO-kWZkWUovCx2e_SPYg05SZ3_4ClT8ZY9ygchbWsxx_1p4leHIFjeDMk-R8wcF5-xXfK_qpBS79z0CpYxeVZdsfjdnq1jLvbErn97JtjbZXfgI1-aMpU6RruDmtefzLka-9E1Um66bgotkl52pMOe9oSkJ4l5eo06wc8W3VcGWIDRY-lqu8OV'
 OUTPUT = ROOT / 'data/r617-secure-bhuvan.json'
 BLOCK_COUNTS = {name.upper(): count for name, _, count in EXPECTED.values()}
 BLOCK_COUNTS['SATNA'] = BLOCK_COUNTS.pop('SOHAWAL')
@@ -25,22 +28,25 @@ def read(url):
         raise ValueError('Unexpected R6.17 link host')
     for attempt in range(3):
         try:
-            with urlopen(url, timeout=25) as response:
-                return html.fromstring(response.read())
-        except OSError:
+            request = Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with session_opener().open(request, timeout=40) as response:
+                return ReportTables(response.read().decode("utf-8-sig", errors="replace"))
+        except OSError as error:
+            if isinstance(error, HTTPError) and error.code not in (408, 429, 500, 502, 503, 504):
+                raise
             if attempt == 2:
                 raise
+            sleep(attempt + 1)
 
 
 def text(cell):
-    return ' '.join(cell.text_content().split())
+    return cell.text
 
 
 def table_rows(doc, header):
-    for table in doc.xpath('//table'):
-        rows = table.xpath('./tr|./thead/tr|./tbody/tr')
-        if rows and any(header in text(cell) for cell in rows[0].xpath('./th|./td')):
-            return [row.xpath('./td') for row in rows[1:]]
+    for rows in doc.tables:
+        if rows and any(header in text(cell) for cell in rows[0]):
+            return rows[1:]
     raise ValueError('Missing government table for ' + header)
 
 
@@ -49,7 +55,7 @@ def counts(cells):
 
 
 def linked(cell):
-    links = cell.xpath('.//a/@href')
+    links = cell.links
     if len(links) != 1:
         raise ValueError('Missing government drill-down link')
     return urljoin(URL, links[0])
@@ -122,9 +128,12 @@ def fetch(output=OUTPUT):
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(read_block, jobs))
     print(f'R6.17: {len(blocks)} Janpads and {sum(len(gps) for gps, _ in results)} GPs matched', flush=True)
-    with ThreadPoolExecutor(max_workers=16) as pool:
-        for gp, field, works in pool.map(read_works, (task for _, tasks in results for task in tasks)):
+    work_tasks = [task for _, tasks in results for task in tasks]
+    with ThreadPoolExecutor(max_workers=12) as pool:
+        for index, (gp, field, works) in enumerate(pool.map(read_works, work_tasks), 1):
             gp[field + 'Works'] = works
+            if index % 25 == 0:
+                print(f'R6.22: {index}/{len(work_tasks)} detail pages verified', flush=True)
     gps = [gp for rows, _ in results for gp in rows]
     for gp in gps:
         if not set(gp.get('receivedBhuvanWorks', {})) <= set(gp.get('sentBhuvanWorks', {})):

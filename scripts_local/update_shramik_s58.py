@@ -2,11 +2,17 @@
 import json
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
+from urllib.parse import urljoin, urlsplit
 
-from update_shramik_state import GRID, norm, number, write_js
+from official_report_tables import ReportTables
+
+from update_shramik_state import norm, number, write_js
+from update_mis_612_work_details import open_text
+from vbgram_access import session_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 URL = (
@@ -24,28 +30,36 @@ def district_names(root):
     return {norm(row['district']) for row in baseline['rows']}
 
 
-def read_counts(page, names):
-    page.get_by_text(re.compile(r'S5\.8.*ongoing works.*2026[-–]2027', re.I)).first.wait_for()
-    candidates = []
-    for table in page.locator('table').evaluate_all(GRID):
-        header = next((row for row in table if any(norm(cell) == 'TOTAL WORKS ONGOING' for cell in row)), [])
-        if not header:
+def read_counts(source, names):
+    document = ReportTables(source)
+    title = document.text
+    if not re.search(r"S5\.8.*ongoing works.*2026[-–]2027", title, re.I):
+        raise ValueError("Official FY 2026–27 S5.8 heading not found")
+    for rows in document.tables:
+        header = next((cells for cells in rows if any(norm(c.text) == "TOTAL WORKS ONGOING" for c in cells)), None)
+        if header is None:
             continue
-        column = next(i for i, cell in enumerate(header) if norm(cell) == 'TOTAL WORKS ONGOING')
-        counts = {}
-        for row in table:
-            if len(row) <= column or column < 1:
+        column = next(i for i, c in enumerate(header) if norm(c.text) == "TOTAL WORKS ONGOING")
+        if not column:
+            continue
+        counts, links = {}, {}
+        for cells in rows:
+            if len(cells) <= column:
                 continue
-            name = norm(row[column - 1])
-            if name in names:
-                if name in counts:
-                    raise ValueError(f'Duplicate S5.8 row: {name}')
-                counts[name] = number(row[column])
+            name = norm(cells[column - 1].text)
+            if name not in names:
+                continue
+            if name in counts:
+                raise ValueError(f"Duplicate S5.8 row: {name}")
+            counts[name] = number(cells[column].text)
+            hrefs = cells[column - 1].links
+            if len(hrefs) == 1:
+                links[name] = hrefs[0]
         if counts.keys() == names:
-            candidates.append(counts)
-    if not candidates or any(counts != candidates[0] for counts in candidates):
-        raise ValueError('S5.8 Total Works Ongoing column missing, incomplete or ambiguous')
-    return candidates[0]
+            return counts, links
+        if counts:
+            raise ValueError(f"S5.8 coverage incomplete: {len(counts)}/{len(names)}; missing {', '.join(sorted(names - counts.keys()))}")
+    raise ValueError("S5.8 Total Works Ongoing column missing or empty")
 
 
 def validate(payload, root):
@@ -60,33 +74,26 @@ def validate(payload, root):
 
 
 def main():
-    from playwright.sync_api import sync_playwright
-
     url = os.environ.get('SHRAMIK_S58_URL') or URL
-    with sync_playwright() as playwright:
-        try:
-            browser = playwright.chromium.launch(channel='chrome', headless=True)
-        except Exception:
-            browser = playwright.chromium.launch(headless=True)
-        context = browser.new_context()
-        cookies = []
-        for pair in os.environ.get('VBGRAM_COOKIE', '').split(';'):
-            name, sep, value = pair.strip().partition('=')
-            if name and sep:
-                cookies.append({'name': name, 'value': value, 'domain': 'vbgramgrep.dord.gov.in', 'path': '/'})
-        if cookies:
-            context.add_cookies(cookies)
-        page = context.new_page()
-        response = page.goto(url, wait_until='domcontentloaded', timeout=60000)
-        if response and response.status >= 400:
-            raise RuntimeError(f'S5.8 state source HTTP {response.status}')
-        districts = read_counts(page, district_names(ROOT))
-        blocks = {}
-        for district, names in BLOCKS.items():
-            page.get_by_role('link', name=district, exact=True).click()
-            page.get_by_text(re.compile(r'District\s*:\s*' + district, re.I)).first.wait_for()
-            blocks[district] = read_counts(page, names)
-            page.go_back(wait_until='domcontentloaded')
+    page, effective_url = open_text(session_opener(), url, timeout=60)
+    districts, links = read_counts(page, district_names(ROOT))
+
+    def read_district(item):
+        district, names = item
+        if district not in links:
+            raise ValueError(f"S5.8 district link missing: {district}")
+        detail = urljoin(effective_url, links[district])
+        if urlsplit(detail).hostname != urlsplit(effective_url).hostname:
+            raise ValueError(f"Unexpected S5.8 district link host: {district}")
+        source, _ = open_text(session_opener(), detail, timeout=60)
+        title = ReportTables(source).text
+        if not re.search(r"District\s*:\s*" + district + r"\b", title, re.I):
+            raise ValueError(f"S5.8 returned the wrong district: {district}")
+        counts, _ = read_counts(source, names)
+        return district, counts
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        blocks = dict(pool.map(read_district, BLOCKS.items()))
     payload = {'source': url, 'retrievedDate': datetime.now(ZoneInfo('Asia/Kolkata')).date().isoformat(),
                'districts': districts, 'blocks': blocks}
     validate(payload, ROOT)

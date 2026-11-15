@@ -12,7 +12,7 @@ h2{font-size:19px;margin:0 0 10px}.tools{display:flex;gap:10px;align-items:cente
 .wrap{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:1160px;table-layout:fixed}th,td{border:1px solid #607e96;padding:6px 4px;text-align:center;overflow-wrap:anywhere;line-height:1.18}
 th{background:#214f76;color:white;font-size:14px}th:nth-last-child(-n+3){background:#096675}td{font-weight:700;font-size:15px;font-variant-numeric:tabular-nums}
 td:nth-child(-n+3){text-align:left;font-size:13px}td:nth-child(2),th:nth-child(2){overflow-wrap:normal;word-break:normal}tbody tr:nth-child(even){background:#edf5fa}.total{background:#d7e8f4!important}.grand{background:#bdd9eb!important}p{margin:6px 0;line-height:1.4}.note{font-size:13px}
-@media print{@page{size:A4 landscape;margin:7mm}body,section{background:white}header{padding:0;color:#19334c;background:white}h1{font-size:15pt}header a,.tools{display:none}main{padding:0}section{border:0;padding:0;margin:0 0 6mm}h2{font-size:10pt}.wrap{overflow:visible}table{min-width:0}thead{display:table-header-group}tr{break-inside:avoid}th,td,td:nth-child(-n+3){font-size:8pt;padding:3px 2px}td:nth-child(2),th:nth-child(2){font-size:7pt}.note{font-size:8pt}*{print-color-adjust:exact}body[data-print="summary"] #sector,body[data-print="sector"] #summary,body[data-print] #r617{display:none}}
+@media print{@page{size:A4 landscape;margin:7mm}body,section{background:white}header{padding:0;color:#19334c;background:white}h1{font-size:15pt}header a,.tools{display:none}main{padding:0}section{border:0;padding:0;margin:0 0 6mm}h2{font-size:10pt}.wrap{overflow:visible}table{min-width:0}thead{display:table-header-group}tr{break-inside:avoid}th,td,td:nth-child(-n+3){font-size:8pt;padding:3px 2px}td:nth-child(2),th:nth-child(2){font-size:7pt}.note{font-size:8pt}*{print-color-adjust:exact}body[data-print="summary"] #sector,body[data-print="sector"] #summary,body[data-print] #r617,body[data-print] #sources{display:none}}
 #r617 table{min-width:690px}#r617 details{margin:6px 0}#r617 summary{cursor:pointer}#r617 td ul{padding-inline-start:1em}
 tbody td{height:33px;vertical-align:middle}
 thead th{background:var(--head,#133e69);vertical-align:middle}
@@ -33,7 +33,7 @@ th .sort-heading:focus-visible{outline:2px solid white;outline-offset:2px}
 <section id="summary"><h2>जिला एवं जनपदवार प्रगति</h2><p class="note" id="ongoingGeoBasis"></p><div class="tools"><button data-print="summary">जिला / जनपद PDF</button></div><div class="wrap" id="summaryTable" aria-live="polite">जनपदवार आँकड़े लोड हो रहे हैं…</div></section>
 <section id="sector"><h2>उपयंत्री / सेक्टरवार प्रगति</h2><div class="tools"><label>जनपद <select id="block"><option value="">सभी जनपद</option></select></label><button data-print="sector">उपयंत्री / सेक्टर PDF</button></div><div class="wrap" id="sectorTable" aria-live="polite">उपयंत्रीवार आँकड़े लोड हो रहे हैं…</div></section>
 <section id="r617"><h2>R6.17 / R6.22 — जनपद, GP और कार्यवार विवरण</h2><div id="r617Detail" aria-live="polite">GP और कार्यवार विवरण लोड हो रहा है…</div></section>
-<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। मुख्य तालिका के BHUVAN कॉलम केवल /YD/ कार्यों के हैं। BHUVAN प्राप्ति शेष = भेजे गए /YD/ कोड − प्राप्त /YD/ कोड। अंतिम BHUVAN कॉलम में प्राप्त /YD/ कोड हैं जो R33.1 की प्रगतिरत सूची में नहीं मिले। नीचे R6.17 / R6.22 का पूरा सरकारी विवरण है। BHUVAN में प्राप्ति और Before फोटो की पुष्टि अलग स्थितियाँ हैं।</p></section>
+<section class="note" id="sources"><p id="status" role="status">डेटा लोड हो रहा है…</p><p>शेष वर्क कोड = प्राप्त − बने वर्क कोड। शेष TS = बने वर्क कोड − TS। शेष AS = TS − AS। कुल Geo Tag = SECURE AS के /YD/ कार्य-कोड जिनकी BHUVAN प्राप्ति R6.17/R6.22 में मिली। शेष Geo Tag = AS − Geo Tag। Geo Tag के बाद अप्रगतिरत = प्राप्त कोड जिनकी प्रगतिरत स्थिति R33.1 और कांसा के R6.12 मिलान में नहीं मिली। बिना अभिसरण और अभिसरण का आधार R6.12 MIS का Is Secure कॉलम है।</p></section>
 </main>
 <script src="yuktdhara-received-data.js"></script>
 <script src="yuktdhara-data.js"></script>
@@ -44,11 +44,12 @@ const esc=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const key=x=>String(x??'').toUpperCase().replace(/[^A-Z0-9\u0900-\u097f]/g,'');
 const block=x=>({SATNA:'SOHAWAL',RAMPORBAGHELAN:'RAMPURBAGHELAN'}[key(x)]||key(x));
 const gpKey=(b,g)=>block(b)+'|'+key(g);
-const fields=['received','created','ts','as','ongoing','non','conv','pending','bhuvanReceived','bhuvanPending','bhuvanOutsideOngoing','verifiedAs'];
+const fields=['received','created','ts','as','ongoing','non','conv','pending','geo','geoPending','afterGeoMin','afterGeoMax','verifiedAs'];
 const totals=(rows)=>Object.fromEntries(fields.map(k=>[k,rows.length&&rows.every(r=>Number.isInteger(r[k]))?rows.reduce((s,r)=>s+r[k],0):null]));
 const sub=(a,b)=>a==null||b==null||b>a?null:a-b;
-const labels=['युक्तधारा से कुल प्राप्त','कुल वर्क कोड','वर्क कोड बनाना शेष','कुल TS','TS हेतु शेष','कुल AS','AS हेतु शेष','बिना अभिसरण','अभिसरण','BHUVAN में प्राप्त','BHUVAN प्राप्ति शेष','BHUVAN प्राप्त, प्रगतिरत सूची से बाहर','प्रगतिरत कार्य'];
+const labels=['युक्तधारा से कुल प्राप्त','कुल वर्क कोड','वर्क कोड बनाना शेष','कुल TS','TS हेतु शेष','कुल AS','AS हेतु शेष','बिना अभिसरण','अभिसरण','कुल Geo Tag','शेष Geo Tag','Geo Tag के बाद अप्रगतिरत','प्रगतिरत कार्य'];
 const fmt=x=>x==null?'—':Number(x).toLocaleString('en-IN');
+const range=(min,max)=>min==null||max==null?'—':min===max?fmt(min):fmt(min)+'–'+fmt(max);
 const metricColors=['#0b7180','#6041a6','#bd6a12','#6041a6','#bd6a12','#bd6a12','#b43c34','#16804b','#087d89','#16804b','#b43c34','#087d89','#133e69'];
 const remainingColumns=new Set([2,4,6,10]);
 const janpadColors={
@@ -60,9 +61,9 @@ const janpadColors={
 function row(d,b,e,r,cls='',withSector=false){
  const palette=cls==='janpad-total'?janpadColors[b]:null;
  const colorStyle=palette?' style="--janpad-fill:'+palette[0]+';--janpad-accent:'+palette[1]+'"':'';
- const values=[r.received,r.created,sub(r.received,r.created),r.ts,sub(r.created,r.ts),r.as,sub(r.ts,r.as),r.non,r.conv,r.bhuvanReceived,r.bhuvanPending,r.bhuvanOutsideOngoing,r.ongoing];
+ const values=[r.received,r.created,sub(r.received,r.created),r.ts,sub(r.created,r.ts),r.as,sub(r.ts,r.as),r.non,r.conv,r.geo,r.geoPending,r.afterGeoMin,r.ongoing];
  const names=[d,b,...(withSector?[e]:[])];
- return '<tr class="'+cls+'"'+colorStyle+'>'+names.map(v=>'<td>'+esc(v)+'</td>').join('')+values.map((v,i)=>'<td'+(remainingColumns.has(i)&&v!=null?' class="remaining" style="--metric-color:'+metricColors[i]+'"':'')+'>'+(i===5&&v==null&&r.verifiedAs?'≥ '+fmt(r.verifiedAs):fmt(v))+(i===8&&r.pending?'<br><small>पुष्टि बाकी '+fmt(r.pending)+'</small>':'')+'</td>').join('')+'</tr>';
+ return '<tr class="'+cls+'"'+colorStyle+'>'+names.map(v=>'<td>'+esc(v)+'</td>').join('')+values.map((v,i)=>'<td'+(remainingColumns.has(i)&&v!=null?' class="remaining" style="--metric-color:'+metricColors[i]+'"':'')+'>'+(i===5&&v==null&&r.verifiedAs?'≥ '+fmt(r.verifiedAs):i===11?range(v,r.afterGeoMax):fmt(v))+(i===8&&r.pending?'<br><small>पुष्टि बाकी '+fmt(r.pending)+'</small>':'')+'</td>').join('')+'</tr>';
 }
 function table(body,sector){
  const widths=sector?[5,9,12]:[6,9];
@@ -121,7 +122,7 @@ function flags(csv){
  const lines=csv.replace(/^\uFEFF/,'').trimEnd().match(/(?:[^"\r\n]|"(?:[^"]|"")*")+/g)||[];
  const cells=line=>Array.from(line.matchAll(/(?:^|,)(?:"((?:[^"]|"")*)"|([^,]*))/g),m=>m[1]?.replace(/""/g,'"')??m[2]);
  const head=cells(lines.shift()||'');
- const [code,status,conv]=['Work Code','Work Status','Convergence'].map(k=>head.indexOf(k));
+ const [code,status,conv]=['Work Code','Work Status','Is Secure'].map(k=>head.indexOf(k));
  if([code,status,conv].includes(-1))return new Map();
  const out=new Map();
  for(const line of lines){
@@ -159,25 +160,31 @@ async function start(){
  };
  const optional=path=>read(path,'json').catch(()=>null);
  const r617=optional('data/r617-secure-bhuvan.json').then(data=>{renderR617(data);return data;});
- const [master,S,A,B]=await Promise.all([
+ const [master,S,A]=await Promise.all([
   read('data/r37-secure-register.json','json'),read('data/secure-ts-yuktadhara-fy2026-27.json','json'),
-  optional('data/secure-as-yuktdhara.json'),r617
+  optional('data/secure-as-yuktdhara.json')
  ]);
  if(!Y?.gpProgress||!M?.mapping)throw Error('युक्तधारा की स्रोत फ़ाइल उपलब्ध नहीं है।');
- const completeAS=A?.fy===S.fy&&A.startDate===S.startDate&&A.gpCount===master.gps.length&&A.snapshotAt?.slice(0,10)===S.snapshotAt?.slice(0,10);
+ const normalizeCode=code=>String(code).trim().toUpperCase();
+ const tsCodes=new Set(S.works.map(w=>normalizeCode(w.workCode)));
+ const completeAS=A?.fy===S.fy&&A.startDate===S.startDate&&A.gpCount===master.gps.length&&A.snapshotAt?.slice(0,10)===S.snapshotAt?.slice(0,10)&&A.works.every(w=>tsCodes.has(normalizeCode(w.workCode)));
+ let B=null;
  let F=null;
  let fallbackAS=null;
  const select=document.querySelector('#block');
  const defaultOption=select.options[0].outerHTML;
+ function ongoingIds(progress){
+  return new Set((progress?.ongoingCodes||[]).map(normalizeCode));
+ }
  function convergence(progress){
   const ongoing=progress?.ongoing;
-  if(!F)return {non:null,conv:null,pending:null};
-  if(!progress)return {non:0,conv:0,pending:0};
-  if(!Number.isInteger(ongoing))return {non:null,conv:null,pending:null};
-  const flags=[...new Set(progress.ongoingCodes||[])].map(code=>F.get(String(code).trim().toUpperCase())).filter(Boolean);
-  const verified=flags.length<=ongoing?flags:[];
-  return {non:verified.filter(flag=>flag==='NO').length,
-   conv:verified.filter(flag=>flag==='YES').length,pending:ongoing-verified.length};
+  if(!F||!Number.isInteger(ongoing))return {non:null,conv:null,pending:null};
+  const ids=ongoingIds(progress);
+  const values=[...ids].map(code=>F.get(code));
+  const extra=Math.max(0,ids.size-ongoing);
+  const non=Math.max(0,values.filter(flag=>flag==='YES').length-extra);
+  const conv=Math.max(0,values.filter(flag=>flag==='NO').length-extra);
+  return {non,conv,pending:ongoing-non-conv};
  }
  function draw(){
  const byGP=works=>{
@@ -194,40 +201,53 @@ async function start(){
  const verifiedAsByGP=byGP((fallbackAS?.rows||[]).filter(w=>w.asStatus==='Available'&&w.asSanctionDate>=S.startDate));
  const mapping=new Map(M.mapping.map(r=>[gpKey(r.janpad,r.gp),r.engineer]));
  const yd=new Map(Object.entries(Y.gpProgress).flatMap(([b,rs])=>rs.map(r=>[gpKey(b,r.gp),r])));
- const ongoingCodes=new Set([...yd.values()].flatMap(r=>r.ongoingCodes||[]).map(c=>String(c).trim().toUpperCase()));
- const ongoingComplete=ongoingCodes.size===Y.blocks.reduce((sum,b)=>sum+b.ongoing,0);
- const sent=new Set((B?.gps||[]).flatMap(g=>Object.keys(g.sentBhuvanWorks||{})).filter(code=>code.includes('/YD/')));
- const received=new Set((B?.gps||[]).flatMap(g=>Object.keys(g.receivedBhuvanWorks||{})).filter(code=>code.includes('/YD/')));
- const bhuvanByGP=new Map();
- const emptyBhuvan=()=>({bhuvanReceived:0,bhuvanPending:0,bhuvanOutsideOngoing:ongoingComplete?0:null});
- for(const code of sent){
+ const kansaKey=gpKey('MAIHAR','KANSA');
+ const kansa=yd.get(kansaKey);
+ const kansaCodes=ongoingIds(kansa);
+ const kansaCorrection=kansa?.ongoing===1&&kansaCodes.size===2&&[...kansaCodes].every(code=>F?.get(code))?1:0;
+ if(kansaCorrection)yd.set(kansaKey,{...kansa,ongoing:2});
+ const asCodes=new Set((completeAS?A.works:[]).map(w=>normalizeCode(w.workCode)));
+ const received=new Set((B?.gps||[]).flatMap(g=>Object.keys(g.receivedBhuvanWorks||{})).map(normalizeCode));
+ const taggedByGP=new Map();
+ for(const code of received){
+  if(!asCodes.has(code))continue;
   const gp=code.split('/')[0];
-  if(!bhuvanByGP.has(gp))bhuvanByGP.set(gp,emptyBhuvan());
-  const counts=bhuvanByGP.get(gp);
-  if(!received.has(code)){counts.bhuvanPending++;continue;}
-  counts.bhuvanReceived++;
-  if(ongoingComplete&&!ongoingCodes.has(code))counts.bhuvanOutsideOngoing++;
+  if(!taggedByGP.has(gp))taggedByGP.set(gp,[]);
+  taggedByGP.get(gp).push(code);
  }
- if(B){
-  const linked=[...received].filter(code=>ongoingCodes.has(code)).length;
-  const matchesAS=completeAS&&A.works.length===sent.size&&A.works.every(w=>sent.has(w.workCode));
-  document.querySelector('#ongoingGeoBasis').textContent='R6.17 ('+B.officialDate+') /YD/: '+fmt(sent.size)+' BHUVAN को भेजे, '+fmt(received.size)+' प्राप्त। '
-   +(matchesAS?'भेजे गए सभी कोड SECURE AS सूची से मिले। ':'')
-   +'प्राप्त कोडों में '+fmt(linked)+' R33.1 की प्रगतिरत सूची में मिले।';
+ function geotag(gp,progress){
+  if(!B||!completeAS)return {};
+  const codes=taggedByGP.get(gp)||[];
+  const as=asByGP.get(gp)||0;
+  const ids=ongoingIds(progress),ongoing=progress?.ongoing;
+  const matched=codes.filter(code=>ids.has(code)).length;
+  const minOngoing=Number.isInteger(ongoing)?Math.max(0,matched-Math.max(0,ids.size-ongoing)):0;
+  const maxOngoing=Number.isInteger(ongoing)?Math.min(codes.length,ongoing,matched+Math.max(0,ongoing-ids.size)):codes.length;
+  return {geo:codes.length,geoPending:as-codes.length,afterGeoMin:codes.length-maxOngoing,afterGeoMax:codes.length-minOngoing};
  }
- const official=new Map(Y.blocks.map(r=>[block(r.block),r]));
+ if(B&&completeAS){
+  const matched=[...taggedByGP.values()].reduce((sum,codes)=>sum+codes.length,0);
+  document.querySelector('#ongoingGeoBasis').textContent='R6.17 / R6.22 ('+B.officialDate+'): '+fmt(asCodes.size)+' SECURE AS /YD/ कोड में '+fmt(matched)+' BHUVAN में प्राप्त।'+(kansaCorrection?' कांसा में R6.12 से दोनों प्रगतिरत कोड सत्यापित हैं।':'');
+ }
+ const official=new Map(Y.blocks.map(r=>[block(r.block),block(r.block)==='MAIHAR'&&kansaCorrection?{...r,ongoing:r.ongoing+kansaCorrection}:r]));
  const blockNames={'1712001':'MAJHGAWAN','1712002':'SOHAWAL','1712003':'NAGOD','1712004':'UNCHAHARA','1712005':'RAMPUR BAGHELAN','1712006':'AMARPATAN','1712007':'RAMNAGAR','1712008':'MAIHAR'};
  const blocks=new Map(Object.values(blockNames).map(b=>[b,[]]));
+ const reconciled=new Set();
+ for(const [name,rows] of Object.entries(Y.gpProgress)){
+  const officialBlock=official.get(block(name));
+  if(officialBlock&&['worksReceived','worksCreated','ongoing'].every(field=>rows.every(r=>Number.isInteger(r[field]))&&rows.reduce((sum,r)=>sum+(yd.get(gpKey(name,r.gp))?.[field]??r[field]),0)===officialBlock[field]))reconciled.add(block(name));
+ }
  const matched=new Set();
+ const noActivity={worksReceived:0,worksCreated:0,ongoing:0,ongoingCodes:[]};
  for(const g of master.gps){
-  const b=blockNames[g.code.slice(0,7)],k=gpKey(b,g.gp),r=yd.get(k);
+  const b=blockNames[g.code.slice(0,7)],k=gpKey(b,g.gp),r=yd.get(k)||(reconciled.has(block(b))?noActivity:null);
   if(r)matched.add(k);
-  blocks.get(b).push({engineer:mapping.get(k)||'मैपिंग की पुष्टि बाकी',...(B?(bhuvanByGP.get(g.code)||emptyBhuvan()):{}),received:r?.worksReceived,created:r?.worksCreated,ts:tsByGP.get(g.code)||0,as:completeAS?(asByGP.get(g.code)||0):null,verifiedAs:verifiedAsByGP.get(g.code)||0,ongoing:r?.ongoing??null,...convergence(r)});
+  blocks.get(b).push({engineer:mapping.get(k)||'मैपिंग की पुष्टि बाकी',...geotag(g.code,r),received:r?.worksReceived,created:r?.worksCreated,ts:tsByGP.get(g.code)||0,as:completeAS?(asByGP.get(g.code)||0):null,verifiedAs:verifiedAsByGP.get(g.code)||0,ongoing:r?.ongoing??null,...convergence(r)});
  }
  // Preserve unmatched official GP activity in the Janpad total.
  for(const [b,rr] of Object.entries(Y.gpProgress)){
   const name=Object.keys(blockNames).map(k=>blockNames[k]).find(n=>block(n)===block(b));
-  for(const r of rr)if(!matched.has(gpKey(b,r.gp)))blocks.get(name).push({engineer:mapping.get(gpKey(b,r.gp))||'मैपिंग की पुष्टि बाकी',received:r.worksReceived,created:r.worksCreated,ongoing:r.ongoing,...convergence(r),...(B?emptyBhuvan():{})});
+  for(const r of rr)if(!matched.has(gpKey(b,r.gp)))blocks.get(name).push({engineer:mapping.get(gpKey(b,r.gp))||'मैपिंग की पुष्टि बाकी',received:r.worksReceived,created:r.worksCreated,ongoing:r.ongoing,...convergence(r),...(B&&completeAS?{geo:0,geoPending:0,afterGeoMin:0,afterGeoMax:0}:{})});
  }
  const groups=[['मैहर',['AMARPATAN','MAIHAR','RAMNAGAR']],['सतना',['MAJHGAWAN','NAGOD','RAMPUR BAGHELAN','SOHAWAL','UNCHAHARA']]];
  const summary=new Map();
@@ -261,16 +281,19 @@ async function start(){
   document.querySelector('#sectorTable').innerHTML=table(rows,true);
  }
  select.onchange=render;render();
- document.querySelector('#status').textContent='R33.1: '+Y.officialDate+' · SECURE /YD/ TS (01-10-2026 से): '+new Date(S.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' · AS: '+(completeAS?new Date(A.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'e-Work File में सत्यापित न्यूनतम')+' · अभिसरण: '+(F?'R6.12 के प्रगतिरत कार्य-कोड से मिलान।':'R6.12 का मिलान अभी उपलब्ध नहीं।');
+ document.querySelector('#status').textContent='R33.1: '+Y.officialDate+' · SECURE /YD/ TS (01-10-2026 से): '+new Date(S.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' · AS: '+(completeAS?new Date(A.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'e-Work File में सत्यापित न्यूनतम')+' · अभिसरण: '+(F?'R6.12 MIS में Is Secure YES = बिना अभिसरण, NO = अभिसरण।':'R6.12 का मिलान अभी उपलब्ध नहीं।');
  }
  draw();
- const [flagData,asEvidence]=await Promise.all([
+ const [flagData,asEvidence,bhuvan]=await Promise.all([
   read('data/Ongoing_Works_dynamic_work_details_latest.csv','text').then(flags).catch(()=>null),
-  completeAS?Promise.resolve(null):optional('data/as-geotag-before-latest.json')
+  completeAS?Promise.resolve(null):optional('data/as-geotag-before-latest.json'),r617
  ]);
  F=flagData;
  fallbackAS=asEvidence;
- if(F||fallbackAS)draw();
+ const bhuvanDate=bhuvan?.officialDate?.split('/').reverse().join('-');
+ B=bhuvanDate===A?.snapshotAt?.slice(0,10)?bhuvan:null;
+ if(bhuvan&&!B)document.querySelector('#ongoingGeoBasis').textContent='BHUVAN और SECURE AS की तारीखें अलग हैं। Geo Tag का संयुक्त मिलान उपलब्ध नहीं है।';
+ if(F||fallbackAS||B)draw();
 }
 document.querySelectorAll('button[data-print]').forEach(b=>b.addEventListener('click',()=>{document.body.dataset.print=b.dataset.print;window.print()}));
 window.addEventListener('afterprint',()=>delete document.body.dataset.print);

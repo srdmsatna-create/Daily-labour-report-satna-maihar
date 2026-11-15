@@ -11,6 +11,7 @@ import tempfile
 import time
 import zipfile
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -86,8 +87,30 @@ def prevent_console_pause():
             kernel.SetConsoleMode(handle, (mode.value | 0x0080) & ~0x0040)
     except (AttributeError, OSError):pass
 
-def refresh_reports(feeds, stage, sleep=time.sleep):
-    states = {}
+def published_successes(feeds, stage):
+    """Resume only the verified portion of today's published partial refresh."""
+    try:
+        previous = json.loads((stage / 'all-tabs-auto-status.json').read_text(encoding='utf-8'))
+        ist = ZoneInfo('Asia/Kolkata')
+        checked = datetime.fromisoformat(previous['checkedAt']).astimezone(ist).date()
+        if checked != datetime.now(ist).date() or previous.get('success') is not False:
+            return {}
+        reports = previous['reports']
+        return {
+            group: {**reports[group], 'resumed': True}
+            for group, _, outputs in feeds.GROUPS
+            if reports.get(group, {}).get('success') is True
+            and reports[group].get('files') == outputs
+            and all((stage / output).is_file() for output in outputs)
+        }
+    except (OSError, KeyError, ValueError, TypeError, AttributeError):
+        return {}
+
+
+def refresh_reports(feeds, stage, sleep=time.sleep, resume=False):
+    states = published_successes(feeds, stage) if resume else {}
+    if states:
+        print(f'Resuming today’s published update: {len(states)} verified groups already live; fetching outstanding groups only.', flush=True)
     for attempt in range(1, 4):
         pending = [(g,c,f) for g,c,f in feeds.GROUPS if not states.get(g,{}).get('success')]
         if not pending:break
@@ -124,6 +147,11 @@ def print_report_summary(status):
     print('\\nREPORT-WISE RESULT', flush=True)
     for name, state in status['reports'].items():
         print(('OK: ' if state['success'] else 'FAILED / OLD DATA RETAINED: ') + name, flush=True)
+        if not state['success']:
+            tail = state.get('errorTail', '').strip().splitlines()
+            cause = tail[-1] if tail and 'returned non-zero exit status' in state.get('message', '') else state.get('message', '')
+            if cause:
+                print('  Cause: ' + cause, flush=True)
     good = sum(bool(s['success']) for s in status['reports'].values())
     print(str(good) + '/' + str(len(status['reports'])) + ' automatic groups verified.', flush=True)
 
@@ -155,7 +183,7 @@ def main():
         feeds = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(feeds)
         report_inventory(stage)
-        states = refresh_reports(feeds, stage)
+        states = refresh_reports(feeds, stage, resume=args.publish and args.publish_verified)
         status = {'checkedAt':datetime.now(timezone.utc).isoformat(), 'schedule':'08:00 Asia/Kolkata',
                   'reports':states, 'success':all(x['success'] for x in states.values())}
         print_report_summary(status)
