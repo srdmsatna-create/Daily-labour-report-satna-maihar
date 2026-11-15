@@ -77,7 +77,7 @@ font-size:13px!important;line-height:1.2!important;
 #yuktdharaSubEngineerApp #yseSummaryTable th,#yuktdharaSubEngineerApp #yseSummaryTable td{border:1px solid #57406f;padding:8px 10px}
 #yuktdharaSubEngineerApp #yseSummaryTable th{background:#54299b;color:white}
 #yuktdharaSubEngineerApp #yseSummaryTable th:last-child{font-size:12px;line-height:1.25}
-#yuktdharaSubEngineerApp .yse-summary-pending{font-size:11px;line-height:1.25;white-space:nowrap;overflow-x:auto}
+#yuktdharaSubEngineerApp .yse-summary-pending{font-size:11px;line-height:1.25}
 #yuktdharaSubEngineerApp .yse-summary-pending .yse-pending-gps{overflow-wrap:normal}
 #yuktdharaSubEngineerApp #yseSummaryTable .num{text-align:center;font-size:16px;font-weight:800}
 #yuktdharaSubEngineerApp .yse-pending{margin:14px 0;padding:12px 16px;border:1px solid #d79595;border-radius:8px;background:#fff7f7;color:#761b23;font-size:14px;line-height:1.5}
@@ -116,8 +116,8 @@ function drawSummary(report,groups){
  const rows=report.filter(x=>x.totalKind);
  const columns='<colgroup>'+[9,13,6,8,8,9,9,38].map(w=>'<col style="width:'+w+'%">').join('')+'</colgroup>';
  function pendingForJanpad(row){
-  const pending=groups.filter(g=>g.district===row.district&&g.janpad===row.janpad&&g.notStarted).map(pendingNames);
-  return pending.length?'<div class="yse-summary-pending" tabindex="0">'+pending.join(', ')+'</div>':'—';
+  return groups.filter(g=>g.district===row.district&&g.janpad===row.janpad&&g.notStarted)
+   .map(g=>'<div class="yse-summary-pending">'+pendingNames(g)+'</div>').join('')||'—';
  }
  $('yseSummaryTable').innerHTML=columns+'<thead><tr>'+labels.map(label=>'<th scope="col">'+label+'</th>').join('')+'</tr></thead><tbody>'+ (rows.length?rows.map(x=>'<tr class="yse-total yse-total-'+x.totalKind+'"><td>'+e(x.district||'सतना + मैहर')+'</td><td>'+e(x.totalKind==='janpad'?jp(x.janpad):x.totalKind==='district'?'जिला योग':'संयुक्त योग')+'</td>'+['total','started','submitted','notStarted','gasApproved'].map(k=>'<td class="num">'+fmt(x[k])+'</td>').join('')+'<td>'+(x.totalKind==='janpad'?pendingForJanpad(x):'')+'</td></tr>').join(''):'<tr><td colspan="8">चयन के अनुसार कोई ग्राम पंचायत नहीं मिली।</td></tr>')+'</tbody>';
 }
