@@ -37,6 +37,7 @@ th .sort-heading:focus-visible{outline:2px solid white;outline-offset:2px}
 </main>
 <script src="yuktdhara-received-data.js"></script>
 <script src="yuktdhara-data.js"></script>
+<script src="r612-yd-convergence.js?v=20261116"></script>
 <script>
 'use strict';
 const Y=window.YUKTDHARA_RECEIVED,M=window.YUKTDHARA_DATA;
@@ -118,19 +119,6 @@ function enableSort(container,sector){
 }
 enableSort(document.querySelector('#summaryTable'),false);
 enableSort(document.querySelector('#sectorTable'),true);
-function flags(csv){
- const lines=csv.replace(/^\uFEFF/,'').trimEnd().match(/(?:[^"\r\n]|"(?:[^"]|"")*")+/g)||[];
- const cells=line=>Array.from(line.matchAll(/(?:^|,)(?:"((?:[^"]|"")*)"|([^,]*))/g),m=>m[1]?.replace(/""/g,'"')??m[2]);
- const head=cells(lines.shift()||'');
- const [code,status,conv]=['Work Code','Work Status','Is Secure'].map(k=>head.indexOf(k));
- if([code,status,conv].includes(-1))return new Map();
- const out=new Map();
- for(const line of lines){
-  const r=cells(line),value=r[conv]?.trim().toUpperCase(),id=r[code]?.trim().toUpperCase();
-  if(id&&r[status]?.trim().toUpperCase()==='ONGOING'&&['YES','NO'].includes(value))out.set(id,out.has(id)&&out.get(id)!==value?null:value);
- }
- return out;
-}
 function renderR617(data){
  const target=document.querySelector('#r617Detail');
  if(!data){target.textContent='R6.17 का सत्यापित विवरण उपलब्ध नहीं है।';return;}
@@ -169,7 +157,8 @@ async function start(){
  const tsCodes=new Set(S.works.map(w=>normalizeCode(w.workCode)));
  const completeAS=A?.fy===S.fy&&A.startDate===S.startDate&&A.gpCount===master.gps.length&&A.snapshotAt?.slice(0,10)===S.snapshotAt?.slice(0,10)&&A.works.every(w=>tsCodes.has(normalizeCode(w.workCode)));
  let B=null;
- let F=null;
+ const sourceFlags=window.R612_YD_CONVERGENCE?.flags;
+ const F=sourceFlags?new Map(Object.entries(sourceFlags)):null;
  let fallbackAS=null;
  const select=document.querySelector('#block');
  const defaultOption=select.options[0].outerHTML;
@@ -284,16 +273,14 @@ async function start(){
  document.querySelector('#status').textContent='R33.1: '+Y.officialDate+' · SECURE /YD/ TS (01-10-2026 से): '+new Date(S.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})+' · AS: '+(completeAS?new Date(A.snapshotAt).toLocaleString('en-IN',{timeZone:'Asia/Kolkata'}):'e-Work File में सत्यापित न्यूनतम')+' · अभिसरण: '+(F?'R6.12 MIS में Is Secure YES = बिना अभिसरण, NO = अभिसरण।':'R6.12 का मिलान अभी उपलब्ध नहीं।');
  }
  draw();
- const [flagData,asEvidence,bhuvan]=await Promise.all([
-  read('data/Ongoing_Works_dynamic_work_details_latest.csv','text').then(flags).catch(()=>null),
+ const [asEvidence,bhuvan]=await Promise.all([
   completeAS?Promise.resolve(null):optional('data/as-geotag-before-latest.json'),r617
  ]);
- F=flagData;
  fallbackAS=asEvidence;
  const bhuvanDate=bhuvan?.officialDate?.split('/').reverse().join('-');
  B=bhuvanDate===A?.snapshotAt?.slice(0,10)?bhuvan:null;
  if(bhuvan&&!B)document.querySelector('#ongoingGeoBasis').textContent='BHUVAN और SECURE AS की तारीखें अलग हैं। Geo Tag का संयुक्त मिलान उपलब्ध नहीं है।';
- if(F||fallbackAS||B)draw();
+ if(fallbackAS||B)draw();
 }
 document.querySelectorAll('button[data-print]').forEach(b=>b.addEventListener('click',()=>{document.body.dataset.print=b.dataset.print;window.print()}));
 window.addEventListener('afterprint',()=>delete document.body.dataset.print);

@@ -27,7 +27,7 @@ GROUPS=[
  ('delayed_compensation',[['scripts_local/update_delayed_compensation.py']],['data/delayed-compensation-latest.json']),
  ('block_statistics',[['scripts_local/update_satna_block_statistics.py']],['vbg-block-stats.js']),
  ('statistics_ekyc_material',[['scripts_local/update_statistics_ekyc_material.py']],['data/statistics-ekyc-material-latest.json']),
- ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js','ongoing-details.json.gz']),
+ ('mis_612',[['scripts_local/update_mis_612_work_details.py']],['data/Ongoing_Works_dynamic_work_details_latest.csv','data/mis-6.12-status.json','ongoing-details.js','ongoing-details.json.gz','r612-yd-convergence.js']),
  ('pmay_janpad_summary',[['scripts_local/update_pmay_janpad_summary.py']],['pmay-janpad-summary-data.js']),
  ('yuktdhara_mr_labour_history', [['scripts_local/update_yuktdhara_mr_labour_history.py']], ['data/yuktdhara-mr-labour-history.json']),
  ('pmayg_physical',[['scripts_local/update_pmayg_physical.py']],['data/pmayg-physical-latest.json']),
@@ -144,6 +144,12 @@ def validate(group,root):
   if not data(root/'ongoing-details.js'):raise ValueError('MIS work details empty')
   with gzip.open(root/'ongoing-details.json.gz','rt',encoding='utf-8') as f: work_rows=json.load(f)
   if not isinstance(work_rows,list) or len(work_rows)<1000:raise ValueError('Compressed MIS work details incomplete')
+  from update_mis_612_work_details import ongoing_yd_secure_flags
+  report=data(root/'r612-yd-convergence.js')
+  meta=data(root/'data/mis-6.12-status.json')
+  with (root/'data/Ongoing_Works_dynamic_work_details_latest.csv').open(encoding='utf-8-sig',newline='') as f:
+   expected=ongoing_yd_secure_flags(csv.DictReader(f))
+  if not expected or report.get('flags')!=expected or report.get('updatedAt')!=meta.get('updatedAt'):raise ValueError('R6.12 convergence feed does not match validated MIS data')
  elif group=='yuktdhara_state':
   d=data(root/'data/yuktdhara-state-latest.json');rr=d.get('rows',[])
   if len(rr)!=52 or len({r['district'] for r in rr})!=52:raise ValueError('52 unique Yuktdhara districts required')

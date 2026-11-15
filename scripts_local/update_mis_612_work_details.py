@@ -124,6 +124,28 @@ def fetch():
     if len(unique)<1000:raise RuntimeError(f'MIS 6.12 Janpad-wise combined rows are incomplete: {len(unique)}')
     return list(unique.values()),counts
 
+def ongoing_yd_secure_flags(rows):
+    flags = {}
+    for row in rows:
+        code = row["Work Code"].strip().upper()
+        secure = row["Is Secure"].strip().upper()
+        if "/YD/" not in code or row["Work Status"].strip().upper() != "ONGOING" or secure not in ("YES", "NO"):
+            continue
+        flags[code] = secure if flags.get(code, secure) == secure else None
+    return {code: flag for code, flag in sorted(flags.items()) if flag}
+
+
+def write_ongoing_yd_secure_flags(rows, updated_at, root=ROOT):
+    flags = ongoing_yd_secure_flags(rows)
+    if not flags:
+        raise ValueError("R6.12 has no verified ongoing /YD/ Is Secure values")
+    path = root / "r612-yd-convergence.js"
+    temporary = path.with_suffix(".tmp")
+    payload = {"updatedAt": updated_at, "flags": flags}
+    temporary.write_text("window.R612_YD_CONVERGENCE=" + json.dumps(payload, separators=(",", ":")) + ";\n", encoding="utf-8")
+    temporary.replace(path)
+
+
 def main():
     rows,counts=fetch();OUT_CSV.parent.mkdir(exist_ok=True)
     with tempfile.NamedTemporaryFile('w',encoding='utf-8-sig',newline='',delete=False,dir=OUT_CSV.parent,suffix='.tmp') as f:
@@ -131,6 +153,7 @@ def main():
     temp.replace(OUT_CSV)
     subprocess.run([sys.executable,str(ROOT/'scripts'/'update_ongoing_csv.py')],cwd=ROOT,check=True)
     meta={'source':'Official MIS Report 6.12','officialUrl':URL,'updatedAt':datetime.now(timezone.utc).isoformat(),'rows':len(rows),'statusCounts':counts}
+    write_ongoing_yd_secure_flags(rows, meta['updatedAt'])
     (ROOT/'data'/'mis-6.12-status.json').write_text(json.dumps(meta,ensure_ascii=False,indent=2),encoding='utf-8')
     print(f'SUCCESS: MIS 6.12 live work list updated: {len(rows)} rows')
 
