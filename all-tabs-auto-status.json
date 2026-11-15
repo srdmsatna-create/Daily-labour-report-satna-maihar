@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-15T02:47:30.258939+00:00",
+  "checkedAt": "2026-11-15T04:09:14.043987+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_r511_persondays": {
@@ -171,14 +171,14 @@
         "data/as-geotag-before-latest.json",
         "as-geotag-before-data.js"
       ],
-      "attempts": 1
+      "attempts": 2
     },
     "ek_bagiya_payment": {
       "success": true,
       "files": [
         "data/ek-bagiya-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 2
     },
     "rejected_wage": {
       "success": true,
