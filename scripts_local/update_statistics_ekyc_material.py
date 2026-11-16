@@ -136,6 +136,49 @@ def fetch_legacy(financial_year, download_dir):
     return parse_legacy(source, financial_year)
 
 
+def resolve_legacy(legacy, previous, fetched_at):
+    prior = previous.get("mgnrega", {})
+    prior_years = set(prior.get("years", []))
+    required_years = prior_years | {"2024-2025", "2025-2026", "2026-2027"}
+    available_years = [year for year in LEGACY_YEARS if legacy[year] is not None]
+    unavailable_required = sorted(required_years.difference(available_years))
+
+    if unavailable_required:
+        snapshot_at = prior.get("fetchedAt") or previous.get("fetchedAt")
+        rows = previous.get("rows", [])
+        if not required_years.issubset(prior_years) or not snapshot_at or len(rows) != len(BLOCKS):
+            raise ValueError("Required MGNREGA reports missing and no complete verified snapshot: "
+                             + ", ".join(unavailable_required))
+        amounts = {
+            row["block"]: (row.get("mgnregaWageAmount"), row.get("mgnregaMaterialAmount"))
+            for row in rows
+        }
+        if set(amounts) != BLOCKS or any(
+            type(value) is not int or value < 0 for pair in amounts.values() for value in pair
+        ):
+            raise ValueError("Previous verified MGNREGA snapshot has invalid Janpad amounts")
+        print(f"MGNREGA financial amounts retained from {snapshot_at}. "
+              f"Unavailable required years: {', '.join(unavailable_required)}.", flush=True)
+        return {
+            **prior,
+            "fetchedAt": snapshot_at,
+            "status": "retained",
+            "unavailableRequiredYears": unavailable_required,
+        }, amounts
+
+    return {
+        "years": available_years,
+        "missingYears": [year for year in LEGACY_YEARS if year not in available_years],
+        "sources": {year: legacy_url(year) for year in available_years},
+        "basis": "Financial Statement payment due: wage column 19; material columns 20 + 21",
+        "fetchedAt": fetched_at,
+        "status": "verified",
+    }, {
+        block: tuple(sum(legacy[year][block][i] for year in available_years) for i in (0, 1))
+        for block in BLOCKS
+    }
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ekyc-html", type=Path)
@@ -154,16 +197,14 @@ def main():
         legacy = {year: future.result() for year, future in legacy_futures.items()}
     target = ROOT / "data/statistics-ekyc-material-latest.json"
     previous = json.loads(target.read_text(encoding="utf-8")) if target.exists() else {}
-    previous_years = set(previous.get("mgnrega", {}).get("years", []))
-    available_years = [year for year, data in legacy.items() if data is not None]
-    required_years = previous_years | {"2024-2025", "2025-2026", "2026-2027"}
-    if not required_years.issubset(available_years):
-        raise ValueError("Previously verified MGNREGA financial reports missing")
+    fetched_at = datetime.now(ZoneInfo("Asia/Kolkata")).isoformat()
+    mgnrega, legacy_amounts = resolve_legacy(legacy, previous, fetched_at)
 
     rows = []
     for block in sorted(BLOCKS):
         active, seeded, done = ekyc[block]
         wage_lakh, material_lakh = material[block]
+        legacy_wage, legacy_material = legacy_amounts[block]
         rows.append({
             "block": block,
             "activeWorkers": int(active),
@@ -171,21 +212,16 @@ def main():
             "eKycDone": int(done),
             "pendingWageAmount": int(wage_lakh * 100_000),
             "pendingMaterialAmount": int(material_lakh * 100_000),
-            "mgnregaWageAmount": sum(legacy[year][block][0] for year in available_years),
-            "mgnregaMaterialAmount": sum(legacy[year][block][1] for year in available_years),
+            "mgnregaWageAmount": legacy_wage,
+            "mgnregaMaterialAmount": legacy_material,
         })
     payload = {
         "financialYear": "2026-2027",
         "ekycWorkerScope": "active-workers",
-        "fetchedAt": datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(),
+        "fetchedAt": fetched_at,
         "sources": {"eKyc": EKYC_SOURCE, "material": MATERIAL_SOURCE},
         "rows": rows,
-        "mgnrega": {
-            "years": available_years,
-            "missingYears": [year for year in LEGACY_YEARS if year not in available_years],
-            "sources": {year: legacy_url(year) for year in available_years},
-            "basis": "Financial Statement payment due: wage column 19; material columns 20 + 21",
-        },
+        "mgnrega": mgnrega,
     }
     temporary = target.with_suffix(".tmp")
     temporary.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
