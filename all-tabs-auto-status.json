@@ -1,52 +1,22 @@
 {
-  "checkedAt": "2026-11-16T05:17:42.708003+00:00",
+  "checkedAt": "2026-11-16T08:12:20.083931+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
-    "emb_pending": {
-      "success": true,
-      "files": [
-        "data/emb-pending-latest.json"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "yuktdhara_bhuvan": {
-      "success": true,
-      "files": [
-        "yuktdhara-data.js"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "pmay_janpad_summary": {
-      "success": true,
-      "files": [
-        "pmay-janpad-summary-data.js"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "yuktdhara_mr_labour_history": {
-      "success": true,
-      "files": [
-        "data/yuktdhara-mr-labour-history.json"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
     "shramik_s58_ongoing": {
       "success": true,
       "files": [
         "shramik-s58-ongoing.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "shramik_r511_persondays": {
       "success": true,
       "files": [
         "shramik-r511-persondays.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "shramik_complete": {
       "success": true,
@@ -65,21 +35,24 @@
       "r69GpSourceDate": "15-11-2026",
       "r69GpRetrievedDate": "16-11-2026",
       "r69GpCurrent": false,
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
     },
     "r42_emuster_wagelist": {
       "success": true,
       "files": [
         "data/r42-emuster-wagelist.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "muster_emb": {
       "success": true,
       "files": [
         "muster-emb-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pending_mr_fto": {
       "success": true,
@@ -87,14 +60,32 @@
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
+    },
+    "emb_pending": {
+      "success": true,
+      "files": [
+        "data/emb-pending-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_state": {
       "success": true,
       "files": [
         "data/yuktdhara-state-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
+    },
+    "yuktdhara_bhuvan": {
+      "success": true,
+      "files": [
+        "yuktdhara-data.js"
+      ],
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara": {
       "success": true,
@@ -102,44 +93,40 @@
         "yuktdhara-official-data.js",
         "yuktdhara-received-data.js"
       ],
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
     },
     "pending_wage_payment": {
       "success": true,
       "files": [
         "data/pending-wage-payment-latest.json"
       ],
-      "attempts": 2
+      "attempts": 2,
+      "resumed": true
     },
     "timely_payment": {
       "success": true,
       "files": [
         "data/timely-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "delayed_compensation": {
       "success": true,
       "files": [
         "data/delayed-compensation-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "block_statistics": {
       "success": true,
       "files": [
         "vbg-block-stats.js"
       ],
-      "attempts": 1
-    },
-    "statistics_ekyc_material": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_statistics_ekyc_material.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_statistics_ekyc_material.py']\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_qoc67ht3\\report\\scripts_local\\update_statistics_ekyc_material.py\", line 197, in <module>\r\n    main()\r\n    ~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_qoc67ht3\\report\\scripts_local\\update_statistics_ekyc_material.py\", line 161, in main\r\n    raise ValueError(\"Previously verified MGNREGA financial reports missing\")\r\nValueError: Previously verified MGNREGA financial reports missing\r\n\nCOMMAND ['scripts_local/update_statistics_ekyc_material.py']\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_qoc67ht3\\report\\scripts_local\\update_statistics_ekyc_material.py\", line 197, in <module>\r\n    main()\r\n    ~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_qoc67ht3\\report\\scripts_local\\update_statistics_ekyc_material.py\", line 161, in main\r\n    raise ValueError(\"Previously verified MGNREGA financial reports missing\")\r\nValueError: Previously verified MGNREGA financial reports missing\r\n\nCOMMAND ['scripts_local/update_statistics_ekyc_material.py']\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_qoc67ht3\\report\\scripts_local\\update_statistics_ekyc_material.py\", line 197, in <module>\r\n    main()\r\n    ~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_qoc67ht3\\report\\scripts_local\\update_statistics_ekyc_material.py\", line 161, in main\r\n    raise ValueError(\"Previously verified MGNREGA financial reports missing\")\r\nValueError: Previously verified MGNREGA financial reports missing\r\n",
-      "files": [
-        "data/statistics-ekyc-material-latest.json"
-      ],
-      "attempts": 3
+      "attempts": 1,
+      "resumed": true
     },
     "mis_612": {
       "success": true,
@@ -150,35 +137,56 @@
         "ongoing-details.json.gz",
         "r612-yd-convergence.js"
       ],
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
+    },
+    "pmay_janpad_summary": {
+      "success": true,
+      "files": [
+        "pmay-janpad-summary-data.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "yuktdhara_mr_labour_history": {
+      "success": true,
+      "files": [
+        "data/yuktdhara-mr-labour-history.json"
+      ],
+      "attempts": 1,
+      "resumed": true
     },
     "pmayg_physical": {
       "success": true,
       "files": [
         "data/pmayg-physical-latest.json"
       ],
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
     },
     "pmayg": {
       "success": true,
       "files": [
         "data/pmayg-latest.json"
       ],
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
     },
     "above75": {
       "success": true,
       "files": [
         "data/above75-latest.json"
       ],
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
     },
     "planner": {
       "success": true,
       "files": [
         "planner-portal-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "secure_ts": {
       "success": true,
@@ -187,28 +195,32 @@
         "secure-ts-yuktadhara-data.js",
         "data/secure-ts-yuktadhara-fy2026-27.json"
       ],
-      "attempts": 2
+      "attempts": 2,
+      "resumed": true
     },
     "r37_secure_register": {
       "success": true,
       "files": [
         "data/r37-secure-register.json"
       ],
-      "attempts": 2
+      "attempts": 2,
+      "resumed": true
     },
     "secure_yd_as": {
       "success": true,
       "files": [
         "data/secure-as-yuktdhara.json"
       ],
-      "attempts": 2
+      "attempts": 2,
+      "resumed": true
     },
     "r617_secure_bhuvan": {
       "success": true,
       "files": [
         "data/r617-secure-bhuvan.json"
       ],
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
     },
     "as_geotag_before": {
       "success": true,
@@ -216,21 +228,33 @@
         "data/as-geotag-before-latest.json",
         "as-geotag-before-data.js"
       ],
-      "attempts": 3
+      "attempts": 3,
+      "resumed": true
     },
     "ek_bagiya_payment": {
       "success": true,
       "files": [
         "data/ek-bagiya-payment-latest.json"
       ],
-      "attempts": 2
+      "attempts": 2,
+      "resumed": true
     },
     "rejected_wage": {
       "success": true,
       "files": [
         "data/rejected-wage-latest.json"
       ],
-      "attempts": 2
+      "attempts": 2,
+      "resumed": true
+    },
+    "statistics_ekyc_material": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_statistics_ekyc_material.py']' returned non-zero exit status 1.",
+      "errorTail": "eq, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 634, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 563, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 643, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 401: Unauthorized\n\nCOMMAND ['scripts_local/update_statistics_ekyc_material.py']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 233, in <module>\n    main()\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 196, in main\n    ekyc, material = ekyc.result(), material.result()\n                     ^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/concurrent/futures/thread.py\", line 58, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 190, in read\n    return parse(file.read_text(encoding=\"utf-8-sig\") if file else request(), kind)\n                                                                   ^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 24, in fetch_active_ekyc\n    source, url = open_text(opener, EKYC_SOURCE, timeout=45)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_mis_612_work_details.py\", line 61, in open_text\n    with opener.open(req,timeout=timeout) as r:return r.read().decode('utf-8','ignore'),r.geturl()\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 525, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 634, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 563, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 643, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 401: Unauthorized\n\nCOMMAND ['scripts_local/update_statistics_ekyc_material.py']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 233, in <module>\n    main()\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 196, in main\n    ekyc, material = ekyc.result(), material.result()\n                     ^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/concurrent/futures/thread.py\", line 58, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 190, in read\n    return parse(file.read_text(encoding=\"utf-8-sig\") if file else request(), kind)\n                                                                   ^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_statistics_ekyc_material.py\", line 24, in fetch_active_ekyc\n    source, url = open_text(opener, EKYC_SOURCE, timeout=45)\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_re3zhwrz/report/scripts_local/update_mis_612_work_details.py\", line 61, in open_text\n    with opener.open(req,timeout=timeout) as r:return r.read().decode('utf-8','ignore'),r.geturl()\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 525, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 634, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 563, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 643, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 401: Unauthorized\n",
+      "files": [
+        "data/statistics-ekyc-material-latest.json"
+      ],
+      "attempts": 3
     }
   },
   "success": false
