@@ -5,19 +5,21 @@
 'use strict';
 const source={letter:'I/1368365/2026',date:'12-10-2026',pages:'1–9'};
 const rules=[
- ['allowed',/^construction of roof top rain water harvesting structure for individual$/i,'R3.4 में उपयोगकर्ता द्वारा पुष्टि; तालिका 1 क्र.2 एवं 3.10 संदर्भ','तालिका 1 में रूफटॉप वर्षाजल संचयन है; 3.10 में सामुदायिक निर्माण का विवरण है। व्यक्तिगत उपप्रकार इस रिपोर्ट में पुष्टि के आधार पर अनुमत्य है।'],
- ['allowed',/^construction of community sanitary complex for community$/i,'R3.4 में उपयोगकर्ता द्वारा पुष्टि; बिंदु 2.8 लागू होने पर अनुमति सत्यापित करें','सामुदायिक स्वच्छता परिसर की उपश्रेणी आंगनवाड़ी या सरकारी विद्यालय शौचालय की प्रविष्टि से अलग है।'],
+ ['pending',/^construction of (?:crematorium|cremation ghat) for community$/i,'तालिका 2 क्र.21; 3.22, पृष्ठ 2,7','तालिका में दर्ज है। स्वीकृति के लिए पृथक दिशा-निर्देश जारी होने की पुष्टि आवश्यक है।'],
+ ['pending',/^construction of (?:masonry check dam|water harvesting pond) for community$/i,'तालिका 2 क्र.6,9; 3.8,3.11, पृष्ठ 2,5–6','तालिका में दर्ज है। राज्य स्तरीय स्थल परीक्षण और पृथक दिशा-निर्देशों की पुष्टि आवश्यक है।'],
+ ['pending',/^construction of roof top rain water harvesting structure for individual$/i,'तालिका 1 क्र.2; 3.10, पृष्ठ 1,6','बिंदु 3.10 में सामुदायिक रूफटॉप दर्ज है। व्यक्तिगत उपप्रकार के लिए लागू अनुमति सत्यापित करें।'],
+ ['pending',/^construction of community sanitary complex for community$/i,'तालिका 2; बिंदु 2.8, पृष्ठ 2–4','सामुदायिक स्वच्छता परिसर 54-कार्य सूची में अलग श्रेणी के रूप में दर्ज नहीं है; बिंदु 2.8 के तहत लागू अनुमति सत्यापित करें।'],
  // The received Yuktdhara feed contains six Hindi labels. Keep them explicit so
  // they are classified against the same official clauses as their English counterparts.
- ['allowed',/^सामुदायिक तालाब जीर्णोद्धार$/i,'तालिका 2 क्र.12; 3.15, पृष्ठ 2,6','पारंपरिक पुराने तालाब का जीर्णोद्धार पात्र है। मनरेगा या अन्य योजना से निर्मित तालाब का जीर्णोद्धार अनुमत नहीं है।'],
- ['outside',/^सामुदायिक नाडेप (?:कम्पोस्ट|कंपोस्ट) पिट$/i,'R3.4 में उपयोगकर्ता द्वारा पुष्टि; पत्र की 54-कार्य सूची','सामुदायिक नाडेप को इस रिपोर्ट में गैर अनुमत्य वर्गीकृत किया गया है।'],
+ ['pending',/^सामुदायिक तालाब जीर्णोद्धार$/i,'तालिका 2 क्र.12; 3.15, पृष्ठ 2,6','स्रोत नाम से पुराने पारंपरिक तालाब की पुष्टि आवश्यक है। मनरेगा या अन्य योजना से निर्मित तालाब का जीर्णोद्धार अनुमत नहीं है।'],
+ ['pending',/^सामुदायिक नाडेप (?:कम्पोस्ट|कंपोस्ट) पिट$/i,'तालिका 2; बिंदु 2.8, पृष्ठ 2–4','सामुदायिक नाडेप सूची में दर्ज नहीं है; अन्य अनुमत कार्य के रूप में सक्षम अनुमति की पुष्टि आवश्यक है।'],
  ['pending',/^सामुदायिक रिचार्ज पिट$/i,'तालिका 1 क्र.4; पृष्ठ 1','रिचार्ज पिट केवल बोरवेल/हैंडपंप के समीप होने की शर्त पर; सामान्य नाम से स्थान की पुष्टि नहीं होती।'],
  ['allowed',/^सामुदायिक सोक पिट$/i,'तालिका 2 क्र.36; 3.31, पृष्ठ 3,8','परिषद के परिशिष्ट-6 अनुसार स्थल चयन और निर्माण आवश्यक है।'],
  ['allowed',/^सामुदायिक cc सड़क निर्माण$/i,'तालिका 2 क्र.19; 3.21, पृष्ठ 2,7','अभिसरण अनिवार्य; योजना से केवल मजदूरी अंश; मानक प्राक्कलन लागू।'],
  ['pending',/^सामुदायिक cc सड़क मरम्मत एवं रखरखाव$/i,'तालिका 2 क्र.53; 2.17, पृष्ठ 3,5','सामान्य सड़क मरम्मत का स्पष्ट मिलान नहीं; आपदा-पश्चात कार्य तभी जब राज्य द्वारा आपदा घोषित हो।'],
- ['outside',/^construction of nadep compost (?:pit|structure) for community$/i,'R3.4 में उपयोगकर्ता द्वारा पुष्टि; पत्र की 54-कार्य सूची','सामुदायिक नाडेप को इस रिपोर्ट में गैर अनुमत्य वर्गीकृत किया गया है।'],
+ ['pending',/^construction of nadep compost (?:pit|structure) for community$/i,'तालिका 2; बिंदु 2.8, पृष्ठ 2–4','सामुदायिक नाडेप सूची में दर्ज नहीं है; अन्य अनुमत कार्य के रूप में सक्षम अनुमति की पुष्टि आवश्यक है।'],
  ['pending',/^Construction of Recharge Pit for Community$/i,'तालिका 1 क्र.4; पृष्ठ 1','रिचार्ज पिट केवल बोरवेल/हैंडपंप के समीप होने की शर्त पर; सामान्य नाम से स्थान की पुष्टि नहीं होती।'],
- ['allowed',/^rejuvenation of pond for community$/i,'तालिका 2 क्र.12; 3.15, पृष्ठ 2,6','पारंपरिक पुराने तालाब का जीर्णोद्धार पात्र है। मनरेगा या अन्य योजना से निर्मित तालाब का जीर्णोद्धार अनुमत नहीं है।'],
+ ['pending',/^rejuvenation of pond for community$/i,'तालिका 2 क्र.12; 3.15, पृष्ठ 2,6','स्रोत नाम से पुराने पारंपरिक तालाब की पुष्टि आवश्यक है। मनरेगा या अन्य योजना से निर्मित तालाब का जीर्णोद्धार अनुमत नहीं है।'],
  ['pending',/^Repair & Maintenance of Cement Concrete Road for Community$/i,'तालिका 2 क्र.53; 2.17, पृष्ठ 3,5','सामान्य सड़क मरम्मत का स्पष्ट मिलान नहीं; आपदा-पश्चात कार्य तभी जब राज्य द्वारा आपदा घोषित हो।'],
  ['outside',/\b(?:kutcha|katcha|unlined|earthen)\b.*\b(?:drain|channel|canal)\b|कच्ची?\s*(?:नाली|चैनल)/i,'3.5; पृष्ठ 5','कच्ची नाली/कच्चे चैनल का निर्माण स्पष्ट रूप से अनुमत नहीं है।'],
  ['outside',/(?:gravel|ग्रेवल).*(?:not under|other than|outside|गैर|से बाहर).*(?:sugam|सुगम)/i,'3.25; पृष्ठ 8','सुगम संपर्कता के अतिरिक्त अन्य ग्रेवल सड़क स्वीकृत नहीं की जाएगी।'],
@@ -29,15 +31,15 @@ const rules=[
  ['allowed',/^construction of sitting chaupal\/pandal for community$/i,'तालिका 2 क्र.35; 3.30, पृष्ठ 3,8','परिशिष्ट-1(x) का मानक प्राक्कलन लागू है।'],
  ['allowed',/^construction of marriage\/community hall for community$/i,'तालिका 2 क्र.28; 3.26, पृष्ठ 2,8','अभिसरण आवश्यक है। पूर्व से सामुदायिक भवन निर्मित या स्वीकृत होने पर नया भवन स्वीकृत नहीं होगा।'],
  ['pending',/^construction of gravel\s*\/\s*mitti murram road for community$/i,'तालिका 2 क्र.24; 3.25, पृष्ठ 2,8','सुगम संपर्कता परियोजना में चयन का प्रमाण चाहिए। परियोजना से बाहर की ग्रेवल सड़क गैर अनुमत्य है।'],
- ['allowed',/^construction of sand-filled groundwater recharge in borewell for community$/i,'R3.4 में उपयोगकर्ता द्वारा पुष्टि; तालिका 1 क्र.3–4 एवं 3.4 संदर्भ','पत्र में कूप पुनर्भरण और निष्क्रिय बोरवेल का फिल्ट्रेशन चैंबर वर्णित हैं। बोरवेल में रेत भरने वाले स्रोत उपप्रकार का शब्दशः नाम अलग है।'],
+ ['pending',/^construction of sand-filled groundwater recharge in borewell for community$/i,'तालिका 1 क्र.3–4; 3.4, पृष्ठ 1,5','कूप पुनर्भरण और निष्क्रिय बोरवेल का फिल्ट्रेशन चैंबर वर्णित हैं। रेत भरने वाले बोरवेल उपप्रकार का सीधा मिलान नहीं है।'],
  ['pending',/^construction of sand-filled groundwater recharge in borewell for individual$/i,'तालिका 1 क्र.3–4; 3.4, पृष्ठ 1,5','व्यक्तिगत बोरवेल का स्रोत उपप्रकार और लागू अनुमति सत्यापित करें।'],
  ['pending',/^construction of soak pit for individual$/i,'तालिका 1 क्र.4; तालिका 2 क्र.36; पृष्ठ 1,3','तालिका 2 में सामान्य सोक पिट समुदाय हेतु है। व्यक्तिगत कार्य के लिए स्थल और लागू अनुमति सत्यापित करें।'],
  ['pending',/^block plantation of horticulture trees in fields for individual$/i,'3.12; पृष्ठ 6','व्यक्तिगत वृक्षारोपण के लिए एक बगिया माँ के नाम परियोजना में शामिल होने का प्रमाण चाहिए।'],
  ['pending',/^plantation in institutions for community$/i,'तालिका 2 क्र.10; 3.13, पृष्ठ 2,6','सरकारी संस्था, अधिकतम 50 पौधे, चारदीवारी, पानी की उपलब्धता और SIPRI स्थल चयन सत्यापित करें।'],
  ['outside',/(?:beneficiary|individual).*plantation.*(?:not under|outside|other than).*bagiya|(?:plantation|वृक्षारोपण).*(?:बगिया परियोजना से बाहर)/i,'3.12; पृष्ठ 6','हितग्राहीमूलक वृक्षारोपण केवल एक बगिया माँ के नाम परियोजना में अनुमत्य है।'],
  ['outside',/(?:rejuvenation|renovation).*(?:pond|step.?well).*(?:built|constructed) under (?:mgnrega|another scheme)/i,'3.15; पृष्ठ 6','मनरेगा या अन्य योजना से बनी ऐसी संरचना का जीर्णोद्धार अनुमत नहीं है।'],
- ['allowed',/\bconstruction\b.*(?:continuous|staggered).*contour trench|कंटूर\s*(?:ट्रेंच|खाई)/i,'तालिका 1 क्र.1; 3.2, पृष्ठ 1,5','SIPRI स्थल चयन और निर्धारित मानक/लागत की शर्तें लागू हैं।'],
- ['allowed',/^construction of boulder check dam for (?:community|individual|groups)$/i,'तालिका 1 क्र.1; 3.1, पृष्ठ 1,5','नाले/ढलान का उपयुक्त स्थल तथा SIPRI/मानक प्राक्कलन जाँचना आवश्यक है।'],
+ ['allowed',/\bconstruction\b.*(?:continuous|staggered).*contour trench.*for community|कंटूर\s*(?:ट्रेंच|खाई)/i,'तालिका 1 क्र.1; 3.2, पृष्ठ 1,5','SIPRI स्थल चयन और निर्धारित मानक/लागत की शर्तें लागू हैं।'],
+ ['allowed',/^construction of boulder check dam for community$/i,'तालिका 1 क्र.1; 3.1, पृष्ठ 1,5','नाले/ढलान का उपयुक्त स्थल तथा SIPRI/मानक प्राक्कलन जाँचना आवश्यक है।'],
  ['allowed',/construction of (?:gabion|gabbion).*check dam/i,'तालिका 1 क्र.1; 3.6, पृष्ठ 1,5','SIPRI स्थल चयन और मानक प्राक्कलन लागू हैं।'],
  ['allowed',/^construction of roof top rain water harvesting structure for community$/i,'तालिका 1 क्र.2; 3.10, पृष्ठ 1,6','SIPRI तथा निर्धारित तकनीकी दिशानिर्देश लागू हैं।'],
  ['allowed',/construction of sand-filled groundwater recharge in dug well for (?:community|individual|groups)/i,'तालिका 1 क्र.3; पृष्ठ 1','कूप पुनर्भरण; तकनीकी स्थल-पात्रता और निर्धारित जल-संबंधी शर्तें लागू हैं।'],
@@ -72,7 +74,7 @@ const rules=[
  // Explicit coverage for additional work types in the 54-item construction list
  // (MP letter I/1368365/2026, table 2). These are type-level permissions;
  // the listed convergence, location, and disaster conditions still apply.
- ['allowed',/block plantation.*(?:agroforestry|community)|agroforestry.*block plantation/i,'तालिका 2 क्र.11; 3.14, पृष्ठ 2,6','समुदाय हेतु 5 एकड़ से अधिक पात्र क्षेत्र तथा .kml फाइल सहित प्रस्ताव; SIPRI/परिशिष्ट-1(m) लागू।'],
+ ['allowed',/block plantation.*agro[ -]?forestry|agro[ -]?forestry.*block plantation/i,'तालिका 2 क्र.11; 3.14, पृष्ठ 2,6','समुदाय हेतु 5 एकड़ से अधिक पात्र क्षेत्र तथा .kml फाइल सहित प्रस्ताव; SIPRI/परिशिष्ट-1(m) लागू।'],
  ['allowed',/(?:rejuvenation|renovation|repair.*maintenance).*(?:step.?well|bawdi|baoli)|(?:step.?well|bawdi|baoli).*(?:rejuvenation|renovation)/i,'तालिका 2 क्र.13; 3.15, पृष्ठ 2,6','केवल पारंपरिक बावड़ी/स्टेपवेल; अन्य योजना से बनी संरचना का जीर्णोद्धार नहीं।'],
  ['allowed',/construction of (?:cremation|crematorium|shamshan|antim sanskar).*(?:ghat|platform|shed)?|(?:cremation|crematorium|shamshan) ghat/i,'तालिका 2 क्र.21; 3.22, पृष्ठ 2,7','बिंदु 3.22 के पृथक दिशा-निर्देश जारी होने के बाद ही स्वीकृति दी जा सकती है।'],
  ['allowed',/(?:construction of|for community).*(?:kabristan|burial ground|graveyard)|(?:kabristan|burial ground|graveyard).*(?:construction|community)/i,'तालिका 2 क्र.25; 3.22, पृष्ठ 2,7','बिंदु 3.22 के पृथक दिशा-निर्देश जारी होने के बाद ही स्वीकृति दी जा सकती है।'],
