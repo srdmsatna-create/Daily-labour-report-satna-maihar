@@ -24,8 +24,10 @@ h1{text-align:center;color:#087b4d;font-size:30px;margin:10px 0 4px}
 .card small.neg{color:#c32838}
 .note{color:#5c7791;margin:6px 0 10px;font-size:14px}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:6px}
-table{border-collapse:collapse;width:100%;min-width:1470px;table-layout:fixed}
-thead th{background:#1a4f7d;color:#fff;padding:10px 7px;font-size:15px;position:sticky;top:0}
+table{border-collapse:collapse;width:100%;min-width:1660px;table-layout:fixed}
+thead th{background:#1a4f7d;color:#fff;padding:10px 7px;font-size:15px}
+thead{position:sticky;top:0}
+@media screen{col.janpad{width:116px}col.engineer{width:178px}col.core{width:151px}col.extra{width:100px}}
 td{border:1px solid #8da8c2;padding:4px 5px;text-align:center;vertical-align:middle;line-height:1.15}
 tbody tr:nth-child(even){background:#f7fafd}
 td:first-child,td:nth-child(2){text-align:left}
@@ -46,7 +48,7 @@ td:first-child,td:nth-child(2){text-align:left}
  .subtitle{font-size:9pt;margin-bottom:4mm}.cards{gap:4mm;margin:3mm 0}
  .card{min-height:auto;padding:2.5mm 3mm}.card label{font-size:8pt}.card strong{font-size:14pt}.card small{font-size:9pt}
  .table-wrap{overflow:visible;border:0}table{min-width:0;width:100%;font-size:8pt}
- thead{display:table-header-group}thead th{position:static;font-size:7.5pt;padding:1.2mm;overflow-wrap:anywhere}
+ thead{display:table-header-group;position:static}thead th{font-size:8pt;padding:1.5mm}
  td{font-size:8pt;padding:1.2mm .8mm;break-inside:avoid}.metric b{font-size:9pt}.metric small{font-size:9pt;font-weight:900}
  tr{break-inside:avoid}button{display:none}
 }
@@ -68,10 +70,11 @@ td:first-child,td:nth-child(2){text-align:left}
 
 <h2 class="summary-title">Planning Summary रिपोर्ट की तुलना — 27-10-2026 से 17-11-2026</h2>
 <div id="cards" class="cards"></div>
-<p class="note" id="filterNote">हर खाने में पहले 27-10-2026 और फिर 17-11-2026 का मान दिखेगा। नीचे का अंतर नए मान में से पुराने मान को घटाकर है। — का अर्थ है कि स्रोत में सत्यापित आँकड़ा उपलब्ध नहीं है।</p>
+<p class="note" id="filterNote">हर खाने में पहले 27-10-2026 और फिर 17-11-2026 का मान दिखेगा। नीचे का अंतर नए मान में से पुराने मान को घटाकर है।</p>
 <div class="table-wrap"><table>
+<colgroup><col class="janpad"><col class="engineer"><col class="core" span="5"><col class="extra" span="6"></colgroup>
 <thead>
-<tr><th rowspan="2" style="width:10%">जनपद / जिला</th><th rowspan="2" style="width:13%">उपयंत्री</th><th rowspan="2">Planner कार्य (स्थिर)</th><th rowspan="2">SIPRI में योजनाबद्ध</th><th rowspan="2">SIPRI हेतु लंबित</th><th rowspan="2">Approved By AE</th><th rowspan="2">Reviewed By SA</th><th rowspan="2">Total Approved (AE+SA)</th><th rowspan="2">Rejected</th><th rowspan="2">Geotagged By SE</th><th colspan="3">Yukthdhara Status</th></tr>
+<tr><th rowspan="2">जनपद / जिला</th><th rowspan="2">उपयंत्री</th><th rowspan="2">Planner कार्य (स्थिर)</th><th rowspan="2">SIPRI में योजनाबद्ध</th><th rowspan="2">SIPRI हेतु लंबित</th><th rowspan="2">Approved By AE</th><th rowspan="2">Reviewed By SA</th><th rowspan="2">Total Approved (AE+SA)</th><th rowspan="2">Rejected</th><th rowspan="2">Geotagged By SE</th><th colspan="3">Yukthdhara Status</th></tr>
 <tr><th>GAW</th><th>Non GAW</th><th>Total</th></tr>
 </thead>
 <tbody id="progressBody"></tbody></table></div>
@@ -137,7 +140,7 @@ function refreshFilterOptions(){
 function render(){
  const rows=DATA.rows.filter(matchesFilter),t=totals(rows);
  $("sourceNote").textContent=DATA.sourceNote;
- $("cards").innerHTML=METRICS.slice(0,7).map(m=>{
+ $("cards").innerHTML=METRICS.slice(0,5).map(m=>{
    const oldValue=val(t.old,m),newValue=val(t.now,m),d=newValue-oldValue;
    if(oldValue==null||newValue==null)return '<div class="card"><label>'+m.name+'</label><strong>'+(newValue==null?'—':fmt(newValue))+'</strong></div>';
    if(m.fixed)return '<div class="card"><label>'+m.name+'</label><strong>'+fmt(newValue)+'</strong><small class="neutral">स्थिर • अंतर नहीं</small></div>';
