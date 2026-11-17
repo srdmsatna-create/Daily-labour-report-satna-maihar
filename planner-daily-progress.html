@@ -24,7 +24,7 @@ h1{text-align:center;color:#087b4d;font-size:30px;margin:10px 0 4px}
 .card small.neg{color:#c32838}
 .note{color:#5c7791;margin:6px 0 10px;font-size:14px}
 .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:6px}
-table{border-collapse:collapse;width:100%;min-width:1050px;table-layout:fixed}
+table{border-collapse:collapse;width:100%;min-width:1470px;table-layout:fixed}
 thead th{background:#1a4f7d;color:#fff;padding:10px 7px;font-size:15px;position:sticky;top:0}
 td{border:1px solid #8da8c2;padding:4px 5px;text-align:center;vertical-align:middle;line-height:1.15}
 tbody tr:nth-child(even){background:#f7fafd}
@@ -46,7 +46,7 @@ td:first-child,td:nth-child(2){text-align:left}
  .subtitle{font-size:9pt;margin-bottom:4mm}.cards{gap:4mm;margin:3mm 0}
  .card{min-height:auto;padding:2.5mm 3mm}.card label{font-size:8pt}.card strong{font-size:14pt}.card small{font-size:9pt}
  .table-wrap{overflow:visible;border:0}table{min-width:0;width:100%;font-size:8pt}
- thead{display:table-header-group}thead th{position:static;font-size:8pt;padding:1.5mm}
+ thead{display:table-header-group}thead th{position:static;font-size:7.5pt;padding:1.2mm;overflow-wrap:anywhere}
  td{font-size:8pt;padding:1.2mm .8mm;break-inside:avoid}.metric b{font-size:9pt}.metric small{font-size:9pt;font-weight:900}
  tr{break-inside:avoid}button{display:none}
 }
@@ -63,17 +63,20 @@ td:first-child,td:nth-child(2){text-align:left}
 <button type="button" onclick="window.print()">Print / PDF</button>
 </div>
 <h1>दैनिक Planner से SIPRI प्रगति पत्रक</h1>
-<p class="subtitle">27-10-2026 से 09-11-2026 की Planning Summary तुलना<br><span id="sourceNote"></span></p>
+<p class="subtitle">27-10-2026 से 17-11-2026 की Planning Summary तुलना<br><span id="sourceNote"></span><br>— = सत्यापित आँकड़ा उपलब्ध नहीं</p>
 
 
-<h2 class="summary-title">Planning Summary रिपोर्ट की तुलना — 27-10-2026 से 09-11-2026</h2>
+<h2 class="summary-title">Planning Summary रिपोर्ट की तुलना — 27-10-2026 से 17-11-2026</h2>
 <div id="cards" class="cards"></div>
-<p class="note" id="filterNote">हर खाने में पहले 27-10-2026 और फिर 09-11-2026 का मान दिखेगा। नीचे का अंतर आज के मान में से पुराने मान को घटाकर है।</p>
+<p class="note" id="filterNote">हर खाने में पहले 27-10-2026 और फिर 17-11-2026 का मान दिखेगा। नीचे का अंतर नए मान में से पुराने मान को घटाकर है। — का अर्थ है कि स्रोत में सत्यापित आँकड़ा उपलब्ध नहीं है।</p>
 <div class="table-wrap"><table>
-<thead><tr><th style="width:11%">जनपद / जिला</th><th style="width:17%">उपयंत्री</th><th>Planner कार्य (स्थिर)</th><th>SIPRI में योजनाबद्ध</th><th>SIPRI हेतु लंबित</th><th>AE स्वीकृत</th><th>SA द्वारा समीक्षित</th></tr></thead>
+<thead>
+<tr><th rowspan="2" style="width:10%">जनपद / जिला</th><th rowspan="2" style="width:13%">उपयंत्री</th><th rowspan="2">Planner कार्य (स्थिर)</th><th rowspan="2">SIPRI में योजनाबद्ध</th><th rowspan="2">SIPRI हेतु लंबित</th><th rowspan="2">Approved By AE</th><th rowspan="2">Reviewed By SA</th><th rowspan="2">Total Approved (AE+SA)</th><th rowspan="2">Rejected</th><th rowspan="2">Geotagged By SE</th><th colspan="3">Yukthdhara Status</th></tr>
+<tr><th>GAW</th><th>Non GAW</th><th>Total</th></tr>
+</thead>
 <tbody id="progressBody"></tbody></table></div>
 </main>
-<script src="planner-daily-progress-data.js?v=20261109-planning"></script>
+<script src="planner-daily-progress-data.js?v=20261117-planning"></script>
 <script>
 (function(){
 const DATA=window.PLANNER_DAILY_PROGRESS;
@@ -82,19 +85,34 @@ const METRICS=[
  {name:"SIPRI में योजनाबद्ध",i:1,lower:false},
  {name:"SIPRI हेतु लंबित",i:-1,lower:true},
  {name:"AE स्वीकृत",i:2,lower:false},
- {name:"SA द्वारा समीक्षित",i:3,lower:false}
+ {name:"SA द्वारा समीक्षित",i:3,lower:false},
+ {name:"Total Approved (AE+SA)",i:-2,lower:false},
+ {name:"Rejected",i:4,lower:true},
+ {name:"Geotagged By SE",i:5},
+ {name:"GAW",i:6},
+ {name:"Non GAW",i:7},
+ {name:"Total",i:-3}
 ];
 const $=id=>document.getElementById(id);
 const fmt=n=>Number(n||0).toLocaleString("en-IN");
 function totals(rows){
- const a=[0,0,0,0],b=[0,0,0,0];
- rows.forEach(r=>{for(let i=0;i<4;i++){a[i]+=r.old[i];b[i]+=r.now[i];}});
- return {old:a,now:b};
+ const sum=period=>Array.from({length:8},(_,i)=>{
+   if(!rows.length||rows.some(r=>r[period][i]==null))return null;
+   return rows.reduce((total,r)=>total+r[period][i],0);
+ });
+ return {old:sum("old"),now:sum("now")};
 }
-function val(x,m){return m.i===-1?x[0]-x[1]:x[m.i];}
+function val(x,m){
+ if(m.i===-1)return x[0]==null||x[1]==null?null:x[0]-x[1];
+ if(m.i===-2)return x[2]==null||x[3]==null?null:x[2]+x[3];
+ if(m.i===-3)return x[6]==null||x[7]==null?null:x[6]+x[7];
+ return x[m.i];
+}
 function signed(n){return n>0?"+"+fmt(n):n<0?"−"+fmt(Math.abs(n)):"(0)";}
 function deltaClass(d,lower){return d===0?"neutral":((lower?d<0:d>0)?"good":"bad");}
 function cell(a,b,lower,fixed){
+ if(b==null)return '<td class="metric" title="सत्यापित आँकड़ा उपलब्ध नहीं">—</td>';
+ if(a==null)return '<td class="metric"><b>'+fmt(b)+'</b></td>';
  if(fixed)return '<td class="metric"><b>'+fmt(b)+'</b></td>';
  const d=b-a;
  return '<td class="metric"><b>'+fmt(a)+' → '+fmt(b)+'</b><small class="'+deltaClass(d,lower)+'">'+signed(d)+'</small></td>';
@@ -119,8 +137,9 @@ function refreshFilterOptions(){
 function render(){
  const rows=DATA.rows.filter(matchesFilter),t=totals(rows);
  $("sourceNote").textContent=DATA.sourceNote;
- $("cards").innerHTML=METRICS.map(m=>{
+ $("cards").innerHTML=METRICS.slice(0,7).map(m=>{
    const oldValue=val(t.old,m),newValue=val(t.now,m),d=newValue-oldValue;
+   if(oldValue==null||newValue==null)return '<div class="card"><label>'+m.name+'</label><strong>'+(newValue==null?'—':fmt(newValue))+'</strong></div>';
    if(m.fixed)return '<div class="card"><label>'+m.name+'</label><strong>'+fmt(newValue)+'</strong><small class="neutral">स्थिर • अंतर नहीं</small></div>';
    return '<div class="card '+(m.i===1||m.i===2?'good-card':'')+'"><label>'+m.name+'</label><strong>'+fmt(oldValue)+' → '+fmt(newValue)+'</strong><small class="'+deltaClass(d,m.lower)+'">'+signed(d)+' बदलाव</small></div>';
  }).join("");
@@ -145,7 +164,7 @@ function render(){
      });
    });
  });
- if(!html)html='<tr><td class="empty" colspan="7">इस फ़िल्टर के लिए डेटा उपलब्ध नहीं है।</td></tr>';
+ if(!html)html='<tr><td class="empty" colspan="13">इस फ़िल्टर के लिए डेटा उपलब्ध नहीं है।</td></tr>';
  $("progressBody").innerHTML=html;
 }
 function renderAll(){render();}
@@ -158,3 +177,4 @@ renderAll();
 </script>
 </body>
 </html>
+
