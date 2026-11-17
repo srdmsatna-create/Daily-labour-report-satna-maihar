@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-17T02:39:03.692002+00:00",
+  "checkedAt": "2026-11-17T03:52:22.297847+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_s58_ongoing": {
@@ -181,7 +181,7 @@
         "secure-ts-yuktadhara-data.js",
         "data/secure-ts-yuktadhara-fy2026-27.json"
       ],
-      "attempts": 1
+      "attempts": 2
     },
     "r37_secure_register": {
       "success": true,
@@ -195,7 +195,7 @@
       "files": [
         "data/secure-as-yuktdhara.json"
       ],
-      "attempts": 2
+      "attempts": 1
     },
     "r617_secure_bhuvan": {
       "success": true,
