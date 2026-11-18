@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-18T08:49:15.773549+00:00",
+  "checkedAt": "2026-11-18T09:26:22.191218+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_s58_ongoing": {
@@ -246,16 +246,14 @@
       "resumed": true
     },
     "secure_ts": {
-      "success": false,
-      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_secure_ts.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_secure_ts.py']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 316, in <module>\n    fetch(workers=args.workers)\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 191, in fetch\n    client = Client()\n             ^^^^^^^^\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 57, in __init__\n    with self.opener.open(BASE + 'tsregister?mvsl=69', timeout=45) as r:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 525, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 634, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 563, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 643, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 401: Unauthorized\n\nCOMMAND ['scripts_local/update_secure_ts.py']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 316, in <module>\n    fetch(workers=args.workers)\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 191, in fetch\n    client = Client()\n             ^^^^^^^^\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 57, in __init__\n    with self.opener.open(BASE + 'tsregister?mvsl=69', timeout=45) as r:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 525, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 634, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 563, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 643, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 401: Unauthorized\n\nCOMMAND ['scripts_local/update_secure_ts.py']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 316, in <module>\n    fetch(workers=args.workers)\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 191, in fetch\n    client = Client()\n             ^^^^^^^^\n  File \"/tmp/SRDM_DAILY_6aoqawb9/report/scripts_local/update_secure_ts.py\", line 57, in __init__\n    with self.opener.open(BASE + 'tsregister?mvsl=69', timeout=45) as r:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 525, in open\n    response = meth(req, response)\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 634, in http_response\n    response = self.parent.error(\n               ^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 563, in error\n    return self._call_chain(*args)\n           ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 496, in _call_chain\n    result = func(*args)\n             ^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py\", line 643, in http_error_default\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\nurllib.error.HTTPError: HTTP Error 401: Unauthorized\n",
+      "success": true,
       "files": [
         "secure-ts-data.js",
         "secure-ts-yuktadhara-data.js",
         "data/secure-ts-yuktadhara-fy2026-27.json"
       ],
-      "attempts": 3
+      "attempts": 1
     }
   },
-  "success": false
+  "success": true
 }
