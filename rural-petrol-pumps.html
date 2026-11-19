@@ -47,7 +47,8 @@ function render() {
  }
  const gpCounts = new Map();
  details.replaceChildren();
- for (const row of filtered) {
+ for (let index = 0; index < filtered.length; index++) {
+   const row = filtered[index];
    const gpKey = JSON.stringify(row.slice(2,5));
    gpCounts.set(gpKey, (gpCounts.get(gpKey) || 0) + 1);
    const tr = fillRow(details, [String(row[0]), ...row.slice(1,9), taxRange(1)], 9, row[3]);
@@ -59,9 +60,13 @@ function render() {
      link.textContent = row[5];
      tr.cells[5].replaceChildren(link);
    }
+   const nextRow = filtered[index + 1];
+   if (!nextRow || nextRow[3] !== row[3]) {
+     const totalRow = fillRow(details, ["", "", "", row[2], "", "", row[3] + " — जनपद कुल", "", "", taxRange(filtered.slice(0, index + 1).filter(item => item[3] === row[3]).length)], 9, row[3]);
+     totalRow.className = "district-total";
+   }
  }
- const janpadTotals = [...janpadCounts].sort(([a], [b]) => a.localeCompare(b, "hi")).map(([key, count]) => JSON.parse(key)[1] + " " + count).join("  |  ");
- get("result").textContent = filtered.length ? filtered.length + " / " + rows.length + " प्रविष्टियाँ  |  जनपदवार कुल: " + janpadTotals : "इन फ़िल्टरों पर कोई प्रविष्टि नहीं मिली।";
+ get("result").textContent = filtered.length ? filtered.length + " / " + rows.length + " प्रविष्टियाँ" : "इन फ़िल्टरों पर कोई प्रविष्टि नहीं मिली।";
 }
 choices(district,"सभी जिले",rows.map(row => row[2]));
 [district,block,panchayat].forEach(select => select.addEventListener("change",render));
