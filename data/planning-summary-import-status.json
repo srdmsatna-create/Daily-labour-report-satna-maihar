@@ -1,37 +1,37 @@
 {
-  "date": "2026-11-15",
+  "date": "2026-11-19",
   "source": {
-    "uploadedDate": "15-11-2026",
+    "uploadedDate": "19-11-2026",
     "files": [
-      "Planning_Summary_Report (25).xlsx",
-      "Planning_Summary_Report (26).xlsx"
+      "Planning_Summary_Report (28).xlsx",
+      "Planning_Summary_Report (27).xlsx"
     ],
     "sourceRows": 8569,
     "mappingSource": "gp-sector-engineer-master-25-09-2026.csv",
     "sourceFiles": [
       {
-        "file": "Planning_Summary_Report (25).xlsx",
-        "sha256": "adc438d3c7562f6910bb5d63e7ab7dad36fdae8b22b946417a8adec54ed1a9ce",
+        "file": "Planning_Summary_Report (28).xlsx",
+        "sha256": "37f52efe0a4642c05cbb4d3d4c7b246c5dcf6090d351d4b5bd53a6c8d6dd95ee",
         "rows": 5103
       },
       {
-        "file": "Planning_Summary_Report (26).xlsx",
-        "sha256": "7446c80a6c824139636517e2edd5e97ad7f27480f24d73e65256776af698499f",
+        "file": "Planning_Summary_Report (27).xlsx",
+        "sha256": "17ef4f7e345586b88b75a9fed1c5c0962793196b7abe739142f20e39aab32041",
         "rows": 3466
       }
     ],
     "mappedRows": 8569,
     "unmappedRows": 0,
     "districtLabelsNormalized": 423,
-    "sipriAbovePlannerRows": 133
+    "sipriAbovePlannerRows": 138
   },
   "totals": {
     "plannerDetail": 30404,
-    "sipri": 2458,
-    "aeApproved": 1382,
-    "aePending": 1076,
+    "sipri": 2560,
+    "aeApproved": 1477,
+    "aePending": 1083,
     "stateReviewed": 411,
-    "statePending": 1001
+    "statePending": 1096
   },
   "blocks": [
     [
@@ -61,31 +61,31 @@
       "Majhgawan",
       "Assistant Engineer - Majhgawan",
       2466,
-      428,
-      246,
-      182,
+      449,
+      258,
+      191,
       38,
-      208
+      220
     ],
     [
       "Satna",
       "Nagod",
       "Assistant Engineer - Nagod",
       2639,
-      448,
-      307,
-      141,
+      486,
+      387,
+      99,
       35,
-      272
+      352
     ],
     [
       "Maihar",
       "Ramnagar",
       "Assistant Engineer - Ramnagar",
       5578,
-      426,
+      462,
       210,
-      216,
+      252,
       78,
       132
     ],
@@ -94,22 +94,22 @@
       "Rampur baghelan",
       "Assistant Engineer - Rampur baghelan",
       3186,
-      209,
-      108,
+      210,
+      109,
       101,
       90,
-      18
+      19
     ],
     [
       "Satna",
       "Sohawal",
       "Assistant Engineer - Sohawal",
       3221,
-      483,
-      315,
-      168,
+      489,
+      317,
+      172,
       79,
-      236
+      238
     ],
     [
       "Satna",
@@ -347,6 +347,13 @@
     },
     {
       "block": "Nagod",
+      "panchayat": "Mugahar",
+      "structure": "Gravel road",
+      "planner": 1,
+      "sipri": 2
+    },
+    {
+      "block": "Nagod",
       "panchayat": "Rahikawara",
       "structure": "Gravel road",
       "planner": 1,
@@ -379,6 +386,13 @@
       "structure": "CC road",
       "planner": 4,
       "sipri": 9
+    },
+    {
+      "block": "Nagod",
+      "panchayat": "Umari Brij",
+      "structure": "CC road",
+      "planner": 5,
+      "sipri": 6
     },
     {
       "block": "Majhgawan",
@@ -417,10 +431,24 @@
     },
     {
       "block": "Majhgawan",
+      "panchayat": "Bairahana",
+      "structure": "CC road",
+      "planner": 2,
+      "sipri": 3
+    },
+    {
+      "block": "Majhgawan",
       "panchayat": "Bathawa",
       "structure": "CC road",
       "planner": 3,
       "sipri": 9
+    },
+    {
+      "block": "Nagod",
+      "panchayat": "Rampura",
+      "structure": "CC road",
+      "planner": 3,
+      "sipri": 6
     },
     {
       "block": "Unchahara",
@@ -498,6 +526,13 @@
       "structure": "Soak pit",
       "planner": 1,
       "sipri": 2
+    },
+    {
+      "block": "Nagod",
+      "panchayat": "Gangwariya",
+      "structure": "Soak pit",
+      "planner": 4,
+      "sipri": 8
     },
     {
       "block": "Unchahara",
