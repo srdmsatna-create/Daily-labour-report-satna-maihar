@@ -52,6 +52,7 @@ const labels=['युक्तधारा से कुल प्राप्�
 const fmt=x=>x==null?'—':Number(x).toLocaleString('en-IN');
 const range=(min,max)=>min==null||max==null?'—':min===max?fmt(min):fmt(min)+'–'+fmt(max);
 const metricColors=['#0b7180','#6041a6','#bd6a12','#6041a6','#bd6a12','#bd6a12','#b43c34','#16804b','#087d89','#16804b','#b43c34','#087d89','#133e69'];
+const officialBhuvan1911={AMARPATAN:6,MAIHAR:36,MAJHGAWAN:34,NAGOD:16,RAMNAGAR:20,RAMPURBAGHELAN:14,SOHAWAL:50,UNCHAHARA:1};
 const remainingColumns=new Set([2,4,6,10]);
 const janpadColors={
  AMARPATAN:['#eee6fa','#6041a6'],MAIHAR:['#dceefd','#17699a'],
@@ -216,7 +217,8 @@ async function start(){
  }
  if(B&&completeAS){
   const matched=[...taggedByGP.values()].reduce((sum,codes)=>sum+codes.length,0);
-  document.querySelector('#ongoingGeoBasis').textContent='R6.17 / R6.22 ('+B.officialDate+'): '+fmt(asCodes.size)+' SECURE AS /YD/ कोड में '+fmt(matched)+' BHUVAN में प्राप्त।'+(kansaCorrection?' कांसा में R6.12 से दोनों प्रगतिरत कोड सत्यापित हैं।':'');
+  const officialBhuvanTotal=B.officialDate==='19/11/2026'?177:B.totals.receivedBhuvan;
+  document.querySelector('#ongoingGeoBasis').textContent='R6.17 / R6.22 ('+B.officialDate+'): कुल TS '+fmt(S.works.length)+' और BHUVAN में प्राप्त '+fmt(officialBhuvanTotal)+'।'+(kansaCorrection?' कांसा में R6.12 से दोनों प्रगतिरत कोड सत्यापित हैं।':'');
  }
  const official=new Map(Y.blocks.map(r=>[block(r.block),block(r.block)==='MAIHAR'&&kansaCorrection?{...r,ongoing:r.ongoing+kansaCorrection}:r]));
  const blockNames={'1712001':'MAJHGAWAN','1712002':'SOHAWAL','1712003':'NAGOD','1712004':'UNCHAHARA','1712005':'RAMPUR BAGHELAN','1712006':'AMARPATAN','1712007':'RAMNAGAR','1712008':'MAIHAR'};
@@ -246,13 +248,21 @@ async function start(){
   for(const r of rs){if(!teams.has(r.engineer))teams.set(r.engineer,[]);teams.get(r.engineer).push(r)}
   sectors.set(b,teams);
   const r=totals(rs),o=official.get(block(b));
-  summary.set(b,{...r,ts:rs.reduce((n,x)=>n+(x.ts||0),0),as:completeAS?rs.reduce((n,x)=>n+(x.as||0),0):null,verifiedAs:rs.reduce((n,x)=>n+(x.verifiedAs||0),0),received:o.worksReceived,created:o.worksCreated,ongoing:o.ongoing});
+  const bhuvanBlock=B?.blocks?.find(x=>block(x.janpad)===block(b));
+  const officialGeo=B?.officialDate==='19/11/2026'?officialBhuvan1911[block(b)]:bhuvanBlock?.receivedBhuvan;
+  const totalAs=completeAS?rs.reduce((n,x)=>n+(x.as||0),0):null;
+  summary.set(b,{...r,ts:rs.reduce((n,x)=>n+(x.ts||0),0),as:totalAs,verifiedAs:rs.reduce((n,x)=>n+(x.verifiedAs||0),0),received:o.worksReceived,created:o.worksCreated,ongoing:o.ongoing,...(Number.isInteger(officialGeo)?{geo:officialGeo,geoPending:Math.max(0,totalAs-officialGeo)}:{})});
  }
- const all=totals([...summary.values()]);
+ const aggregate=rows=>{
+  const result=totals(rows);
+  if(Number.isInteger(result.as)&&Number.isInteger(result.geo))result.geoPending=Math.max(0,result.as-result.geo);
+  return result;
+ };
+ const all=aggregate([...summary.values()]);
  let html='';
  for(const [d,bs] of groups){
   for(const b of bs)html+=row(d,b,'',summary.get(b),'janpad-total');
-  html+=row(d,'जिला योग','',totals(bs.map(b=>summary.get(b))),'total');
+  html+=row(d,'जिला योग','',aggregate(bs.map(b=>summary.get(b))),'total');
  }
  html+=row('संयुक्त','कुल','',all,'grand');
  document.querySelector('#summaryTable').innerHTML=table(html,false);
