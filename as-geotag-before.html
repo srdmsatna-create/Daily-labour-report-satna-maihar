@@ -173,8 +173,8 @@ async function start(){
   const values=[...ids].map(code=>F.get(code));
   const extra=Math.max(0,ids.size-ongoing);
   const non=Math.max(0,values.filter(flag=>flag==='YES').length-extra);
-  const conv=Math.max(0,values.filter(flag=>flag==='NO').length-extra);
-  return {non,conv,pending:ongoing-non-conv};
+  const conv=Math.max(0,ongoing-non);
+  return {non,conv,pending:0};
  }
  function draw(){
  const byGP=works=>{
