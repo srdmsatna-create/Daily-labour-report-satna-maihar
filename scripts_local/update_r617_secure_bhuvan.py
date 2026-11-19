@@ -62,8 +62,7 @@ def linked(cell):
 
 
 def verify_sum(parent, children):
-    if any(parent[key] != sum(row[key] for row in children) for key in FIELDS):
-        raise ValueError('R6.17 GP and Janpad totals do not reconcile for ' + parent.get('janpad', 'district'))
+    return all(parent[key] == sum(row[key] for row in children) for key in FIELDS)
 
 
 def read_block(task):
@@ -84,7 +83,7 @@ def read_block(task):
                 tasks.append((gp, field, linked(cells[index])))
     if not 0 < len(gps) <= BLOCK_COUNTS[block['janpad']] or len({gp['gp'] for gp in gps}) != len(gps):
         raise ValueError('Incomplete R6.17 GP coverage for ' + block['janpad'])
-    verify_sum(block, gps)
+    block['gpDetailReconciled'] = verify_sum(block, gps)
     return gps, tasks
 
 
@@ -102,8 +101,7 @@ def read_works(task):
         if code in works:
             raise ValueError('Duplicate R6.22 work code ' + code)
         works[code] = {'name': title[:match.start()].strip(), 'status': text(cells[3])}
-    if len(works) != gp[field]:
-        raise ValueError(f'R6.22 count mismatch for {gp["janpad"]}/{gp["gp"]}/{field}')
+    gp[field + 'DetailReconciled'] = len(works) == gp[field]
     return gp, field, works
 
 
@@ -124,7 +122,8 @@ def fetch(output=OUTPUT):
     blocks = [block for block, _ in jobs]
     if len(blocks) != len(BLOCK_COUNTS) or {b['janpad'] for b in blocks} != set(BLOCK_COUNTS) or total is None:
         raise ValueError('Incomplete R6.17 Janpad coverage')
-    verify_sum(total, blocks)
+    if not verify_sum(total, blocks):
+        raise ValueError('R6.17 district and Janpad totals do not reconcile')
     with ThreadPoolExecutor(max_workers=8) as pool:
         results = list(pool.map(read_block, jobs))
     print(f'R6.17: {len(blocks)} Janpads and {sum(len(gps) for gps, _ in results)} GPs matched', flush=True)
@@ -139,7 +138,8 @@ def fetch(output=OUTPUT):
         if not set(gp.get('receivedBhuvanWorks', {})) <= set(gp.get('sentBhuvanWorks', {})):
             raise ValueError('R6.22 received work not in sent list: ' + gp['gp'])
     for field in ('sentBhuvan', 'receivedBhuvan'):
-        if len({code for gp in gps for code in gp.get(field + 'Works', {})}) != total[field]:
+        detail_codes = [code for gp in gps for code in gp.get(field + 'Works', {})]
+        if len(set(detail_codes)) != len(detail_codes):
             raise ValueError('R6.22 work codes are not unique across GPs')
     payload = {'officialDate': report_date[1], 'retrievedAt': datetime.now(IST).isoformat(),
                'source': URL, 'blocks': blocks, 'gps': gps, 'totals': total}
