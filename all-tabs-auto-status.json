@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-18T09:26:22.191218+00:00",
+  "checkedAt": "2026-11-19T03:03:49.774105+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_s58_ongoing": {
@@ -7,16 +7,14 @@
       "files": [
         "shramik-s58-ongoing.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "shramik_r511_persondays": {
       "success": true,
       "files": [
         "shramik-r511-persondays.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "shramik_complete": {
       "success": true,
@@ -32,27 +30,24 @@
         "shramik-state-refresh-status.js",
         "shramik-refresh-status.js"
       ],
-      "r69GpSourceDate": "17-11-2026",
-      "r69GpRetrievedDate": "18-11-2026",
+      "r69GpSourceDate": "18-11-2026",
+      "r69GpRetrievedDate": "19-11-2026",
       "r69GpCurrent": false,
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "r42_emuster_wagelist": {
       "success": true,
       "files": [
         "data/r42-emuster-wagelist.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "muster_emb": {
       "success": true,
       "files": [
         "muster-emb-data.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "pending_mr_fto": {
       "success": true,
@@ -60,32 +55,28 @@
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "emb_pending": {
       "success": true,
       "files": [
         "data/emb-pending-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "yuktdhara_state": {
       "success": true,
       "files": [
         "data/yuktdhara-state-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "yuktdhara_bhuvan": {
       "success": true,
       "files": [
         "yuktdhara-data.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "yuktdhara": {
       "success": true,
@@ -93,48 +84,42 @@
         "yuktdhara-official-data.js",
         "yuktdhara-received-data.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "pending_wage_payment": {
       "success": true,
       "files": [
         "data/pending-wage-payment-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "timely_payment": {
       "success": true,
       "files": [
         "data/timely-payment-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "delayed_compensation": {
       "success": true,
       "files": [
         "data/delayed-compensation-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "block_statistics": {
       "success": true,
       "files": [
         "vbg-block-stats.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "statistics_ekyc_material": {
       "success": true,
       "files": [
         "data/statistics-ekyc-material-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "mis_612": {
       "success": true,
@@ -145,105 +130,49 @@
         "ongoing-details.json.gz",
         "r612-yd-convergence.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "pmay_janpad_summary": {
       "success": true,
       "files": [
         "pmay-janpad-summary-data.js"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "yuktdhara_mr_labour_history": {
       "success": true,
       "files": [
         "data/yuktdhara-mr-labour-history.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "pmayg_physical": {
       "success": true,
       "files": [
         "data/pmayg-physical-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "pmayg": {
       "success": true,
       "files": [
         "data/pmayg-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "above75": {
       "success": true,
       "files": [
         "data/above75-latest.json"
       ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "planner": {
       "success": true,
       "files": [
         "planner-portal-data.js"
       ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "r37_secure_register": {
-      "success": true,
-      "files": [
-        "data/r37-secure-register.json"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "secure_yd_as": {
-      "success": true,
-      "files": [
-        "data/secure-as-yuktdhara.json"
-      ],
-      "attempts": 3,
-      "resumed": true
-    },
-    "r617_secure_bhuvan": {
-      "success": true,
-      "files": [
-        "data/r617-secure-bhuvan.json"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "as_geotag_before": {
-      "success": true,
-      "files": [
-        "data/as-geotag-before-latest.json",
-        "as-geotag-before-data.js"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "ek_bagiya_payment": {
-      "success": true,
-      "files": [
-        "data/ek-bagiya-payment-latest.json"
-      ],
-      "attempts": 1,
-      "resumed": true
-    },
-    "rejected_wage": {
-      "success": true,
-      "files": [
-        "data/rejected-wage-latest.json"
-      ],
-      "attempts": 1,
-      "resumed": true
+      "attempts": 1
     },
     "secure_ts": {
       "success": true,
@@ -251,6 +180,49 @@
         "secure-ts-data.js",
         "secure-ts-yuktadhara-data.js",
         "data/secure-ts-yuktadhara-fy2026-27.json"
+      ],
+      "attempts": 1
+    },
+    "r37_secure_register": {
+      "success": true,
+      "files": [
+        "data/r37-secure-register.json"
+      ],
+      "attempts": 1
+    },
+    "secure_yd_as": {
+      "success": true,
+      "files": [
+        "data/secure-as-yuktdhara.json"
+      ],
+      "attempts": 1
+    },
+    "r617_secure_bhuvan": {
+      "success": true,
+      "files": [
+        "data/r617-secure-bhuvan.json"
+      ],
+      "attempts": 1
+    },
+    "as_geotag_before": {
+      "success": true,
+      "files": [
+        "data/as-geotag-before-latest.json",
+        "as-geotag-before-data.js"
+      ],
+      "attempts": 1
+    },
+    "ek_bagiya_payment": {
+      "success": true,
+      "files": [
+        "data/ek-bagiya-payment-latest.json"
+      ],
+      "attempts": 1
+    },
+    "rejected_wage": {
+      "success": true,
+      "files": [
+        "data/rejected-wage-latest.json"
       ],
       "attempts": 1
     }
