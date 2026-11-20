@@ -23,18 +23,22 @@ def block_key(s):
  key=norm(s)
  return 'SOHAWAL' if key=='SATNA' else key
 def open_with_retry(opener,url,data=None,timeout=60):
- for attempt in range(1,4):
+ max_attempts=6
+ retry_delays=(5,15,30,60,90)
+ for attempt in range(1,max_attempts+1):
   stop=threading.Event();started=time.monotonic()
   def heartbeat():
    while not stop.wait(15):
-    print('Waiting for official portal response: '+str(int(time.monotonic()-started))+' sec (attempt '+str(attempt)+'/3)',flush=True)
+    print('Waiting for official portal response: '+str(int(time.monotonic()-started))+' sec (attempt '+str(attempt)+'/'+str(max_attempts)+')',flush=True)
   worker=threading.Thread(target=heartbeat,daemon=True);worker.start()
   try:return open_text(opener,url,data,timeout=min(timeout,60))
   except Exception as e:
    retryable=isinstance(e,(TimeoutError,urllib.error.URLError))
    if isinstance(e,urllib.error.HTTPError):retryable=e.code in (408,429,500,502,503,504)
-   if not retryable or attempt==3:raise
-   print('Temporary portal failure; retry '+str(attempt)+'/2',flush=True)
+   if not retryable or attempt==max_attempts:raise
+   delay=retry_delays[attempt-1]
+   print('Temporary portal/DNS failure; waiting '+str(delay)+' sec before retry '+str(attempt+1)+'/'+str(max_attempts),flush=True)
+   time.sleep(delay)
   finally:stop.set();worker.join(timeout=1)
 
 
