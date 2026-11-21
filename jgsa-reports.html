@@ -16,9 +16,9 @@
 .category-ongoing-table .grand td{background:#164a7b;color:#fff;font-weight:900}
 .category-ongoing-table th:nth-child(-n+4),.category-ongoing-table td:nth-child(-n+4){position:sticky;z-index:3;background:#fff}
 .category-ongoing-table th:nth-child(1),.category-ongoing-table td:nth-child(1){left:0;width:75px;min-width:75px;max-width:75px}
-.category-ongoing-table th:nth-child(2),.category-ongoing-table td:nth-child(2){left:75px;width:120px;min-width:120px;max-width:120px}
-.category-ongoing-table th:nth-child(3),.category-ongoing-table td:nth-child(3){left:195px;width:155px;min-width:155px;max-width:155px;white-space:normal;line-height:1.2}
-.category-ongoing-table th:nth-child(4),.category-ongoing-table td:nth-child(4){left:350px;width:135px;min-width:135px;max-width:135px;white-space:normal;overflow-wrap:anywhere;line-height:1.2;border-right:3px solid #164a7b}
+.category-ongoing-table th:nth-child(2),.category-ongoing-table td:nth-child(2){left:75px;width:135px;min-width:135px;max-width:135px;white-space:nowrap;font-size:11px}
+.category-ongoing-table th:nth-child(3),.category-ongoing-table td:nth-child(3){left:210px;width:155px;min-width:155px;max-width:155px;white-space:normal;line-height:1.2}
+.category-ongoing-table th:nth-child(4),.category-ongoing-table td:nth-child(4){left:365px;width:135px;min-width:135px;max-width:135px;white-space:normal;overflow-wrap:anywhere;line-height:1.2;border-right:3px solid #164a7b}
 .category-ongoing-table thead th:nth-child(-n+4){z-index:7;background:#164a7b;color:#fff}
 .category-ongoing-table .engineer-total td:nth-child(-n+4){background:#fff2cc;color:#6f4e00}.category-ongoing-table .block-total td:nth-child(-n+4){background:#d9eaff;color:#124f87}.category-ongoing-table .district-total td:nth-child(-n+4){background:#dcebdc}
 .category-ongoing-table .grand td:nth-child(-n+4){background:#164a7b;color:#fff}
@@ -87,7 +87,7 @@ function categoryOngoingReport(r){
  const rowsHtml=body.map(row=>{const first=row[0],cls=first==='संयुक्त योग'?'grand':String(first).includes('उपयंत्री योग')?'engineer-total':String(first).includes('जनपद योग')?'block-total':String(first).includes('जिला योग')?'district-total':'';if(cls)return '<tr class="'+cls+'"><td class="text merged-total-label" colspan="4">'+escape(first)+'</td>'+row.slice(4).map((v,i)=>'<td class="n '+(i%8===0?'group-start':'')+'">'+escape(v)+'</td>').join('')+'</tr>';return '<tr>'+row.map((v,i)=>'<td class="'+(i>=4?'n '+((i-4)%8===0?'group-start':''):'text')+'">'+escape(v)+'</td>').join('')+'</tr>'}).join('');
  const summary=groups(r,['district','block','engineer','cluster','category']).map(g=>{const a=metrics(g.rows),remainingDays=Math.round(Math.max(0,a.bw)/300);return [...g.vals,a.count,money(a.cost),money(a.wb),money(a.mb),money(a.exp),a.pct===null?'—':fmt(a.pct)+'%',money(a.bw),money(a.bm),money(a.balance),remainingDays.toLocaleString('en-IN')]});
  const summaryHeads=['जिला','जनपद','उपयंत्री','क्लस्टर','कार्य का नाम','संख्या','कुल स्वीकृत लागत','व्यय मजदूरी','व्यय सामग्री','कुल व्यय','व्यय %','शेष मजदूरी','शेष सामग्री','कुल शेष','शेष मानव दिवस'];
- const compactCols='<colgroup><col style="width:75px"><col style="width:120px"><col style="width:155px"><col style="width:135px">'+cats.map(()=>'<col span="8" style="width:76px">').join('')+'</colgroup>',compactWidth=485+(cats.length*8*76);
+ const compactCols='<colgroup><col style="width:75px"><col style="width:135px"><col style="width:155px"><col style="width:135px">'+cats.map(()=>'<col span="8" style="width:76px">').join('')+'</colgroup>',compactWidth=500+(cats.length*8*76);
  return '<div class="category-ongoing-note">केवल प्रगतिरत (Ongoing) कार्य • श्रेणी/कार्य-नाम heading में • स्वीकृति, व्यय और शेष राशि ₹ लाख में • चयनित कार्य: '+r.length.toLocaleString('en-IN')+'</div><h2>प्रगतिरत कार्यों की सारांश</h2><p class="note">राशि ₹ लाख में • शेष मानव दिवस = शेष मजदूरी ÷ ₹300</p>'+table(summaryHeads,summary)+'<h2>श्रेणीवार विस्तृत वित्तीय तालिका</h2><div class="category-ongoing-wrap"><table class="category-ongoing-table" style="width:'+compactWidth+'px;min-width:'+compactWidth+'px;table-layout:fixed">'+compactCols+'<thead>'+head1+head2+'</thead><tbody>'+rowsHtml+'</tbody></table></div>';
 }
 
