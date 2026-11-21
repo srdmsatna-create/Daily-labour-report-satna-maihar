@@ -39,14 +39,22 @@ function categoryOngoingReport(r){
  const cats=(selected?[selected]:categoryOrder.filter(c=>r.some(w=>w.category===c))).concat([...new Set(r.map(w=>w.category).filter(c=>c&&!categoryOrder.includes(c)&&(!selected||c===selected)))].sort((a,b)=>a.localeCompare(b,'hi')));
  const groupRows=groups(r,['district','block','engineer','cluster']);
  const financial=x=>{const a=metrics(x);return [money(a.cost),money(a.wb),money(a.mb),money(a.exp),a.pct===null?'—':fmt(a.pct)+'%',money(a.bw),money(a.bm),money(a.balance)]};
- const body=groupRows.map(g=>[...g.vals,...cats.flatMap(c=>financial(g.rows.filter(w=>w.category===c)))]);
+ const body=[];
  for(const d of ['SATNA','MAIHAR']){
-   const x=r.filter(w=>w.district===d);if(x.length)body.push([d+' योग','','','',...cats.flatMap(c=>financial(x.filter(w=>w.category===c)))]);
+   const districtRows=r.filter(w=>w.district===d);if(!districtRows.length)continue;
+   const blocks=[...new Set(districtRows.map(w=>w.block))].sort((a,b)=>compareValue('block',a,b));
+   for(const block of blocks){
+     const blockGroups=groupRows.filter(g=>g.vals[0]===d&&g.vals[1]===block);
+     body.push(...blockGroups.map(g=>[...g.vals,...cats.flatMap(c=>financial(g.rows.filter(w=>w.category===c)))]));
+     const x=districtRows.filter(w=>w.block===block);
+     body.push([block+' जनपद योग','','','',...cats.flatMap(c=>financial(x.filter(w=>w.category===c)))]);
+   }
+   body.push([d+' जिला योग','','','',...cats.flatMap(c=>financial(districtRows.filter(w=>w.category===c)))]);
  }
  body.push(['संयुक्त योग','','','',...cats.flatMap(c=>financial(r.filter(w=>w.category===c)))]);
  const head1='<tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">उपयंत्री</th><th rowspan="2">क्लस्टर</th>'+cats.map(c=>'<th class="work-heading" colspan="8">'+escape(c)+'</th>').join('')+'</tr>';
  const head2='<tr>'+cats.map(()=>'<th>कुल स्वीकृत लागत<br>₹ लाख</th><th>व्यय मजदूरी<br>₹ लाख</th><th>व्यय सामग्री<br>₹ लाख</th><th>कुल व्यय<br>₹ लाख</th><th>व्यय %</th><th class="balance-wage">शेष मजदूरी<br>₹ लाख</th><th class="balance-material">शेष सामग्री<br>₹ लाख</th><th class="balance-total">कुल शेष<br>₹ लाख</th>').join('')+'</tr>';
- const rowsHtml=body.map(row=>{const first=row[0],cls=first==='संयुक्त योग'?'grand':String(first).endsWith(' योग')?'district-total':'';if(cls)return '<tr class="'+cls+'"><td class="text merged-total-label" colspan="4">'+escape(first)+'</td>'+row.slice(4).map((v,i)=>'<td class="n '+(i%8===0?'group-start':'')+'">'+escape(v)+'</td>').join('')+'</tr>';return '<tr>'+row.map((v,i)=>'<td class="'+(i>=4?'n '+((i-4)%8===0?'group-start':''):'text')+'">'+escape(v)+'</td>').join('')+'</tr>'}).join('');
+ const rowsHtml=body.map(row=>{const first=row[0],cls=first==='संयुक्त योग'?'grand':String(first).includes('जनपद योग')?'block-total':String(first).includes('जिला योग')?'district-total':'';if(cls)return '<tr class="'+cls+'"><td class="text merged-total-label" colspan="4">'+escape(first)+'</td>'+row.slice(4).map((v,i)=>'<td class="n '+(i%8===0?'group-start':'')+'">'+escape(v)+'</td>').join('')+'</tr>';return '<tr>'+row.map((v,i)=>'<td class="'+(i>=4?'n '+((i-4)%8===0?'group-start':''):'text')+'">'+escape(v)+'</td>').join('')+'</tr>'}).join('');
  return '<div class="category-ongoing-note">केवल प्रगतिरत (Ongoing) कार्य • श्रेणी/कार्य-नाम heading में • स्वीकृति, व्यय और शेष राशि ₹ लाख में • चयनित कार्य: '+r.length.toLocaleString('en-IN')+'</div><div class="category-ongoing-wrap"><table class="category-ongoing-table"><thead>'+head1+head2+'</thead><tbody>'+rowsHtml+'</tbody></table></div>';
 }
 
@@ -93,13 +101,13 @@ for(const id of ['district','block','engineer','cluster','category','gp'])$(id).
 .category-ongoing-table th.balance-total{background:#e4f5e9!important;color:#12633a!important}
 .category-ongoing-table td.n{font-weight:800;font-variant-numeric:tabular-nums}
 .category-ongoing-table td.group-start{border-left:3px solid #557996}
-.category-ongoing-table .district-total td{background:#dcebdc;color:#164a35;font-weight:900}.category-ongoing-table .merged-total-label{text-align:center!important;font-size:14px;letter-spacing:.02em;border-right:3px solid #164a7b}
+.category-ongoing-table .block-total td{background:#e8f2ff;color:#174f7c;font-weight:900}.category-ongoing-table .district-total td{background:#dcebdc;color:#164a35;font-weight:900}.category-ongoing-table .merged-total-label{text-align:center!important;font-size:14px;letter-spacing:.02em;border-right:3px solid #164a7b}
 .category-ongoing-table .grand td{background:#164a7b;color:#fff;font-weight:900}
 .category-ongoing-table th:nth-child(-n+4),.category-ongoing-table td:nth-child(-n+4){position:sticky;z-index:3;background:#fff}
 .category-ongoing-table th:nth-child(1),.category-ongoing-table td:nth-child(1){left:0;min-width:85px}
 .category-ongoing-table th:nth-child(2),.category-ongoing-table td:nth-child(2){left:85px;min-width:150px}
-.category-ongoing-table th:nth-child(3),.category-ongoing-table td:nth-child(3){left:235px;min-width:180px}
-.category-ongoing-table th:nth-child(4),.category-ongoing-table td:nth-child(4){left:415px;min-width:170px;border-right:3px solid #164a7b}
+.category-ongoing-table th:nth-child(3),.category-ongoing-table td:nth-child(3){left:235px;min-width:135px;max-width:135px;white-space:normal;line-height:1.2}
+.category-ongoing-table th:nth-child(4),.category-ongoing-table td:nth-child(4){left:370px;min-width:155px;max-width:155px;white-space:normal;overflow-wrap:anywhere;line-height:1.2;border-right:3px solid #164a7b}
 .category-ongoing-table thead th:nth-child(-n+4){z-index:7;background:#164a7b;color:#fff}
 .category-ongoing-table .district-total td:nth-child(-n+4){background:#dcebdc}
 .category-ongoing-table .grand td:nth-child(-n+4){background:#164a7b;color:#fff}
