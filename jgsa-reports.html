@@ -46,7 +46,7 @@ function categoryOngoingReport(r){
  body.push(['संयुक्त योग','','','',...cats.flatMap(c=>financial(r.filter(w=>w.category===c)))]);
  const head1='<tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">उपयंत्री</th><th rowspan="2">क्लस्टर</th>'+cats.map(c=>'<th class="work-heading" colspan="8">'+escape(c)+'</th>').join('')+'</tr>';
  const head2='<tr>'+cats.map(()=>'<th>कुल स्वीकृत लागत<br>₹ लाख</th><th>व्यय मजदूरी<br>₹ लाख</th><th>व्यय सामग्री<br>₹ लाख</th><th>कुल व्यय<br>₹ लाख</th><th>व्यय %</th><th class="balance-wage">शेष मजदूरी<br>₹ लाख</th><th class="balance-material">शेष सामग्री<br>₹ लाख</th><th class="balance-total">कुल शेष<br>₹ लाख</th>').join('')+'</tr>';
- const rowsHtml=body.map(row=>{const first=row[0],cls=first==='संयुक्त योग'?'grand':String(first).endsWith(' योग')?'district-total':'';return '<tr class="'+cls+'">'+row.map((v,i)=>'<td class="'+(i>=4?'n '+((i-4)%8===0?'group-start':''):'text')+'">'+escape(v)+'</td>').join('')+'</tr>'}).join('');
+ const rowsHtml=body.map(row=>{const first=row[0],cls=first==='संयुक्त योग'?'grand':String(first).endsWith(' योग')?'district-total':'';if(cls)return '<tr class="'+cls+'"><td class="text merged-total-label" colspan="4">'+escape(first)+'</td>'+row.slice(4).map((v,i)=>'<td class="n '+(i%8===0?'group-start':'')+'">'+escape(v)+'</td>').join('')+'</tr>';return '<tr>'+row.map((v,i)=>'<td class="'+(i>=4?'n '+((i-4)%8===0?'group-start':''):'text')+'">'+escape(v)+'</td>').join('')+'</tr>'}).join('');
  return '<div class="category-ongoing-note">केवल प्रगतिरत (Ongoing) कार्य • श्रेणी/कार्य-नाम heading में • स्वीकृति, व्यय और शेष राशि ₹ लाख में • चयनित कार्य: '+r.length.toLocaleString('en-IN')+'</div><div class="category-ongoing-wrap"><table class="category-ongoing-table"><thead>'+head1+head2+'</thead><tbody>'+rowsHtml+'</tbody></table></div>';
 }
 
@@ -93,7 +93,7 @@ for(const id of ['district','block','engineer','cluster','category','gp'])$(id).
 .category-ongoing-table th.balance-total{background:#e4f5e9!important;color:#12633a!important}
 .category-ongoing-table td.n{font-weight:800;font-variant-numeric:tabular-nums}
 .category-ongoing-table td.group-start{border-left:3px solid #557996}
-.category-ongoing-table .district-total td{background:#dcebdc;color:#164a35;font-weight:900}
+.category-ongoing-table .district-total td{background:#dcebdc;color:#164a35;font-weight:900}.category-ongoing-table .merged-total-label{text-align:center!important;font-size:14px;letter-spacing:.02em;border-right:3px solid #164a7b}
 .category-ongoing-table .grand td{background:#164a7b;color:#fff;font-weight:900}
 .category-ongoing-table th:nth-child(-n+4),.category-ongoing-table td:nth-child(-n+4){position:sticky;z-index:3;background:#fff}
 .category-ongoing-table th:nth-child(1),.category-ongoing-table td:nth-child(1){left:0;min-width:85px}
