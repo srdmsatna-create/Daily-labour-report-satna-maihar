@@ -38,16 +38,16 @@ function categoryOngoingReport(r){
  const selected=$('category').value;
  const cats=(selected?[selected]:categoryOrder.filter(c=>r.some(w=>w.category===c))).concat([...new Set(r.map(w=>w.category).filter(c=>c&&!categoryOrder.includes(c)&&(!selected||c===selected)))].sort((a,b)=>a.localeCompare(b,'hi')));
  const groupRows=groups(r,['district','block','engineer','cluster']);
- const triple=x=>{const a=metrics(x);return [money(a.bw),money(a.bm),money(a.balance)]};
- const body=groupRows.map(g=>[...g.vals,...cats.flatMap(c=>triple(g.rows.filter(w=>w.category===c)))]);
+ const financial=x=>{const a=metrics(x);return [money(a.cost),money(a.wb),money(a.mb),money(a.exp),a.pct===null?'—':fmt(a.pct)+'%',money(a.bw),money(a.bm),money(a.balance)]};
+ const body=groupRows.map(g=>[...g.vals,...cats.flatMap(c=>financial(g.rows.filter(w=>w.category===c)))]);
  for(const d of ['SATNA','MAIHAR']){
-   const x=r.filter(w=>w.district===d);if(x.length)body.push([d+' योग','','','',...cats.flatMap(c=>triple(x.filter(w=>w.category===c)))]);
+   const x=r.filter(w=>w.district===d);if(x.length)body.push([d+' योग','','','',...cats.flatMap(c=>financial(x.filter(w=>w.category===c)))]);
  }
- body.push(['संयुक्त योग','','','',...cats.flatMap(c=>triple(r.filter(w=>w.category===c)))]);
- const head1='<tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">उपयंत्री</th><th rowspan="2">क्लस्टर</th>'+cats.map(c=>'<th class="work-heading" colspan="3">'+escape(c)+'</th>').join('')+'</tr>';
- const head2='<tr>'+cats.map(()=>'<th class="balance-wage">शेष मजदूरी<br>₹ लाख</th><th class="balance-material">शेष सामग्री<br>₹ लाख</th><th class="balance-total">कुल शेष<br>₹ लाख</th>').join('')+'</tr>';
- const rowsHtml=body.map(row=>{const first=row[0],cls=first==='संयुक्त योग'?'grand':String(first).endsWith(' योग')?'district-total':'';return '<tr class="'+cls+'">'+row.map((v,i)=>'<td class="'+(i>=4?'n '+((i-4)%3===0?'group-start':''):'text')+'">'+escape(v)+'</td>').join('')+'</tr>'}).join('');
- return '<div class="category-ongoing-note">केवल प्रगतिरत (Ongoing) कार्य • श्रेणी/कार्य-नाम heading में • राशि ₹ लाख में • चयनित कार्य: '+r.length.toLocaleString('en-IN')+'</div><div class="category-ongoing-wrap"><table class="category-ongoing-table"><thead>'+head1+head2+'</thead><tbody>'+rowsHtml+'</tbody></table></div>';
+ body.push(['संयुक्त योग','','','',...cats.flatMap(c=>financial(r.filter(w=>w.category===c)))]);
+ const head1='<tr><th rowspan="2">जिला</th><th rowspan="2">जनपद</th><th rowspan="2">उपयंत्री</th><th rowspan="2">क्लस्टर</th>'+cats.map(c=>'<th class="work-heading" colspan="8">'+escape(c)+'</th>').join('')+'</tr>';
+ const head2='<tr>'+cats.map(()=>'<th>कुल स्वीकृत लागत<br>₹ लाख</th><th>व्यय मजदूरी<br>₹ लाख</th><th>व्यय सामग्री<br>₹ लाख</th><th>कुल व्यय<br>₹ लाख</th><th>व्यय %</th><th class="balance-wage">शेष मजदूरी<br>₹ लाख</th><th class="balance-material">शेष सामग्री<br>₹ लाख</th><th class="balance-total">कुल शेष<br>₹ लाख</th>').join('')+'</tr>';
+ const rowsHtml=body.map(row=>{const first=row[0],cls=first==='संयुक्त योग'?'grand':String(first).endsWith(' योग')?'district-total':'';return '<tr class="'+cls+'">'+row.map((v,i)=>'<td class="'+(i>=4?'n '+((i-4)%8===0?'group-start':''):'text')+'">'+escape(v)+'</td>').join('')+'</tr>'}).join('');
+ return '<div class="category-ongoing-note">केवल प्रगतिरत (Ongoing) कार्य • श्रेणी/कार्य-नाम heading में • स्वीकृति, व्यय और शेष राशि ₹ लाख में • चयनित कार्य: '+r.length.toLocaleString('en-IN')+'</div><div class="category-ongoing-wrap"><table class="category-ongoing-table"><thead>'+head1+head2+'</thead><tbody>'+rowsHtml+'</tbody></table></div>';
 }
 
 function r46Report(){
@@ -83,7 +83,7 @@ for(const id of ['district','block','engineer','cluster','category','gp'])$(id).
   doc.open();doc.write('<!doctype html><html lang="hi"><head><meta charset="utf-8"><title>'+escape(title)+'</title><style>@page{size:A4 landscape;margin:7mm}body{margin:0;color:#142b44;font-family:Arial,sans-serif}h1{font-size:13pt;text-align:left;margin:0 0 2mm}p{font-size:8pt}table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:7pt}th,td{border:1px solid #7c99b8;padding:1.2mm .6mm;overflow-wrap:anywhere;vertical-align:top}th{background:#dbeaf9;text-align:center}td.text,td.n{text-align:center;vertical-align:middle}thead{display:table-header-group}tr{break-inside:avoid}.grand td{background:#cedef0;font-weight:bold}.maihar td{background:#e1f1e7}.satna td{background:#e4edfb}*{print-color-adjust:exact;-webkit-print-color-adjust:exact}</style><style id="jgsa-r46-style">body.r46-mode #legacyNote,body.r46-mode #legacyFilters,body.r46-mode #reportTools #csv,body.r46-mode #reportTools #reset{display:none}body.r46-mode .r46-wrap{overflow:auto;background:white;border:1px solid #c5d5e5;border-radius:10px;padding:14px;margin:12px 0}.r46-kpis{display:grid;grid-template-columns:repeat(5,minmax(130px,1fr));gap:10px;margin:14px 0}.r46-card{background:#fff;border:1px solid #b9cde0;border-radius:9px;padding:12px;text-align:center}.r46-card small{display:block;font-size:13px;color:#46627d}.r46-card strong{display:block;font-size:30px;line-height:1.2;color:#123f68;margin-top:5px}.r46-note{background:#fff7df;border:1px solid #e7c56e;padding:12px;line-height:1.6;border-radius:7px}.r46-table{min-width:0!important;font-size:15px!important}.r46-table td.n{font-size:16px;font-weight:800}.r46-table td.text{font-weight:700}.r46-source{font-size:13px;color:#405c78}@media(max-width:850px){.r46-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}@media print{body.r46-mode .r46-kpis{grid-template-columns:repeat(5,1fr);gap:4px}.r46-card{padding:5px}.r46-card small{font-size:8pt}.r46-card strong{font-size:16pt}.r46-wrap{padding:3mm!important;border:0!important}.r46-table{font-size:9pt!important}.r46-table td.n{font-size:9pt!important}.r46-note{font-size:8pt;padding:2mm}}</style><style id="category-ongoing-pivot-style">
 .category-ongoing-note{margin:10px 0;padding:10px 12px;border-left:5px solid #176da6;background:#eef6fc;color:#234b6b;font-weight:700}
 .category-ongoing-wrap{overflow:auto;max-height:72vh;border:1px solid #68869c;border-radius:6px;background:#fff}
-.category-ongoing-table{border-collapse:separate;border-spacing:0;min-width:5100px;width:max-content}
+.category-ongoing-table{border-collapse:separate;border-spacing:0;min-width:11200px;width:max-content}
 .category-ongoing-table th,.category-ongoing-table td{border-right:1px solid #7893aa;border-bottom:1px solid #7893aa;padding:6px 8px;text-align:center;white-space:nowrap}
 .category-ongoing-table thead th{position:sticky;top:0;z-index:4;background:#164a7b;color:#fff;font-size:12px}
 .category-ongoing-table thead tr:nth-child(2) th{top:36px;background:#dce9f5;color:#193b57}
