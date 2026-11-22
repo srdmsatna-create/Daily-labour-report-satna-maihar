@@ -4335,24 +4335,7 @@ function srdmPrintEkBagiyaOnly(){
     '#reportTable{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin-top:3mm}'+
     '#reportTable th,#reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}'+
     '#reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}#reportTable thead,#ekBlockTable thead{display:table-header-group!important}#reportTable tr,#ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}.district-total td,.grand-total td,.total-row td{font-weight:900!important;background:#dbe9fb!important}'+
-    '</style></head><body>'+body+'<link rel="stylesheet" href="official-dashboard-tabs.css?v=20261122">
-<script id="official-dashboard-tabs-state">
-(function(){
-  const menu=document.getElementById('srdmApplications');
-  if(!menu)return;
-  menu.addEventListener('click',function(event){
-    const card=event.target.closest('.srdm-app-card');
-    if(!card||!menu.contains(card))return;
-    menu.querySelectorAll('.srdm-app-card.is-active').forEach(item=>{
-      item.classList.remove('is-active');
-      item.removeAttribute('aria-current');
-    });
-    card.classList.add('is-active');
-    card.setAttribute('aria-current','page');
-  });
-})();
-</script>
-</body></html>');
+    '</style></head><body>'+body+'</body></html>');
   doc.close();
 
   setTimeout(function(){
@@ -4899,4 +4882,21 @@ body[data-report-view="official"] #reportTable tbody tr td:nth-child(18){backgro
   }
 }
 </style>
+<link rel="stylesheet" href="official-dashboard-tabs.css?v=20261122">
+<script id="official-dashboard-tabs-state">
+(function(){
+  const menu=document.getElementById('srdmApplications');
+  if(!menu)return;
+  menu.addEventListener('click',function(event){
+    const card=event.target.closest('.srdm-app-card');
+    if(!card||!menu.contains(card))return;
+    menu.querySelectorAll('.srdm-app-card.is-active').forEach(item=>{
+      item.classList.remove('is-active');
+      item.removeAttribute('aria-current');
+    });
+    card.classList.add('is-active');
+    card.setAttribute('aria-current','page');
+  });
+})();
+</script>
 </body></html>
