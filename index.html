@@ -4912,7 +4912,7 @@ body[data-report-view="official"] #reportTable tbody tr td:nth-child(18){backgro
  const group=document.querySelector('[data-report-group="4"]');if(!group)return;
  for(const [code,[href,title,desc]] of Object.entries(map)){
   const card=group.querySelector('[data-report-code-fixed="'+code+'"]');if(!card)continue;
-  card.href=href;card.target='_blank';card.rel='noopener noreferrer';
+  card.href=href;card.target='_self';card.removeAttribute('rel');
   const strong=card.querySelector('.srdm-app-copy strong');if(strong)strong.textContent=title;
   const detail=card.querySelector('.srdm-app-copy>span');if(detail)detail.textContent=desc;
  }
