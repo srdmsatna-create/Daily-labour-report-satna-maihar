@@ -1977,8 +1977,8 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
 
 <section class="srdm-app-launcher no-print" id="srdmApplications" aria-label="SRDM Applications">
   <div class="srdm-app-launcher-head">
-    <h2 class="srdm-app-launcher-title">SRDM Applications</h2>
-    <div class="srdm-app-launcher-note">Quick access • SATNA &amp; MAIHAR</div>
+    <h2 class="srdm-app-launcher-title">रिपोर्ट एवं मॉनिटरिंग डैशबोर्ड</h2>
+    <div class="srdm-app-launcher-note">जिला सतना एवं मैहर • 8 जनपद • 695 ग्राम पंचायत</div>
   </div>
   <div class="report-menu-tools"><input id="reportMenuSearch" type="search" placeholder="Search reports… / रिपोर्ट खोजें" aria-label="Search reports"><button id="reportMenuExpand" type="button" aria-expanded="false" aria-controls="reportMenuGrid">↕ Expand All</button></div>
   <p id="reportMenuEmpty" role="status" hidden>कोई रिपोर्ट नहीं मिली।</p>
@@ -4335,7 +4335,24 @@ function srdmPrintEkBagiyaOnly(){
     '#reportTable{width:100%!important;min-width:0!important;max-width:100%!important;table-layout:fixed!important;border-collapse:collapse!important;margin-top:3mm}'+
     '#reportTable th,#reportTable td{border:1px solid #6f86a1!important;font-size:6pt!important;line-height:1.08!important;padding:.65mm .4mm!important;text-align:center!important;white-space:normal!important;word-break:break-word!important;overflow-wrap:anywhere!important}'+
     '#reportTable th{background:#123f72!important;color:#fff!important;font-weight:800!important}#reportTable thead,#ekBlockTable thead{display:table-header-group!important}#reportTable tr,#ekBlockTable tr{break-inside:avoid!important;page-break-inside:avoid!important}.district-total td,.grand-total td,.total-row td{font-weight:900!important;background:#dbe9fb!important}'+
-    '</style></head><body>'+body+'</body></html>');
+    '</style></head><body>'+body+'<link rel="stylesheet" href="official-dashboard-tabs.css?v=20261122">
+<script id="official-dashboard-tabs-state">
+(function(){
+  const menu=document.getElementById('srdmApplications');
+  if(!menu)return;
+  menu.addEventListener('click',function(event){
+    const card=event.target.closest('.srdm-app-card');
+    if(!card||!menu.contains(card))return;
+    menu.querySelectorAll('.srdm-app-card.is-active').forEach(item=>{
+      item.classList.remove('is-active');
+      item.removeAttribute('aria-current');
+    });
+    card.classList.add('is-active');
+    card.setAttribute('aria-current','page');
+  });
+})();
+</script>
+</body></html>');
   doc.close();
 
   setTimeout(function(){
