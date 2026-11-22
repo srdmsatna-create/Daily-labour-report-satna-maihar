@@ -1,5 +1,5 @@
 """One entry point: isolated refresh, validation, then one publication."""
-# status-conflict-retry-v8
+# status-conflict-retry-v9-single-pass
 import argparse
 import importlib.util
 import json
@@ -108,21 +108,23 @@ def published_successes(feeds, stage):
 
 
 def refresh_reports(feeds, stage, sleep=time.sleep, resume=False):
+    """Run each pending group once.
+
+    Individual fetchers already own their network retry policy. Re-running a
+    whole group here duplicated those retries and could turn one portal outage
+    into a multi-hour daily run. A later same-day run resumes only failed
+    groups through published_successes().
+    """
     states = published_successes(feeds, stage) if resume else {}
     if states:
         print(f'Resuming today’s published update: {len(states)} verified groups already live; fetching outstanding groups only.', flush=True)
-    for attempt in range(1, 4):
-        pending = [(g,c,f) for g,c,f in feeds.GROUPS if not states.get(g,{}).get('success')]
-        if not pending:break
-        if attempt > 1:
-            print('Automatic recovery: retrying only failed reports: ' + ', '.join(g for g,_,_ in pending), flush=True)
-            sleep(5 * (attempt - 1))
-        for group, commands, files in pending:
-            print(f'[{group}] attempt {attempt}/3', flush=True)
-            state = feeds.refresh_group(group, commands, files, root=stage)
-            state['attempts'] = attempt
-            states[group] = state
-            print(group + ': ' + ('VERIFIED' if state['success'] else 'FAILED; previous verified group retained'), flush=True)
+    pending = [(g,c,f) for g,c,f in feeds.GROUPS if not states.get(g,{}).get('success')]
+    for group, commands, files in pending:
+        print(f'[{group}] single daily attempt (fetcher handles network retries)', flush=True)
+        state = feeds.refresh_group(group, commands, files, root=stage)
+        state['attempts'] = 1
+        states[group] = state
+        print(group + ': ' + ('VERIFIED' if state['success'] else 'FAILED; previous verified group retained'), flush=True)
     return states
 
 
