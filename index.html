@@ -4899,4 +4899,25 @@ body[data-report-view="official"] #reportTable tbody tr td:nth-child(18){backgro
   });
 })();
 </script>
+<script id="r4-distinct-report-links-20261122">
+(function(){
+ const version='20261122b';
+ const map={
+  '4.1':['jgsa-reports.html?report=summary&v='+version,'JGSA स्थिति एवं वित्तीय सारांश','जिला • जनपद • उपयंत्री / क्लस्टर • व्यय एवं शेष'],
+  '4.2':['jgsa-reports.html?report=categoryOngoing&v='+version,'Ongoing उपयंत्री एवं जनपदवार सारांश','संख्या Hyperlink • उपयंत्री कुल • जनपद कुल • संयुक्त कुल'],
+  '4.3':['jgsa-reports.html?report=ranking&v='+version,'JGSA उपयंत्री / क्लस्टर रैंकिंग','जिला • जनपद • उपयंत्री • क्लस्टर रैंक'],
+  '4.4':['jgsa-reports.html?report=works&v='+version,'JGSA श्रेणी एवं कार्यवार विवरण','Ongoing • Completed • Physically Completed'],
+  '4.5':['jgsa-reports.html?report=r46&v='+version,'JGSA वर्तमान कार्य प्रगति','सतना + मैहर • जनपदवार प्रगति']
+ };
+ const group=document.querySelector('[data-report-group="4"]');if(!group)return;
+ for(const [code,[href,title,desc]] of Object.entries(map)){
+  const card=group.querySelector('[data-report-code-fixed="'+code+'"]');if(!card)continue;
+  card.href=href;card.target='_blank';card.rel='noopener noreferrer';
+  const strong=card.querySelector('.srdm-app-copy strong');if(strong)strong.textContent=title;
+  const detail=card.querySelector('.srdm-app-copy>span');if(detail)detail.textContent=desc;
+ }
+ const official=group.querySelector('[data-report-code-fixed="4.5"]');
+ if(official&&official.href.includes('jgsa.nregsmp.org'))official.href=map['4.5'][0];
+})();
+</script>
 </body></html>
