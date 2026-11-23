@@ -1,22 +1,22 @@
 {
-  "date": "2026-11-19",
+  "date": "2026-11-23",
   "source": {
-    "uploadedDate": "19-11-2026",
+    "uploadedDate": "23-11-2026",
     "files": [
-      "Planning_Summary_Report (28).xlsx",
-      "Planning_Summary_Report (27).xlsx"
+      "Planning_Summary_Report (29).xlsx",
+      "Planning_Summary_Report (30).xlsx"
     ],
     "sourceRows": 8569,
     "mappingSource": "gp-sector-engineer-master-25-09-2026.csv",
     "sourceFiles": [
       {
-        "file": "Planning_Summary_Report (28).xlsx",
-        "sha256": "37f52efe0a4642c05cbb4d3d4c7b246c5dcf6090d351d4b5bd53a6c8d6dd95ee",
+        "file": "Planning_Summary_Report (29).xlsx",
+        "sha256": "50063f7f8724843af1bb6dcb86665030b3b6a2e87ad1d6e6a6c9f0b6e7c407ce",
         "rows": 5103
       },
       {
-        "file": "Planning_Summary_Report (27).xlsx",
-        "sha256": "17ef4f7e345586b88b75a9fed1c5c0962793196b7abe739142f20e39aab32041",
+        "file": "Planning_Summary_Report (30).xlsx",
+        "sha256": "bcc23df45d2b0482169dcc02d991634fb90d7b0379113feb991563f0284f68ac",
         "rows": 3466
       }
     ],
@@ -28,10 +28,10 @@
   "totals": {
     "plannerDetail": 30404,
     "sipri": 2560,
-    "aeApproved": 1477,
-    "aePending": 1083,
+    "aeApproved": 1585,
+    "aePending": 975,
     "stateReviewed": 411,
-    "statePending": 1096
+    "statePending": 1204
   },
   "blocks": [
     [
@@ -62,10 +62,10 @@
       "Assistant Engineer - Majhgawan",
       2466,
       449,
-      258,
-      191,
+      263,
+      186,
       38,
-      220
+      225
     ],
     [
       "Satna",
@@ -84,10 +84,10 @@
       "Assistant Engineer - Ramnagar",
       5578,
       462,
-      210,
-      252,
+      279,
+      183,
       78,
-      132
+      201
     ],
     [
       "Satna",
@@ -117,10 +117,10 @@
       "Assistant Engineer - Unchahara",
       1087,
       241,
-      144,
-      97,
+      178,
+      63,
       9,
-      135
+      169
     ]
   ],
   "categoryRows": 1666,
