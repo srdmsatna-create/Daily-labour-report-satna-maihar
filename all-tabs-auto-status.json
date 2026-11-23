@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-23T06:09:18.393583+00:00",
+  "checkedAt": "2026-11-23T07:58:12.299307+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_s58_ongoing": {
@@ -7,14 +7,16 @@
       "files": [
         "shramik-s58-ongoing.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "shramik_r511_persondays": {
       "success": true,
       "files": [
         "shramik-r511-persondays.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "shramik_complete": {
       "success": true,
@@ -33,21 +35,24 @@
       "r69GpSourceDate": "22-11-2026",
       "r69GpRetrievedDate": "23-11-2026",
       "r69GpCurrent": false,
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "r42_emuster_wagelist": {
       "success": true,
       "files": [
         "data/r42-emuster-wagelist.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "muster_emb": {
       "success": true,
       "files": [
         "muster-emb-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pending_mr_fto": {
       "success": true,
@@ -55,28 +60,32 @@
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "emb_pending": {
       "success": true,
       "files": [
         "data/emb-pending-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_state": {
       "success": true,
       "files": [
         "data/yuktdhara-state-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_bhuvan": {
       "success": true,
       "files": [
         "yuktdhara-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara": {
       "success": true,
@@ -84,42 +93,48 @@
         "yuktdhara-official-data.js",
         "yuktdhara-received-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pending_wage_payment": {
       "success": true,
       "files": [
         "data/pending-wage-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "timely_payment": {
       "success": true,
       "files": [
         "data/timely-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "delayed_compensation": {
       "success": true,
       "files": [
         "data/delayed-compensation-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "block_statistics": {
       "success": true,
       "files": [
         "vbg-block-stats.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "statistics_ekyc_material": {
       "success": true,
       "files": [
         "data/statistics-ekyc-material-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "mis_612": {
       "success": true,
@@ -130,51 +145,48 @@
         "ongoing-details.json.gz",
         "r612-yd-convergence.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pmay_janpad_summary": {
       "success": true,
       "files": [
         "pmay-janpad-summary-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_mr_labour_history": {
       "success": true,
       "files": [
         "data/yuktdhara-mr-labour-history.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pmayg_physical": {
       "success": true,
       "files": [
         "data/pmayg-physical-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pmayg": {
       "success": true,
       "files": [
         "data/pmayg-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "above75": {
       "success": true,
       "files": [
         "data/above75-latest.json"
       ],
-      "attempts": 1
-    },
-    "planner": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts/fetch_planner_portal_summary.py']' returned non-zero exit status 1.",
-      "errorTail": ".py\", line 85, in create_connection\r\n    raise err\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\util\\connection.py\", line 73, in create_connection\r\n    sock.connect(sa)\r\n    ~~~~~~~~~~~~^^^^\r\nConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 788, in urlopen\r\n    response = self._make_request(\r\n        conn,\r\n    ...<10 lines>...\r\n        **response_kw,\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 488, in _make_request\r\n    raise new_e\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 464, in _make_request\r\n    self._validate_conn(conn)\r\n    ~~~~~~~~~~~~~~~~~~~^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 1106, in _validate_conn\r\n    conn.connect()\r\n    ~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connection.py\", line 759, in connect\r\n    self.sock = sock = self._new_conn()\r\n                       ~~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connection.py\", line 219, in _new_conn\r\n    raise NewConnectionError(\r\n        self, f\"Failed to establish a new connection: {e}\"\r\n    ) from e\r\nurllib3.exceptions.NewConnectionError: HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\adapters.py\", line 696, in send\r\n    resp = conn.urlopen(\r\n        method=request.method,\r\n    ...<9 lines>...\r\n        chunked=chunked,\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  [Previous line repeated 2 more times]\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 842, in urlopen\r\n    retries = retries.increment(\r\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\util\\retry.py\", line 543, in increment\r\n    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]\r\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by NewConnectionError(\"HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts\\fetch_planner_portal_summary.py\", line 42, in <module>\r\n    html=get_district_report(); soup=BeautifulSoup(html,'html.parser')\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts\\fetch_planner_portal_summary.py\", line 33, in get_district_report\r\n    return get(BASE)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts\\fetch_planner_portal_summary.py\", line 21, in get\r\n    r=SESSION.get(url,headers=HEADERS,timeout=(30,90))\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 671, in get\r\n    return self.request(\"GET\", url, params=params, **kwargs)\r\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 651, in request\r\n    resp = self.send(prep, **send_kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 784, in send\r\n    r = adapter.send(request, **kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\adapters.py\", line 729, in send\r\n    raise ConnectionError(e, request=request)\r\nrequests.exceptions.ConnectionError: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by NewConnectionError(\"HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))\r\n",
-      "files": [
-        "planner-portal-data.js"
-      ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "secure_ts": {
       "success": true,
@@ -183,33 +195,46 @@
         "secure-ts-yuktadhara-data.js",
         "data/secure-ts-yuktadhara-fy2026-27.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "r37_secure_register": {
       "success": true,
       "files": [
         "data/r37-secure-register.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "secure_yd_as": {
       "success": true,
       "files": [
         "data/secure-as-yuktdhara.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "r617_secure_bhuvan": {
       "success": true,
       "files": [
         "data/r617-secure-bhuvan.json"
       ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "planner": {
+      "success": false,
+      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts/fetch_planner_portal_summary.py']' returned non-zero exit status 1.",
+      "errorTail": ".py\", line 85, in create_connection\r\n    raise err\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\util\\connection.py\", line 73, in create_connection\r\n    sock.connect(sa)\r\n    ~~~~~~~~~~~~^^^^\r\nConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 788, in urlopen\r\n    response = self._make_request(\r\n        conn,\r\n    ...<10 lines>...\r\n        **response_kw,\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 488, in _make_request\r\n    raise new_e\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 464, in _make_request\r\n    self._validate_conn(conn)\r\n    ~~~~~~~~~~~~~~~~~~~^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 1106, in _validate_conn\r\n    conn.connect()\r\n    ~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connection.py\", line 759, in connect\r\n    self.sock = sock = self._new_conn()\r\n                       ~~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connection.py\", line 219, in _new_conn\r\n    raise NewConnectionError(\r\n        self, f\"Failed to establish a new connection: {e}\"\r\n    ) from e\r\nurllib3.exceptions.NewConnectionError: HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\adapters.py\", line 696, in send\r\n    resp = conn.urlopen(\r\n        method=request.method,\r\n    ...<9 lines>...\r\n        chunked=chunked,\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  [Previous line repeated 2 more times]\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 842, in urlopen\r\n    retries = retries.increment(\r\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\util\\retry.py\", line 543, in increment\r\n    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]\r\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by NewConnectionError(\"HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_88ygvmjc\\report\\scripts\\fetch_planner_portal_summary.py\", line 42, in <module>\r\n    html=get_district_report(); soup=BeautifulSoup(html,'html.parser')\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_88ygvmjc\\report\\scripts\\fetch_planner_portal_summary.py\", line 33, in get_district_report\r\n    return get(BASE)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_88ygvmjc\\report\\scripts\\fetch_planner_portal_summary.py\", line 21, in get\r\n    r=SESSION.get(url,headers=HEADERS,timeout=(30,90))\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 671, in get\r\n    return self.request(\"GET\", url, params=params, **kwargs)\r\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 651, in request\r\n    resp = self.send(prep, **send_kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 784, in send\r\n    r = adapter.send(request, **kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\adapters.py\", line 729, in send\r\n    raise ConnectionError(e, request=request)\r\nrequests.exceptions.ConnectionError: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by NewConnectionError(\"HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))\r\n",
+      "files": [
+        "planner-portal-data.js"
+      ],
       "attempts": 1
     },
     "as_geotag_before": {
       "success": false,
       "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_as_geotag_before.py']' timed out after 900 seconds",
-      "errorTail": "\nCOMMAND ['scripts_local/update_as_geotag_before.py']\nSearch AMARPATAN\r\n  official rows: 470\r\n  checked YD candidates: 20\r\n  checked YD candidates: 40\r\n  checked YD candidates: 60\r\n  checked YD candidates: 80\r\n  detail failed for 1712006049/WC/VB/YD/22012035347264 (1/3): Page.goto: net::ERR_NETWORK_IO_SUSPENDED at https://vbgramgrep.dord.gov.in/vbgramg/specific_work_rpt_dtl.aspx?state_name=MADHYA+PRADESH&state_code=17&short_name=MP&district_name=SA\r\n  detail failed for 1712006049/WC/VB/YD/22012035347264 (2/3): Page.goto: net::ERR_NETWORK_IO_SUSPENDED at https://vbgramgrep.dord.gov.in/vbgramg/specific_work_rpt_dtl.aspx?state_name=MADHYA+PRADESH&state_code=17&short_name=MP&district_name=SA\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/update_as_geotag_before.py']\nSearch AMARPATAN\r\n  official rows: 470\r\n  checked YD candidates: 20\r\n  checked YD candidates: 40\r\n  checked YD candidates: 60\r\n  checked YD candidates: 80\r\nSearch MAIHAR\r\n  official rows: 782\r\n  checked YD candidates: 100\r\n  checked YD candidates: 120\r\n  checked YD candidates: 140\r\n  checked YD candidates: 160\r\n  checked YD candidates: 180\r\n  checked YD candidates: 200\r\n  checked YD candidates: 220\r\n  checked YD candidates: 240\r\n  checked YD candidates: 260\r\n  checked YD candidates: 280\r\nSearch MAJHGAWAN\r\n  official rows: 706\r\n  checked YD candidates: 300\r\n  checked YD candidates: 320\r\n  checked YD candidates: 340\r\n  checked YD candidates: 360\r\n  checked YD candidates: 380\r\n  checked YD candidates: 400\r\n  checked YD candidates: 420\r\n  checked YD candidates: 440\r\nSearch NAGOD\r\n  official rows: 1083\r\n  checked YD candidates: 460\r\n  checked YD candidates: 480\r\n  checked YD candidates: 500\r\n  checked YD candidates: 520\r\n  checked YD candidates: 540\r\nSearch RAMNAGAR\r\n  official rows: 612\r\n  checked YD candidates: 560\r\n  checked YD candidates: 580\r\n  checked YD candidates: 600\r\n  checked YD candidates: 620\r\n  checked YD candidates: 640\r\n  checked YD candidates: 660\r\nSearch RAMPUR BAGHELAN\r\n  official rows: 1163\r\n  checked YD candidates: 680\r\n  checked YD candidates: 700\r\n  checked YD candidates: 720\r\n  checked YD candidates: 740\r\nSearch SATNA\r\n  official rows: 455\r\n  checked YD candidates: 760\r\n  checked YD candidates: 780\r\n  checked YD candidates: 800\r\n",
       "files": [
         "data/as-geotag-before-latest.json",
         "as-geotag-before-data.js"
@@ -217,18 +242,14 @@
       "attempts": 1
     },
     "ek_bagiya_payment": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_ek_bagiya_payment.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_ek_bagiya_payment.py']\nRetrying payment source with fresh session (2/3), block=ALL, FY=ALL: <urlopen error [Errno 11001] getaddrinfo failed>\r\nVBGRAMG source fetched (all work-start FYs)\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts_local\\update_ek_bagiya_payment.py\", line 136, in <module>\r\n    if __name__=='__main__':main()\r\n                            ~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts_local\\update_ek_bagiya_payment.py\", line 126, in main\r\n    with ThreadPoolExecutor(max_workers=4) as pool:results=list(pool.map(read,tasks))\r\n                                                           ~~~~^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 645, in result_iterator\r\n    yield _result_or_cancel(fs.pop())\r\n          ~~~~~~~~~~~~~~~~~^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 312, in _result_or_cancel\r\n    return fut.result(timeout)\r\n           ~~~~~~~~~~^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 447, in result\r\n    return self.__get_result()\r\n           ~~~~~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 396, in __get_result\r\n    raise self._exception\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\thread.py\", line 86, in run\r\n    result = ctx.run(self.task)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\thread.py\", line 73, in run\r\n    return fn(*args, **kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts_local\\update_ek_bagiya_payment.py\", line 123, in read\r\n    j,c,fy=task;rr,date=fetch(urls['MGNREGA'],c,fy)\r\n                        ~~~~~^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts_local\\update_ek_bagiya_payment.py\", line 34, in fetch\r\n    try:return fetch_once(url,block,fy)\r\n               ~~~~~~~~~~^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts_local\\update_ek_bagiya_payment.py\", line 19, in fetch_once\r\n    source,base=mis.open_text(opener,mis.form_action(source,base),urllib.parse.urlencode(fields).encode(),timeout=90)\r\n                ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts_local\\update_mis_612_work_details.py\", line 61, in open_text\r\n    with opener.open(req,timeout=timeout) as r:return r.read().decode('utf-8','ignore'),r.geturl()\r\n         ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 493, in open\r\n    response = meth(req, response)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 602, in http_response\r\n    response = self.parent.error(\r\n        'http', request, response, code, msg, hdrs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 525, in error\r\n    result = self._call_chain(*args)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 464, in _call_chain\r\n    result = func(*args)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 718, in http_error_302\r\n    return self.parent.open(new, timeout=req.timeout)\r\n           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 493, in open\r\n    response = meth(req, response)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 602, in http_response\r\n    response = self.parent.error(\r\n        'http', request, response, code, msg, hdrs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 531, in error\r\n    return self._call_chain(*args)\r\n           ~~~~~~~~~~~~~~~~^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 464, in _call_chain\r\n    result = func(*args)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\urllib\\request.py\", line 611, in http_error_default\r\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\r\nurllib.error.HTTPError: HTTP Error 404: Not Found\r\n",
+      "success": true,
       "files": [
         "data/ek-bagiya-payment-latest.json"
       ],
       "attempts": 1
     },
     "rejected_wage": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts/update_rejected_wage.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts/update_rejected_wage.py']\nVBGRAMG FY 2026-27: HTTP 200\r\nDetail VBGRAMG 2026-27 AMARPATAN: 18/18\r\nDetail VBGRAMG 2026-27 MAIHAR: 13/13\r\nDetail VBGRAMG 2026-27 MAJHGAWAN: 371/383\r\nDetail VBGRAMG 2026-27 NAGOD: 162/162\r\nDetail VBGRAMG 2026-27 RAMPUR BAGHELAN: 531/583\r\nDetail VBGRAMG 2026-27 SATNA: 4/4\r\nValidated VBGRAMG 2026-27: 8 Janpads\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts\\update_rejected_wage.py\", line 171, in <module>\r\n    if __name__ == '__main__': asyncio.run(main())\r\n                               ~~~~~~~~~~~^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\asyncio\\runners.py\", line 205, in run\r\n    return runner.run(main)\r\n           ~~~~~~~~~~^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\asyncio\\runners.py\", line 128, in run\r\n    return self._loop.run_until_complete(task)\r\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\asyncio\\base_events.py\", line 720, in run_until_complete\r\n    return future.result()\r\n           ~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_gaw18aqh\\report\\scripts\\update_rejected_wage.py\", line 147, in main\r\n    response = await page.goto(url, wait_until='domcontentloaded', timeout=90000)\r\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\playwright\\async_api\\_generated.py\", line 9869, in goto\r\n    await self._impl_obj.goto(\r\n    ...<4 lines>...\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\playwright\\_impl\\_page.py\", line 560, in goto\r\n    return await self._main_frame.goto(**locals_to_params(locals()))\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\playwright\\_impl\\_frame.py\", line 156, in goto\r\n    await self._channel.send(\r\n        \"goto\", self._navigation_timeout, locals_to_params(locals())\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\playwright\\_impl\\_connection.py\", line 76, in send\r\n    return await self._connection.wrap_api_call(\r\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n    ...<3 lines>...\r\n    )\r\n    ^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\playwright\\_impl\\_connection.py\", line 632, in wrap_api_call\r\n    raise rewrite_error(error, f\"{parsed_st['apiName']}: {error}\") from None\r\nplaywright._impl._errors.TimeoutError: Page.goto: Timeout 90000ms exceeded.\r\nCall log:\r\n  - navigating to \"https://mnregaweb4.dord.gov.in/netnrega/rej_trans_track.aspx?payload=lYKfJ2he503a2YjN-5H7rx8HSsNRo1hermf0qeU_UlB-axSLVwnJu6NiuDrXgPJztMbSfR9MsUWQpNTCeEazgNJTD8aQSNQlSVdbKgsSHUvEGaBqGfG31BUlgofOA-LQ6_735w3aB-rWGqfvlqbvW1EaNRz819i2krnKW9tb6xCA-lw7Xt6Ayd3P6a5DaPfg8aT-ZH9Xw5i0ATpwg1VE2BEaI8n2EayBeDyJPNUlzEbT0lHAbj3AyjToqfssgKfU\", waiting until \"domcontentloaded\"\r\n\r\n",
+      "success": true,
       "files": [
         "data/rejected-wage-latest.json"
       ],
