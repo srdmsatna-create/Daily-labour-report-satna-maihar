@@ -2315,7 +2315,7 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
   loading=(async()=>{
    try{
     if(typeof DecompressionStream==='function'){
-     const response=await fetch('ongoing-details.json.gz',{cache:'default'});
+     const response=await fetch('ongoing-details.json.gz?v=20261124-r75fix',{cache:'no-store'});
      if(response.ok&&response.body){
       const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
       const rows=JSON.parse(await new Response(stream).text());
@@ -2325,7 +2325,7 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
    }catch(error){}
    return await new Promise(resolve=>{
     const script=document.createElement('script');
-    script.src='ongoing-details.js?category=20261028';
+    script.src='ongoing-details.js?category=20261124-r75fix';
     script.onload=()=>resolve(Array.isArray(window.ONGOING_DETAILS)&&window.ONGOING_DETAILS.length>1000);
     script.onerror=()=>{loading=null;resolve(false)};
     document.head.appendChild(script);
@@ -2344,7 +2344,10 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
    tab.removeAttribute('aria-busy');busyMark.remove();
    if(ok){try{ongoingDetails=window.ONGOING_DETAILS;refreshFilters()}catch(error){}}
    else {const meta=document.getElementById('viewMeta');if(meta)meta.textContent='Work details data load नहीं हुआ। दोबारा रिपोर्ट खोलें।';delete tab.dataset.srdmWorkReplay;return;}
-   tab.click();delete tab.dataset.srdmWorkReplay;
+   // Replay only after removing the guard; otherwise the capture handler blocks
+   // the synthetic click and R-7.2 to R-7.5 never opens.
+   delete tab.dataset.srdmWorkReplay;
+   tab.click();
   });
  },true);
 })();
