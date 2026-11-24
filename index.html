@@ -2314,18 +2314,25 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
   if(loading)return loading;
   loading=(async()=>{
    try{
-    if(typeof DecompressionStream==='function'){
-     const response=await fetch('ongoing-details.json.gz?v=20261124-r75fix',{cache:'no-store'});
-     if(response.ok&&response.body){
-      const stream=response.body.pipeThrough(new DecompressionStream('gzip'));
-      const rows=JSON.parse(await new Response(stream).text());
-      if(Array.isArray(rows)&&rows.length>1000){window.ONGOING_DETAILS=rows;return true;}
+    const response=await fetch('ongoing-details.json.gz?v=20261124-r75fix2',{cache:'no-store'});
+    if(response.ok){
+     const bytes=new Uint8Array(await response.arrayBuffer());
+     let jsonText='';
+     // Some CDNs return the .gz bytes while others transparently decompress them.
+     // Detect the gzip signature so both responses work reliably.
+     if(bytes[0]===0x1f&&bytes[1]===0x8b&&typeof DecompressionStream==='function'){
+      const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+      jsonText=await new Response(stream).text();
+     }else{
+      jsonText=new TextDecoder().decode(bytes);
      }
+     const rows=JSON.parse(jsonText);
+     if(Array.isArray(rows)&&rows.length>1000){window.ONGOING_DETAILS=rows;return true;}
     }
    }catch(error){}
    return await new Promise(resolve=>{
     const script=document.createElement('script');
-    script.src='ongoing-details.js?category=20261124-r75fix';
+    script.src='ongoing-details.js?category=20261124-r75fix2';
     script.onload=()=>resolve(Array.isArray(window.ONGOING_DETAILS)&&window.ONGOING_DETAILS.length>1000);
     script.onerror=()=>{loading=null;resolve(false)};
     document.head.appendChild(script);
