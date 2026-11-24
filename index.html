@@ -2087,6 +2087,7 @@ function openPortal(){
   const s=document.getElementById('loginScreen'); if(s)s.classList.add('hidden');
   document.body.classList.remove('login-locked');
   sessionStorage.setItem('srdmPortalLogin','1');
+  setTimeout(()=>window.openRequestedPortalReport?.(),0);
 }
 function closePortal(){
   sessionStorage.removeItem('srdmPortalLogin');
@@ -3351,7 +3352,15 @@ document.addEventListener('click',event=>{
  render();
  requestAnimationFrame(()=>document.querySelector('.shell>.compact-controls')?.scrollIntoView({behavior:'smooth',block:'start'}));
 },true);
-$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();if(view)render();else{document.body.classList.add('srdm-no-report-selected');document.getElementById('viewTitle').textContent='रिपोर्ट चुनें';document.getElementById('viewMeta').textContent='मेनू से रिपोर्ट चुनें';document.getElementById('reportTable').replaceChildren()}updateAutoStatus();
+$('csvBtn').addEventListener('click',()=>{if(!lastExport.length)return;const keys=Object.keys(lastExport[0]);const q=v=>'"'+String(v??'').replaceAll('"','""')+'"';const csv='\ufeff'+[keys.join(','),...lastExport.map(r=>keys.map(k=>q(r[k])).join(','))].join('\r\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download=`daily-report-${view}-${todayDate()}.csv`;a.click();URL.revokeObjectURL(a.href)});
+window.openRequestedPortalReport=function(){
+ const requested=(new URLSearchParams(location.search).get('report')||'').toLowerCase();
+ const reportView=({'r7.2':'category','r7.3':'categorysubeng','r7.4':'categoryworks','r7.5':'incomplete','incomplete':'incomplete'})[requested];
+ if(!reportView||document.body.classList.contains('login-locked'))return;
+ const tab=document.querySelector(`.tab[data-view="${reportView}"]`);
+ if(tab&&!tab.classList.contains('active'))tab.click();
+};
+initPortalLogin();refreshFilters();initJanpadPortal();initPremiumUI();initPptExportUI();if(view)render();else{document.body.classList.add('srdm-no-report-selected');document.getElementById('viewTitle').textContent='रिपोर्ट चुनें';document.getElementById('viewMeta').textContent='मेनू से रिपोर्ट चुनें';document.getElementById('reportTable').replaceChildren()}updateAutoStatus();window.openRequestedPortalReport();
 window.addEventListener('load',()=>{if(view==='dysjanpad')render();},{once:true});
 $('allWorksExcelBtn')?.addEventListener('click',()=>{
  if(typeof XLSX==='undefined'){alert('Excel library load नहीं हुई। Page refresh करके पुनः प्रयास करें।');return}
