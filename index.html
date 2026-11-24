@@ -2358,6 +2358,11 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
  }
  document.addEventListener('click',function(event){
   const tab=event.target.closest('.tab[data-view="category"],.tab[data-view="categorysubeng"],.tab[data-view="categoryworks"],.tab[data-view="incomplete"],.tab[data-view="expbucket"],.tab[data-view="recovery"],.tab[data-view="ongoingall"],.tab[data-view="ongoingdetails"]');
+  if(tab?.dataset.view==='incomplete'){
+   event.preventDefault();event.stopImmediatePropagation();
+   location.href='r7-5-incomplete.html?v=20261124-fast';
+   return;
+  }
   if(!tab||(Array.isArray(window.ONGOING_DETAILS)&&window.ONGOING_DETAILS.length>1000))return;
   if(tab.dataset.srdmWorkReplay==='1'){event.preventDefault();event.stopImmediatePropagation();return;}
   event.preventDefault();event.stopImmediatePropagation();
