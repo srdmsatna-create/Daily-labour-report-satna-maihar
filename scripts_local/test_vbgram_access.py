@@ -1,8 +1,9 @@
 import os
 import unittest
+import urllib.error
 import urllib.request
 from unittest.mock import patch
-from vbgram_access import session_opener, session_cookies
+from vbgram_access import PortalOpener, session_opener, session_cookies
 
 class SessionTests(unittest.TestCase):
     def attach(self, opener, url):
@@ -27,6 +28,28 @@ class SessionTests(unittest.TestCase):
     def test_invalid_cookie_header_is_not_forwarded(self):
         with patch.dict(os.environ, {'VBGRAM_COOKIE': 'session=bad\r\nInjected: value'}):
             self.assertEqual(session_cookies(), [])
+
+    def test_stale_cookie_retries_initial_get_without_cookie(self):
+        class Response:
+            pass
+        class Fake:
+            def __init__(self, result):
+                self.result = result
+                self.handlers = []
+                self.cookies = []
+            def open(self, request, *args, **kwargs):
+                self.cookies.append(request.get_header('Cookie'))
+                if isinstance(self.result, Exception):
+                    raise self.result
+                return self.result
+        denied = urllib.error.HTTPError('https://vbgramgrep.dord.gov.in/', 401, 'Unauthorized', {}, None)
+        first, second = Fake(denied), Fake(Response())
+        with patch.dict(os.environ, {'VBGRAM_COOKIE': 'ASP.NET_SessionId=expired'}), \
+             patch('vbgram_access._build_opener', side_effect=[first, second]):
+            opener = PortalOpener()
+            response = opener.open(urllib.request.Request('https://vbgramgrep.dord.gov.in/VBGRAMG/report.aspx'))
+        self.assertIsInstance(response, Response)
+        self.assertIsNone(second.cookies[0])
 
 if __name__ == '__main__':
     unittest.main()
