@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-26T07:29:11.764347+00:00",
+  "checkedAt": "2026-11-26T09:49:51.462803+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_s58_ongoing": {
@@ -7,16 +7,8 @@
       "files": [
         "shramik-s58-ongoing.js"
       ],
-      "attempts": 1
-    },
-    "shramik_r511_persondays": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_shramik_persondays.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_shramik_persondays.py']\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_cd7ern99\\report\\scripts_local\\update_shramik_persondays.py\", line 115, in <module>\r\n    main()\r\n    ~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_cd7ern99\\report\\scripts_local\\update_shramik_persondays.py\", line 106, in main\r\n    payload = collect()\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_cd7ern99\\report\\scripts_local\\update_shramik_persondays.py\", line 93, in collect\r\n    satna, gp_links = sat_future.result()\r\n                      ~~~~~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 454, in result\r\n    return self.__get_result()\r\n           ~~~~~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 396, in __get_result\r\n    raise self._exception\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\thread.py\", line 86, in run\r\n    result = ctx.run(self.task)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\thread.py\", line 73, in run\r\n    return fn(*args, **kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_cd7ern99\\report\\scripts_local\\update_shramik_persondays.py\", line 62, in read\r\n    raise ValueError('R5.1.1 FY 2026-27 header missing')\r\nValueError: R5.1.1 FY 2026-27 header missing\r\n",
-      "files": [
-        "shramik-r511-persondays.js"
-      ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "shramik_complete": {
       "success": true,
@@ -35,21 +27,24 @@
       "r69GpSourceDate": "25-11-2026",
       "r69GpRetrievedDate": "26-11-2026",
       "r69GpCurrent": false,
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "r42_emuster_wagelist": {
       "success": true,
       "files": [
         "data/r42-emuster-wagelist.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "muster_emb": {
       "success": true,
       "files": [
         "muster-emb-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pending_mr_fto": {
       "success": true,
@@ -57,78 +52,179 @@
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "emb_pending": {
       "success": true,
       "files": [
         "data/emb-pending-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_state": {
       "success": true,
       "files": [
         "data/yuktdhara-state-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_bhuvan": {
       "success": true,
       "files": [
         "yuktdhara-data.js"
       ],
-      "attempts": 1
-    },
-    "yuktdhara": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_yuktdhara_received.py']' timed out after 1800 seconds",
-      "errorTail": "kTypes: 3\r\nWork details [541/659] SOHAWAL / KOTHRA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [542/659] SOHAWAL / KUDIYA\r\n  Verified workTypes: 2\r\nWork details [543/659] SOHAWAL / KUNWA\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [544/659] SOHAWAL / KUSIYARA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [545/659] SOHAWAL / LALPUR\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 1\r\nWork details [546/659] SOHAWAL / MADHVGARH\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [547/659] SOHAWAL / MADNI\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [548/659] SOHAWAL / MAJHAGAWANBHATTHA\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 1\r\nWork details [549/659] SOHAWAL / MANAKAHARI\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [550/659] SOHAWAL / MAND\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [551/659] SOHAWAL / MASANAHA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 1\r\nWork details [552/659] SOHAWAL / MATEHNA\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [553/659] SOHAWAL / MAUHAR\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 1\r\nWork details [554/659] SOHAWAL / MEDNIPUR\r\n  Verified workTypes: 4\r\nWork details [555/659] SOHAWAL / MUDAHA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [556/659] SOHAWAL / NACHANAURA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [557/659] SOHAWAL / NADNA\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [558/659] SOHAWAL / NAINA (NEAR KOTHI)\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 1\r\nWork details [559/659] SOHAWAL / NAINA (NEAR SAGMANIHA)\r\n  Verified workTypes: 1\r\nWork details [560/659] SOHAWAL / NAKATI\r\n  Verified workTypes: 2\r\nWork details [561/659] SOHAWAL / NARAYANPUR\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [562/659] SOHAWAL / NAYAGOAN\r\n  Verified workTypes: 3\r\nWork details [563/659] SOHAWAL / NEMEBRAT\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 1\r\nWork details [564/659] SOHAWAL / PADRAUT\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 3\r\nWork details [565/659] SOHAWAL / PAIKORI\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 2\r\nWork details [566/659] SOHAWAL / PASI\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [567/659] SOHAWAL / PATAUDA\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 2\r\nWork details [568/659] SOHAWAL / PAWAIYA\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [569/659] SOHAWAL / PHUTAUNDHA\r\n  Verified workTypes: 4\r\n  Verified createdWorkTypes: 2\r\nWork details [570/659] SOHAWAL / PHUTAUNDHI\r\n  Verified workTypes: 1\r\nWork details [571/659] SOHAWAL / POINDHAKALA\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 2\r\nWork details [572/659] SOHAWAL / PONDI\r\n  Verified workTypes: 4\r\n  Verified createdWorkTypes: 4\r\nWork details [573/659] SOHAWAL / PURAWA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [574/659] SOHAWAL / RAGAULE\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [575/659] SOHAWAL / RAIGAON\r\n  Verified workTypes: 2\r\nWork details [576/659] SOHAWAL / RAIPUR\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 1\r\nWork details [577/659] SOHAWAL / RAMASTHAN\r\n  Verified workTypes: 4\r\n  Verified createdWorkTypes: 1\r\nWork details [578/659] SOHAWAL / RAMPUR CHAURASI\r\n  Verified workTypes: 5\r\n  Verified createdWorkTypes: 1\r\nWork details [579/659] SOHAWAL / RANEHI\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 1\r\nWork details [580/659] SOHAWAL / SAGMA\r\n  Verified workTypes: 1\r\nWork details [581/659] SOHAWAL / SAKARIYA\r\n  Verified workTypes: 5\r\n  Verified createdWorkTypes: 2\r\nWork details [582/659] SOHAWAL / SEMARIA\r\n  Verified workTypes: 4\r\n  Verified createdWorkTypes: 2\r\nWork details [583/659] SOHAWAL / SEMRIKALA\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 2\r\nWork details [584/659] SOHAWAL / SHIVPUR\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [585/659] SOHAWAL / SIJAHATA\r\n  Verified workTypes: 1\r\n  Verified createdWorkTypes: 1\r\nWork details [586/659] SOHAWAL / SOHAS\r\n  Verified workTypes: 2\r\nWork details [587/659] SOHAWAL / SOHAULA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [588/659] SOHAWAL / SOHAWAL\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [589/659] SOHAWAL / TIKAR\r\n  Verified workTypes: 5\r\n  Verified createdWorkTypes: 2\r\nWork details [590/659] SOHAWAL / UDAYSAGAR\r\n  Verified workTypes: 2\r\nWork details [591/659] SOHAWAL / UJARAUNDHA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 1\r\nWork details [592/659] UNCHAHARA / AALAMAPUR\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 1\r\nWork details [593/659] UNCHAHARA / AKAHA\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [594/659] UNCHAHARA / AMADAREE\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 1\r\nWork details [595/659] UNCHAHARA / ATARA\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 2\r\nWork details [596/659] UNCHAHARA / BAABOOPUR\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 1\r\nWork details [597/659] UNCHAHARA / BAANDHEEMAUHAAR\r\n  Verified workTypes: 2\r\nWork details [598/659] UNCHAHARA / BAD_AKHURA\r\n  Verified workTypes: 3\r\nWork details [599/659] UNCHAHARA / BADAKHERA\r\n  Verified workTypes: 2\r\nWork details [600/659] UNCHAHARA / BADARAHA\r\n  Verified workTypes: 3\r\n  Verified createdWorkTypes: 2\r\nWork details [601/659] UNCHAHARA / BEERAPUR\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [602/659] UNCHAHARA / BHARAHATA\r\n  Verified workTypes: 8\r\n  Verified createdWorkTypes: 2\r\nWork details [603/659] UNCHAHARA / BHARAHUT\r\n  Verified workTypes: 2\r\n  Verified createdWorkTypes: 2\r\nWork details [604/659] UNCHAHARA / BHATANAVARA\r\n  Verified workTypes: 1\r\n",
-      "files": [
-        "yuktdhara-official-data.js",
-        "yuktdhara-received-data.js"
-      ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pending_wage_payment": {
       "success": true,
       "files": [
         "data/pending-wage-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "timely_payment": {
       "success": true,
       "files": [
         "data/timely-payment-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "delayed_compensation": {
       "success": true,
       "files": [
         "data/delayed-compensation-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "block_statistics": {
       "success": true,
       "files": [
         "vbg-block-stats.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "statistics_ekyc_material": {
       "success": true,
       "files": [
         "data/statistics-ekyc-material-latest.json"
       ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "pmay_janpad_summary": {
+      "success": true,
+      "files": [
+        "pmay-janpad-summary-data.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "pmayg": {
+      "success": true,
+      "files": [
+        "data/pmayg-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "above75": {
+      "success": true,
+      "files": [
+        "data/above75-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "secure_ts": {
+      "success": true,
+      "files": [
+        "secure-ts-data.js",
+        "secure-ts-yuktadhara-data.js",
+        "data/secure-ts-yuktadhara-fy2026-27.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "r37_secure_register": {
+      "success": true,
+      "files": [
+        "data/r37-secure-register.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "secure_yd_as": {
+      "success": true,
+      "files": [
+        "data/secure-as-yuktdhara.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "r617_secure_bhuvan": {
+      "success": true,
+      "files": [
+        "data/r617-secure-bhuvan.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "as_geotag_before": {
+      "success": true,
+      "files": [
+        "data/as-geotag-before-latest.json",
+        "as-geotag-before-data.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "ek_bagiya_payment": {
+      "success": true,
+      "files": [
+        "data/ek-bagiya-payment-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "rejected_wage": {
+      "success": true,
+      "files": [
+        "data/rejected-wage-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "shramik_r511_persondays": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_shramik_persondays.py']' returned non-zero exit status 1.",
+      "errorTail": "\nCOMMAND ['scripts_local/update_shramik_persondays.py']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/update_shramik_persondays.py\", line 115, in <module>\n    main()\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/update_shramik_persondays.py\", line 106, in main\n    payload = collect()\n              ^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/update_shramik_persondays.py\", line 89, in collect\n    districts, links = read(SOURCE, 52)\n                       ^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/update_shramik_persondays.py\", line 57, in read\n    with open_url(Request(url, headers={'User-Agent':'Mozilla/5.0'}), timeout=35) as response:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/vbgram_access.py\", line 42, in open_url\n    raise RuntimeError('Portal access refused (HTTP %s); report retained. '\nRuntimeError: Portal access refused (HTTP 401); report retained. A working portal connection/session is required.\n",
+      "files": [
+        "shramik-r511-persondays.js"
+      ],
+      "attempts": 1
+    },
+    "yuktdhara": {
+      "success": false,
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--official-only']' returned non-zero exit status 1.",
+      "errorTail": "\nCOMMAND ['scripts_local/update_yuktdhara_monitoring.py', '--official-only']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/update_yuktdhara_monitoring.py\", line 226, in <module>\n    fetch()\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/update_yuktdhara_monitoring.py\", line 155, in fetch\n    source=open_url(req,timeout=90).read().decode(\"utf-8\",\"ignore\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts_local/vbgram_access.py\", line 42, in open_url\n    raise RuntimeError('Portal access refused (HTTP %s); report retained. '\nRuntimeError: Portal access refused (HTTP 401); report retained. A working portal connection/session is required.\n",
+      "files": [
+        "yuktdhara-official-data.js",
+        "yuktdhara-received-data.js"
+      ],
       "attempts": 1
     },
     "mis_612": {
       "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_mis_612_work_details.py']\nMIS 6.12 AMARPATAN Approved: 850 rows\r\nMIS 6.12 AMARPATAN Ongoing: 1440 rows\r\nMIS 6.12 AMARPATAN Completed: 10 rows\r\nMIS 6.12 AMARPATAN Physically Completed: 298 rows\r\nMIS 6.12 MAIHAR Approved: 1581 rows\r\nMIS 6.12 MAIHAR Ongoing: 2460 rows\r\nMIS 6.12 MAIHAR Completed: 44 rows\r\nMIS 6.12 MAIHAR Physically Completed: 431 rows\r\nMIS 6.12 RAMNAGAR Approved: 937 rows\r\nERROR: MIS 6.12 live update failed; existing dashboard data preserved. HTTP Error 503: Service Unavailable\r\n",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_mis_612_work_details.py']' returned non-zero exit status 1.",
+      "errorTail": "\nCOMMAND ['scripts_local/update_mis_612_work_details.py']\nERROR: MIS 6.12 live update failed; existing dashboard data preserved. HTTP Error 401: Unauthorized\n",
       "files": [
         "data/Ongoing_Works_dynamic_work_details_latest.csv",
         "data/mis-6.12-status.json",
@@ -138,17 +234,10 @@
       ],
       "attempts": 1
     },
-    "pmay_janpad_summary": {
-      "success": true,
-      "files": [
-        "pmay-janpad-summary-data.js"
-      ],
-      "attempts": 1
-    },
     "yuktdhara_mr_labour_history": {
       "success": false,
       "message": "Current-day MIS 6.12 source required",
-      "errorTail": "\nCOMMAND ['scripts_local/update_yuktdhara_mr_labour_history.py']\nRecorded 2026-11-26: R33.1 ongoing 106; R6.12 FY2026-27 /YD/ ongoing 106; with issued MR 26\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/update_yuktdhara_mr_labour_history.py']\nRecorded 2026-11-26: R33.1 ongoing 106; R6.12 FY2026-27 /YD/ ongoing 106; with issued MR 26\n",
       "files": [
         "data/yuktdhara-mr-labour-history.json"
       ],
@@ -156,85 +245,19 @@
     },
     "pmayg_physical": {
       "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_pmayg_physical.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_pmayg_physical.py']\nTemporary portal failure; retry 1/2\r\nTemporary portal failure; retry 2/2\r\nFAILED R-7.1; previous verified snapshot retained: HTTP Error 503: Service Unavailable\r\n",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_pmayg_physical.py']' returned non-zero exit status 1.",
+      "errorTail": "\nCOMMAND ['scripts_local/update_pmayg_physical.py']\nFAILED R-7.1; previous verified snapshot retained: HTTP Error 401: Unauthorized\n",
       "files": [
         "data/pmayg-physical-latest.json"
       ],
       "attempts": 1
     },
-    "pmayg": {
-      "success": true,
-      "files": [
-        "data/pmayg-latest.json"
-      ],
-      "attempts": 1
-    },
-    "above75": {
-      "success": true,
-      "files": [
-        "data/above75-latest.json"
-      ],
-      "attempts": 1
-    },
     "planner": {
       "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts/fetch_planner_portal_summary.py']' returned non-zero exit status 1.",
-      "errorTail": ".py\", line 85, in create_connection\r\n    raise err\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\util\\connection.py\", line 73, in create_connection\r\n    sock.connect(sa)\r\n    ~~~~~~~~~~~~^^^^\r\nConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 788, in urlopen\r\n    response = self._make_request(\r\n        conn,\r\n    ...<10 lines>...\r\n        **response_kw,\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 488, in _make_request\r\n    raise new_e\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 464, in _make_request\r\n    self._validate_conn(conn)\r\n    ~~~~~~~~~~~~~~~~~~~^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 1106, in _validate_conn\r\n    conn.connect()\r\n    ~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connection.py\", line 759, in connect\r\n    self.sock = sock = self._new_conn()\r\n                       ~~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connection.py\", line 219, in _new_conn\r\n    raise NewConnectionError(\r\n        self, f\"Failed to establish a new connection: {e}\"\r\n    ) from e\r\nurllib3.exceptions.NewConnectionError: HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\r\n\r\nThe above exception was the direct cause of the following exception:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\adapters.py\", line 696, in send\r\n    resp = conn.urlopen(\r\n        method=request.method,\r\n    ...<9 lines>...\r\n        chunked=chunked,\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 872, in urlopen\r\n    return self.urlopen(\r\n           ~~~~~~~~~~~~^\r\n        method,\r\n        ^^^^^^^\r\n    ...<13 lines>...\r\n        **response_kw,\r\n        ^^^^^^^^^^^^^^\r\n    )\r\n    ^\r\n  [Previous line repeated 2 more times]\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\connectionpool.py\", line 842, in urlopen\r\n    retries = retries.increment(\r\n        method, url, error=new_e, _pool=self, _stacktrace=sys.exc_info()[2]\r\n    )\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\urllib3\\util\\retry.py\", line 543, in increment\r\n    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]\r\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by NewConnectionError(\"HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))\r\n\r\nDuring handling of the above exception, another exception occurred:\r\n\r\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_cd7ern99\\report\\scripts\\fetch_planner_portal_summary.py\", line 42, in <module>\r\n    html=get_district_report(); soup=BeautifulSoup(html,'html.parser')\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_cd7ern99\\report\\scripts\\fetch_planner_portal_summary.py\", line 33, in get_district_report\r\n    return get(BASE)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_cd7ern99\\report\\scripts\\fetch_planner_portal_summary.py\", line 21, in get\r\n    r=SESSION.get(url,headers=HEADERS,timeout=(30,90))\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 671, in get\r\n    return self.request(\"GET\", url, params=params, **kwargs)\r\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 651, in request\r\n    resp = self.send(prep, **send_kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\sessions.py\", line 784, in send\r\n    r = adapter.send(request, **kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\site-packages\\requests\\adapters.py\", line 729, in send\r\n    raise ConnectionError(e, request=request)\r\nrequests.exceptions.ConnectionError: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by NewConnectionError(\"HTTPSConnection(host='planner.nregsmp.org', port=443): Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it\"))\r\n",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts/fetch_planner_portal_summary.py']' returned non-zero exit status 1.",
+      "errorTail": "\nCOMMAND ['scripts/fetch_planner_portal_summary.py']\nTraceback (most recent call last):\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connection.py\", line 239, in _new_conn\n    sock = connection.create_connection(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/util/connection.py\", line 85, in create_connection\n    raise err\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/util/connection.py\", line 73, in create_connection\n    sock.connect(sa)\nTimeoutError: timed out\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 793, in urlopen\n    response = self._make_request(\n               ^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 494, in _make_request\n    raise new_e\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 470, in _make_request\n    self._validate_conn(conn)\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 1125, in _validate_conn\n    conn.connect()\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connection.py\", line 827, in connect\n    self.sock = sock = self._new_conn()\n                       ^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connection.py\", line 248, in _new_conn\n    raise ConnectTimeoutError(\nurllib3.exceptions.ConnectTimeoutError: (<HTTPSConnection(host='planner.nregsmp.org', port=443) at 0x78175bd4ee10>, 'Connection to planner.nregsmp.org timed out. (connect timeout=30)')\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/requests/adapters.py\", line 696, in send\n    resp = conn.urlopen(\n           ^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 886, in urlopen\n    return self.urlopen(\n           ^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 886, in urlopen\n    return self.urlopen(\n           ^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 886, in urlopen\n    return self.urlopen(\n           ^^^^^^^^^^^^^\n  [Previous line repeated 2 more times]\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/connectionpool.py\", line 847, in urlopen\n    retries = retries.increment(\n              ^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/urllib3/util/retry.py\", line 555, in increment\n    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nurllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by ConnectTimeoutError(<HTTPSConnection(host='planner.nregsmp.org', port=443) at 0x78175bd4ee10>, 'Connection to planner.nregsmp.org timed out. (connect timeout=30)'))\n\nDuring handling of the above exception, another exception occurred:\n\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts/fetch_planner_portal_summary.py\", line 42, in <module>\n    html=get_district_report(); soup=BeautifulSoup(html,'html.parser')\n         ^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts/fetch_planner_portal_summary.py\", line 33, in get_district_report\n    return get(BASE)\n           ^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_wfj80cgx/report/scripts/fetch_planner_portal_summary.py\", line 21, in get\n    r=SESSION.get(url,headers=HEADERS,timeout=(30,90))\n      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/requests/sessions.py\", line 671, in get\n    return self.request(\"GET\", url, params=params, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/requests/sessions.py\", line 651, in request\n    resp = self.send(prep, **send_kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/requests/sessions.py\", line 784, in send\n    r = adapter.send(request, **kwargs)\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/site-packages/requests/adapters.py\", line 717, in send\n    raise ConnectTimeout(e, request=request)\nrequests.exceptions.ConnectTimeout: HTTPSConnectionPool(host='planner.nregsmp.org', port=443): Max retries exceeded with url: /reports/hierarchy.php?district=1712&financialYearId=2&status=4&view=block (Caused by ConnectTimeoutError(<HTTPSConnection(host='planner.nregsmp.org', port=443) at 0x78175bd4ee10>, 'Connection to planner.nregsmp.org timed out. (connect timeout=30)'))\n",
       "files": [
         "planner-portal-data.js"
-      ],
-      "attempts": 1
-    },
-    "secure_ts": {
-      "success": true,
-      "files": [
-        "secure-ts-data.js",
-        "secure-ts-yuktadhara-data.js",
-        "data/secure-ts-yuktadhara-fy2026-27.json"
-      ],
-      "attempts": 1
-    },
-    "r37_secure_register": {
-      "success": true,
-      "files": [
-        "data/r37-secure-register.json"
-      ],
-      "attempts": 1
-    },
-    "secure_yd_as": {
-      "success": true,
-      "files": [
-        "data/secure-as-yuktdhara.json"
-      ],
-      "attempts": 1
-    },
-    "r617_secure_bhuvan": {
-      "success": true,
-      "files": [
-        "data/r617-secure-bhuvan.json"
-      ],
-      "attempts": 1
-    },
-    "as_geotag_before": {
-      "success": true,
-      "files": [
-        "data/as-geotag-before-latest.json",
-        "as-geotag-before-data.js"
-      ],
-      "attempts": 1
-    },
-    "ek_bagiya_payment": {
-      "success": true,
-      "files": [
-        "data/ek-bagiya-payment-latest.json"
-      ],
-      "attempts": 1
-    },
-    "rejected_wage": {
-      "success": true,
-      "files": [
-        "data/rejected-wage-latest.json"
       ],
       "attempts": 1
     }
