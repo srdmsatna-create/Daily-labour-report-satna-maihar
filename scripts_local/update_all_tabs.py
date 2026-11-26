@@ -54,6 +54,13 @@ def validate(group,root):
   runpy.run_path(str(root/'scripts_local/update_secure_yd_as.py'))['validate'](data(root/'data/secure-as-yuktdhara.json'))
  elif group=='secure_ts':
   runpy.run_path(str(root/'scripts_local/update_secure_ts.py'))['validate'](data(root/'secure-ts-data.js'))
+ elif group=='r617_secure_bhuvan':
+  d=data(root/'data/r617-secure-bhuvan.json');rows=d.get('blocks',[]);total=d.get('totals',{})
+  janpads={'AMARPATAN','MAIHAR','MAJHGAWAN','NAGOD','RAMNAGAR','RAMPUR BAGHELAN','SATNA','UNCHAHARA'}
+  fields=('sentSecure','consumedSecure','sentBhuvan','receivedBhuvan')
+  if d.get('officialDate')!=datetime.now(ZoneInfo('Asia/Kolkata')).strftime('%d/%m/%Y'):raise ValueError('Current R6.17 official date required')
+  if len(rows)!=8 or {r.get('janpad') for r in rows}!=janpads or any(int(total.get(k,-1))!=sum(int(r.get(k,-1)) for r in rows) for k in fields):raise ValueError('R6.17 Janpad totals incomplete or unreconciled')
+  if not d.get('gps') or not all(r.get('gpDetailReconciled') is True for r in rows):raise ValueError('R6.17 GP drill-down is incomplete')
  elif group=='shramik_s58_ongoing':
   from update_shramik_s58 import validate as validate_s58
   validate_s58(data(root/'shramik-s58-ongoing.js'),root)

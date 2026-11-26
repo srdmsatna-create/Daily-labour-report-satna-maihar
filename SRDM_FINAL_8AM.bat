@@ -1,10 +1,13 @@
 @echo off
-title SRDM FINAL - Daily 8 AM Reports
-echo SRDM FINAL 8AM - 07 NOV 2026 - ALL REGISTERED REPORTS
+if not defined SRDM_SCHEDULE_TIME set "SRDM_SCHEDULE_TIME=08:00"
+if not defined SRDM_TASK_NAME set "SRDM_TASK_NAME=SRDM_ALL_REPORTS_DAILY_8AM"
+title SRDM FINAL - Daily Reports
+echo SRDM FINAL %SRDM_SCHEDULE_TIME% - ALL REGISTERED REPORTS
 setlocal EnableExtensions DisableDelayedExpansion
 set "PYTHONUTF8=1"
 set "PYTHONIOENCODING=utf-8"
-set "SRDM_DAILY_BAT=%~f0"
+if not defined SRDM_ENTRY_BAT set "SRDM_ENTRY_BAT=%~f0"
+set "SRDM_DAILY_BAT=%SRDM_ENTRY_BAT%"
 set "SRDM_DAILY_REPO=%~dp0"
 set "SRDM_DAILY_LOG=%SRDM_DAILY_REPO%\daily-all-reports-%RANDOM%-%RANDOM%.log"
 if not exist "%SRDM_DAILY_REPO%\.git" (
@@ -22,9 +25,13 @@ where py >nul 2>&1
 if errorlevel 1 (set "SRDM_DAILY_PY=python") else (set "SRDM_DAILY_PY=py")
 where %SRDM_DAILY_PY% >nul 2>&1
 if errorlevel 1 goto failed
-if /i "%~1"=="--scheduled" goto run
-echo Installing one daily 8 AM India task...
-powershell.exe -NoProfile -Command "$ErrorActionPreference='Stop'; if((Get-TimeZone).Id -ne 'India Standard Time'){throw 'Windows timezone must be India Standard Time for the 8 AM timer'}; $a=New-ScheduledTaskAction -Execute $env:ComSpec -Argument ('/d /s /c ""'+$env:SRDM_DAILY_BAT+'" --scheduled"') -WorkingDirectory $env:SRDM_DAILY_REPO; $t=New-ScheduledTaskTrigger -Daily -At '08:00'; $s=New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 3); $p=New-ScheduledTaskPrincipal -UserId ([Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited; Register-ScheduledTask -TaskName 'SRDM_ALL_REPORTS_DAILY_8AM' -Action $a -Trigger $t -Settings $s -Principal $p -Force | Out-Null; Write-Host 'Daily 08:00 task installed; missed start runs when laptop is available.'"
+if /i "%~1"=="--scheduled" (
+ set "SRDM_SESSION_MODE=--scheduled"
+ goto run
+)
+set "SRDM_SESSION_MODE="
+echo Installing one daily %SRDM_SCHEDULE_TIME% India task...
+powershell.exe -NoProfile -Command "$ErrorActionPreference='Stop'; if((Get-TimeZone).Id -ne 'India Standard Time'){throw 'Windows timezone must be India Standard Time for the timer'}; $a=New-ScheduledTaskAction -Execute $env:ComSpec -Argument ('/d /s /c ""'+$env:SRDM_DAILY_BAT+'" --scheduled"') -WorkingDirectory $env:SRDM_DAILY_REPO; $t=New-ScheduledTaskTrigger -Daily -At $env:SRDM_SCHEDULE_TIME; $s=New-ScheduledTaskSettingsSet -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Hours 3); $p=New-ScheduledTaskPrincipal -UserId ([Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited; Register-ScheduledTask -TaskName $env:SRDM_TASK_NAME -Action $a -Trigger $t -Settings $s -Principal $p -Force | Out-Null; Write-Host ('Daily '+$env:SRDM_SCHEDULE_TIME+' task installed; missed start runs when laptop is available.')"
 if errorlevel 1 goto failed
 powershell.exe -NoProfile -Command "$names=@('SRDM_52_DISTRICTS_AUTO','SRDM_GP_EMUSTER_DAILY_8AM','SRDM_GP_ALL_IN_ONE_DAILY_8AM'); foreach($n in $names){try{$t=Get-ScheduledTask -TaskName $n -ErrorAction SilentlyContinue; if($t){$t | Disable-ScheduledTask -ErrorAction Stop | Out-Null}}catch{Write-Host ('WARNING: Could not disable old task '+$n+'. Current report update will continue.')}}; exit 0"
 :run
@@ -51,8 +58,8 @@ if errorlevel 1 goto failed
 echo Checking ALL registered report updaters...
 %SRDM_DAILY_PY% -u "%SRDM_DAILY_BOOT%\scripts_local\run_daily_unified.py" --list-reports
 if errorlevel 1 goto failed
-echo Refreshing all reports. Log: %SRDM_DAILY_LOG%
-powershell.exe -NoProfile -Command "$ErrorActionPreference='Stop'; $LASTEXITCODE=1; try { & $env:SRDM_DAILY_PY -u (Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py') --publish --publish-verified 2>&1 | Tee-Object -FilePath $env:SRDM_DAILY_LOG -Append; $rc=$LASTEXITCODE; if($rc -ne 0){exit $rc}; exit 0 } catch { Write-Host $_; exit 1 }"
+echo Refreshing all reports with the saved official-portal browser session. Log: %SRDM_DAILY_LOG%
+powershell.exe -NoProfile -Command "$ErrorActionPreference='Stop'; $LASTEXITCODE=1; try { $wrapper=Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_with_vbgram_session.py'; $runner=Join-Path $env:SRDM_DAILY_BOOT 'scripts_local\run_daily_unified.py'; $a=@('-u',$wrapper); if($env:SRDM_SESSION_MODE){$a+=$env:SRDM_SESSION_MODE}; $a+=@('--',$env:SRDM_DAILY_PY,'-u',$runner,'--publish','--publish-verified'); & $env:SRDM_DAILY_PY @a 2>&1 | Tee-Object -FilePath $env:SRDM_DAILY_LOG -Append; $rc=$LASTEXITCODE; if($rc-ne 0){exit $rc}; exit 0 } catch { Write-Host $_; exit 1 }"
 if errorlevel 1 goto failed
 git worktree remove --force "%SRDM_DAILY_BOOT%"
 if errorlevel 1 echo WARNING: Temporary updater folder could not be removed; reports were already published.
