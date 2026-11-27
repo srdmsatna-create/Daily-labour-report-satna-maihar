@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-27T03:31:37.589924+00:00",
+  "checkedAt": "2026-11-27T07:59:41.435456+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_s58_ongoing": {
@@ -7,16 +7,8 @@
       "files": [
         "shramik-s58-ongoing.js"
       ],
-      "attempts": 1
-    },
-    "shramik_r511_persondays": {
-      "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_shramik_persondays.py']' returned non-zero exit status 1.",
-      "errorTail": "\nCOMMAND ['scripts_local/update_shramik_persondays.py']\nTraceback (most recent call last):\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_ooyiq7mt\\report\\scripts_local\\update_shramik_persondays.py\", line 115, in <module>\r\n    main()\r\n    ~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_ooyiq7mt\\report\\scripts_local\\update_shramik_persondays.py\", line 106, in main\r\n    payload = collect()\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_ooyiq7mt\\report\\scripts_local\\update_shramik_persondays.py\", line 97, in collect\r\n    gps = dict(zip(SATNA, pool.map(lambda b: read(gp_links[b], SATNA[b])[0], SATNA)))\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 645, in result_iterator\r\n    yield _result_or_cancel(fs.pop())\r\n          ~~~~~~~~~~~~~~~~~^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 312, in _result_or_cancel\r\n    return fut.result(timeout)\r\n           ~~~~~~~~~~^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 454, in result\r\n    return self.__get_result()\r\n           ~~~~~~~~~~~~~~~~~^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\_base.py\", line 396, in __get_result\r\n    raise self._exception\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\thread.py\", line 86, in run\r\n    result = ctx.run(self.task)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Programs\\Python\\Python314\\Lib\\concurrent\\futures\\thread.py\", line 73, in run\r\n    return fn(*args, **kwargs)\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_ooyiq7mt\\report\\scripts_local\\update_shramik_persondays.py\", line 97, in <lambda>\r\n    gps = dict(zip(SATNA, pool.map(lambda b: read(gp_links[b], SATNA[b])[0], SATNA)))\r\n                                             ~~~~^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Users\\welcome\\AppData\\Local\\Temp\\SRDM_DAILY_ooyiq7mt\\report\\scripts_local\\update_shramik_persondays.py\", line 62, in read\r\n    raise ValueError('R5.1.1 FY 2026-27 header missing')\r\nValueError: R5.1.1 FY 2026-27 header missing\r\n",
-      "files": [
-        "shramik-r511-persondays.js"
-      ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "shramik_complete": {
       "success": true,
@@ -35,21 +27,24 @@
       "r69GpSourceDate": "26-11-2026",
       "r69GpRetrievedDate": "27-11-2026",
       "r69GpCurrent": false,
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "r42_emuster_wagelist": {
       "success": true,
       "files": [
         "data/r42-emuster-wagelist.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "muster_emb": {
       "success": true,
       "files": [
         "muster-emb-data.js"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "pending_mr_fto": {
       "success": true,
@@ -57,26 +52,179 @@
         "data/pending-mr-fto.json",
         "data/pending-mr-fto-details.json.gz"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "emb_pending": {
       "success": true,
       "files": [
         "data/emb-pending-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_state": {
       "success": true,
       "files": [
         "data/yuktdhara-state-latest.json"
       ],
-      "attempts": 1
+      "attempts": 1,
+      "resumed": true
     },
     "yuktdhara_bhuvan": {
       "success": true,
       "files": [
         "yuktdhara-data.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "pending_wage_payment": {
+      "success": true,
+      "files": [
+        "data/pending-wage-payment-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "timely_payment": {
+      "success": true,
+      "files": [
+        "data/timely-payment-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "delayed_compensation": {
+      "success": true,
+      "files": [
+        "data/delayed-compensation-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "block_statistics": {
+      "success": true,
+      "files": [
+        "vbg-block-stats.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "statistics_ekyc_material": {
+      "success": true,
+      "files": [
+        "data/statistics-ekyc-material-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "mis_612": {
+      "success": true,
+      "files": [
+        "data/Ongoing_Works_dynamic_work_details_latest.csv",
+        "data/mis-6.12-status.json",
+        "ongoing-details.js",
+        "ongoing-details.json.gz",
+        "r612-yd-convergence.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "pmay_janpad_summary": {
+      "success": true,
+      "files": [
+        "pmay-janpad-summary-data.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "pmayg_physical": {
+      "success": true,
+      "files": [
+        "data/pmayg-physical-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "pmayg": {
+      "success": true,
+      "files": [
+        "data/pmayg-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "above75": {
+      "success": true,
+      "files": [
+        "data/above75-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "planner": {
+      "success": true,
+      "files": [
+        "planner-portal-data.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "secure_ts": {
+      "success": true,
+      "files": [
+        "secure-ts-data.js",
+        "secure-ts-yuktadhara-data.js",
+        "data/secure-ts-yuktadhara-fy2026-27.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "r37_secure_register": {
+      "success": true,
+      "files": [
+        "data/r37-secure-register.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "secure_yd_as": {
+      "success": true,
+      "files": [
+        "data/secure-as-yuktdhara.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "r617_secure_bhuvan": {
+      "success": true,
+      "files": [
+        "data/r617-secure-bhuvan.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "ek_bagiya_payment": {
+      "success": true,
+      "files": [
+        "data/ek-bagiya-payment-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "rejected_wage": {
+      "success": true,
+      "files": [
+        "data/rejected-wage-latest.json"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "shramik_r511_persondays": {
+      "success": true,
+      "files": [
+        "shramik-r511-persondays.js"
       ],
       "attempts": 1
     },
@@ -90,59 +238,6 @@
       ],
       "attempts": 1
     },
-    "pending_wage_payment": {
-      "success": true,
-      "files": [
-        "data/pending-wage-payment-latest.json"
-      ],
-      "attempts": 1
-    },
-    "timely_payment": {
-      "success": true,
-      "files": [
-        "data/timely-payment-latest.json"
-      ],
-      "attempts": 1
-    },
-    "delayed_compensation": {
-      "success": true,
-      "files": [
-        "data/delayed-compensation-latest.json"
-      ],
-      "attempts": 1
-    },
-    "block_statistics": {
-      "success": true,
-      "files": [
-        "vbg-block-stats.js"
-      ],
-      "attempts": 1
-    },
-    "statistics_ekyc_material": {
-      "success": true,
-      "files": [
-        "data/statistics-ekyc-material-latest.json"
-      ],
-      "attempts": 1
-    },
-    "mis_612": {
-      "success": true,
-      "files": [
-        "data/Ongoing_Works_dynamic_work_details_latest.csv",
-        "data/mis-6.12-status.json",
-        "ongoing-details.js",
-        "ongoing-details.json.gz",
-        "r612-yd-convergence.js"
-      ],
-      "attempts": 1
-    },
-    "pmay_janpad_summary": {
-      "success": true,
-      "files": [
-        "pmay-janpad-summary-data.js"
-      ],
-      "attempts": 1
-    },
     "yuktdhara_mr_labour_history": {
       "success": false,
       "message": "Current source date 27-11-2026 required; R33.1=26/11/2026",
@@ -152,85 +247,13 @@
       ],
       "attempts": 1
     },
-    "pmayg_physical": {
-      "success": true,
-      "files": [
-        "data/pmayg-physical-latest.json"
-      ],
-      "attempts": 1
-    },
-    "pmayg": {
-      "success": true,
-      "files": [
-        "data/pmayg-latest.json"
-      ],
-      "attempts": 1
-    },
-    "above75": {
-      "success": true,
-      "files": [
-        "data/above75-latest.json"
-      ],
-      "attempts": 1
-    },
-    "planner": {
-      "success": true,
-      "files": [
-        "planner-portal-data.js"
-      ],
-      "attempts": 1
-    },
-    "secure_ts": {
-      "success": true,
-      "files": [
-        "secure-ts-data.js",
-        "secure-ts-yuktadhara-data.js",
-        "data/secure-ts-yuktadhara-fy2026-27.json"
-      ],
-      "attempts": 1
-    },
-    "r37_secure_register": {
-      "success": true,
-      "files": [
-        "data/r37-secure-register.json"
-      ],
-      "attempts": 1
-    },
-    "secure_yd_as": {
-      "success": true,
-      "files": [
-        "data/secure-as-yuktdhara.json"
-      ],
-      "attempts": 1
-    },
-    "r617_secure_bhuvan": {
-      "success": true,
-      "files": [
-        "data/r617-secure-bhuvan.json"
-      ],
-      "attempts": 1
-    },
     "as_geotag_before": {
       "success": false,
       "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_as_geotag_before.py']' timed out after 900 seconds",
-      "errorTail": "\nCOMMAND ['scripts_local/update_as_geotag_before.py']\nSearch AMARPATAN\r\n  official rows: 505\r\n  checked YD candidates: 20\r\n  checked YD candidates: 40\r\n  checked YD candidates: 60\r\n  checked YD candidates: 80\r\n  checked YD candidates: 100\r\nSearch MAIHAR\r\n  official rows: 799\r\n  checked YD candidates: 120\r\n  checked YD candidates: 140\r\n  checked YD candidates: 160\r\n  checked YD candidates: 180\r\n  checked YD candidates: 200\r\n  checked YD candidates: 220\r\n  checked YD candidates: 240\r\n  checked YD candidates: 260\r\n  checked YD candidates: 280\r\n  checked YD candidates: 300\r\n  checked YD candidates: 320\r\nSearch MAJHGAWAN\r\n  official rows: 0\r\nSearch NAGOD\r\n  official rows: 0\r\nSearch RAMNAGAR\r\n  official rows: 634\r\n  checked YD candidates: 340\r\n  checked YD candidates: 360\r\n  checked YD candidates: 380\r\n  checked YD candidates: 400\r\n  checked YD candidates: 420\r\n  checked YD candidates: 440\r\n  checked YD candidates: 460\r\nSearch RAMPUR BAGHELAN\r\n  official rows: 1293\r\n  checked YD candidates: 480\r\n  checked YD candidates: 500\r\n  checked YD candidates: 520\r\n  checked YD candidates: 540\r\nSearch SATNA\r\n  official rows: 456\r\n  checked YD candidates: 560\r\n  checked YD candidates: 580\r\n  checked YD candidates: 600\r\n  checked YD candidates: 620\r\n  checked YD candidates: 640\r\nSearch UNCHAHARA\r\n  official rows: 446\r\n  checked YD candidates: 660\r\n  checked YD candidates: 680\r\n  checked YD candidates: 700\r\n  checked YD candidates: 720\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/update_as_geotag_before.py']\nSearch AMARPATAN\r\n  official rows: 505\r\n  checked YD candidates: 20\r\n  checked YD candidates: 40\r\n  checked YD candidates: 60\r\n  checked YD candidates: 80\r\n  checked YD candidates: 100\r\nSearch MAIHAR\r\n  official rows: 799\r\n  checked YD candidates: 120\r\n  checked YD candidates: 140\r\n  checked YD candidates: 160\r\n  checked YD candidates: 180\r\n  checked YD candidates: 200\r\n  checked YD candidates: 220\r\n  checked YD candidates: 240\r\n  checked YD candidates: 260\r\n  checked YD candidates: 280\r\n  checked YD candidates: 300\r\n  checked YD candidates: 320\r\nSearch MAJHGAWAN\r\n  official rows: 740\r\n  checked YD candidates: 340\r\n  checked YD candidates: 360\r\n  checked YD candidates: 380\r\n  checked YD candidates: 400\r\n  checked YD candidates: 420\r\n",
       "files": [
         "data/as-geotag-before-latest.json",
         "as-geotag-before-data.js"
-      ],
-      "attempts": 1
-    },
-    "ek_bagiya_payment": {
-      "success": true,
-      "files": [
-        "data/ek-bagiya-payment-latest.json"
-      ],
-      "attempts": 1
-    },
-    "rejected_wage": {
-      "success": true,
-      "files": [
-        "data/rejected-wage-latest.json"
       ],
       "attempts": 1
     }
