@@ -1,11 +1,19 @@
 {
-  "checkedAt": "2026-11-27T07:59:41.435456+00:00",
+  "checkedAt": "2026-11-27T09:51:39.977629+00:00",
   "schedule": "08:00 Asia/Kolkata",
   "reports": {
     "shramik_s58_ongoing": {
       "success": true,
       "files": [
         "shramik-s58-ongoing.js"
+      ],
+      "attempts": 1,
+      "resumed": true
+    },
+    "shramik_r511_persondays": {
+      "success": true,
+      "files": [
+        "shramik-r511-persondays.js"
       ],
       "attempts": 1,
       "resumed": true
@@ -221,17 +229,10 @@
       "attempts": 1,
       "resumed": true
     },
-    "shramik_r511_persondays": {
-      "success": true,
-      "files": [
-        "shramik-r511-persondays.js"
-      ],
-      "attempts": 1
-    },
     "yuktdhara": {
       "success": false,
-      "message": "Current verified Yuktdhara GP/engineer detail required: UNCHAHARA: UNCHAHARA attempt 1: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True; UNCHAHARA attempt 2: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True; UNCHAHARA attempt 3: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True",
-      "errorTail": "\nCOMMAND ['scripts_local/update_yuktdhara_monitoring.py', '--official-only']\nYuktdhara official data updated: 8 blocks\r\n\nCOMMAND ['scripts_local/update_yuktdhara_received.py']\nUsing current browser-session Yuktdhara parent totals for all 8 blocks\r\nUNCHAHARA attempt 1: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True\r\nUNCHAHARA attempt 2: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True\r\nUNCHAHARA attempt 3: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True\r\nYUKTDHARA RECEIVED NOT REFRESHED: UNCHAHARA: UNCHAHARA attempt 1: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True; UNCHAHARA attempt 2: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True; UNCHAHARA attempt 3: GP detail does not reconcile: received GPs 68/68, received works 223/223, created works 103/102, created column True; previous detail retained with its original date.\r\n",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_yuktdhara_monitoring.py', '--official-only']' returned non-zero exit status 1.",
+      "errorTail": "\nCOMMAND ['scripts_local/update_yuktdhara_monitoring.py', '--official-only']\nTraceback (most recent call last):\n  File \"/tmp/SRDM_DAILY_e40g1oh8/report/scripts_local/update_yuktdhara_monitoring.py\", line 226, in <module>\n    fetch()\n  File \"/tmp/SRDM_DAILY_e40g1oh8/report/scripts_local/update_yuktdhara_monitoring.py\", line 155, in fetch\n    source=open_url(req,timeout=90).read().decode(\"utf-8\",\"ignore\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/SRDM_DAILY_e40g1oh8/report/scripts_local/vbgram_access.py\", line 71, in open_url\n    raise RuntimeError('Portal access refused (HTTP %s); report retained. '\nRuntimeError: Portal access refused (HTTP 401); report retained. A working portal connection/session is required.\n",
       "files": [
         "yuktdhara-official-data.js",
         "yuktdhara-received-data.js"
@@ -241,7 +242,7 @@
     "yuktdhara_mr_labour_history": {
       "success": false,
       "message": "Current source date 27-11-2026 required; R33.1=26/11/2026",
-      "errorTail": "\nCOMMAND ['scripts_local/update_yuktdhara_mr_labour_history.py']\nRecorded 2026-11-27: R33.1 ongoing 107; R6.12 FY2026-27 /YD/ ongoing 111; with issued MR 25\r\n",
+      "errorTail": "\nCOMMAND ['scripts_local/update_yuktdhara_mr_labour_history.py']\nRecorded 2026-11-27: R33.1 ongoing 107; R6.12 FY2026-27 /YD/ ongoing 111; with issued MR 25\n",
       "files": [
         "data/yuktdhara-mr-labour-history.json"
       ],
@@ -249,8 +250,8 @@
     },
     "as_geotag_before": {
       "success": false,
-      "message": "Command '['C:\\\\Users\\\\welcome\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python314\\\\python.exe', '-u', 'scripts_local/update_as_geotag_before.py']' timed out after 900 seconds",
-      "errorTail": "\nCOMMAND ['scripts_local/update_as_geotag_before.py']\nSearch AMARPATAN\r\n  official rows: 505\r\n  checked YD candidates: 20\r\n  checked YD candidates: 40\r\n  checked YD candidates: 60\r\n  checked YD candidates: 80\r\n  checked YD candidates: 100\r\nSearch MAIHAR\r\n  official rows: 799\r\n  checked YD candidates: 120\r\n  checked YD candidates: 140\r\n  checked YD candidates: 160\r\n  checked YD candidates: 180\r\n  checked YD candidates: 200\r\n  checked YD candidates: 220\r\n  checked YD candidates: 240\r\n  checked YD candidates: 260\r\n  checked YD candidates: 280\r\n  checked YD candidates: 300\r\n  checked YD candidates: 320\r\nSearch MAJHGAWAN\r\n  official rows: 740\r\n  checked YD candidates: 340\r\n  checked YD candidates: 360\r\n  checked YD candidates: 380\r\n  checked YD candidates: 400\r\n  checked YD candidates: 420\r\n",
+      "message": "Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', '-u', 'scripts_local/update_as_geotag_before.py']' returned non-zero exit status 1.",
+      "errorTail": "\nCOMMAND ['scripts_local/update_as_geotag_before.py']\nSearch AMARPATAN\nFAILED AS-before-Geotag fetch; previous data retained: Search form missing for AMARPATAN; HTTP=401; title=''; url='https://vbgramgrep.dord.gov.in/vbgramg/specific_work_search_rpt.aspx?payload=O9l6bN6AlHZgNqmUmUbD-_Wlw6J25huImwdkIbmM4uSNTDKRaZbIdLI-cc4ucZ2mr5bWHHTiru9H_pAMTgtJ6SwRjR4hgE7P6n-GOWd4wdVj0rfZ2rxv6aEsaYMEaJ-sHEPzh8QI6VVN-tQY2mMZtEOiK7ITn6wQQgYNPYR1PiYAuOH4zKOOj9_6ueUj57Lp'; body='{\"code\":\"401\",\"message\":\"Unauthorized\"}'\n",
       "files": [
         "data/as-geotag-before-latest.json",
         "as-geotag-before-data.js"
