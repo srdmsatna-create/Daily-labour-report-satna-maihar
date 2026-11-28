@@ -24,7 +24,7 @@
 <div id="metrics" class="metrics"></div>
 <h2 class="subhead">AwaasPlus — किस्त एवं भौतिक प्रगति</h2>
 <div class="scroll"><table><thead id="head"></thead><tbody id="body"></tbody><tfoot id="foot"></tfoot></table></div>
-<div class="note"><b>मिलान का आधार:</b> AwaasPlus exports में जनपदवार किस्तों की गिनती है, घर/कार्य ID नहीं है। VB-G RAM G की मजदूरी R-7.1 के Physically Completed PMAY-G/IAY कार्यों से जनपदवार जोड़ी गई है। इसलिए मजदूरी के आँकड़े किसी खास किस्त या घर के लिए नहीं हैं। शेष मजदूरी = VB-G RAM G में बुक्ड मजदूरी − प्रदाय मजदूरी। किस्तों की गिनती अलग-अलग चरणों की संचयी संख्या है; इन्हें जोड़कर कुल घर न निकालें।</div>
+<h2 class="subhead">VB-G RAM G मजदूरी — कार्यवार विवरण</h2><div class="scroll"><table><thead><tr><th>क्र.</th><th>जिला</th><th>जनपद</th><th>उपयंत्री / क्लस्टर</th><th>GP</th><th>Work Code</th><th>कार्य नाम</th><th>बुक्ड मजदूरी</th><th>प्रदाय मजदूरी</th><th>शेष मजदूरी</th><th>मानव दिवस</th></tr></thead><tbody id="workBody"></tbody></table></div><div class="note"><b>मिलान का आधार:</b> AwaasPlus exports में जनपदवार किस्तों की गिनती है, घर/कार्य ID नहीं है। VB-G RAM G की मजदूरी R-7.1 के Physically Completed PMAY-G/IAY कार्यों से जनपदवार जोड़ी गई है। इसलिए मजदूरी के आँकड़े किसी खास किस्त या घर के लिए नहीं हैं। शेष मजदूरी = VB-G RAM G में बुक्ड मजदूरी − प्रदाय मजदूरी। किस्तों की गिनती अलग-अलग चरणों की संचयी संख्या है; इन्हें जोड़कर कुल घर न निकालें।</div>
 </main>
 <script>
 (function(){
@@ -32,7 +32,7 @@
 const $=id=>document.getElementById(id),fmt=n=>new Intl.NumberFormat('en-IN',{maximumFractionDigits:0}).format(Number(n)||0),cash=n=>'₹'+fmt(n);
 const districtOf=j=>['AMARPATAN','MAIHAR','RAMNAGAR'].includes(String(j).toUpperCase())?'MAIHAR':'SATNA';
 const janpadName=b=>String(b).trim().toUpperCase()==='SATNA'?'SOHAWAL':String(b).trim().toUpperCase();
-let awaas=[],wageByJanpad=new Map(),exportRows=[];
+let awaas=[],physicalRows=[],wageByJanpad=new Map(),exportRows=[];
 function showError(msg){$('error').textContent=msg;$('error').classList.remove('hidden')}
 function render(){
  const fy=$('fy').value,dist=$('district').value,jp=$('janpad').value;
@@ -55,6 +55,7 @@ function render(){
  for(const d of ['MAIHAR','SATNA']){const items=bodyRows.filter(r=>r.district===d);if(items.length){bodyHtml+=items.map(rowHtml).join('');bodyHtml+=totalRow((d==='MAIHAR'?'मैहर':'सतना')+' — जिला योग',items,d==='MAIHAR'?'maihar-total':'total')}}
  $('body').innerHTML=bodyHtml||'<tr><td colspan="14">चुने हुए फिल्टर में कोई रिकॉर्ड नहीं है।</td></tr>';
  $('foot').innerHTML=totalRow('महायोग',bodyRows,'grand');
+ const details=physicalRows.filter(r=>(!dist||String(r.district).toUpperCase()===dist)&&(!jp||janpadName(r.janpad)===jp));$('workBody').innerHTML=details.map((r,i)=>{const w=r.sources.VBGRAMG;return '<tr><td class="num">'+(i+1)+'</td><td>'+String(r.district).toUpperCase()+'</td><td>'+janpadName(r.janpad)+'</td><td>'+(r.engineer||'—')+' / '+(r.cluster||'—')+'</td><td>'+r.gp+'</td><td>'+r.code+'</td><td>'+r.name+'</td><td class="num">'+cash(w.wageBooked)+'</td><td class="num">'+cash(w.wagePaid)+'</td><td class="num">'+cash(w.wageBooked-w.wagePaid)+'</td><td class="num">'+fmt(r.mandays)+'</td></tr>'}).join('')||'<tr><td colspan="11">चुने हुए फिल्टर में कोई कार्य नहीं है।</td></tr>';
  exportRows=[titles,...bodyRows.map(r=>[r.district,r.janpad,...keys.map(k=>r[k]),r.wageBooked,r.wagePaid,r.wageRemaining])];
 }
 async function init(){try{
@@ -63,7 +64,7 @@ async function init(){try{
  const years=[...new Set(awaas.map(r=>r.fy))].sort().reverse();$('fy').innerHTML='<option value="ALL">दोनों वर्ष</option>'+years.map(y=>'<option value="'+y+'">'+y.replace('-','–')+'</option>').join('');
  const physical=await fetch('data/pmayg-physical-latest.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error('R-7.1 मजदूरी डेटा नहीं मिला');return r.json()});
  if(physical.basis!=='vbg-physical-pmayg-v1'||!Array.isArray(physical.rows)||!physical.rows.length)throw Error('R-7.1 मजदूरी डेटा सत्यापित नहीं है');
- if(physical.rows.some(r=>r.status!=='Physically Completed'||!r.sources?.VBGRAMG||!Number.isFinite(r.sources.VBGRAMG.wageBooked)||!Number.isFinite(r.sources.VBGRAMG.wagePaid)))throw Error('R-7.1 मजदूरी फ़ील्ड अधूरे हैं');
+ physicalRows=physical.rows;if(physical.rows.some(r=>r.status!=='Physically Completed'||!r.sources?.VBGRAMG||!Number.isFinite(r.sources.VBGRAMG.wageBooked)||!Number.isFinite(r.sources.VBGRAMG.wagePaid)))throw Error('R-7.1 मजदूरी फ़ील्ड अधूरे हैं');
  for(const r of physical.rows){const j=janpadName(r.janpad),w=r.sources.VBGRAMG;if(!wageByJanpad.has(j))wageByJanpad.set(j,{booked:0,paid:0,remaining:0});const a=wageByJanpad.get(j);a.booked+=w.wageBooked;a.paid+=w.wagePaid;a.remaining+=w.wageBooked-w.wagePaid}
  const jans=[...new Set(awaas.map(r=>janpadName(r.portalBlock)))].sort();$('janpad').innerHTML='<option value="">सभी जनपद</option>'+jans.map(j=>'<option value="'+j+'">'+j+'</option>').join('');
  const dates=[...new Set(awaas.map(r=>r.sourceAsOn))].join(' • '),sourceDates=Object.entries(physical.sourceDates||{}).map(([k,v])=>k+' '+v).join(' | ');

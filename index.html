@@ -1999,10 +1999,10 @@ body[data-report-view="ekbagiya"] table.ek-all-work-table td {font-weight:500!im
       <span class="srdm-app-icon" style="background:#0f766e;color:#fff" aria-label="Payment">💳</span><span class="srdm-app-copy"><strong>Payment</strong><span>एक बगिया माँ के नाम · भुगतान की स्थिति</span></span><span class="srdm-app-new">New</span>
     </a>
     <a class="srdm-app-card" data-report="ek-bagiya-complete" href="ek-bagiya/dashboard-20260926.html?v=3" style="text-decoration:none;--app-accent:#a16207;--app-soft:#fffbeb;--app-shadow:#a1620744;border-color:#a16207;background:linear-gradient(135deg,#fffbeb,#fff 75%)">
-      <span class="srdm-app-icon" style="background:#f59e0b;color:#7c2d12" aria-label="Ek Bagiya">🌳</span><span class="srdm-app-copy"><strong>Ek Bagiya Maa Ke Naam — Complete Report</strong><span>District Ranking • Block Ranking • Panchayat Performance • Registration • Expenditure • District • Member Detail</span></span><span class="srdm-app-new">New</span>
+      <span class="srdm-app-icon" style="background:#f59e0b;color:#7c2d12" aria-label="Ek Bagiya">🌳</span><span class="srdm-app-copy"><strong>Ek Bagiya Maa Ke Naam — Ranking Report</strong><span>District Ranking • Block Ranking • Panchayat Performance • Registration • Expenditure • District • Member Detail</span></span><span class="srdm-app-new">New</span>
     </a>
 
-    <a class="srdm-app-card srdm-portal-card" href="anushravan-rfi.html?v=20261121-amarpatan-final" style="text-decoration:none;--app-accent:#d95f2b;--app-soft:#fff4ed;border-color:#d95f2b;background:linear-gradient(135deg,#fff4ed,#fff 75%)"><span class="srdm-app-icon" style="background:#d95f2b;color:#fff">📋</span><span class="srdm-app-copy"><strong>अनुश्रवण डैशबोर्ड RFI</strong><span>All District • Satna • Maihar • Janpad / Cluster-wise RFI status</span></span><span class="srdm-app-new">New</span></a>
+    <a class="srdm-app-card srdm-portal-card" href="anushravan-rfi.html?v=20261121-amarpatan-final" style="text-decoration:none;--app-accent:#d95f2b;--app-soft:#fff4ed;border-color:#d95f2b;background:linear-gradient(135deg,#fff4ed,#fff 75%)"><span class="srdm-app-icon" style="background:#d95f2b;color:#fff">📋</span><span class="srdm-app-copy"><strong>अनुश्रवण डैशबोर्ड RFI</strong><span>All District • Satna • Maihar • Janpad / Cluster-wise RFI status</span></span><span class="srdm-app-new">New</span></a><a class="srdm-app-card srdm-portal-card" data-report="r6-pmay-sanctioned-mandays" href="pmayg-sanctioned-mandays.html" style="text-decoration:none;--app-accent:#5326a5"><span class="srdm-app-icon">🏠</span><span class="srdm-app-copy"><strong>Sanctioned PMAY(G) Houses and Mandays Generated</strong><span>FY 2025-2026 एवं 2026-2027 • District / Janpad / House-wise</span></span><span class="srdm-app-new">New</span></a>
     <a class="srdm-app-card srdm-portal-card srdm-portal-planner" href="planner-portal-dashboard.html" style="text-decoration:none">
       <span class="srdm-app-icon srdm-thumb-icon" aria-label="Planner Portal">
 <svg viewBox="0 0 136 100" role="img" aria-label="Planner Portal"><defs><linearGradient id="plannerG" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0877ef"/><stop offset="1" stop-color="#20a7df"/></linearGradient></defs><rect width="136" height="100" rx="14" fill="url(#plannerG)"/><rect x="27" y="24" width="82" height="52" rx="8" fill="#fff" opacity=".96"/><rect x="38" y="55" width="10" height="12" fill="#19a76f"/><rect x="55" y="45" width="10" height="22" fill="#f0b429"/><rect x="72" y="35" width="10" height="32" fill="#ed5252"/><rect x="89" y="28" width="10" height="39" fill="#0d5bd7"/><text x="68" y="88" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="900" fill="#fff">PLANNER</text></svg>
@@ -2367,6 +2367,7 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
    return;
   }
   if(!tab||(Array.isArray(window.ONGOING_DETAILS)&&window.ONGOING_DETAILS.length>1000))return;
+  if(tab.dataset.srdmWorkBypass==='1'){delete tab.dataset.srdmWorkBypass;return;}
   if(tab.dataset.srdmWorkReplay==='1'){event.preventDefault();event.stopImmediatePropagation();return;}
   event.preventDefault();event.stopImmediatePropagation();
   const busyMark=document.createElement('span');busyMark.className='srdm-work-data-loading';busyMark.textContent=' Work details लोड हो रहे हैं…';
@@ -2374,10 +2375,11 @@ window.ONGOING_DETAILS=window.ONGOING_DETAILS||[];
   (tab.dataset.view==='incomplete'?loadIncompleteDetails():loadWorkDetails()).then(ok=>{
    tab.removeAttribute('aria-busy');busyMark.remove();
    if(ok){try{ongoingDetails=window.ONGOING_DETAILS;refreshFilters()}catch(error){}}
-   else {const meta=document.getElementById('viewMeta');if(meta)meta.textContent='Work details data load नहीं हुआ। दोबारा रिपोर्ट खोलें।';delete tab.dataset.srdmWorkReplay;return;}
-   // Replay only after removing the guard; otherwise the capture handler blocks
-   // the synthetic click and R-7.2 to R-7.5 never opens.
+   else {const meta=document.getElementById('viewMeta');if(meta)meta.textContent='Report खुल गई है; work details background में दोबारा load होंगे।';}
+   // Never keep an R-8 report trapped behind the optional large payload.
+   // Bypass this capture guard once and let the normal report renderer run.
    delete tab.dataset.srdmWorkReplay;
+   tab.dataset.srdmWorkBypass='1';
    tab.click();
   });
  },true);
@@ -4125,12 +4127,12 @@ function srdmPrintEkBagiyaOnly(){
 const root=document.getElementById('srdmApplications'),grid=document.getElementById('reportMenuGrid');if(!root||!grid)return;
 const groups=[
  ['1','मस्टरोल, e-MB एवं FTO',['#embPendingLauncher','a[href="pending-mr-fto.html"]','a[href="rejected-wage-reconciliation.html"]','#musterEmbLauncher']],
- ['2','एक बगिया — भुगतान एवं प्रगति',['a[href="payment.html"]','a[data-report="ek-bagiya-complete"]','[data-view="ekbagiya"]']],
+ ['2','एक बगिया — भुगतान एवं प्रगति',['a[href="payment.html"]','[data-view="ekbagiya"]','a[data-report="ek-bagiya-complete"]']],
  ['3','कार्य योजना — Planner / SIPRI / Yuktdhara',['a[href^="planner-portal-dashboard.html"]','a[href^="planner-sipri-dashboard-compact.html"]','a[href^="planner-daily-progress.html"]','a[href="planner-sipri-dashboard-hi.html"]','#yuktdharaLauncher','#yuktdharaStateLauncher','a[href^="as-geotag-before.html"]','a[href^="yuktdhara-daily-progress.html"]','a[href^="yuktdhara-r33-1.html"]']],
  ['4','जल गंगा संवर्धन अभियान — JGSA',['a[href="jgsa-reports.html?report=summary&level=district"]','a[href="jgsa-reports.html?report=summary"]','a[href="jgsa-reports.html?report=ranking"]','#jgsaReserved44','a[href="jgsa-reports.html?report=works"]','a[data-report-code-fixed="4.6"]','a.srdm-portal-jgsa']],
  ['5','सुगम संपर्कता परियोजना — RIMS',[]],
  ['6','ग्राम पंचायत / सेक्टर / उपयंत्री मास्टर',['a[href^="gp-sector-engineer-master.html"]','a[data-report-code-fixed="6.2"]','a[href="rims-roads.html"]']],
- ['14','अनुश्रवण Dashboard — RFI',['a[href^="https://sipri.mp.gov.in/AnushravanDashboard/"]']],
+ ['14','अनुश्रवण Dashboard — RFI',['a[href^="https://sipri.mp.gov.in/AnushravanDashboard/"]','a[href="pmayg-sanctioned-mandays.html"]']],
  ['7','PMAY-G — मानव दिवस एवं भौतिक पूर्ण कार्य',['a[href="pmayg-physical.html"]','a[href="pmayg.html"]','a[href="pmayg-installment-labour.html"]','a[href="pmayg-muster-issue.html"]']],
  ['8','कार्य विश्लेषण एवं व्यय',['a[href="works-above-75.html"]',':is([data-srdm-view="category"],[data-view="category"])','[data-view="categorysubeng"]','[data-view="categoryworks"]','[data-view="incomplete"]','[data-view="recovery"]','a[href="r6-12-janpad-wise-physically.html"]','a[href^="planner-sipri-dashboard-hi.html?"]']],
  ['9','दैनिक श्रमिक एवं जनपद मॉनिटरिंग',[':is([data-srdm-view="mandaysgen"],[data-view="mandaysgen"])','#srdmZeroLauncher',':is([data-srdm-view="dysfunctional"],[data-view="dysfunctional"])',':is([data-srdm-view="engineer"],[data-view="engineer"])',':is([data-srdm-view="official"],[data-view="official"])',':is([data-srdm-view="state"],[data-view="state"])','#shramikNiyojanLauncher','[data-view="dysjanpad"]']],
